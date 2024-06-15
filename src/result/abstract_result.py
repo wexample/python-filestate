@@ -1,0 +1,2 @@
+class AbstractResult(object):
+    pass
