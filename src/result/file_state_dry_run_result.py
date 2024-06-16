@@ -1,4 +1,4 @@
-from abstract_result import AbstractResult
+from src.result.abstract_result import AbstractResult
 
 
 class FileStateDryRunResult(AbstractResult):

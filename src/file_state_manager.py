@@ -1,21 +1,29 @@
-from result.file_state_dry_run_result import FileStateDryRunResult
+from typing import Optional
+
 import yaml
 from pydantic import BaseModel
+
+from src.result.file_state_dry_run_result import FileStateDryRunResult
 
 
 class FileStateManager(BaseModel):
     root_directory: str
-    config: dict = {}
+    _config: Optional[dict] = None
 
-    class Config:
-        arbitrary_types_allowed = True
+    @property
+    def config(self) -> Optional[dict]:
+        return self._config
+
+    @config.setter
+    def config(self, value: dict):
+        self._config = value
+
+    def configure(self, config: dict):
+        self.config = config
 
     def configure_from_file(self, file_path: str):
         with open(file_path, 'r') as file:
             self.config = yaml.safe_load(file)
-
-    def configure(self, config_dict: dict):
-        self.config = config_dict
 
     def dry_run(self):
         # Implement dry run logic here
