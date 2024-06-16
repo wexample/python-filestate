@@ -1,16 +1,20 @@
 from result.file_state_dry_run_result import FileStateDryRunResult
 import yaml
+from pydantic import BaseModel
 
-class FileStateManager:
-    def __init__(self, root_directory):
-        self.root_directory = root_directory
-        self.config = {}
 
-    def configure_from_file(self, file_path):
+class FileStateManager(BaseModel):
+    root_directory: str
+    config: dict = {}
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def configure_from_file(self, file_path: str):
         with open(file_path, 'r') as file:
             self.config = yaml.safe_load(file)
 
-    def configure(self, config_dict):
+    def configure(self, config_dict: dict):
         self.config = config_dict
 
     def dry_run(self):
