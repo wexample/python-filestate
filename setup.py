@@ -4,11 +4,11 @@ setup(
     name='filestates',
     version=open('version.txt').read(),
     author='weeger',
-    author_email='contact@example.com',
+    author_email='contact@wexample.com',
     description='A tool for managing file states, with configuration files in YAML.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/weeger/filestates',
+    url='https://github.com/wexample/python-filestates',
     packages=find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
