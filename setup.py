@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='filestates',
+    name='wexample-filestates',
     version=open('version.txt').read(),
     author='weeger',
     author_email='contact@wexample.com',
@@ -18,6 +18,8 @@ setup(
     install_requires=[
         'pydantic',
         'pyyaml',
+        'wexample-helpers',
+        'wexample-helpers-yaml'
     ],
     python_requires='>=3.6',
 )

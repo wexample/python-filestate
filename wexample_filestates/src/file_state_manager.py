@@ -1,13 +1,11 @@
 from pathlib import Path
 from typing import Optional
-
-import yaml
 from pydantic import BaseModel
-
-from src.const.types import FileStringOrPath
-from src.helpers.file_helper import file_resolve_path
-from src.result.file_state_dry_run_result import FileStateDryRunResult
-from src.result.file_state_result import FileStateResult
+from wexample_filestates.src.result.file_state_dry_run_result import FileStateDryRunResult
+from wexample_filestates.src.result.file_state_result import FileStateResult
+from wexample_helpers.const.types import FileStringOrPath
+from wexample_helpers.helpers.file_helper import file_resolve_path
+from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 
 
 class FileStateManager(BaseModel):
@@ -26,9 +24,7 @@ class FileStateManager(BaseModel):
         self.config = config
 
     def configure_from_file(self, path: FileStringOrPath):
-        path = file_resolve_path(path)
-        with open(path, 'r') as f:
-            self.config = yaml.safe_load(f)
+        self.config = yaml_load(path)
 
     def dry_run(self) -> FileStateDryRunResult:
         return FileStateDryRunResult()
