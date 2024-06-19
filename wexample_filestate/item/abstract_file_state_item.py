@@ -14,6 +14,3 @@ class AbstractFileStateItem(BaseModel):
 
     def get_resolved(self):
         return self.path.resolve()
-
-    def configure(self, config: dict):
-        pass
