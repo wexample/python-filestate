@@ -1,7 +1,7 @@
 from typing import Optional, cast, Union
 from pydantic import BaseModel, Field
 
-from helpers.state_item_helper import state_item_from_path
+from wexample_filestate.helpers.state_item_helper import state_item_from_path
 from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
 from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource

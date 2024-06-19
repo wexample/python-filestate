@@ -15,6 +15,11 @@ class TestFileStateManagerTest(unittest.TestCase):
                 {
                     'name': 'simple-text.txt',
                     'mode': '0644'
+                },
+                {
+                    'name': 'simple-text-missing.txt',
+                    'mode': '0644',
+                    'should_exists': True
                 }
             ]
         })
