@@ -8,7 +8,7 @@ setup(
     description='A tool for managing file states, with configuration files in YAML.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/wexample/python-filestates',
+    url='https://github.com/wexample/python-filestate',
     packages=find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',

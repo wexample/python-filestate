@@ -1,6 +1,6 @@
-# filestates
+# filestate
 
-`filestates` is a Python package that allows you to manage the state of files and directories using YAML configuration files.
+`filestate` is a Python package that allows you to manage the state of files and directories using YAML configuration files.
 
 ## Features
 
@@ -10,9 +10,9 @@
 
 ## Installation
 
-Install `filestates` with pip:
+Install `filestate` with pip:
 
-pip install filestates
+pip install wexample-filestate
 
 ## Usage
 
@@ -40,10 +40,10 @@ templates:
 
 ## Usage
 
-Here's how you can use filestates in your Python code:
+Here's how you can use filestate in your Python code:
 
 ```
-from filestates import FileStateManager
+from filestate import FileStateManager
 
 # Initialize the state manager with the root directory
 state_manager = FileStateManager('root/directory/')
