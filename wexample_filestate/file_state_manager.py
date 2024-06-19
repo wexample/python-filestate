@@ -1,7 +1,7 @@
 from typing import Optional, cast, Union
 from pydantic import BaseModel, Field
 
-from wexample_filestate.helpers.state_item_helper import state_item_from_path
+from wexample_filestate.helpers.state_item_helper import state_item_source_from_path
 from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
 from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
@@ -20,7 +20,7 @@ class FileStateManager(BaseModel):
         = None
 
     def __init__(self, root: str, config: Optional[dict] = None):
-        super().__init__(root=state_item_from_path(root))
+        super().__init__(root=state_item_source_from_path(root))
 
         self._target = self.root.create_target()
 
