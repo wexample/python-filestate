@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from wexample_filestate.src.file_state_manager import FileStateManager
@@ -6,9 +7,11 @@ from wexample_filestate.src.file_state_manager import FileStateManager
 class TestFileStateManagerTest(unittest.TestCase):
 
     def setUp(self):
-        self.state_manager = FileStateManager(root_directory='root/directory/')
+        self.state_manager = FileStateManager(path=os.curdir)
 
     def test_configure(self):
+        print(self.state_manager.path)
+
         config = {'files': [{'path': '/path/to/file', 'owner': 'user', 'group': 'group', 'mode': '0644'}]}
         self.state_manager.configure(config)
         self.assertEqual(self.state_manager.config, config)

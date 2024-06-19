@@ -9,12 +9,12 @@ from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 
 
 class FileStateManager(BaseModel):
-    root_directory: Path
+    path: Path
     config: dict = {}
 
-    def __init__(self, root_directory: FileStringOrPath, config: Optional[dict] = None):
+    def __init__(self, path: FileStringOrPath, config: Optional[dict] = None):
         super().__init__(
-            root_directory=file_resolve_path(root_directory)
+            path=file_resolve_path(path)
         )
 
         if config:
