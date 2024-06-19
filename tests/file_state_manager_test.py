@@ -1,6 +1,6 @@
 import unittest
 
-from wexample_filestates.src.file_state_manager import FileStateManager
+from wexample_filestate.src.file_state_manager import FileStateManager
 
 
 class TestFileStateManagerTest(unittest.TestCase):

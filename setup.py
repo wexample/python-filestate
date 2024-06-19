@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='wexample-filestates',
+    name='wexample-filestate',
     version=open('version.txt').read(),
     author='weeger',
     author_email='contact@wexample.com',
