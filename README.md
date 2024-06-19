@@ -30,12 +30,6 @@ directories:
     recursive: true
     mode: '0755'
     create: true
-templates:
-  - path: /path/to/output/file
-    template: /path/to/template/file
-    placeholders:
-      placeholder1: value1
-      placeholder2: value2
 ```
 
 ## Usage
