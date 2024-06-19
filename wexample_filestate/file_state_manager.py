@@ -12,16 +12,19 @@ from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 
 
 class FileStateManager(BaseModel):
-    root: AbstractFileStateItem = Field(..., description="Path to the file or directory")
+    root: AbstractFileStateItem = Field(..., description="Actual root item definition")
+    _target: AbstractFileStateItem = None
 
     def __init__(self, root: str, config: Optional[dict] = None):
         super().__init__(root=state_item_from_path(root))
+
+        self._target = AbstractFileStateItem(path=root)
 
         if config:
             self.configure(config)
 
     def configure(self, config: dict):
-        self.root.configure(config)
+        self._target.configure(config)
 
     def configure_from_file(self, path: FileStringOrPath):
         self.configure(yaml_load(path))
