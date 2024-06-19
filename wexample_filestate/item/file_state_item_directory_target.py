@@ -7,6 +7,9 @@ from wexample_filestate.item.file_state_item_file_target import FileStateItemFil
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
 
 
+from wexample_filestate.const.types import StateItemConfig
+from wexample_filestate.helpers.state_item_helper import state_item_target_from_path
+
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
     config: Optional[dict] = None
 
@@ -16,10 +19,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         if 'name' in config:
             _name = config['name']
 
-        if 'files' in config:
-            for item_config in config['files']:
-                FileStateItemFileTarget(path=base_path + item_config['name'], config=item_config)
-
-        if 'directories' in config:
-            for item_config in config['directories']:
-                FileStateItemDirectoryTarget(path=base_path + item_config['path'], config=item_config)
+        if 'children' in config:
+            for item_config in config['children']:
+                print(item_config);
+                state_item_target_from_path(path=base_path, config=item_config)

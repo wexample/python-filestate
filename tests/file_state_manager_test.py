@@ -11,7 +11,7 @@ class TestFileStateManagerTest(unittest.TestCase):
 
     def test_file_permissions(self):
         self.state_manager.configure({
-            'files': [
+            'children': [
                 {
                     'name': 'simple-text.txt',
                     'mode': '0644'

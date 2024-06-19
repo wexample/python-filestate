@@ -5,7 +5,7 @@ from typing import Optional, List
 from typing_extensions import TypedDict
 
 
-class StateItemConfig(TypedDict):
+class StateItemConfig(TypedDict, total=False):
     name: str
     children: Optional[List[StateItemConfig]]
 

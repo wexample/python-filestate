@@ -20,12 +20,11 @@ pip install wexample-filestate
 
 ```yaml
 # example.yaml
-files:
+children:
   - path: /path/to/file
     owner: user
     group: group
     mode: '0644'
-directories:
   - path: /path/to/directory
     recursive: true
     mode: '0755'
