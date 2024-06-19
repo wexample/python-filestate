@@ -1,3 +1,4 @@
+from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
 from wexample_helpers.helpers.file_helper import file_resolve_path
 
@@ -14,8 +15,7 @@ def state_item_source_from_path(path) -> AbstractFileStateItem:
         raise ValueError('Root path should be a valid file or directory')
 
 
-# def state_item_target_from_path(path: str, config: StateItemConfig) -> AbstractFileStateItem:
-def state_item_target_from_path(path: str, config: any) -> AbstractFileStateItem:
+def state_item_target_from_path(path: str, config: StateItemConfig) -> AbstractFileStateItem:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
     resolved_path = file_resolve_path(path)
