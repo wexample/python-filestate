@@ -34,6 +34,8 @@ class FileStateManager(BaseModel):
         self.configure(yaml_load(path))
 
     def run(self, result: AbstractResult) -> AbstractResult:
+        self._target.build_operations(result)
+
         return result
 
     def dry_run(self) -> FileStateDryRunResult:

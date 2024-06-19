@@ -17,5 +17,4 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         if 'children' in config:
             for item_config in config['children']:
-                print(item_config);
                 state_item_target_from_path(path=base_path, config=item_config)
