@@ -21,7 +21,7 @@ class FileStateManager(BaseModel):
             self.configure(config)
 
     def configure(self, config: dict):
-        pass
+        self._target.configure(config)
 
     def run(self, result: AbstractResult) -> AbstractResult:
         return result
