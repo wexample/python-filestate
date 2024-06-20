@@ -14,17 +14,23 @@ class TestFileStateManagerTest(unittest.TestCase):
             'children': [
                 {
                     'name': 'simple-text.txt',
-                    'mode': '0644'
+                    'mode': '644'
                 },
                 {
                     'name': 'simple-text-missing.txt',
                     'mode': '0644',
-                    'should_exists': True
+                    'should_exists': True,
+                    'type': 'file'
                 }
             ]
         })
 
-        self.state_manager.dry_run()
+        result = self.state_manager.dry_run()
+
+        self.assertGreater(
+            len(result.operations),
+            0
+        )
 
         self.assertTrue(self.state_manager.root.path.is_dir())
 

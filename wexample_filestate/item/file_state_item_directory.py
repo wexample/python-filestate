@@ -11,4 +11,4 @@ class FileStateItemDirectory(AbstractFileStateItem):
     _directories: List[FileStateItemDirectory]
 
     def get_resolved(self) -> str:
-        return f'{super()}{os.sep}'
+        return f'{super().get_resolved()}{os.sep}'

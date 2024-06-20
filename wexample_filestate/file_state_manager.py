@@ -14,9 +14,9 @@ from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 
 
 class FileStateManager(BaseModel):
-    root: Union[FileStateItemDirectorySource | FileStateItemFileSource] \
+    root: Union[FileStateItemDirectorySource, FileStateItemFileSource] \
         = Field(..., description="Current root item definition")
-    _target: Union[FileStateItemDirectoryTarget | FileStateItemFileTarget] \
+    _target: Union[FileStateItemDirectoryTarget, FileStateItemFileTarget] \
         = None
 
     def __init__(self, root: str, config: Optional[dict] = None):

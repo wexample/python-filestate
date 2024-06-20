@@ -12,6 +12,14 @@ class AbstractFileStateItem(BaseModel):
     _name: str
     _mode: Optional[FileSystemStructurePermission] = None
 
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def mode(self):
+        return self._mode
+
     def __init__(self, **data):
         path = file_resolve_path(data.get('path'))
 

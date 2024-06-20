@@ -7,7 +7,8 @@ from typing_extensions import TypedDict
 
 class StateItemConfig(TypedDict, total=False):
     name: str
-    mode: int | FileSystemStructurePermission
+    type: Optional[str]
+    mode: Optional[int | FileSystemStructurePermission]
     children: Optional[List[StateItemConfig]]
 
 
