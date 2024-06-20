@@ -14,6 +14,8 @@ class FileStateManager(BaseModel):
     def __init__(self, root: str, config: Optional[dict] = None):
         super().__init__(root=state_item_source_from_path(root))
 
+        self._target = self.root.create_target()
+
     def configure(self, config: dict):
         pass
 
