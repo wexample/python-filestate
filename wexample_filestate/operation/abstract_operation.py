@@ -10,6 +10,9 @@ if TYPE_CHECKING:
 
 
 class AbstractOperation(BaseModel):
+    target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+    # target:Optional[str] = None
+
     @classmethod
     def get_name(cls):
         return cls.__name__.lower()
@@ -21,4 +24,8 @@ class AbstractOperation(BaseModel):
 
     @abstractmethod
     def apply(self) -> None:
+        pass
+
+    @abstractmethod
+    def to_tty(self) -> str:
         pass

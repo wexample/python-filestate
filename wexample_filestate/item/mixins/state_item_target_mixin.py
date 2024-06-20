@@ -40,4 +40,6 @@ class StateItemTargetMixin:
 
         for operation_class in operation_list_all():
             if operation_class.applicable(cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], self)):
-                result.operations.append(operation_class)
+                result.operations.append(operation_class(target='self'))
+                pass
+                # result.operations.append(operation_class(target=self))
