@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Optional
 
 from pydantic import BaseModel
@@ -22,6 +22,10 @@ class AbstractFileStateItem(BaseModel, ABC):
     @property
     def mode(self):
         return self._mode
+
+    @abstractmethod
+    def get_item_title(self) -> str:
+        pass
 
     def __init__(self, **data):
         path = file_resolve_path(data.get('path'))

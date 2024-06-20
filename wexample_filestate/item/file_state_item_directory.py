@@ -10,5 +10,8 @@ class FileStateItemDirectory(AbstractFileStateItem):
     _files: List[FileStateItemFile]
     _directories: List[FileStateItemDirectory]
 
+    def get_item_title(self) -> str:
+        return 'Directory'
+
     def get_resolved(self) -> str:
         return f'{super().get_resolved()}{os.sep}'

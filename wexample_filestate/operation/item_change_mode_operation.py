@@ -25,9 +25,14 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
 
         return False
 
-    def to_tty(self) -> str:
-        return (f'Current source file mode {file_mode_num_to_octal(self.target.source.path.stat().st_mode)} '
-                f'will be changed by mode {self.target.mode}')
+    def describe_before(self) -> str:
+        return file_mode_num_to_octal(self.target.source.path.stat().st_mode)
+
+    def describe_after(self) -> str:
+        return self.target.mode
+
+    def description(self) -> str:
+        return 'Change file permission'
 
     def apply(self) -> None:
         pass
