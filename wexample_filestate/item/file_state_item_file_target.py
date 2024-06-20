@@ -7,3 +7,7 @@ from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTarg
 
 class FileStateItemFileTarget(FileStateItemFile, StateItemTargetMixin):
     config: StateItemConfig = None
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        StateItemTargetMixin.__init__(self, **data)

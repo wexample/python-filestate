@@ -8,6 +8,7 @@ from wexample_filestate.const.types_state_items import SourceFileOrDirectory, Ta
 from wexample_filestate.helpers.state_item_helper import state_item_source_from_path
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
+from wexample_filestate.result.file_state_result import FileStateResult
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 # Expected imports for pydantic initialization
@@ -42,3 +43,6 @@ class FileStateManager(BaseModel):
 
     def dry_run(self) -> FileStateDryRunResult:
         return cast(FileStateDryRunResult, self.run(FileStateDryRunResult()))
+
+    def apply(self) -> FileStateResult:
+        return cast(FileStateResult, self.run(FileStateResult()))
