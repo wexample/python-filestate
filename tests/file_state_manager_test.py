@@ -25,6 +25,8 @@ class TestFileStateManagerTest(unittest.TestCase):
             ]
         })
 
+        result = self.state_manager.dry_run()
+
 
 if __name__ == '__main__':
     unittest.main()
