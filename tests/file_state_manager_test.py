@@ -28,5 +28,8 @@ class TestFileStateManagerTest(unittest.TestCase):
         result = self.state_manager.dry_run()
 
 
+        self.assertTrue(self.state_manager.root.path.is_dir())
+
+
 if __name__ == '__main__':
     unittest.main()
