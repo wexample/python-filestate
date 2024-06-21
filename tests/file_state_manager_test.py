@@ -60,31 +60,51 @@ class TestFileStateManagerTest(unittest.TestCase):
 
     def test_file_create_operation(self):
         missing_file_name = 'simple-text-missing.txt'
+        missing_dir_name = 'simple-directory-missing'
 
         self.state_manager.configure({
             'children': [
                 {
+                    'name': missing_dir_name,
+                    'should_exist': True,
+                    'type': 'dir'
+                },
+                {
                     'name': missing_file_name,
-                    'mode': '0644',
-                    'should_exists': True,
+                    'should_exist': True,
                     'type': 'file'
                 }
             ]
         })
 
+        target_dir = self.state_manager.target.find_by_name(missing_dir_name)
+        target_file = self.state_manager.target.find_by_name(missing_file_name)
+
         self.assertFalse(
             os.path.exists(
-                self.state_manager.target.find_by_name(missing_file_name).path.resolve()
+                target_dir.path.resolve()
             )
         )
 
-        self._dry_run_and_count_operations(operations_count=1)
+        self.assertFalse(
+            os.path.exists(
+                target_file.path.resolve()
+            )
+        )
+
+        self._dry_run_and_count_operations(operations_count=2)
 
         self.state_manager.apply()
 
         self.assertTrue(
             os.path.exists(
-                self.state_manager.target.find_by_name(missing_file_name).path.resolve()
+                target_dir.path.resolve()
+            )
+        )
+
+        self.assertTrue(
+            os.path.exists(
+                target_file.path.resolve()
             )
         )
 

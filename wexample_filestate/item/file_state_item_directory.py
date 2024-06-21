@@ -10,3 +10,9 @@ class FileStateItemDirectory(AbstractFileStateItem):
 
     def get_resolved(self) -> str:
         return f'{super().get_resolved()}{os.sep}'
+
+    def is_file(self) -> bool:
+        return False
+
+    def is_directory(self) -> bool:
+        return True

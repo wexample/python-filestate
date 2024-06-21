@@ -16,7 +16,7 @@ class FileCreateOperation(AbstractOperation):
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        if not target.source:
+        if not target.source and target.should_exist:
             return True
 
         return False
@@ -32,7 +32,14 @@ class FileCreateOperation(AbstractOperation):
 
     def apply(self) -> None:
         self._original_path_str = self.target.path.resolve().as_posix()
-        file_touch(self._original_path_str)
+        if self.target.is_file():
+            file_touch(self._original_path_str)
+        elif self.target.is_directory():
+            os.mkdir(self._original_path_str)
 
     def undo(self) -> None:
-        os.remove(self._original_path_str)
+        if self.target.is_file():
+            os.remove(self._original_path_str)
+        elif self.target.is_directory():
+            # Do not remove recursively, as for now it only can be created empty with mkdir.
+            os.rmdir(self._original_path_str)

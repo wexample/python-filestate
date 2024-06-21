@@ -16,6 +16,15 @@ if TYPE_CHECKING:
 class StateItemTargetMixin:
     _source: Optional[StateItemSourceMixin] = None
     _mode: Optional[FileSystemPermission] = None
+    _should_exist: Optional[bool] = None
+
+    @property
+    def mode(self) -> Optional[FileSystemPermission]:
+        return self._mode
+
+    @property
+    def should_exist(self) -> Optional[bool]:
+        return self._should_exist
 
     @property
     def source(self):
@@ -44,6 +53,9 @@ class StateItemTargetMixin:
 
         if "mode" in config:
             self._mode = config["mode"]
+
+        if "should_exist" in config:
+            self._should_exist = config["should_exist"]
 
     def build_operations(self, result: AbstractResult):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectory

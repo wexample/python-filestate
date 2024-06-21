@@ -5,7 +5,6 @@ from typing import Optional, TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from wexample_filestate.const.types import FileSystemPermission
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file_helper import file_resolve_path
 
@@ -30,13 +29,17 @@ class AbstractFileStateItem(BaseModel, ABC):
     def name(self) -> str:
         return self._name
 
-    @property
-    def mode(self) -> Optional[FileSystemPermission]:
-        return self._mode
-
     @abstractmethod
     def get_item_title(self) -> str:
         pass
 
     def get_resolved(self):
         return self.path.resolve()
+
+    @abstractmethod
+    def is_file(self) -> bool:
+        pass
+
+    @abstractmethod
+    def is_directory(self) -> bool:
+        pass
