@@ -32,7 +32,7 @@ class TestFileStateManagerTest(unittest.TestCase):
             0
         )
 
-        responses = result.to_tty()
+        responses = result.to_prompt_responses()
 
         self.state_manager.io.print_responses(
             responses

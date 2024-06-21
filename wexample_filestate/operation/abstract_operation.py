@@ -39,7 +39,7 @@ class AbstractOperation(BaseModel, ABC):
     def describe_after(self) -> str:
         pass
 
-    def to_tty(self) -> PromptResponse:
+    def to_prompt_response(self) -> PromptResponse:
         return PromptResponse.from_lines([
             f'TASK '.ljust(self._tty_width, '_'),
             f'{self.target.get_item_title()}: {self.target.path.resolve()}',
