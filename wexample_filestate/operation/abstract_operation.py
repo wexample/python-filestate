@@ -12,6 +12,7 @@ class AbstractOperation(BaseModel, ABC):
     target: TargetFileOrDirectory
     _before: int | str | None = None
     _after: int | str | None = None
+    _tty_width: int = 80
 
     @classmethod
     def get_name(cls):
@@ -40,6 +41,7 @@ class AbstractOperation(BaseModel, ABC):
 
     def to_tty(self) -> str:
         return os.linesep.join([
+            f'TASK '.ljust(self._tty_width, '_'),
             f'{self.target.get_item_title()}: {self.target.path.resolve()}',
             f'{self.description()}:',
             f'    Before: {self._before}',

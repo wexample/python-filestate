@@ -7,4 +7,6 @@ from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSour
 
 class FileStateItemFileSource(FileStateItemFile, StateItemSourceMixin):
     def create_target(self) -> FileStateItemFileTarget:
-        return FileStateItemFileTarget(path=self.path)
+        return FileStateItemFileTarget(
+            state_manager=self.state_manager,
+            path=self.path)

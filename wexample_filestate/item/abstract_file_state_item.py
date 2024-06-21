@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from pydantic import BaseModel
 
@@ -9,8 +9,12 @@ from wexample_filestate.const.types import FileSystemStructurePermission
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file_helper import file_resolve_path
 
+if TYPE_CHECKING:
+    from wexample_filestate.file_state_manager import FileStateManager
+
 
 class AbstractFileStateItem(BaseModel, ABC):
+    state_manager: 'FileStateManager'
     path: FileStringOrPath
     _name: str
     _mode: Optional[FileSystemStructurePermission] = None

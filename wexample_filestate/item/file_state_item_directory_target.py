@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import List, Union, cast
 
 from wexample_filestate.const.types import StateItemConfig
-from wexample_filestate.helpers.state_item_helper import state_item_target_from_path
 from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
@@ -25,7 +24,11 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         if 'children' in config:
             for item_config in config['children']:
-                self.children.append(state_item_target_from_path(path=f'{base_path}{item_config["name"]}', config=item_config))
+                self.children.append(
+                    self.state_manager.state_item_target_from_path(
+                        path=f'{base_path}{item_config["name"]}',
+                        config=item_config)
+                )
 
     def build_operations(self, result: AbstractResult):
         super().build_operations(result)

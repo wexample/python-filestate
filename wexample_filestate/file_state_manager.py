@@ -4,12 +4,14 @@ from typing import cast, Optional
 
 from pydantic import BaseModel, Field
 
+from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.const.types_state_items import SourceFileOrDirectory, TargetFileOrDirectory
-from wexample_filestate.helpers.state_item_helper import state_item_source_from_path
+from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 from wexample_filestate.result.file_state_result import FileStateResult
 from wexample_helpers.const.types import FileStringOrPath
+from wexample_helpers.helpers.file_helper import file_resolve_path
 from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
 # Expected imports for pydantic initialization
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
@@ -23,7 +25,7 @@ class FileStateManager(BaseModel):
     _target: TargetFileOrDirectory = None
 
     def __init__(self, root: str, config: Optional[dict] = None):
-        super().__init__(root=state_item_source_from_path(root))
+        super().__init__(root=self.state_item_source_from_path(root))
 
         self._target = self.root.create_target()
 
@@ -46,3 +48,31 @@ class FileStateManager(BaseModel):
 
     def apply(self) -> FileStateResult:
         return cast(FileStateResult, self.run(FileStateResult()))
+
+    def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractFileStateItem:
+        from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
+        from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
+        resolved_path = file_resolve_path(path)
+        if resolved_path.is_file():
+            return FileStateItemFileSource(state_manager=self, path=resolved_path)
+        elif resolved_path.is_dir():
+            return FileStateItemDirectorySource(state_manager=self, path=resolved_path)
+        else:
+            raise ValueError('Root path should be a valid file or directory')
+
+    def state_item_target_from_path(self, path: FileStringOrPath, config: StateItemConfig) -> AbstractFileStateItem:
+        from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
+        from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+        resolved_path = file_resolve_path(path)
+
+        if resolved_path.is_file() or ('type' in config and config['type'] == 'file'):
+            return FileStateItemFileTarget(state_manager=self, path=resolved_path, config=config)
+        # Directories and undefined files.
+        return FileStateItemDirectoryTarget(state_manager=self, path=resolved_path, config=config)
+
+
+# Rebuild classes that point back to manager.
+FileStateItemFileTarget.model_rebuild()
+FileStateItemDirectoryTarget.model_rebuild()
+FileStateItemFileSource.model_rebuild()
+FileStateItemDirectorySource.model_rebuild()
