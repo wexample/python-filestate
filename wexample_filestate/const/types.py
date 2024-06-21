@@ -9,6 +9,7 @@ class StateItemConfig(TypedDict, total=False):
     type: Optional[str]
     mode: Optional[FileSystemPermission]
     children: Optional[List[StateItemConfig]]
+    remove_backup_max_file_size: Optional[int]
     should_exist: Optional[bool]
 
 

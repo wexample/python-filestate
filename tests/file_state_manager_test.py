@@ -1,12 +1,12 @@
 import os
 import unittest
-from typing import Optional, List
 
 from wexample_filestate.file_state_manager import FileStateManager
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
 
 class TestFileStateManagerTest(unittest.TestCase):
+    file_name_simple_text = 'simple-text.txt'
 
     def setUp(self):
         self.state_manager = FileStateManager(root=os.path.join(os.curdir, 'tests', 'resources'))
@@ -18,7 +18,7 @@ class TestFileStateManagerTest(unittest.TestCase):
         self.state_manager.configure({
             'children': [
                 {
-                    'name': 'simple-text.txt',
+                    'name': self.file_name_simple_text,
                     'mode': '644'
                 },
             ]
@@ -28,7 +28,7 @@ class TestFileStateManagerTest(unittest.TestCase):
 
         self._dry_run_and_count_operations(operations_count=1)
 
-        target = self.state_manager.target.find_by_name('simple-text.txt')
+        target = self.state_manager.target.find_by_name(self.file_name_simple_text)
         original_mode = target.source.get_octal_mode()
 
         self.assertNotEqual(
@@ -60,11 +60,6 @@ class TestFileStateManagerTest(unittest.TestCase):
         return result
 
     def test_file_create_operation(self):
-        self._test_file_create_operation()
-        self.state_manager.rollback().print()
-        self._test_file_create_operation(['git', 'system'])
-
-    def _test_file_create_operation(self, file_manipulation_preferred_order: Optional[List[str]] = None):
         missing_file_name = 'simple-text-missing.txt'
         missing_dir_name = 'simple-directory-missing'
 
@@ -111,6 +106,34 @@ class TestFileStateManagerTest(unittest.TestCase):
         self.assertTrue(
             os.path.exists(
                 target_file.path.resolve()
+            )
+        )
+
+    def test_file_delete_operation(self):
+        self.state_manager.configure({
+            'children': [
+                {
+                    'name': self.file_name_simple_text,
+                    'should_exist': False,
+                }
+            ]
+        })
+
+        target = self.state_manager.target.find_by_name(self.file_name_simple_text)
+
+        self.assertTrue(
+            os.path.exists(
+                target.path.resolve()
+            )
+        )
+
+        self._dry_run_and_count_operations(operations_count=1)
+
+        self.state_manager.apply()
+
+        self.assertFalse(
+            os.path.exists(
+                target.path.resolve()
             )
         )
 

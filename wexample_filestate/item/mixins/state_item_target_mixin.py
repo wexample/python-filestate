@@ -19,6 +19,11 @@ class StateItemTargetMixin:
     _source: Optional[StateItemSourceMixin] = None
     _mode: Optional[FileSystemPermission] = None
     _should_exist: Optional[bool] = None
+    _remove_backup_max_file_size: int = 1000
+
+    @property
+    def remove_backup_max_file_size(self) -> int:
+        return self._remove_backup_max_file_size
 
     @property
     def mode(self) -> Optional[FileSystemPermission]:
@@ -64,6 +69,9 @@ class StateItemTargetMixin:
 
         if "should_exist" in config:
             self._should_exist = config["should_exist"]
+
+        if "remove_backup_max_file_size" in config:
+            self._remove_backup_max_file_size = config["remove_backup_max_file_size"]
 
     def build_operations(self, result: AbstractResult):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectory
