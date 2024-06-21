@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Union, Optional
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num, file_validate_mode_octal_or_fail, \
-    file_mode_num_to_octal, file_change_mode_recursive
+    file_change_mode_recursive
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 
 class ItemChangeModeOperation(AbstractOperation, ABC):
+    _original_octal_mode: Optional[str] = None
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
@@ -26,7 +27,7 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
         return False
 
     def describe_before(self) -> str:
-        return file_mode_num_to_octal(self.target.source.path.stat().st_mode)
+        return self.target.source.get_octal_mode()
 
     def describe_after(self) -> str:
         return self.target.mode
@@ -35,7 +36,14 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
         return 'Change file permission'
 
     def apply(self) -> None:
+        self._original_octal_mode = self.target.source.get_octal_mode()
         file_change_mode_recursive(
             self.target.source.path,
             self.target.get_int_mode()
+        )
+
+    def undo(self) -> None:
+        file_change_mode_recursive(
+            self.target.source.path,
+            file_mode_octal_to_num(self._original_octal_mode)
         )

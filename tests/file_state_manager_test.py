@@ -50,10 +50,7 @@ class TestFileStateManagerTest(unittest.TestCase):
             target.mode
         )
 
-        os.chmod(
-            target.path,
-            file_mode_octal_to_num(original_mode)
-        )
+        self.state_manager.rollback().print()
 
     def test_file_create_operation(self):
         missing_file_name = 'simple-text-missing.txt'

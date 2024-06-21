@@ -14,12 +14,13 @@ if TYPE_CHECKING:
 class AbstractResult(BaseModel):
     state_manager: 'FileStateManager'
     operations: List[AbstractOperation] = []
+    rollback: bool = False
 
     def to_prompt_responses(self) -> List[PromptResponse]:
         output: List[PromptResponse] = []
 
         for operation in self.operations:
-            output.append(operation.to_prompt_response())
+            output.append(operation.to_prompt_response(self.rollback))
 
         return output
 

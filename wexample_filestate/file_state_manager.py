@@ -40,8 +40,21 @@ class FileStateManager(BaseModel):
             self.configure(config)
 
     @property
-    def target(self):
+    def target(self) -> TargetFileOrDirectory:
         return self._target
+
+    def rollback(self) -> FileStateResult:
+        result = FileStateResult(state_manager=self, rollback=True)
+
+        if self._last_result:
+            for operation in self._last_result.operations:
+                if operation.applied:
+                    result.operations.append(operation)
+
+        result.apply_operations()
+        self._last_result = result
+
+        return result
 
     def configure(self, config: dict):
         self._target.configure(config)
@@ -51,9 +64,9 @@ class FileStateManager(BaseModel):
 
     def run(self, result: AbstractResult) -> AbstractResult:
         self._target.build_operations(result)
-        _last_result = result
+        self._last_result = result
 
-        return _last_result
+        return self._last_result
 
     def dry_run(self) -> FileStateDryRunResult:
         return cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self)))

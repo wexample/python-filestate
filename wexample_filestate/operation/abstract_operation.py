@@ -5,6 +5,7 @@ from abc import abstractmethod, ABC
 from pydantic import BaseModel
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+from wexample_helpers.helpers.array_helper import array_swap
 from wexample_prompt.utils.prompt_response import PromptResponse
 
 
@@ -13,6 +14,15 @@ class AbstractOperation(BaseModel, ABC):
     _before: int | str | None = None
     _after: int | str | None = None
     _tty_width: int = 80
+    _applied: bool = False
+
+    @property
+    def applied(self):
+        return self._applied
+
+    @applied.setter
+    def applied(self, value: bool):
+        self._applied = value
 
     @classmethod
     def get_name(cls):
@@ -28,6 +38,10 @@ class AbstractOperation(BaseModel, ABC):
         pass
 
     @abstractmethod
+    def undo(self) -> None:
+        pass
+
+    @abstractmethod
     def description(self) -> str:
         pass
 
@@ -39,11 +53,26 @@ class AbstractOperation(BaseModel, ABC):
     def describe_after(self) -> str:
         pass
 
-    def to_prompt_response(self) -> PromptResponse:
-        return PromptResponse.from_lines([
-            f'TASK '.ljust(self._tty_width, '_'),
-            f'{self.target.get_item_title()}: {self.target.path.resolve()}',
-            f'{self.description()}:',
-            f'    Before: {self.describe_before()}',
-            f'    After: {self.describe_after()}',
-        ])
+    def to_prompt_response(self, rollback: bool) -> PromptResponse:
+        lines = [
+            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, '_')
+        ]
+
+        before, after = array_swap(
+            [
+                self.describe_before(),
+                self.describe_after(),
+            ],
+            do_swap=rollback,
+        )
+
+        lines.extend(
+            [
+                f'{self.target.get_item_title()}: {self.target.path.resolve()}',
+                f'{self.description()}:',
+                f'    Before: {before}',
+                f'    After: {after}',
+            ]
+        )
+
+        return PromptResponse.from_lines(lines)
