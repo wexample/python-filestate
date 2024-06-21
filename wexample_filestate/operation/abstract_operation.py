@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import os
 from abc import abstractmethod, ABC
 
 from pydantic import BaseModel
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+from wexample_prompt.utils.prompt_response import PromptResponse
 
 
 class AbstractOperation(BaseModel, ABC):
@@ -39,8 +39,8 @@ class AbstractOperation(BaseModel, ABC):
     def describe_after(self) -> str:
         pass
 
-    def to_tty(self) -> str:
-        return os.linesep.join([
+    def to_tty(self) -> PromptResponse:
+        return PromptResponse.from_lines([
             f'TASK '.ljust(self._tty_width, '_'),
             f'{self.target.get_item_title()}: {self.target.path.resolve()}',
             f'{self.description()}:',

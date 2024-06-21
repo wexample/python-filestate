@@ -32,13 +32,16 @@ class TestFileStateManagerTest(unittest.TestCase):
             0
         )
 
-        result_str = result.to_tty()
+        responses = result.to_tty()
 
-        self.assertTrue(
-            type(result_str) is str
+        self.state_manager.io.print_responses(
+            responses
         )
 
-        print(result_str)
+        self.assertGreater(
+            len(responses),
+            0
+        )
 
         self.assertTrue(self.state_manager.root.path.is_dir())
 

@@ -19,7 +19,8 @@ setup(
         'pydantic',
         'pyyaml',
         'wexample-helpers',
-        'wexample-helpers-yaml'
+        'wexample-helpers-yaml',
+        'wexample-prompt'
     ],
     python_requires='>=3.6',
 )

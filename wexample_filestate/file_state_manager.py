@@ -13,7 +13,7 @@ from wexample_filestate.result.file_state_result import FileStateResult
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file_helper import file_resolve_path
 from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
-# Expected imports for pydantic initialization
+from wexample_prompt.io_manager import IOManager
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
@@ -21,12 +21,18 @@ from wexample_filestate.item.file_state_item_directory_source import FileStateIt
 
 
 class FileStateManager(BaseModel):
-    root: SourceFileOrDirectory = Field(..., description="Current root item definition")
+    io: IOManager = Field(
+        default_factory=IOManager,
+        description="Handles output to print, allow to share it if defined in a parent context")
+    root: SourceFileOrDirectory = Field(
+        ...,
+        description="Current root item definition")
     _target: TargetFileOrDirectory = None
 
-    def __init__(self, root: str, config: Optional[dict] = None):
+    def __init__(self, root: str, config: Optional[dict] = None, io: IOManager = None):
         super().__init__(root=self.state_item_source_from_path(root))
 
+        self.io = io or IOManager()
         self._target = self.root.create_target()
 
         if config:
