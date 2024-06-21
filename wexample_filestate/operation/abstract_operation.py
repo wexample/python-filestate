@@ -44,6 +44,6 @@ class AbstractOperation(BaseModel, ABC):
             f'TASK '.ljust(self._tty_width, '_'),
             f'{self.target.get_item_title()}: {self.target.path.resolve()}',
             f'{self.description()}:',
-            f'    Before: {self._before}',
-            f'    After: {self._after}',
+            f'    Before: {self.describe_before()}',
+            f'    After: {self.describe_after()}',
         ])
