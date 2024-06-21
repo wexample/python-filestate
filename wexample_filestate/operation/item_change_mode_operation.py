@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import TYPE_CHECKING, Union, Optional
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
@@ -12,7 +11,7 @@ if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 
 
-class ItemChangeModeOperation(AbstractOperation, ABC):
+class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
 
     @staticmethod
