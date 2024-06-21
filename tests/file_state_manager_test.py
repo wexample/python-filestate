@@ -2,6 +2,7 @@ import os
 import unittest
 
 from wexample_filestate.file_state_manager import FileStateManager
+from wexample_helpers.helpers.file_helper import file_mode_octal_to_num
 
 
 class TestFileStateManagerTest(unittest.TestCase):
@@ -25,6 +26,8 @@ class TestFileStateManagerTest(unittest.TestCase):
             ]
         })
 
+        self.assertTrue(self.state_manager.root.path.is_dir())
+
         result = self.state_manager.dry_run()
 
         self.assertGreater(
@@ -43,7 +46,25 @@ class TestFileStateManagerTest(unittest.TestCase):
             0
         )
 
-        self.assertTrue(self.state_manager.root.path.is_dir())
+        target = self.state_manager.target.find_by_name('simple-text.txt')
+        original_mode = target.source.get_octal_mode()
+
+        self.assertNotEqual(
+            original_mode,
+            target.mode
+        )
+
+        self.state_manager.apply()
+
+        self.assertEqual(
+            target.get_octal_mode(),
+            target.mode
+        )
+
+        os.chmod(
+            target.path,
+            file_mode_octal_to_num(original_mode)
+        )
 
 
 if __name__ == '__main__':

@@ -4,4 +4,6 @@ from wexample_filestate.result.abstract_result import AbstractResult
 
 
 class FileStateResult(AbstractResult):
-    pass
+    def apply_operations(self):
+        for operation in self.operations:
+            operation.apply()

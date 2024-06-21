@@ -38,6 +38,10 @@ class FileStateManager(BaseModel):
         if config:
             self.configure(config)
 
+    @property
+    def target(self):
+        return self._target
+
     def configure(self, config: dict):
         self._target.configure(config)
 
@@ -53,7 +57,7 @@ class FileStateManager(BaseModel):
         return cast(FileStateDryRunResult, self.run(FileStateDryRunResult()))
 
     def apply(self) -> FileStateResult:
-        return cast(FileStateResult, self.run(FileStateResult()))
+        return cast(FileStateResult, self.run(FileStateResult())).apply_operations()
 
     def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractFileStateItem:
         from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource

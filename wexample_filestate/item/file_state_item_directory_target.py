@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Union, cast
+from typing import List, Union, cast, Optional
 
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
@@ -36,3 +36,10 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         for item in self.children:
             cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item).build_operations(result)
+
+    def find_by_name(self, name: str) -> Optional[AbstractFileStateItem]:
+        for child in self.children:
+            if child.name == name:
+                return child
+
+        return None

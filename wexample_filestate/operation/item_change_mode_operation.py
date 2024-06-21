@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num, file_validate_mode_octal_or_fail, \
-    file_mode_num_to_octal
+    file_mode_num_to_octal, file_change_mode_recursive
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
@@ -18,9 +18,9 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
         if target.source:
             if target.mode:
-                file_validate_mode_octal_or_fail(target.mode)
+                file_validate_mode_octal_or_fail(target.get_octal_mode())
 
-                if target.source.path.stat().st_mode != file_mode_octal_to_num(target.mode):
+                if target.source.path.stat().st_mode != target.get_int_mode():
                     return True
 
         return False
@@ -35,4 +35,10 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
         return 'Change file permission'
 
     def apply(self) -> None:
-        pass
+        print(self.target.get_octal_mode())
+        print(self.target.get_int_mode())
+        print(0o777)
+        file_change_mode_recursive(
+            self.target.source.path,
+            self.target.get_int_mode()
+        )

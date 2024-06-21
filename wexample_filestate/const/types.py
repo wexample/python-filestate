@@ -7,10 +7,13 @@ from typing_extensions import TypedDict
 class StateItemConfig(TypedDict, total=False):
     name: str
     type: Optional[str]
-    mode: Optional[int | FileSystemStructurePermission]
+    mode: Optional[FileSystemPermission]
     children: Optional[List[StateItemConfig]]
 
 
-class FileSystemStructurePermission(TypedDict):
+class FileSystemPermissionConfig(TypedDict):
     mode: int
     recursive: bool
+
+
+FileSystemPermission = FileSystemPermissionConfig | str | int
