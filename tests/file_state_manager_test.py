@@ -1,5 +1,6 @@
 import os
 import unittest
+from typing import Optional, List
 
 from wexample_filestate.file_state_manager import FileStateManager
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
@@ -59,6 +60,11 @@ class TestFileStateManagerTest(unittest.TestCase):
         return result
 
     def test_file_create_operation(self):
+        self._test_file_create_operation()
+        self.state_manager.rollback().print()
+        self._test_file_create_operation(['git', 'system'])
+
+    def _test_file_create_operation(self, file_manipulation_preferred_order: Optional[List[str]] = None):
         missing_file_name = 'simple-text-missing.txt'
         missing_dir_name = 'simple-directory-missing'
 

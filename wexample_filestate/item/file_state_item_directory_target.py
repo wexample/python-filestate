@@ -10,22 +10,26 @@ from wexample_filestate.result.abstract_result import AbstractResult
 
 
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
-    config: StateItemConfig = None
+    config: Optional[StateItemConfig] = None
     children: List[AbstractFileStateItem] = []
 
     def __init__(self, **data):
         super().__init__(**data)
         StateItemTargetMixin.__init__(self, **data)
 
-    def configure(self, config: dict):
+    def configure(self, config: Optional[StateItemConfig] = None) -> None:
         super().configure(config)
+        self.children = []
+
+        if not config:
+            return
 
         base_path = self.get_resolved()
-
         if 'children' in config:
             for item_config in config['children']:
                 self.children.append(
                     self.state_manager.state_item_target_from_path(
+                        parent=self,
                         path=f'{base_path}{item_config["name"]}',
                         config=item_config)
                 )

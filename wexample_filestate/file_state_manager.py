@@ -30,14 +30,12 @@ class FileStateManager(BaseModel):
     _target: TargetFileOrDirectory = None
     _last_result: Optional[AbstractResult] = None
 
-    def __init__(self, root: str, config: Optional[dict] = None, io: IOManager = None):
+    def __init__(self, root: str, config: Optional[StateItemConfig] = None, io: IOManager = None):
         super().__init__(root=self.state_item_source_from_path(root))
 
         self.io = io or IOManager()
-        self._target = self.root.create_target()
 
-        if config:
-            self.configure(config)
+        self.configure(config)
 
     @property
     def target(self) -> TargetFileOrDirectory:
@@ -56,7 +54,14 @@ class FileStateManager(BaseModel):
 
         return result
 
-    def configure(self, config: dict):
+    def configure(self, config: Optional[StateItemConfig] = None):
+        self._target = cast(
+            FileStateItemDirectoryTarget,
+            self.state_item_target_from_path(
+                path=self.root.path
+            )
+        )
+
         self._target.configure(config)
 
     def configure_from_file(self, path: FileStringOrPath):
@@ -85,15 +90,19 @@ class FileStateManager(BaseModel):
         else:
             raise ValueError('Root path should be a valid file or directory')
 
-    def state_item_target_from_path(self, path: FileStringOrPath, config: StateItemConfig) -> AbstractFileStateItem:
+    def state_item_target_from_path(
+        self,
+        path: FileStringOrPath,
+        config: Optional[StateItemConfig] = None,
+        parent: Optional[TargetFileOrDirectory] = None) -> AbstractFileStateItem:
         from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
         resolved_path = file_resolve_path(path)
 
-        if resolved_path.is_file() or ('type' in config and config['type'] == 'file'):
-            return FileStateItemFileTarget(state_manager=self, path=resolved_path, config=config)
+        if resolved_path.is_file() or (config and 'type' in config and config['type'] == 'file'):
+            return FileStateItemFileTarget(state_manager=self, path=resolved_path, config=config, parent=parent)
         # Directories and undefined files.
-        return FileStateItemDirectoryTarget(state_manager=self, path=resolved_path, config=config)
+        return FileStateItemDirectoryTarget(state_manager=self, path=resolved_path, config=config, parent=parent)
 
 
 # Rebuild classes that point back to manager.

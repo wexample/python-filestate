@@ -9,6 +9,7 @@ class StateItemConfig(TypedDict, total=False):
     type: Optional[str]
     mode: Optional[FileSystemPermission]
     children: Optional[List[StateItemConfig]]
+    should_exist: Optional[bool]
 
 
 class FileSystemPermissionConfig(TypedDict):
