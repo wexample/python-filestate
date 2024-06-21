@@ -28,6 +28,7 @@ class FileStateManager(BaseModel):
         ...,
         description="Current root item definition")
     _target: TargetFileOrDirectory = None
+    _last_result: Optional[AbstractResult] = None
 
     def __init__(self, root: str, config: Optional[dict] = None, io: IOManager = None):
         super().__init__(root=self.state_item_source_from_path(root))
@@ -50,14 +51,15 @@ class FileStateManager(BaseModel):
 
     def run(self, result: AbstractResult) -> AbstractResult:
         self._target.build_operations(result)
+        _last_result = result
 
-        return result
+        return _last_result
 
     def dry_run(self) -> FileStateDryRunResult:
-        return cast(FileStateDryRunResult, self.run(FileStateDryRunResult()))
+        return cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self)))
 
     def apply(self) -> FileStateResult:
-        return cast(FileStateResult, self.run(FileStateResult())).apply_operations()
+        return cast(FileStateResult, self.run(FileStateResult(state_manager=self))).apply_operations()
 
     def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractFileStateItem:
         from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
@@ -86,3 +88,5 @@ FileStateItemFileTarget.model_rebuild()
 FileStateItemDirectoryTarget.model_rebuild()
 FileStateItemFileSource.model_rebuild()
 FileStateItemDirectorySource.model_rebuild()
+FileStateDryRunResult.model_rebuild()
+FileStateResult.model_rebuild()

@@ -10,39 +10,28 @@ class TestFileStateManagerTest(unittest.TestCase):
     def setUp(self):
         self.state_manager = FileStateManager(root=os.path.join(os.curdir, 'tests', 'resources'))
 
-    def test_file_permissions(self):
+    def test_change_mode_operation(self):
         self.state_manager.configure({
             'children': [
                 {
                     'name': 'simple-text.txt',
                     'mode': '644'
                 },
-                {
-                    'name': 'simple-text-missing.txt',
-                    'mode': '0644',
-                    'should_exists': True,
-                    'type': 'file'
-                }
             ]
         })
 
         self.assertTrue(self.state_manager.root.path.is_dir())
 
         result = self.state_manager.dry_run()
+        result.print()
 
         self.assertGreater(
             len(result.operations),
             0
         )
 
-        responses = result.to_prompt_responses()
-
-        self.state_manager.io.print_responses(
-            responses
-        )
-
         self.assertGreater(
-            len(responses),
+            len(result.to_prompt_responses()),
             0
         )
 
@@ -66,6 +55,19 @@ class TestFileStateManagerTest(unittest.TestCase):
             file_mode_octal_to_num(original_mode)
         )
 
+    def test_file_create_operation(self):
+        missing_file_name = 'simple-text-missing.txt'
+
+        self.state_manager.configure({
+            'children': [
+                {
+                    'name': missing_file_name,
+                    'mode': '0644',
+                    'should_exists': True,
+                    'type': 'file'
+                }
+            ]
+        })
 
 if __name__ == '__main__':
     unittest.main()

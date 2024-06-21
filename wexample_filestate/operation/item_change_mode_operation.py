@@ -35,9 +35,6 @@ class ItemChangeModeOperation(AbstractOperation, ABC):
         return 'Change file permission'
 
     def apply(self) -> None:
-        print(self.target.get_octal_mode())
-        print(self.target.get_int_mode())
-        print(0o777)
         file_change_mode_recursive(
             self.target.source.path,
             self.target.get_int_mode()
