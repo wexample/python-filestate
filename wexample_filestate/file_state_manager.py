@@ -12,7 +12,7 @@ from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunR
 from wexample_filestate.result.file_state_result import FileStateResult
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file_helper import file_resolve_path
-from wexample_helpers_yaml.helpers.yaml_helpers import yaml_load
+from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
 from wexample_prompt.io_manager import IOManager
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
@@ -65,7 +65,7 @@ class FileStateManager(BaseModel):
         self._target.configure(config)
 
     def configure_from_file(self, path: FileStringOrPath):
-        self.configure(yaml_load(path))
+        self.configure(yaml_read(path))
 
     def run(self, result: AbstractResult) -> AbstractResult:
         self._target.build_operations(result)
