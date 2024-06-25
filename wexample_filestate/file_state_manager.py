@@ -30,7 +30,7 @@ class FileStateManager(BaseModel):
     _target: TargetFileOrDirectory = None
     _last_result: Optional[AbstractResult] = None
 
-    def __init__(self, root: str, config: Optional[StateItemConfig] = None, io: IOManager = None):
+    def __init__(self, root: FileStringOrPath, config: Optional[StateItemConfig] = None, io: IOManager = None):
         super().__init__(root=self.state_item_source_from_path(root))
 
         self.io = io or IOManager()
