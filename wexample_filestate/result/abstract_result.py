@@ -24,11 +24,9 @@ class AbstractResult(BaseModel):
 
         return output
 
-    def print(self) -> List[PromptResponse]:
+    def print(self) -> None:
         responses = self.to_prompt_responses()
 
         self.state_manager.io.print_responses(
             responses
         )
-
-        return responses

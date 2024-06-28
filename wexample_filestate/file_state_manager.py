@@ -4,6 +4,7 @@ from typing import cast, Optional
 
 from pydantic import BaseModel, Field
 
+from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.const.types_state_items import SourceFileOrDirectory, TargetFileOrDirectory
 from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
@@ -77,7 +78,10 @@ class FileStateManager(BaseModel):
         return cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self)))
 
     def apply(self) -> FileStateResult:
-        return cast(FileStateResult, self.run(FileStateResult(state_manager=self))).apply_operations()
+        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self)))
+        result.apply_operations()
+
+        return result
 
     def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractFileStateItem:
         from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
@@ -99,7 +103,7 @@ class FileStateManager(BaseModel):
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
         resolved_path = file_resolve_path(path)
 
-        if resolved_path.is_file() or (config and 'type' in config and config['type'] == 'file'):
+        if resolved_path.is_file() or (config and 'type' in config and config['type'] == DiskItemType.FILE):
             return FileStateItemFileTarget(state_manager=self, path=resolved_path, config=config, parent=parent)
         # Directories and undefined files.
         return FileStateItemDirectoryTarget(state_manager=self, path=resolved_path, config=config, parent=parent)

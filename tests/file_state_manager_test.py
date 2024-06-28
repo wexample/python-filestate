@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.file_state_manager import FileStateManager
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
@@ -68,12 +69,12 @@ class TestFileStateManagerTest(unittest.TestCase):
                 {
                     'name': missing_dir_name,
                     'should_exist': True,
-                    'type': 'dir'
+                    'type': DiskItemType.DIRECTORY
                 },
                 {
                     'name': missing_file_name,
                     'should_exist': True,
-                    'type': 'file'
+                    'type': DiskItemType.FILE
                 }
             ]
         })

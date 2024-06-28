@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import os
+import re
 from typing import List, Union, cast, Optional
 
 from wexample_filestate.const.types import StateItemConfig
+from wexample_filestate.helpers.config_helper import config_has_item_type
 from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
@@ -27,12 +30,26 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         base_path = self.get_resolved()
         if 'children' in config:
             for item_config in config['children']:
-                self.children.append(
-                    self.state_manager.state_item_target_from_path(
-                        parent=self,
-                        path=f'{base_path}{item_config["name"]}',
-                        config=item_config)
-                )
+                paths = []
+
+                if "name" in item_config:
+                    paths.append(f'{base_path}{item_config["name"]}')
+
+                elif "name_pattern" in item_config:
+                    pattern = re.compile(item_config['name_pattern'])
+                    for file in os.listdir(base_path):
+                        if pattern.match(file):
+                            path = f'{base_path}{file}'
+                            if ("type" not in item_config) or config_has_item_type(item_config, path):
+                                paths.append(path)
+
+                for path in paths:
+                    self.children.append(
+                        self.state_manager.state_item_target_from_path(
+                            parent=self,
+                            path=path,
+                            config=item_config)
+                    )
 
     def build_operations(self, result: AbstractResult):
         super().build_operations(result)
