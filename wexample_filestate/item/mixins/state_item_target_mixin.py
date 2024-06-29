@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import cast, Optional, TYPE_CHECKING, List, Type, Dict, Any
 
-from wexample_filestate.const.types import StateItemConfig, FileSystemPermission
+from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSourceMixin
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.const.types import FileStringOrPath
-from wexample_helpers.helpers.file_helper import file_resolve_path, file_mode_octal_to_num
+from wexample_helpers.helpers.file_helper import file_resolve_path
 
 if TYPE_CHECKING:
     from wexample_filestate.file_state_manager import FileStateManager
@@ -85,6 +85,13 @@ class StateItemTargetMixin:
             return
 
         options = self.get_options()
+        valid_option_names = {option_class.get_name() for option_class in options}
+
+        unknown_keys = set(config.keys()) - valid_option_names
+        if unknown_keys:
+            from wexample_filestate.exceptions.invalid_option_exception import InvalidOptionException
+            raise InvalidOptionException(f'Unknown configuration options: {unknown_keys}')
+
         for option_class in options:
             option_name = option_class.get_name()
             if option_name in config:
