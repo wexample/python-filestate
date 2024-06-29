@@ -16,7 +16,9 @@ class FileCreateOperation(AbstractOperation):
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        if not target.source and target.should_exist:
+        from wexample_filestate.options.should_exist_option import ShouldExistOption
+
+        if not target.source and target.has_option_value(ShouldExistOption, True):
             return True
 
         return False

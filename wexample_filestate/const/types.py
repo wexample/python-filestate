@@ -1,22 +1,20 @@
 from __future__ import annotations
-from typing import Optional, List, Literal
 from typing_extensions import TypedDict
-from wexample_filestate.const.enums import DiskItemType
 
+from wexample_helpers.const.types import StringKeysDict
 
-class StateItemConfig(TypedDict, total=False):
-    name: Optional[str]
-    name_pattern: Optional[str]
-    type: Optional[Literal[DiskItemType.FILE, DiskItemType.DIRECTORY]]
-    mode: Optional[FileSystemPermission]
-    children: Optional[List[StateItemConfig]]
-    remove_backup_max_file_size: Optional[int]
-    should_exist: Optional[bool]
+# Can't define key list as it can ben dynamic when using more options.
+# We may use the future __extra_items__ flag in python 3.13.
+StateItemConfig = StringKeysDict
 
 
 class FileSystemPermissionConfig(TypedDict):
     mode: int
     recursive: bool
+
+
+class OptionDefinition(TypedDict):
+    name: str
 
 
 FileSystemPermission = FileSystemPermissionConfig | str | int

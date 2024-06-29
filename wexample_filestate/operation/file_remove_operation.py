@@ -19,7 +19,9 @@ class FileRemoveOperation(AbstractOperation):
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        if target.source and target.should_exist is False:
+        from wexample_filestate.options.should_exist_option import ShouldExistOption
+
+        if target.source and target.has_option_value(ShouldExistOption, False):
             return True
 
         return False
