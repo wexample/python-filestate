@@ -19,12 +19,7 @@ if TYPE_CHECKING:
 class StateItemTargetMixin:
     parent: Optional[TargetFileOrDirectory] = None
     _source: Optional[StateItemSourceMixin] = None
-    _remove_backup_max_file_size: int = 1000
     _options: Dict[str, AbstractOption] = {}
-
-    @property
-    def remove_backup_max_file_size(self) -> int:
-        return self._remove_backup_max_file_size
 
     @property
     def source(self):
@@ -98,13 +93,10 @@ class StateItemTargetMixin:
                     value=config[option_name]
                 )
 
-        if "remove_backup_max_file_size" in config:
-            self._remove_backup_max_file_size = config["remove_backup_max_file_size"]
-
-    def has_option_value(self, option_type: Type["AbstractOption"], value: Any):
+    def get_option_value(self, option_type: Type["AbstractOption"]) -> Any:
         option = self.get_option(option_type)
         if option:
-            return option.value == value
+            return option.value
 
         return False
 
