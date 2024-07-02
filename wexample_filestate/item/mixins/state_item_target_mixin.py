@@ -103,13 +103,6 @@ class StateItemTargetMixin:
         for option_class in options:
             option_name = option_class.get_name()
             if option_name in config:
-                if not isinstance(config[option_name], option_class.get_value_type()):
-                    from wexample_filestate.const.exceptions import InvalidOptionTypeException
-                    raise InvalidOptionTypeException(
-                        f'Invalid type for option "{option_name}": '
-                        f'{type(config[option_name])}, '
-                        f'expected {option_class.get_value_type()}')
-
                 self._options[option_name] = option_class(
                     target=self,
                     value=config[option_name]
