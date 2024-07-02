@@ -2,3 +2,4 @@
 .wex
 /build/*
 /dist/*
+__pycache__

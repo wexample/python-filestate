@@ -16,6 +16,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     install_requires=[
+        'gitpython',
         'pydantic',
         'pyyaml',
         'wexample-helpers',

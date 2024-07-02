@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import PosixPath
 from typing import cast, Optional, TYPE_CHECKING, List, Type, Dict, Any
 
 from wexample_filestate.const.types import StateItemConfig
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
 class StateItemTargetMixin:
     parent: Optional[TargetFileOrDirectory] = None
     _source: Optional[StateItemSourceMixin] = None
-    _options: Dict[str, AbstractOption] = {}
+    _options: Dict[str, AbstractOption]
 
     @property
     def source(self):
@@ -30,6 +31,8 @@ class StateItemTargetMixin:
                  path: FileStringOrPath,
                  parent: Optional[TargetFileOrDirectory] = None,
                  config: Optional[StateItemConfig] = None):
+        self._options = {}
+
         resolved_path = file_resolve_path(path)
         if resolved_path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
@@ -45,28 +48,28 @@ class StateItemTargetMixin:
         if config:
             self.configure(config)
 
-    def operation_list_all(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.item_change_mode_operation import ItemChangeModeOperation
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
-        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+    def get_operations(self) -> List[Type["AbstractOperation"]]:
+        providers = self.get_options_providers()
+        operations = []
 
-        return [
-            FileCreateOperation,
-            FileRemoveOperation,
-            ItemChangeModeOperation,
-        ]
+        for provider in providers:
+            operations.extend(cast("AbstractOptionsProvider", provider).get_operations())
+
+        return operations
 
     def get_options_providers(self) -> List["AbstractOptionsProvider"]:
         from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
+        from wexample_filestate.options_provider.git_options_provider import GitOptionsProvider
 
         return [
-            DefaultOptionsProvider()
+            DefaultOptionsProvider(),
+            GitOptionsProvider()
         ]
 
     def get_option(self, option_type: Type["AbstractOption"]) -> Optional["AbstractOption"]:
         option_name = option_type.get_name()
 
-        if self._options[option_name]:
+        if option_name in self._options:
             return self._options[option_name]
 
         return None
@@ -89,12 +92,24 @@ class StateItemTargetMixin:
 
         unknown_keys = set(config.keys()) - valid_option_names
         if unknown_keys:
-            from wexample_filestate.exceptions.invalid_option_exception import InvalidOptionException
-            raise InvalidOptionException(f'Unknown configuration options: {unknown_keys}')
+            from wexample_filestate.const.exceptions import InvalidOptionException
+            raise InvalidOptionException(f'Unknown configuration option name: {unknown_keys}')
+
+        # Loop over options classes to execute option_class.resolve_config(config)
+        # This will modify config before using it, with extra configuration keys.
+        for option_class in options:
+            config = option_class.resolve_config(config)
 
         for option_class in options:
             option_name = option_class.get_name()
             if option_name in config:
+                if not isinstance(config[option_name], option_class.get_value_type()):
+                    from wexample_filestate.const.exceptions import InvalidOptionTypeException
+                    raise InvalidOptionTypeException(
+                        f'Invalid type for option "{option_name}": '
+                        f'{type(config[option_name])}, '
+                        f'expected {option_class.get_value_type()}')
+
                 self._options[option_name] = option_class(
                     target=self,
                     value=config[option_name]
@@ -105,11 +120,24 @@ class StateItemTargetMixin:
         if option:
             return option.value
 
-        return False
+        return None
 
     def build_operations(self, result: AbstractResult):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 
-        for operation_class in self.operation_list_all():
+        for operation_class in self.get_operations():
             if operation_class.applicable(cast(TargetFileOrDirectory, self)):
                 result.operations.append(operation_class(target=self))
+
+    def config_parse_value(self, value: Any) -> str:
+        path = cast(PosixPath, self.path)
+
+        if isinstance(value, str):
+            return value
+        elif isinstance(value, dict) and "pattern" in value:
+            return value["pattern"].format(**{
+                'name': path.name,
+                'path': str(path)
+            })
+
+        return value

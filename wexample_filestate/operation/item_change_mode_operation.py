@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Union, Optional, cast
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num, file_validate_mode_octal_or_fail, \
-    file_change_mode_recursive
+    file_change_mode_recursive, file_change_mode
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
@@ -39,12 +39,21 @@ class ItemChangeModeOperation(AbstractOperation):
 
     def apply(self) -> None:
         from wexample_filestate.options.mode_option import ModeOption
+        from wexample_filestate.options.mode_recursive_option import ModeRecursiveOption
 
         self._original_octal_mode = self.target.source.get_octal_mode()
-        file_change_mode_recursive(
-            self.target.source.path,
-            cast(ModeOption, self.target.get_option(ModeOption)).get_int()
-        )
+        mode_int = cast(ModeOption, self.target.get_option(ModeOption)).get_int()
+
+        if self.target.get_option_value(ModeRecursiveOption) is True:
+            file_change_mode(
+                self.target.source.path,
+                mode_int
+            )
+        else:
+            file_change_mode_recursive(
+                self.target.source.path,
+                mode_int
+            )
 
     def undo(self) -> None:
         file_change_mode_recursive(
