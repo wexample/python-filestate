@@ -1,3 +1,5 @@
+from typing import Any
+
 from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
 from wexample_helpers.const.types import FileStringOrPath
@@ -13,4 +15,4 @@ def config_has_item_type(config: StateItemConfig, path: FileStringOrPath) -> boo
     if resolved_path.is_dir() and config["type"] == DiskItemType.DIRECTORY:
         return True
 
-    return False;
+    return False
