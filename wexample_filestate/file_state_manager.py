@@ -36,7 +36,8 @@ class FileStateManager(BaseModel):
 
         self.io = io or IOManager()
 
-        self.configure(config)
+        if config:
+            self.configure(config)
 
     @property
     def target(self) -> TargetFileOrDirectory:

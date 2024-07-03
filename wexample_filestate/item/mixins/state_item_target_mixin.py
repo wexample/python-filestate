@@ -21,11 +21,6 @@ class StateItemTargetMixin:
     parent: Optional[TargetFileOrDirectory] = None
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
-
-    @property
-    def source(self):
-        return self._source
-
     def __init__(self,
                  state_manager: 'FileStateManager',
                  path: FileStringOrPath,
@@ -47,6 +42,11 @@ class StateItemTargetMixin:
 
         if config:
             self.configure(config)
+
+    @property
+    def source(self):
+        return self._source
+
 
     def get_operations(self) -> List[Type["AbstractOperation"]]:
         providers = self.get_options_providers()
