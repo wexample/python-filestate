@@ -94,7 +94,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
     def state_item_target_from_base_path(
         self,
-        base_path: "FileStringOrPath",
+        base_path: FileStringOrPath,
         config: StateItemConfig,
     ) -> AbstractStateItem:
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget

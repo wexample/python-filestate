@@ -15,7 +15,6 @@ from wexample_filestate.item.file_state_item_directory_target import FileStateIt
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
 from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
 
-
 class FileStateManager(FileStateItemDirectoryTarget):
     def __init__(self, root: FileStringOrPath, config: Optional[StateItemConfig] = None,
                  io: Optional[IOManager] = None):

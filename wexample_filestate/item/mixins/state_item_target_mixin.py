@@ -8,19 +8,19 @@ from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSourceMixin
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.file_helper import file_resolve_path
+from wexample_helpers.const.types import FileStringOrPath
 
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.options_provider.abstract_options_provider import AbstractOptionsProvider
     from wexample_filestate.options.abstract_option import AbstractOption
-    from wexample_helpers.const.types import FileStringOrPath
 
 from pydantic import BaseModel
 
 
 class StateItemTargetMixin(BaseModel):
     parent: Optional[TargetFileOrDirectory] = None
-    base_path: "FileStringOrPath"
+    base_path: FileStringOrPath
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
 
