@@ -5,8 +5,8 @@ import shutil
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.options.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption
-from wexample_filestate.options.should_exist_option import ShouldExistOption
+from wexample_filestate.options.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption, \
+    REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 from wexample_helpers.helpers.file_helper import file_read, file_write
 
 if TYPE_CHECKING:
@@ -44,7 +44,10 @@ class FileRemoveOperation(AbstractOperation):
         size = os.path.getsize(file_path)
 
         # Save content if not too large.
-        if size < int(self.target.get_option_value(RemoveBackupMaxFileSizeOption)):
+        if size < int(self.target.get_option_value(
+            RemoveBackupMaxFileSizeOption,
+            default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
+        )):
             self._original_file_content = file_read(file_path)
 
         if self.target.is_file():

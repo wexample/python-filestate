@@ -3,9 +3,11 @@ from types import UnionType
 
 from wexample_filestate.options.abstract_option import AbstractOption
 
+REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT: int = 1000
+
 
 class RemoveBackupMaxFileSizeOption(AbstractOption):
-    value: int = 1000
+    value: int = REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 
     @staticmethod
     def get_name() -> str:

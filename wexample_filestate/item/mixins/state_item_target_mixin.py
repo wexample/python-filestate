@@ -127,12 +127,12 @@ class StateItemTargetMixin:
 
         return option.value if option else None
 
-    def get_option_value(self, option_type: Type["AbstractOption"]) -> Any:
+    def get_option_value(self, option_type: Type["AbstractOption"], default: Any = None) -> Any:
         option = self.get_option(option_type)
         if option:
             return option.value
 
-        return None
+        return default
 
     def build_operations(self, result: AbstractResult):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectory
