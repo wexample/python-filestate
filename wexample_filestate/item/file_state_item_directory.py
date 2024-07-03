@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import os
-from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
+from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
 
 
-class FileStateItemDirectory(AbstractFileStateItem):
+class FileStateItemDirectory(AbstractStateItem):
     def get_item_title(self) -> str:
         return 'Directory'
 

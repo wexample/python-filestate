@@ -6,7 +6,7 @@ from typing import List, Union, cast, Optional
 
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.helpers.config_helper import config_has_item_type
-from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
+from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
 from wexample_filestate.result.abstract_result import AbstractResult
@@ -14,7 +14,7 @@ from wexample_filestate.result.abstract_result import AbstractResult
 
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
     config: Optional[StateItemConfig] = None
-    children: List[AbstractFileStateItem] = []
+    children: List[AbstractStateItem] = []
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -58,7 +58,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         for item in self.children:
             cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item).build_operations(result)
 
-    def find_by_name(self, name: str) -> Optional[AbstractFileStateItem]:
+    def find_by_name(self, name: str) -> Optional[AbstractStateItem]:
         for child in self.children:
             if child.name == name:
                 return child

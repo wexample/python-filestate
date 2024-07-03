@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
+from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
 
 
-class FileStateItemFile(AbstractFileStateItem):
+class FileStateItemFile(AbstractStateItem):
     def get_item_title(self) -> str:
         return 'File'
 

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from wexample_filestate.file_state_manager import FileStateManager
 
 
-class AbstractFileStateItem(BaseModel, ABC):
+class AbstractStateItem(BaseModel, ABC):
     state_manager: 'FileStateManager'
     path: FileStringOrPath
     _name: str

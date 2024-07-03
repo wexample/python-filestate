@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.const.types_state_items import SourceFileOrDirectory, TargetFileOrDirectory
-from wexample_filestate.item.abstract_file_state_item import AbstractFileStateItem
+from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 from wexample_filestate.result.file_state_result import FileStateResult
@@ -84,7 +84,7 @@ class FileStateManager(BaseModel):
 
         return result
 
-    def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractFileStateItem:
+    def state_item_source_from_path(self, path: FileStringOrPath) -> AbstractStateItem:
         from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
         from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
         resolved_path = file_resolve_path(path)
@@ -99,7 +99,7 @@ class FileStateManager(BaseModel):
         self,
         path: FileStringOrPath,
         config: Optional[StateItemConfig] = None,
-        parent: Optional[TargetFileOrDirectory] = None) -> AbstractFileStateItem:
+        parent: Optional[TargetFileOrDirectory] = None) -> AbstractStateItem:
         from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
         resolved_path = file_resolve_path(path)
