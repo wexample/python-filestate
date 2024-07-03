@@ -35,9 +35,10 @@ class StateItemTargetMixin:
         for key, value in list(config.items()):
             if callable(value):
                 config[key] = value(self, config)
+
         self._path = Path(f"{base_path}{config['name']}")
 
-        resolved_path = file_resolve_path(base_path)
+        resolved_path = file_resolve_path(self._path)
         if resolved_path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self._source = FileStateItemFileSource(
@@ -119,6 +120,12 @@ class StateItemTargetMixin:
                     target=self,
                     value=config[option_name]
                 )
+
+    def get_name(self) -> Optional[str]:
+        from wexample_filestate.options.name_option import NameOption
+        option = self.get_option(NameOption)
+
+        return option.value if option else None
 
     def get_option_value(self, option_type: Type["AbstractOption"]) -> Any:
         option = self.get_option(option_type)
