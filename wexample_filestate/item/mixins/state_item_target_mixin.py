@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from wexample_filestate.options_provider.abstract_options_provider import AbstractOptionsProvider
     from wexample_filestate.options.abstract_option import AbstractOption
     from wexample_helpers.const.types import FileStringOrPath
-    from wexample_filestate.file_state_manager import FileStateManager
 
 from pydantic import BaseModel
 
@@ -22,7 +21,6 @@ from pydantic import BaseModel
 class StateItemTargetMixin(BaseModel):
     parent: Optional[TargetFileOrDirectory] = None
     base_path: "FileStringOrPath"
-    state_manager: "FileStateManager"
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
 
@@ -42,12 +40,10 @@ class StateItemTargetMixin(BaseModel):
         if resolved_path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self._source = FileStateItemFileSource(
-                state_manager=self.state_manager,
                 path=self.path)
         elif resolved_path.is_dir():
             from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
             self._source = FileStateItemDirectorySource(
-                state_manager=self.state_manager,
                 path=self.path)
 
         if config:

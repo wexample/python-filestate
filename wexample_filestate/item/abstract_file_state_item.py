@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from typing import TYPE_CHECKING
+from pydantic import BaseModel
 
-from wexample_filestate.file_state_manager_child import AbstractFileStateManagerChild
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import FileStringOrPath
 
 
-class AbstractStateItem(AbstractFileStateManagerChild):
+class AbstractStateItem(BaseModel):
     path: "FileStringOrPath"
 
     def get_resolved(self):

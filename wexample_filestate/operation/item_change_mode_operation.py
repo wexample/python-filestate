@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Union, Optional, cast
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_filestate.options.mode_option import ModeOption
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num, file_validate_mode_octal_or_fail, \
     file_change_mode_recursive, file_change_mode
 
@@ -32,7 +33,7 @@ class ItemChangeModeOperation(AbstractOperation):
         return self.target.source.get_octal_mode()
 
     def describe_after(self) -> str:
-        return self.target.mode
+        return self.target.get_option_value(ModeOption)
 
     def description(self) -> str:
         return 'Change file permission'

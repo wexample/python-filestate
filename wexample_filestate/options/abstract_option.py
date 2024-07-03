@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from types import UnionType
-from typing import Any, Type
+from typing import Any, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from wexample_filestate.const.types import StateItemConfig
-from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+if TYPE_CHECKING:
+    from wexample_filestate.const.types import StateItemConfig
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 
 
 class AbstractOption(BaseModel, ABC):
@@ -37,5 +38,5 @@ class AbstractOption(BaseModel, ABC):
         pass
 
     @staticmethod
-    def resolve_config(config: StateItemConfig) -> StateItemConfig:
+    def resolve_config(config: "StateItemConfig") -> "StateItemConfig":
         return config

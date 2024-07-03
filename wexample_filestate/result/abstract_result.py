@@ -8,11 +8,11 @@ from wexample_prompt.utils.prompt_response import PromptResponse
 
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
-    from wexample_filestate.file_state_manager import FileStateManager
+    from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 
 
 class AbstractResult(BaseModel):
-    state_manager: 'FileStateManager'
+    state_manager: 'FileStateItemDirectoryTarget'
     _operations: List["AbstractOperation"]
     rollback: bool = False
 
