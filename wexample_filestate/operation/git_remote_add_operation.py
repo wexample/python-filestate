@@ -14,7 +14,11 @@ if TYPE_CHECKING:
 
 class GitRemoteAddOperation(AbstractGitOperation):
     _original_path_str: str
-    _created_remote: Dict[str, bool] = {}
+    _created_remote: Dict[str, bool]
+
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
+        self._created_remote = {}
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
