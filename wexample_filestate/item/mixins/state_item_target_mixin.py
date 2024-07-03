@@ -31,8 +31,10 @@ class StateItemTargetMixin(BaseModel):
         # Resolve callables and process children recursively
         config = config.copy()
         for key, value in list(config.items()):
-            if callable(value):
-                config[key] = value(self, config)
+            from wexample_filestate.options_values.callback_option_value import CallbackOptionValue
+
+            if isinstance(value, CallbackOptionValue):
+                config[key] = value.callback(self, config)
 
         self._path = Path(f"{self.base_path}{config['name']}")
 
