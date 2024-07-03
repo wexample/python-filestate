@@ -10,24 +10,24 @@ from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.file_helper import file_resolve_path
 
 if TYPE_CHECKING:
-    from wexample_filestate.file_state_manager import FileStateManager
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.options_provider.abstract_options_provider import AbstractOptionsProvider
     from wexample_filestate.options.abstract_option import AbstractOption
     from wexample_helpers.const.types import FileStringOrPath
+    from wexample_filestate.file_state_manager import FileStateManager
+
+from pydantic import BaseModel
 
 
-class StateItemTargetMixin:
+class StateItemTargetMixin(BaseModel):
     parent: Optional[TargetFileOrDirectory] = None
     base_path: "FileStringOrPath"
+    state_manager: "FileStateManager"
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
 
-    def __init__(self,
-                 state_manager: 'FileStateManager',
-                 base_path: FileStringOrPath,
-                 parent: Optional[TargetFileOrDirectory] = None,
-                 config: Optional[StateItemConfig] = None):
+    def __init__(self, config: Optional[StateItemConfig] = None, **data):
+        super().__init__(**data)
         self._options = {}
 
         # Resolve callables and process children recursively
@@ -36,18 +36,18 @@ class StateItemTargetMixin:
             if callable(value):
                 config[key] = value(self, config)
 
-        self._path = Path(f"{base_path}{config['name']}")
+        self._path = Path(f"{self.base_path}{config['name']}")
 
         resolved_path = file_resolve_path(self._path)
         if resolved_path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self._source = FileStateItemFileSource(
-                state_manager=state_manager,
+                state_manager=self.state_manager,
                 path=self.path)
         elif resolved_path.is_dir():
             from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
             self._source = FileStateItemDirectorySource(
-                state_manager=state_manager,
+                state_manager=self.state_manager,
                 path=self.path)
 
         if config:
