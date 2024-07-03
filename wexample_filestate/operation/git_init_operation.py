@@ -26,7 +26,8 @@ class GitInitOperation(AbstractGitOperation):
 
         if not is_init:
             self._has_initialized_git = True
-            repo = Repo.init(self.get_target_file_path())
+
+            repo = Repo.init(path)
             repo.init()
 
     def undo(self) -> None:

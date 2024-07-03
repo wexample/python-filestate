@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import cast, Optional
 
 from pydantic import BaseModel, Field
@@ -57,14 +58,15 @@ class FileStateManager(BaseModel):
         return result
 
     def configure(self, config: Optional[StateItemConfig] = None):
+        config['name'] = os.path.basename(self.root.path)
+
         self._target = cast(
             FileStateItemDirectoryTarget,
-            self.state_item_target_from_path(
-                path=self.root.path
+            self.state_item_target_from_base_path(
+                base_path=os.path.dirname(self.root.path) + os.sep,
+                config=config
             )
         )
-
-        self._target.configure(config)
 
     def configure_from_file(self, path: FileStringOrPath):
         self.configure(yaml_read(path))
@@ -95,19 +97,24 @@ class FileStateManager(BaseModel):
         else:
             raise ValueError('Root path should be a valid file or directory')
 
-    def state_item_target_from_path(
+    def state_item_target_from_base_path(
         self,
-        path: FileStringOrPath,
-        config: Optional[StateItemConfig] = None,
+        base_path: FileStringOrPath,
+        config: StateItemConfig,
         parent: Optional[TargetFileOrDirectory] = None) -> AbstractStateItem:
         from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
-        resolved_path = file_resolve_path(path)
 
-        if resolved_path.is_file() or (config and 'type' in config and config['type'] == DiskItemType.FILE):
-            return FileStateItemFileTarget(state_manager=self, path=resolved_path, config=config, parent=parent)
+        is_file = False
+        if 'type' in config:
+            is_file = config['type'] == DiskItemType.FILE
+        elif 'name' in config and isinstance(config['name'], str):
+            is_file = os.path.isfile(config['name'])
+
+        if is_file:
+            return FileStateItemFileTarget(state_manager=self, base_path=base_path, config=config, parent=parent)
         # Directories and undefined files.
-        return FileStateItemDirectoryTarget(state_manager=self, path=resolved_path, config=config, parent=parent)
+        return FileStateItemDirectoryTarget(state_manager=self, base_path=base_path, config=config, parent=parent)
 
 
 # Rebuild classes that point back to manager.

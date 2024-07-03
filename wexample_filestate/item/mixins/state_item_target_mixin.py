@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from pathlib import PosixPath
+from pathlib import PosixPath, Path
 from typing import cast, Optional, TYPE_CHECKING, List, Type, Dict, Any
 
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSourceMixin
 from wexample_filestate.result.abstract_result import AbstractResult
-from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file_helper import file_resolve_path
 
 if TYPE_CHECKING:
@@ -15,30 +14,40 @@ if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.options_provider.abstract_options_provider import AbstractOptionsProvider
     from wexample_filestate.options.abstract_option import AbstractOption
+    from wexample_helpers.const.types import FileStringOrPath
 
 
 class StateItemTargetMixin:
     parent: Optional[TargetFileOrDirectory] = None
+    base_path: "FileStringOrPath"
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
+
     def __init__(self,
                  state_manager: 'FileStateManager',
-                 path: FileStringOrPath,
+                 base_path: FileStringOrPath,
                  parent: Optional[TargetFileOrDirectory] = None,
                  config: Optional[StateItemConfig] = None):
         self._options = {}
 
-        resolved_path = file_resolve_path(path)
+        # Resolve callables and process children recursively
+        config = config.copy()
+        for key, value in list(config.items()):
+            if callable(value):
+                config[key] = value(self, config)
+        self._path = Path(f"{base_path}{config['name']}")
+
+        resolved_path = file_resolve_path(base_path)
         if resolved_path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self._source = FileStateItemFileSource(
                 state_manager=state_manager,
-                path=path)
+                path=self.path)
         elif resolved_path.is_dir():
             from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
             self._source = FileStateItemDirectorySource(
                 state_manager=state_manager,
-                path=path)
+                path=self.path)
 
         if config:
             self.configure(config)
@@ -47,6 +56,9 @@ class StateItemTargetMixin:
     def source(self):
         return self._source
 
+    @property
+    def path(self) -> Path:
+        return self._path
 
     def get_operations(self) -> List[Type["AbstractOperation"]]:
         providers = self.get_options_providers()
