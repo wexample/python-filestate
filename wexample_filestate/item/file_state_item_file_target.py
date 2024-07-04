@@ -11,8 +11,5 @@ class FileStateItemFileTarget(FileStateItemFile, StateItemTargetMixin):
     config: Optional[StateItemConfig] = None
 
     def __init__(self, config, **data):
-        super().__init__(config=config, **data)
+        FileStateItemFile.__init__(self, config=config, **data)
         StateItemTargetMixin.__init__(self, config=config, **data)
-
-        if self.config:
-            self.configure(self.config)

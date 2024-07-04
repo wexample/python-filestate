@@ -1,5 +1,3 @@
-from typing import Any
-
 from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
 from wexample_helpers.const.types import FileStringOrPath
