@@ -14,6 +14,8 @@ class AbstractGitOperation(AbstractOperation, ABC):
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
         from wexample_filestate.options.git_option import GitOption
+        from wexample_helpers.helpers.git_helper import git_is_init
+
         option = cast(GitOption, target.get_option(GitOption))
 
-        return option and option.should_have_git()
+        return option and option.should_have_git() and not git_is_init(target.path)

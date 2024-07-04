@@ -22,16 +22,12 @@ class GitInitOperation(AbstractGitOperation):
 
     def apply(self) -> None:
         path = self.get_target_file_path()
-        is_init = git_is_init(path)
+        self._has_initialized_git = True
 
-        if not is_init:
-            self._has_initialized_git = True
-
-            repo = Repo.init(path)
-            repo.init()
+        repo = Repo.init(path)
+        repo.init()
 
     def undo(self) -> None:
-        if self._has_initialized_git:
-            import shutil
+        import shutil
 
-            shutil.rmtree(self.get_target_file_path() + GIT_DIR_NAME)
+        shutil.rmtree(self.get_target_file_path() + GIT_DIR_NAME)
