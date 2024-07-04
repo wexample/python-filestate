@@ -19,6 +19,7 @@ from pydantic import BaseModel
 
 
 class StateItemTargetMixin(BaseModel):
+    config: Optional[StateItemConfig] = None
     parent: Optional[TargetFileOrDirectory] = None
     base_path: FileStringOrPath
     _source: Optional[StateItemSourceMixin] = None

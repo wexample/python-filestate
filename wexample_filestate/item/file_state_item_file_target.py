@@ -10,6 +10,9 @@ from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTarg
 class FileStateItemFileTarget(FileStateItemFile, StateItemTargetMixin):
     config: Optional[StateItemConfig] = None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        StateItemTargetMixin.__init__(self, **data)
+    def __init__(self, config, **data):
+        super().__init__(config=config, **data)
+        StateItemTargetMixin.__init__(self, config=config, **data)
+
+        if self.config:
+            self.configure(self.config)

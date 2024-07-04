@@ -12,6 +12,7 @@ from wexample_filestate.helpers.config_helper import config_has_item_type
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
 from wexample_filestate.result.abstract_result import AbstractResult
+from wexample_helpers.helpers.directory_helper import directory_get_base_name, directory_get_parent_path
 from wexample_prompt.io_manager import IOManager
 
 if TYPE_CHECKING:
@@ -22,16 +23,18 @@ if TYPE_CHECKING:
 
 
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
-    config: Optional[StateItemConfig] = None
     io: IOManager = Field(
         default_factory=IOManager,
         description="Handles output to print, allow to share it if defined in a parent context")
     _children: List["AbstractStateItem"]
     _last_result: Optional[AbstractResult] = None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        StateItemTargetMixin.__init__(self, **data)
+    def __init__(self, config, **data):
+        super().__init__(config=config, **data)
+        StateItemTargetMixin.__init__(self, config=config, **data)
+
+        if self.config:
+            self.configure(self.config)
 
     @property
     def children(self) -> List["AbstractStateItem"]:
@@ -140,3 +143,15 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         result.apply_operations()
 
         return result
+
+    @staticmethod
+    def create_from_path(path: str, config: Optional[StateItemConfig],
+                         io: Optional[IOManager] = None) -> FileStateItemDirectoryTarget:
+        config = config or {}
+        config["name"] = directory_get_base_name(path)
+
+        return FileStateItemDirectoryTarget(
+            config=config,
+            base_path=directory_get_parent_path(path),
+            io=io or IOManager(),
+        )
