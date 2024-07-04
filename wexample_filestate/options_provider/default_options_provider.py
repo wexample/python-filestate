@@ -1,5 +1,6 @@
 from typing import List, TYPE_CHECKING, Type
 
+from wexample_filestate.options.children_class_option import ChildrenClassOption
 from wexample_filestate.options.children_option import ChildrenOption
 from wexample_filestate.options.name_pattern_option import NamePatternOption
 from wexample_filestate.options.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption
@@ -19,6 +20,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.options.should_exist_option import ShouldExistOption
 
         return [
+            ChildrenClassOption,
             ChildrenOption,
             ModeOption,
             ModeRecursiveOption,
