@@ -29,6 +29,8 @@ class StateItemTargetMixin(BaseModel):
         super().__init__(**data)
         self._options = {}
 
+        config = self.build_config(config)
+
         # Resolve callables and process children recursively
         for key, value in list(config.items()):
             from wexample_filestate.options_values.callback_option_value import CallbackOptionValue
@@ -50,6 +52,9 @@ class StateItemTargetMixin(BaseModel):
 
         if config:
             self.configure(config)
+
+    def build_config(self, config: Optional[StateItemConfig] = None) -> StateItemConfig:
+        return config or {}
 
     @property
     def source(self):

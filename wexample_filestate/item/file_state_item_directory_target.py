@@ -32,7 +32,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
     _children: List["AbstractStateItem"]
     _last_result: Optional[AbstractResult] = None
 
-    def __init__(self, config, **data):
+    def __init__(self, config: Optional[StateItemConfig] = None, **data):
         FileStateItemDirectory.__init__(self, config=config, **data)
         StateItemTargetMixin.__init__(self, config=config, **data)
 
@@ -152,8 +152,12 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         return result
 
     @classmethod
-    def create_from_path(cls, path: str, config: Optional[StateItemConfig],
-                         io: Optional[IOManager] = None) -> FileStateItemDirectoryTarget:
+    def create_from_path(
+        cls,
+        path: str,
+        config: Optional[StateItemConfig] = None,
+        io: Optional[IOManager] = None
+    ) -> FileStateItemDirectoryTarget:
         config = config or {}
         config["name"] = directory_get_base_name(path)
 
