@@ -4,6 +4,7 @@ import os
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_filestate.options.default_content_option import DefaultContentOption
 from wexample_helpers.helpers.file_helper import file_touch
 
 if TYPE_CHECKING:
@@ -35,7 +36,14 @@ class FileCreateOperation(AbstractOperation):
     def apply(self) -> None:
         self._original_path_str = self.get_target_file_path()
         if self.target.is_file():
-            file_touch(self._original_path_str)
+            content = self.target.get_option_value(DefaultContentOption)
+
+            if content:
+                with open(self._original_path_str, "a") as file:
+                    file.write(str(content))
+            else:
+                file_touch(self._original_path_str)
+
         elif self.target.is_directory():
             os.mkdir(self._original_path_str)
 
