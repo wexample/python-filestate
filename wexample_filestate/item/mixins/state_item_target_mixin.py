@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import PosixPath, Path
 from typing import cast, Optional, TYPE_CHECKING, List, Type, Dict, Any
 
