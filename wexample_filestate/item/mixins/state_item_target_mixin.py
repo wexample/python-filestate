@@ -9,11 +9,11 @@ from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSour
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.file_helper import file_resolve_path
 from wexample_helpers.const.types import FileStringOrPath
+from wexample_filestate.options.abstract_option import AbstractOption
 
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.options_provider.abstract_options_provider import AbstractOptionsProvider
-    from wexample_filestate.options.abstract_option import AbstractOption
 
 from pydantic import BaseModel
 
@@ -22,12 +22,14 @@ class StateItemTargetMixin(BaseModel):
     config: Optional[StateItemConfig] = None
     parent: Optional[TargetFileOrDirectory] = None
     base_path: FileStringOrPath
+    _path: Path
     _source: Optional[StateItemSourceMixin] = None
     _options: Dict[str, AbstractOption]
 
     def __init__(self, config: Optional[StateItemConfig] = None, **data):
         super().__init__(**data)
         self._options = {}
+        self._path = Path(f"{self.base_path}{config['name']}")
 
         config = self.build_config(config)
 
@@ -38,17 +40,14 @@ class StateItemTargetMixin(BaseModel):
             if isinstance(value, CallbackOptionValue):
                 config[key] = value.callback(self, config)
 
-        self._path = Path(f"{self.base_path}{config['name']}")
-
-        resolved_path = file_resolve_path(self._path)
-        if resolved_path.is_file():
+        if self._path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self._source = FileStateItemFileSource(
-                path=self.path)
-        elif resolved_path.is_dir():
+                path=self._path)
+        elif self._path.is_dir():
             from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
             self._source = FileStateItemDirectorySource(
-                path=self.path)
+                path=self._path)
 
         if config:
             self.configure(config)
