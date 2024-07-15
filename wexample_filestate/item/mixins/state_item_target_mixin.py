@@ -29,7 +29,6 @@ class StateItemTargetMixin(BaseModel):
     def __init__(self, config: Optional[StateItemConfig] = None, **data):
         super().__init__(**data)
         self._options = {}
-        self._path = Path(f"{self.base_path}{config['name']}")
 
         config = self.build_config(config)
 
@@ -39,6 +38,8 @@ class StateItemTargetMixin(BaseModel):
 
             if isinstance(value, CallbackOptionValue):
                 config[key] = value.callback(self, config)
+
+        self._path = Path(f"{self.base_path}{config['name']}")
 
         if self._path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
