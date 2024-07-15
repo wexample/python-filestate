@@ -65,10 +65,6 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
                                 item_config_copy = copy.deepcopy(item_config)
                                 item_config_copy["name"] = file
 
-                                if "type" not in item_config_copy:
-                                    item_config_copy["type"] = \
-                                        DiskItemType.FILE if path.is_file() else DiskItemType.DIRECTORY
-
                                 self.children.append(
                                     self.state_item_target_from_base_path(
                                         base_path=base_path,
@@ -104,6 +100,10 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         config: StateItemConfig,
         class_definition: Optional[TargetFileOrDirectory] = None
     ) -> AbstractStateItem:
+        if "type" not in config:
+            config["type"] = \
+                DiskItemType.FILE if base_path.is_file() else DiskItemType.DIRECTORY
+
         if class_definition:
             return class_definition(base_path=base_path, config=config, parent=self)
 
