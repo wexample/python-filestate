@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
-from wexample_filestate.options.children_class_option import ChildrenClassOption
+from wexample_filestate.options.class_option import ClassOption
 
 if TYPE_CHECKING:
     from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
@@ -27,9 +27,8 @@ class ChildConfig(BaseModel):
         if "type" not in self.config:
             self.config["type"] = DiskItemType.FILE if base_path.is_file() else DiskItemType.DIRECTORY
 
-        class_definition: Optional[Type[TargetFileOrDirectory]] = target.get_option_value(ChildrenClassOption)
-        if class_definition:
-            return [class_definition(base_path=base_path, config=self.config, parent=target)]
+        if "class" in self.config:
+            return [self.config["class"](base_path=base_path, config=self.config, parent=target)]
 
         from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 

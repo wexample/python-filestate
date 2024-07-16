@@ -12,7 +12,7 @@ from wexample_filestate.const.types import StateItemConfig
 from wexample_filestate.helpers.config_helper import config_has_item_type
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
-from wexample_filestate.options.children_class_option import ChildrenClassOption
+from wexample_filestate.options.class_option import ClassOption
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.directory_helper import directory_get_base_name, directory_get_parent_path
 from wexample_prompt.io_manager import IOManager

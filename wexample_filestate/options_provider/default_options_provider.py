@@ -1,6 +1,6 @@
 from typing import List, TYPE_CHECKING, Type
 
-from wexample_filestate.options.children_class_option import ChildrenClassOption
+from wexample_filestate.options.class_option import ClassOption
 from wexample_filestate.options.children_option import ChildrenOption
 from wexample_filestate.options.default_content_option import DefaultContentOption
 from wexample_filestate.options.name_pattern_option import NamePatternOption
@@ -21,7 +21,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.options.should_exist_option import ShouldExistOption
 
         return [
-            ChildrenClassOption,
+            ClassOption,
             ChildrenOption,
             DefaultContentOption,
             ModeOption,

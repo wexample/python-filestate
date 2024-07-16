@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from wexample_filestate.const.types_state_items import SourceFileOrDirectory, TargetFileOrDirectory
 from wexample_filestate.options.abstract_option import AbstractOption
-from wexample_filestate.options.children_class_option import ChildrenClassOption
+from wexample_filestate.options.class_option import ClassOption
 from wexample_filestate.options.children_option import ChildrenOption
 from wexample_filestate.options.git_option import GitOption
 from wexample_filestate.options.mode_option import ModeOption
@@ -30,7 +30,7 @@ class FileStateManager(FileStateItemDirectoryTarget):
 
 # Rebuild classes that point back to manager.
 AbstractOption.model_rebuild()
-ChildrenClassOption.model_rebuild()
+ClassOption.model_rebuild()
 ChildrenOption.model_rebuild()
 GitOption.model_rebuild()
 ModeOption.model_rebuild()
