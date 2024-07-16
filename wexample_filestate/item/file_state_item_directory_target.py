@@ -45,40 +45,26 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         self.configure(yaml_read(path))
 
     def configure(self, config: Optional[StateItemConfig] = None) -> None:
+        from wexample_filestate.utils.child_config import ChildConfig
+
         super().configure(config)
         self._children = []
 
         if not config:
             return
 
-        children_class_definition = self.get_option_value(ChildrenClassOption)
-        base_path = self.get_resolved()
         if "children" in config:
             for item_config in config["children"]:
-                if "name_pattern" in item_config:
-                    pattern = re.compile(item_config["name_pattern"])
-                    for file in os.listdir(base_path):
-                        if pattern.match(file):
-                            path = Path(f"{base_path}{file}")
-
-                            if "type" not in item_config or config_has_item_type(item_config, path):
-                                item_config_copy = copy.deepcopy(item_config)
-                                item_config_copy["name"] = file
-
-                                self.children.append(
-                                    self.state_item_target_from_base_path(
-                                        base_path=base_path,
-                                        config=item_config_copy,
-                                        class_definition=children_class_definition
-                                    )
-                                )
+                if isinstance(item_config, ChildConfig):
+                    child_config = item_config
                 else:
-                    self.children.append(
-                        self.state_item_target_from_base_path(
-                            base_path=base_path,
-                            config=copy.deepcopy(item_config),
-                            class_definition=children_class_definition)
+                    child_config = ChildConfig(config=copy.deepcopy(item_config))
+
+                self.children.extend(
+                    child_config.parse_config(
+                        target=self,
                     )
+                )
 
     def build_operations(self, result: AbstractResult):
         super().build_operations(result)
@@ -93,32 +79,6 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
                 return child
 
         return None
-
-    def state_item_target_from_base_path(
-        self,
-        base_path: FileStringOrPath,
-        config: StateItemConfig,
-        class_definition: Optional[TargetFileOrDirectory] = None
-    ) -> AbstractStateItem:
-        if "type" not in config:
-            config["type"] = \
-                DiskItemType.FILE if base_path.is_file() else DiskItemType.DIRECTORY
-
-        if class_definition:
-            return class_definition(base_path=base_path, config=config, parent=self)
-
-        from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
-
-        is_file = False
-        if 'type' in config:
-            is_file = config['type'] == DiskItemType.FILE
-        elif 'name' in config and isinstance(config['name'], str):
-            is_file = os.path.isfile(config['name'])
-
-        if is_file:
-            return FileStateItemFileTarget(base_path=base_path, config=config, parent=self)
-        # Directories and undefined files.
-        return FileStateItemDirectoryTarget(base_path=base_path, config=config, parent=self)
 
     def rollback(self) -> FileStateResult:
         result = FileStateResult(state_manager=self, rollback=True)
