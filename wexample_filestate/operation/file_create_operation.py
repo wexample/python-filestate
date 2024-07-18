@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.options.default_content_option import DefaultContentOption
-from wexample_helpers.helpers.file_helper import file_touch
+from wexample_helpers.helpers.file_helper import file_touch, file_write
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
@@ -39,8 +39,12 @@ class FileCreateOperation(AbstractOperation):
             content = self.target.get_option_value(DefaultContentOption)
 
             if content:
-                with open(self._original_path_str, "a") as file:
-                    file.write(str(content))
+                if isinstance(content, str):
+                    str_content = content
+                else:
+                    str_content = content.render(self.target, current_value='')
+
+                file_write(self._original_path_str, str_content)
             else:
                 file_touch(self._original_path_str)
 
