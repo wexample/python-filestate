@@ -119,6 +119,11 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         io: Optional[IOManager] = None
     ) -> FileStateItemDirectoryTarget:
         config = config or {}
+
+        # If path is a file, ignore file name a keep parent directory.
+        if os.path.isfile(path):
+            path = os.path.dirname(path)
+
         config["name"] = directory_get_base_name(path)
 
         return cls(
