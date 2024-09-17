@@ -2,17 +2,12 @@ from __future__ import annotations
 
 import copy
 import os
-import re
-from pathlib import Path
 from typing import List, Union, cast, Optional, TYPE_CHECKING
 from pydantic import Field
 
-from wexample_filestate.const.enums import DiskItemType
 from wexample_filestate.const.types import StateItemConfig
-from wexample_filestate.helpers.config_helper import config_has_item_type
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
-from wexample_filestate.options.class_option import ClassOption
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.directory_helper import directory_get_base_name, directory_get_parent_path
 from wexample_prompt.io_manager import IOManager
@@ -22,8 +17,6 @@ if TYPE_CHECKING:
     from wexample_filestate.item.abstract_file_state_item import AbstractStateItem
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectory
-
 
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
     io: IOManager = Field(

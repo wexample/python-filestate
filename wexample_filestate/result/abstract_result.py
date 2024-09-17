@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 
-
 class AbstractResult(BaseModel):
     state_manager: 'FileStateItemDirectoryTarget'
     _operations: List["AbstractOperation"]
