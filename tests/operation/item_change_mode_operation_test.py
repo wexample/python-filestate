@@ -20,3 +20,5 @@ class ItemChangeModeOperationTest(AbstractOperationTest):
             ]
         })
 
+        self.assertTrue(self.state_manager.path.is_dir())
+
