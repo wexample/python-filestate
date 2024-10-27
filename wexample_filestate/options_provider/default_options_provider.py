@@ -1,4 +1,6 @@
 from typing import List, TYPE_CHECKING, Type
+
+from wexample_config.option.children_option import ChildrenOption
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 if TYPE_CHECKING:
@@ -11,5 +13,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_config.option.name_option import NameOption
 
         return [
+            ChildrenOption,
             NameOption,
         ]
