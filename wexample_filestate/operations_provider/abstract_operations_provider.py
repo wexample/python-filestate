@@ -1,10 +1,9 @@
-from abc import ABC, abstractmethod
 from typing import List, Type
-from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
+from pydantic import BaseModel
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
-class AbstractOperationsProvider(AbstractOptionsProvider, ABC):
-    @abstractmethod
-    def get_operations(self) -> List[Type["AbstractOperation"]]:
+class AbstractOperationsProvider(BaseModel):
+    @staticmethod
+    def get_operations() -> List[Type["AbstractOperation"]]:
         pass

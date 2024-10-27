@@ -22,3 +22,5 @@ class ItemChangeModeOperationTest(AbstractOperationTest):
 
         self.assertTrue(self.state_manager.path.is_dir())
 
+        self._dry_run_and_count_operations(operations_count=1)
+
