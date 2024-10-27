@@ -5,7 +5,7 @@ from wexample_config.classes.mixins.multiple_options_providers_mixin import Mult
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 
-class StateItemTargetMixin(BaseModel, MultipleOptionsProvidersMixin):
+class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
     def __init__(self, **data):
         BaseModel.__init__(self, **data)
         MultipleOptionsProvidersMixin.__init__(self, **data)
