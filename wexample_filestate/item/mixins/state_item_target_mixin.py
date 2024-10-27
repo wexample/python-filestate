@@ -1,5 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
+
+from wexample_config.const.types import StateItemConfig
 
 
 class StateItemTargetMixin(BaseModel):
-    pass
+    config: Optional[StateItemConfig] = None
