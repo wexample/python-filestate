@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
     def get_options(cls) -> List[Type["AbstractOption"]]:
-        from wexample_filestate.option.name_option import NameOption
+        from wexample_config.option.name_option import NameOption
 
         return [
             NameOption,
