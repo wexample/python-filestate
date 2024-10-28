@@ -15,8 +15,11 @@ class ModeOption(AbstractOption):
             return self.value.get_str()
         elif self.value.is_int():
             return self.value.to_str()
-        elif isinstance(self.value, FileSystemPermission) and 'mode' in self.value:
-            return str(self.value['mode'])
+        elif self.value.is_dict():
+            value_dict = self.value.get_dict()
+            if isinstance(value_dict, FileSystemPermission):
+                if 'mode' in value_dict:
+                    return str(self.value['mode'])
         else:
             raise ValueError(f"Unexpected value in get_octal: {self.value}")
 

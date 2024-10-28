@@ -1,18 +1,14 @@
 from abc import abstractmethod, ABC
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING, Optional
 
+from wexample_config.const.types import DictConfig
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
 
-class AbstractOperationTest(AbstractStateManagerTest, ABC):
-    @abstractmethod
-    def get_operation(self) -> Type["AbstractOperation"]:
-        pass
-
+class TestAbstractOperation(AbstractStateManagerTest, ABC):
     def test_apply(self) -> None:
         self._operation_test_setup()
         self._operation_test_assert_initial()
@@ -34,9 +30,14 @@ class AbstractOperationTest(AbstractStateManagerTest, ABC):
     def _operation_get_count(self) -> int:
         return 1
 
-    @abstractmethod
     def _operation_test_setup(self) -> None:
-        pass
+        config = self._operation_test_setup_configuration()
+
+        if config is not None:
+            self.state_manager.configure(config)
+
+    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+        return None
 
     def _operation_test_assert_initial(self) -> None:
         self._dry_run_and_count_operations(

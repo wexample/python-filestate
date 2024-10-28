@@ -69,4 +69,4 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         from wexample_config.option.name_option import NameOption
         option = self.get_option(NameOption)
 
-        return option.get_str() if option else None
+        return option.value.get_str() if option else None
