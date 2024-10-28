@@ -13,6 +13,10 @@ class AggregatedTemplatesConfigValue(ItemConfigValue):
     templates: Optional[List[str]] = []
     parameters: Optional[Dict[str, BasicValue]] = {}
 
+    @staticmethod
+    def get_value_type() -> type:
+        return Any
+
     def render(self, operation: "AbstractOperation") -> str:
         output = []
 
