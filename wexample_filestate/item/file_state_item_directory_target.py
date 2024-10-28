@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional, List, cast, TYPE_CHECKING, Union
 from pydantic import Field
 from wexample_config.const.types import DictConfig
+from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.item.abstract_state_item import AbstractStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
@@ -11,6 +12,7 @@ from wexample_prompt.io_manager import IOManager
 from wexample_filestate.result.abstract_result import AbstractResult
 
 if TYPE_CHECKING:
+    from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
 
@@ -47,7 +49,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         for item in self.children:
             cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item).build_operations(result)
 
-    def find_by_name(self, name: str) -> Optional["AbstractStateItem"]:
+    def find_by_name(self, name: str) -> Optional["TargetFileOrDirectory"]:
         for child in self.children:
             if child.get_name() == name:
                 return child
@@ -64,6 +66,13 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
         return cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self)))
+
+    def apply(self) -> "FileStateResult":
+        from wexample_filestate.result.file_state_result import FileStateResult
+        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self)))
+        result.apply_operations()
+
+        return result
 
     @classmethod
     def create_from_path(

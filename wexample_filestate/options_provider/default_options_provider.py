@@ -3,6 +3,7 @@ from typing import List, TYPE_CHECKING, Type
 from wexample_config.option.children_option import ChildrenOption
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 from wexample_filestate.option.mode_option import ModeOption
+from wexample_filestate.option.mode_recursive_option import ModeRecursiveOption
 from wexample_filestate.option.type_option import TypeOption
 
 if TYPE_CHECKING:
@@ -17,6 +18,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         return [
             ChildrenOption,
             ModeOption,
+            ModeRecursiveOption,
             NameOption,
             TypeOption,
         ]

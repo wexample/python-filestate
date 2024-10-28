@@ -23,3 +23,7 @@ class AbstractStateItem(BaseModel):
     @abstractmethod
     def is_directory(self) -> bool:
         pass
+
+    def get_octal_mode(self: AbstractStateItem) -> str:
+        from wexample_helpers.helpers.file_helper import file_path_get_octal_mode
+        return file_path_get_octal_mode(self.path)
