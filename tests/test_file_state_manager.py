@@ -1,6 +1,7 @@
 import os
 import pytest
 
+from wexample_config.const.types import DictConfig
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 
@@ -35,6 +36,31 @@ class TestFileStateManager(AbstractStateManagerTest):
                     }
                 ]
             })
+
+    def test_configure_from_callback(self):
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+
+        def _name(target: TargetFileOrDirectory, config: DictConfig):
+            return "yes"
+
+        self.state_manager.configure({
+            "name": _name
+        })
+
+        assert self.state_manager.get_name() == "yes"
+
+    def test_configure_from_callback_class(self):
+        from wexample_filestate.config_value.callback_option_value import CallbackOptionValue
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+
+        def _name(target: TargetFileOrDirectory, config: DictConfig):
+            return "yow"
+
+        self.state_manager.configure({
+            'name': CallbackOptionValue(callback=_name),
+        })
+
+        assert self.state_manager.get_name() == "yow"
 
     def test_configure_from_file(self):
         self.state_manager.configure_from_file(
