@@ -20,6 +20,12 @@ class ChildConfig(BaseModel):
         is_actual_file = isinstance(item_name, str) and os.path.isfile(os.path.join(base_path, item_name))
 
         if "class" in self.config:
+            if not issubclass(self.config.get("class"), FileStateItemDirectoryTarget):
+                from wexample_filestate.exception.config import BadConfigurationClassTypeException
+
+                raise BadConfigurationClassTypeException(
+                    f"Class {self.config['class'].__name__} option should extend {FileStateItemDirectoryTarget.__name__}")
+
             return [self.config["class"](base_path=base_path, config=self.config, parent=target)]
 
         if is_file_type or is_actual_file:
@@ -28,4 +34,3 @@ class ChildConfig(BaseModel):
             state_item = FileStateItemDirectoryTarget(base_path=base_path, config=self.config, parent=self)
 
         return [state_item]
-

@@ -21,6 +21,21 @@ class TestFileStateManager(AbstractStateManagerTest):
                 "unexpected_option": "yes"
             })
 
+    def test_configure_class_unexpected(self):
+        from wexample_filestate.exception.config import BadConfigurationClassTypeException
+
+        class BadClass:
+            pass
+
+        with pytest.raises(BadConfigurationClassTypeException):
+            self.state_manager.configure({
+                "children": [
+                    {
+                        "class": BadClass
+                    }
+                ]
+            })
+
     def test_configure_from_file(self):
         self.state_manager.configure_from_file(
             os.path.join(self.get_package_resources_path(), 'config-test-one.yml')
