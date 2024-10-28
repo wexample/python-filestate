@@ -34,30 +34,20 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         if yaml_read is not None:
             self.configure(yaml_read(path))
 
-    def configure(self, config: Optional[DictConfig]) -> None:
-        import os
+    def configure(self, config: Optional[dict]) -> None:
         import copy
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
-
+        from wexample_filestate.config.child_config import ChildConfig
         super().configure(config)
 
         self.children = []
         if "children" in config:
-            base_path = self.get_resolved()
-
             for item_config in config["children"]:
-                item_config_copy = copy.deepcopy(item_config)
-                item_name = item_config_copy.get("name")
-                is_file_type = item_config_copy.get("type") == DiskItemType.FILE
-                is_actual_file = isinstance(item_name, str) and os.path.isfile(os.path.join(base_path, item_name))
-
-                if is_file_type or is_actual_file:
-                    state_item = FileStateItemFileTarget(base_path=base_path, config=item_config_copy, parent=self)
+                if isinstance(item_config, ChildConfig):
+                    child_config = item_config
                 else:
-                    state_item = FileStateItemDirectoryTarget(base_path=base_path, config=item_config_copy, parent=self)
+                    child_config = ChildConfig(config=copy.deepcopy(item_config))
 
-                self.children.append(state_item)
+                self.children.extend(child_config.parse_config(target=self))
 
     def build_operations(self, result: AbstractResult):
         super().build_operations(result)
