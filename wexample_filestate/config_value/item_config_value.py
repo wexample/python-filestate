@@ -13,4 +13,4 @@ class ItemConfigValue(ConfigValue):
     filters: Optional[List[AbstractConfigValueFilter]] = []
 
     def render(self, operation: "AbstractOperation") -> str:
-        return ''
+        return self.get_str()

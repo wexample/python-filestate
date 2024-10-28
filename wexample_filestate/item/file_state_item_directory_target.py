@@ -68,7 +68,7 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         if child is None:
             from wexample_filestate.exception.item import ChildNotFoundException
-            raise ChildNotFoundException(f'Directory children not found: {name}')
+            raise ChildNotFoundException(f'Directory child not found: {name}')
 
         return child
 

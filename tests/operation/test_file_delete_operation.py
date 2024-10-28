@@ -7,9 +7,6 @@ from wexample_filestate.test.test_abstract_operation import TestAbstractOperatio
 
 
 class TestFileDeleteOperation(TestAbstractOperation):
-    missing_file_name: str = 'simple-text-missing.txt'
-    missing_dir_name: str = 'simple-directory-missing'
-
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         return {
             'children': [

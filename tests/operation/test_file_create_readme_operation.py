@@ -1,12 +1,12 @@
 import os
 from typing import Optional
 
-from tests.operation.test_file_create_operation import TestFileCreateOperation
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_value.readme_content_option_value import ReadmeContentConfigValue
+from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
 
 
-class TestFileCreateReadmeOperation(TestFileCreateOperation):
+class TestFileCreateReadmeOperation(TestAbstractOperation):
     missing_file_name: str = 'simple-readme.md'
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:

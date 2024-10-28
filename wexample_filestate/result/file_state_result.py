@@ -24,5 +24,9 @@ class FileStateResult(AbstractResult):
     def apply_operations(self):
         self._executed_operations = []
 
-        for operation in self.operations:
+        # Reverse operations order in rollback mode
+        operations = reversed(self.operations) if self.rollback else self.operations
+
+        for operation in operations:
             self.apply_with_dependencies(operation)
+            self._executed_operations.append(operation)

@@ -25,6 +25,8 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
 
         self.path = Path(f"{self.base_path}{config['name']}")
 
+        self.autoconfigure(config=config)
+
         if self.path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
             self.source = FileStateItemFileSource(
