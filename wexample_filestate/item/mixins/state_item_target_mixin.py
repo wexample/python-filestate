@@ -64,3 +64,9 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         for operation_class in self.get_operations():
             if operation_class.applicable(cast(TargetFileOrDirectory, self)):
                 result.operations.append(operation_class(target=self))
+
+    def get_name(self) -> Optional[str]:
+        from wexample_config.option.name_option import NameOption
+        option = self.get_option(NameOption)
+
+        return option.get_str() if option else None

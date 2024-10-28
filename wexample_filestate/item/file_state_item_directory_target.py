@@ -5,6 +5,7 @@ from pydantic import Field
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.abstract_state_item import AbstractStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
+from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
 from wexample_prompt.io_manager import IOManager
 from wexample_filestate.result.abstract_result import AbstractResult
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
-    children: List[AbstractStateItem] = []
+    children: List[Union[AbstractStateItem, FileStateItemDirectoryTarget, FileStateItemFileTarget]] = []
     io: IOManager = Field(
         default_factory=IOManager,
         description="Handles output to print, allow to share it if defined in a parent context")
@@ -45,6 +46,13 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         for item in self.children:
             cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item).build_operations(result)
+
+    def find_by_name(self, name: str) -> Optional["AbstractStateItem"]:
+        for child in self.children:
+            if child.get_name() == name:
+                return child
+
+        return None
 
     def run(self, result: AbstractResult) -> "AbstractResult":
         self.build_operations(result)
