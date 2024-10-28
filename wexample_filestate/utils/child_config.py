@@ -21,6 +21,8 @@ class ChildConfig(BaseModel):
         self,
         target: TargetFileOrDirectory,
     ) -> List["AbstractStateItem"]:
+        from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+
         base_path = target.get_resolved()
 
         if "type" not in self.config:
@@ -31,7 +33,7 @@ class ChildConfig(BaseModel):
         )
 
         if is_file:
-            pass
+            state_item = FileStateItemFileTarget(base_path=base_path, config=self.config, parent=target)
         else:
             # Directories and undefined files.
             state_item = FileStateItemDirectoryTarget(base_path=base_path, config=self.config, parent=target)
