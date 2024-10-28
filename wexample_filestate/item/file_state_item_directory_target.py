@@ -23,10 +23,16 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         description="Handles output to print, allow to share it if defined in a parent context")
     last_result: Optional[AbstractResult] = None
 
+    def __init__(self, config: Optional[DictConfig] = None, **data):
+        FileStateItemDirectory.__init__(self, config=config, **data)
+        StateItemTargetMixin.__init__(self, config=config, **data)
+
     def configure(self, config: Optional[DictConfig]) -> None:
         from wexample_filestate.utils.child_config import ChildConfig
         super().configure(config)
 
+
+        self.children = []
         if "children" in config:
             import copy
 
@@ -56,7 +62,22 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         return None
 
-    def run(self, result: AbstractResult) -> "AbstractResult":
+    def rollback(self) -> "FileStateResult":
+        from wexample_filestate.result.file_state_result import FileStateResult
+
+        result = FileStateResult(state_manager=self, rollback=True)
+
+        if self.last_result:
+            for operation in self.last_result.operations:
+                if operation.applied:
+                    result.operations.append(operation)
+
+        result.apply_operations()
+        self.last_result = result
+
+        return result
+
+    def run(self, result: AbstractResult) -> AbstractResult:
         self.build_operations(result)
         self.last_result = result
 

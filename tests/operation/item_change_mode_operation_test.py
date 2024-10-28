@@ -40,3 +40,5 @@ class ItemChangeModeOperationTest(AbstractOperationTest):
             target.get_octal_mode(),
             expected_mode
         )
+
+        self.state_manager.rollback()
