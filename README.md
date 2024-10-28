@@ -83,6 +83,10 @@ state_manager.configure({
 state_manager.apply()
 ```
 
+## Testing
+
+    python3 -m unittest discover tests
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
