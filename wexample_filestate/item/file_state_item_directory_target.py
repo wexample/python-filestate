@@ -47,7 +47,10 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
                 else:
                     child_config = ChildConfig(config=copy.deepcopy(item_config))
 
-                self.children.extend(child_config.parse_config(target=self))
+                if child_config:
+                    self.children.extend(
+                        child_config.build_state_items(target=self)
+                    )
 
     def build_operations(self, result: AbstractResult):
         super().build_operations(result)
@@ -55,6 +58,18 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
 
         for item in self.children:
             cast(Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item).build_operations(result)
+
+    def find_by_name_recursive(self, name: str) -> Optional["TargetFileOrDirectory"]:
+        found = self.find_by_name(name)
+        if found:
+            return found
+
+        for child in self.children:
+            result = child.find_by_name_recursive(name)
+            if result:
+                return result
+
+        return None
 
     def find_by_name(self, name: str) -> Optional["TargetFileOrDirectory"]:
         for child in self.children:

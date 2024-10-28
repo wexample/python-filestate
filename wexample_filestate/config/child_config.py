@@ -12,20 +12,25 @@ if TYPE_CHECKING:
 class ChildConfig(BaseModel):
     config: Optional[dict] = None
 
-    def parse_config(self, target) -> List["AbstractStateItem"]:
+    def build_state_items(self, target) -> List["AbstractStateItem"]:
+        from wexample_filestate.helpers.config_helper import config_is_item_type
+
         base_path = target.get_resolved()
         item_name = self.config.get("name")
-        item_type = self.config.get("type")
-        is_file_type = item_type == DiskItemType.FILE or item_type == DiskItemType.FILE.value
+        is_file_type = config_is_item_type(self.config, DiskItemType.FILE)
         is_actual_file = isinstance(item_name, str) and os.path.isfile(os.path.join(base_path, item_name))
 
         if "class" in self.config:
-            if not issubclass(self.config.get("class"), FileStateItemDirectoryTarget):
+            if not issubclass(self.config.get("class"), FileStateItemDirectoryTarget) and not issubclass(
+                self.config.get("class"), FileStateItemFileTarget):
                 from wexample_filestate.exception.config import BadConfigurationClassTypeException
 
                 raise BadConfigurationClassTypeException(
-                    f"Class {self.config['class'].__name__} option should extend {FileStateItemDirectoryTarget.__name__}")
+                    f"Class {self.config['class'].__name__} option "
+                    f"should extend {FileStateItemDirectoryTarget.__name__} "
+                    f"or {FileStateItemFileTarget.__name__}")
 
+            print(self.config)
             return [self.config["class"](base_path=base_path, config=self.config, parent=target)]
 
         if is_file_type or is_actual_file:
