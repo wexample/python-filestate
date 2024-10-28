@@ -8,6 +8,7 @@ from wexample_filestate.item.abstract_state_item import AbstractStateItem
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
+from wexample_helpers.const.types import FileStringOrPath
 from wexample_prompt.io_manager import IOManager
 from wexample_filestate.result.abstract_result import AbstractResult
 
@@ -26,6 +27,12 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
     def __init__(self, config: Optional[DictConfig] = None, **data):
         FileStateItemDirectory.__init__(self, config=config, **data)
         StateItemTargetMixin.__init__(self, config=config, **data)
+
+    def configure_from_file(self, path: FileStringOrPath):
+        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
+
+        if yaml_read is not None:
+            self.configure(yaml_read(path))
 
     def configure(self, config: Optional[DictConfig]) -> None:
         from wexample_filestate.utils.child_config import ChildConfig
