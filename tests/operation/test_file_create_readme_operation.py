@@ -1,13 +1,13 @@
 import os
 from typing import Optional
 
+from tests.operation.test_file_create_operation import TestFileCreateOperation
 from wexample_config.const.types import DictConfig
-from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.config_values.readme_content_option_value import ReadmeContentConfigValue
 
 
-class TestFileCreateOperation(TestAbstractOperation):
-    missing_file_name: str = 'simple-text-missing.txt'
-    missing_dir_name: str = 'simple-directory-missing'
+class TestFileCreateReadmeOperation(TestFileCreateOperation):
+    missing_file_name: str = 'simple-readme.md'
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         from wexample_filestate.const.disk import DiskItemType
@@ -15,33 +15,29 @@ class TestFileCreateOperation(TestAbstractOperation):
         return {
             'children': [
                 {
-                    'name': self.missing_dir_name,
-                    'should_exist': True,
-                    'type': DiskItemType.DIRECTORY
-                },
-                {
                     'name': self.missing_file_name,
                     'should_exist': True,
                     'type': DiskItemType.FILE,
-                    'default_content': 'This is a test'
+                    'default_content': ReadmeContentConfigValue(
+                        templates=[
+                            '## Introduction',
+                            '## License'
+                        ],
+                        parameters={}
+                    )
                 }
             ]
         }
 
     def _operation_get_count(self) -> int:
-        # Will create a file and a directory.
-        return 2
+        return 1
 
     def _operation_test_assert_initial(self) -> None:
-        target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
 
-        assert not os.path.exists(target_dir.path.resolve()), "The directory should not exist"
         assert not os.path.exists(target_file.path.resolve()), "The file should not exist"
 
     def _operation_test_assert_applied(self):
-        target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
 
-        assert os.path.exists(target_dir.path.resolve()), "The target directory should have been created"
         assert os.path.exists(target_file.path.resolve()), "The target file should have been created"

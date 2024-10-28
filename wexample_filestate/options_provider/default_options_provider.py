@@ -10,6 +10,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
     def get_options(cls) -> List[Type["AbstractOption"]]:
         from wexample_config.option.children_option import ChildrenOption
+        from wexample_filestate.option.default_content_option import DefaultContentOption
         from wexample_filestate.option.mode_option import ModeOption
         from wexample_filestate.option.mode_recursive_option import ModeRecursiveOption
         from wexample_config.option.name_option import NameOption
@@ -18,6 +19,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
 
         return [
             ChildrenOption,
+            DefaultContentOption,
             ModeOption,
             ModeRecursiveOption,
             NameOption,
