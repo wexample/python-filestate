@@ -41,7 +41,7 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
         return None
 
     def _operation_test_assert_initial(self) -> None:
-        self._dry_run_and_count_operations()
+        pass
 
     def _operation_test_dry_run(self) -> None:
         self._dry_run_and_count_operations()

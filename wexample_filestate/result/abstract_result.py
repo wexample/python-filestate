@@ -14,6 +14,12 @@ class AbstractResult(BaseModel):
     operations: List["AbstractOperation"] = []
     rollback: bool = False
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}>"
+
+    def __str__(self) -> str:
+        return f"{self.__repr__}"
+
     def to_prompt_responses(self) -> List[PromptResponse]:
         output: List[PromptResponse] = []
 
