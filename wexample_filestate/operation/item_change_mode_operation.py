@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 
+
 class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
 
@@ -44,8 +45,9 @@ class ItemChangeModeOperation(AbstractOperation):
 
         self._original_octal_mode = self.target.source.get_octal_mode()
         mode_int = cast(ModeOption, self.target.get_option(ModeOption)).get_int()
+        mode_recursive_option = self.target.get_option(ModeRecursiveOption)
 
-        if self.target.get_option(ModeRecursiveOption).value.get_bool() is True:
+        if mode_recursive_option and mode_recursive_option.value.get_bool() is True:
             file_change_mode(
                 self.target.source.path,
                 mode_int
