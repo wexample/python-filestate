@@ -34,7 +34,7 @@ class ItemChangeModeOperation(AbstractOperation):
         return self.target.source.get_octal_mode()
 
     def describe_after(self) -> str:
-        return self.target.get_option_value(ModeOption)
+        return self.target.get_option(ModeOption).value.get_str()
 
     def description(self) -> str:
         return 'Change file permission'
@@ -45,7 +45,7 @@ class ItemChangeModeOperation(AbstractOperation):
         self._original_octal_mode = self.target.source.get_octal_mode()
         mode_int = cast(ModeOption, self.target.get_option(ModeOption)).get_int()
 
-        if self.target.get_option_value(ModeRecursiveOption) is True:
+        if self.target.get_option(ModeRecursiveOption).value.get_bool() is True:
             file_change_mode(
                 self.target.source.path,
                 mode_int

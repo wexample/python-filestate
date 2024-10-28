@@ -18,10 +18,11 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
         self._operation_test_rollback()
         self._operation_test_assert_rollback()
 
-    def _dry_run_and_count_operations(self, operations_count: int) -> "FileStateDryRunResult":
+    def _dry_run_and_count_operations(self) -> "FileStateDryRunResult":
         result = self.state_manager.dry_run()
         result.print()
 
+        operations_count = self._operation_get_count()
         assert len(result.operations) == operations_count
         assert len(result.to_prompt_responses()) == operations_count
 
@@ -40,14 +41,10 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
         return None
 
     def _operation_test_assert_initial(self) -> None:
-        self._dry_run_and_count_operations(
-            operations_count=self._operation_get_count()
-        )
+        self._dry_run_and_count_operations()
 
     def _operation_test_dry_run(self) -> None:
-        self._dry_run_and_count_operations(
-            operations_count=self._operation_get_count()
-        )
+        self._dry_run_and_count_operations()
 
     def _operation_test_apply(self) -> None:
         self.state_manager.apply()

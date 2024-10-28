@@ -8,5 +8,5 @@ class ModeRecursiveOption(AbstractOption):
     value: FileSystemPermission
 
     @staticmethod
-    def get_value_type() -> Type | UnionType:
+    def get_value_class_type() -> Type | UnionType:
         return bool

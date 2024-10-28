@@ -7,7 +7,7 @@ from wexample_helpers.helpers.file_helper import file_mode_octal_to_num
 
 class ModeOption(AbstractOption):
     @staticmethod
-    def get_value_type() -> FileSystemPermission:
+    def get_value_class_type() -> FileSystemPermission:
         return Union[str, int, FileSystemPermission]
 
     def get_octal(self) -> str:

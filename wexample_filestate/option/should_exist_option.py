@@ -6,5 +6,5 @@ from wexample_config.option.abstract_option import AbstractOption
 
 class ShouldExistOption(AbstractOption):
     @staticmethod
-    def get_value_type() -> Type | UnionType:
+    def get_value_class_type() -> Type | UnionType:
         return bool
