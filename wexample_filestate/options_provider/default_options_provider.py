@@ -1,6 +1,7 @@
 from typing import List, TYPE_CHECKING, Type
 
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
+from wexample_filestate.option.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption
 
 if TYPE_CHECKING:
     from wexample_config.option.abstract_option import AbstractOption
@@ -23,6 +24,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ModeOption,
             ModeRecursiveOption,
             NameOption,
+            RemoveBackupMaxFileSizeOption,
             ShouldExistOption,
             TypeOption,
         ]
