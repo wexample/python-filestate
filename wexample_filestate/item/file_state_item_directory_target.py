@@ -38,7 +38,6 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         from wexample_filestate.utils.child_config import ChildConfig
         super().configure(config)
 
-
         self.children = []
         if "children" in config:
             import copy
@@ -68,6 +67,15 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
                 return child
 
         return None
+
+    def find_by_name_or_fail(self, name: str) -> "TargetFileOrDirectory":
+        child = self.find_by_name(name)
+
+        if child is None:
+            from wexample_filestate.exception.item import ChildNotFoundException
+            raise ChildNotFoundException(f'Directory children not found: {name}')
+
+        return child
 
     def rollback(self) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult

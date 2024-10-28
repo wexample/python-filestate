@@ -1,12 +1,12 @@
 import os
-import unittest
+from abc import ABC
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from wexample_filestate.file_state_manager import FileStateManager
 
 
-class AbstractStateManagerTest(unittest.TestCase):
+class AbstractStateManagerTest(ABC):
     state_manager: "FileStateManager"
 
     def get_package_root_path(self) -> str:
@@ -17,7 +17,7 @@ class AbstractStateManagerTest(unittest.TestCase):
             self.get_package_root_path(), 'tests', 'resources'
         ) + os.sep
 
-    def setUp(self) -> None:
+    def setup_method(self) -> None:
         from wexample_filestate.file_state_manager import FileStateManager
 
         self.state_manager = FileStateManager.create_from_path(

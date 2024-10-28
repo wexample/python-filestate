@@ -85,7 +85,7 @@ state_manager.apply()
 
 ## Testing
 
-    python3 -m unittest discover tests
+     pytest -s pip/filestate/tests/
 
 ## License
 
