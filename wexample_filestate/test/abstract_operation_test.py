@@ -16,6 +16,7 @@ class AbstractOperationTest(AbstractStateManagerTest, ABC):
     def test_apply(self) -> None:
         self._operation_test_setup()
         self._operation_test_assert_initial()
+        self._operation_test_dry_run()
         self._operation_test_apply()
         self._operation_test_assert_applied()
         self._operation_test_rollback()
@@ -42,6 +43,11 @@ class AbstractOperationTest(AbstractStateManagerTest, ABC):
             operations_count=self._operation_get_count()
         )
 
+    def _operation_test_dry_run(self) -> None:
+        self._dry_run_and_count_operations(
+            operations_count=self._operation_get_count()
+        )
+
     def _operation_test_apply(self) -> None:
         self.state_manager.apply()
 
@@ -50,8 +56,8 @@ class AbstractOperationTest(AbstractStateManagerTest, ABC):
         pass
 
     def _operation_test_rollback(self) -> None:
-        self.state_manager.rollback()
+        self.state_manager.rollback().print()
 
     def _operation_test_assert_rollback(self):
-        # Re run initial checkup
+        # Rerun initial checkup
         self._operation_test_assert_initial()
