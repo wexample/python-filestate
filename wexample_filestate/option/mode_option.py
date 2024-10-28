@@ -1,13 +1,13 @@
 from typing import Union
 
 from wexample_filestate.const.files import FileSystemPermission
-from wexample_config.option.abstract_option import AbstractOption
+from wexample_filestate.option.abstract_item_option import AbstractItemOption
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num
 
 
-class ModeOption(AbstractOption):
+class ModeOption(AbstractItemOption):
     @staticmethod
-    def get_value_class_type() -> FileSystemPermission:
+    def get_value_allowed_type() -> FileSystemPermission:
         return Union[str, int, FileSystemPermission]
 
     def get_octal(self) -> str:

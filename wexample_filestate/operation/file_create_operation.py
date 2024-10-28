@@ -39,16 +39,12 @@ class FileCreateOperation(AbstractOperation):
             default_content = self.target.get_option(DefaultContentOption)
 
             if default_content:
-                # TODO
-                content = default_content.value.get_str()
+                content_str = default_content.value.render(
+                    operation=self
+                )
 
-                if content:
-                    if isinstance(content, str):
-                        str_content = content
-                    else:
-                        str_content = content.render(self.target, current_value='')
-
-                    file_write(self._original_path_str, str_content)
+                if content_str:
+                    file_write(self._original_path_str, content_str)
                 else:
                     file_touch(self._original_path_str)
             else:

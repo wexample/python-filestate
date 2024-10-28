@@ -1,10 +1,10 @@
 from typing import Type
 from types import UnionType
 
-from wexample_config.option.abstract_option import AbstractOption
+from wexample_filestate.option.abstract_item_option import AbstractItemOption
 
 
-class DefaultContentOption(AbstractOption):
+class DefaultContentOption(AbstractItemOption):
     @staticmethod
-    def get_value_class_type() -> Type | UnionType:
+    def get_value_allowed_type() -> Type | UnionType:
         return str

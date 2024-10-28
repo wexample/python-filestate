@@ -2,10 +2,10 @@ from typing import Type
 from types import UnionType
 
 from wexample_filestate.const.disk import DiskItemType
-from wexample_config.option.abstract_option import AbstractOption
+from wexample_filestate.option.abstract_item_option import AbstractItemOption
 
 
-class TypeOption(AbstractOption):
+class TypeOption(AbstractItemOption):
     @staticmethod
-    def get_value_class_type() -> Type | UnionType:
+    def get_value_allowed_type() -> Type | UnionType:
         return DiskItemType

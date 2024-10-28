@@ -3,7 +3,7 @@ from typing import Optional
 
 from tests.operation.test_file_create_operation import TestFileCreateOperation
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_values.readme_content_option_value import ReadmeContentConfigValue
+from wexample_filestate.config_value.readme_content_option_value import ReadmeContentConfigValue
 
 
 class TestFileCreateReadmeOperation(TestFileCreateOperation):
