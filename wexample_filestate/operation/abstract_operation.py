@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Type
 
 from pydantic import BaseModel
 
@@ -39,7 +39,7 @@ class AbstractOperation(BaseModel, ABC):
     def describe_after(self) -> str:
         pass
 
-    def dependencies(self) -> List["AbstractOperation"]:
+    def dependencies(self) -> List[Type["AbstractOperation"]]:
         return []
 
     def to_prompt_response(self, rollback: bool) -> PromptResponse:
