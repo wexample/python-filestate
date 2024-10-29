@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.option.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption, \
+from wexample_filestate.option.remove_backup_max_file_size_config_option import RemoveBackupMaxFileSizeConfigOption, \
     REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 from wexample_filestate.protocol.has_target_protocol import HasTargetProtocol
 

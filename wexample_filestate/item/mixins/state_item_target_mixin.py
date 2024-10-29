@@ -2,7 +2,7 @@ from typing import List, Type, Optional, TYPE_CHECKING, cast, Any
 from pathlib import Path
 
 from pydantic import BaseModel
-from wexample_config.classes.mixins.multiple_options_providers_mixin import MultipleOptionsProvidersMixin
+from wexample_config.classes.config_manager import ConfigManager
 from wexample_config.const.types import DictConfig
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
-class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
+class StateItemTargetMixin(ConfigManager, BaseModel):
     base_path: FileStringOrPath
     path: Optional[Path] = None
     source: Optional[StateItemSourceMixin] = None
@@ -25,11 +25,11 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
 
     def __init__(self, config: DictConfig, **data):
         BaseModel.__init__(self, config=config, **data)
-        MultipleOptionsProvidersMixin.__init__(self, config=config, **data)
+        ConfigManager.__init__(self, config=config, **data)
 
         self.path = Path(f"{self.base_path}{config['name']}")
 
-        self.autoconfigure(config=config)
+        self.configure(config=config)
 
         if self.path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
@@ -83,7 +83,7 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
                 result.operations.append(operation_class(target=self))
 
     def get_name(self) -> Optional[str]:
-        from wexample_config.option.name_option import NameOption
-        option = self.get_option(NameOption)
+        from wexample_config.option.name_config_option import NameConfigOption
+        option = self.get_option(NameConfigOption)
 
         return option.value.get_str() if option else None

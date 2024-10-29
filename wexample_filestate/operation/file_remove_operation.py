@@ -15,9 +15,9 @@ if TYPE_CHECKING:
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.option.should_exist_option import ShouldExistOption
+        from wexample_filestate.option.should_exist_config_option import ShouldExistConfigOption
 
-        if target.source and target.get_option_value(ShouldExistOption, default=True).is_false():
+        if target.source and target.get_option_value(ShouldExistConfigOption, default=True).is_false():
             return True
 
         return False

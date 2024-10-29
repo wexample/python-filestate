@@ -3,34 +3,34 @@ from typing import List, TYPE_CHECKING, Type
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 if TYPE_CHECKING:
-    from wexample_config.option.abstract_option import AbstractOption
+    from wexample_config.option.abstract_config_option import AbstractConfigOption
 
 
 class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
-    def get_options(cls) -> List[Type["AbstractOption"]]:
-        from wexample_filestate.option.class_option import ClassOption
-        from wexample_filestate.option.content_option import ContentOption
-        from wexample_filestate.option.name_pattern_option import NamePatternOption
-        from wexample_config.option.children_option import ChildrenOption
-        from wexample_filestate.option.default_content_option import DefaultContentOption
-        from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.option.mode_recursive_option import ModeRecursiveOption
-        from wexample_config.option.name_option import NameOption
-        from wexample_filestate.option.should_exist_option import ShouldExistOption
-        from wexample_filestate.option.type_option import TypeOption
-        from wexample_filestate.option.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption
+    def get_options(cls) -> List[Type["AbstractConfigOption"]]:
+        from wexample_filestate.option.class_config_option import ClassConfigOption
+        from wexample_filestate.option.content_config_option import ContentConfigOption
+        from wexample_filestate.option.name_pattern_config_option import NamePatternConfigOption
+        from wexample_config.option.children_config_option import ChildrenConfigOption
+        from wexample_filestate.option.default_content_config_option import DefaultContentConfigOption
+        from wexample_filestate.option.mode_config_option import ModeConfigOption
+        from wexample_filestate.option.mode_recursive_config_option import ModeRecursiveConfigOption
+        from wexample_config.option.name_config_option import NameConfigOption
+        from wexample_filestate.option.should_exist_config_option import ShouldExistConfigOption
+        from wexample_filestate.option.type_config_option import TypeConfigOption
+        from wexample_filestate.option.remove_backup_max_file_size_config_option import RemoveBackupMaxFileSizeConfigOption
 
         return [
-            ChildrenOption,
-            ClassOption,
-            ContentOption,
-            DefaultContentOption,
-            ModeOption,
-            ModeRecursiveOption,
-            NameOption,
-            NamePatternOption,
-            RemoveBackupMaxFileSizeOption,
-            ShouldExistOption,
-            TypeOption,
+            ChildrenConfigOption,
+            ClassConfigOption,
+            ContentConfigOption,
+            DefaultContentConfigOption,
+            ModeConfigOption,
+            ModeRecursiveConfigOption,
+            NameConfigOption,
+            NamePatternConfigOption,
+            RemoveBackupMaxFileSizeConfigOption,
+            ShouldExistConfigOption,
+            TypeConfigOption,
         ]

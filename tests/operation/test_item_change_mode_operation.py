@@ -11,9 +11,9 @@ class TestItemChangeModeOperation(TestAbstractOperation):
         return self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
 
     def _get_expected_mode(self) -> str:
-        from wexample_filestate.option.mode_option import ModeOption
+        from wexample_filestate.option.mode_config_option import ModeConfigOption
         target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
-        return target.get_option(ModeOption).value.get_str()
+        return target.get_option(ModeConfigOption).value.get_str()
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         return {

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
-from wexample_filestate.option.default_content_option import DefaultContentOption
+from wexample_filestate.option.default_content_config_option import DefaultContentConfigOption
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
 if TYPE_CHECKING:
@@ -18,9 +18,9 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.option.should_exist_option import ShouldExistOption
+        from wexample_filestate.option.should_exist_config_option import ShouldExistConfigOption
 
-        if not target.source and target.get_option_value(ShouldExistOption, default=False).is_true():
+        if not target.source and target.get_option_value(ShouldExistConfigOption, default=False).is_true():
             return True
 
         return False
@@ -37,7 +37,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def apply(self) -> None:
         self._original_path_str = self._get_target_file_path(target=self.target)
         if self.target.is_file():
-            default_content = self.target.get_option(DefaultContentOption)
+            default_content = self.target.get_option(DefaultContentConfigOption)
 
             if default_content:
                 content_str = default_content.value.render()
