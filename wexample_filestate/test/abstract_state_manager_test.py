@@ -39,3 +39,9 @@ class AbstractStateManagerTest(ABC):
         from wexample_helpers.helpers.file_helper import file_read
 
         assert (file_read(file_path) == expected_value) == positive
+
+    def _assert_dir_exists(self, dir_path: str, positive: bool = True):
+        assert (os.path.isdir(dir_path)) == positive
+
+    def _assert_file_exists(self, file_path: str, positive: bool = True):
+        assert (os.path.isfile(file_path)) == positive
