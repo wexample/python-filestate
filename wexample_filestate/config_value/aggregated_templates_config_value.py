@@ -1,5 +1,6 @@
 import os
-from typing import Dict, Optional, List, Any
+from types import UnionType
+from typing import Dict, Optional, List, Any, Type
 from wexample_filestate.config_value.item_config_value import ItemConfigValue
 from wexample_helpers.const.types import BasicValue
 
@@ -10,7 +11,7 @@ class AggregatedTemplatesConfigValue(ItemConfigValue):
     parameters: Optional[Dict[str, BasicValue]] = {}
 
     @staticmethod
-    def get_value_type() -> type:
+    def get_value_allowed_type() -> Type | UnionType:
         return Any
 
     def render(self) -> str:

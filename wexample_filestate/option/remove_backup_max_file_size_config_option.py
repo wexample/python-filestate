@@ -10,5 +10,5 @@ class RemoveBackupMaxFileSizeConfigOption(AbstractItemConfigOption):
     value: int = REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 
     @staticmethod
-    def get_value_type() -> Type | UnionType:
+    def get_value_allowed_type() -> Type | UnionType:
         return int
