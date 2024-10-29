@@ -1,9 +1,11 @@
 import os
 from abc import ABC
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, List, Type
 
 if TYPE_CHECKING:
     from wexample_filestate.file_state_manager import FileStateManager
+    from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
+    from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
 
 
 class AbstractStateManagerTest(ABC):
@@ -22,7 +24,16 @@ class AbstractStateManagerTest(ABC):
         from wexample_filestate.file_state_manager import FileStateManager
 
         self.state_manager = FileStateManager.create_from_path(
-            path=self._get_test_state_manager_path())
+            path=self._get_test_state_manager_path(),
+            options_providers=self._get_test_options_providers(),
+            operations_providers=self._get_test_operations_providers(),
+        )
+
+    def _get_test_operations_providers(self) -> Optional[List[Type["AbstractOperationsProvider"]]]:
+        return None
+
+    def _get_test_options_providers(self) -> Optional[List[Type["AbstractOptionsProvider"]]]:
+        return None
 
     def _assert_file_content_equals(self, file_path: str, expected_value: str, positive: bool = True):
         from wexample_helpers.helpers.file_helper import file_read

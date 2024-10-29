@@ -16,11 +16,8 @@ setup(
         'Operating System :: OS Independent',
     ],
     install_requires=[
-        'gitpython',
         'pydantic',
-        'pyyaml',
         'wexample-helpers',
-        'wexample-helpers-yaml',
         'wexample-prompt'
     ],
     python_requires='>=3.6',

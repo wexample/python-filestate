@@ -18,6 +18,8 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
     base_path: FileStringOrPath
     path: Optional[Path] = None
     source: Optional[StateItemSourceMixin] = None
+    options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None
+    operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None
 
     def __init__(self, config: DictConfig, **data):
         BaseModel.__init__(self, config=config, **data)
@@ -36,7 +38,6 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
             self.source = FileStateItemDirectorySource(
                 path=self.path)
 
-
     def get_operations(self) -> List[Type["AbstractOperation"]]:
         providers = self.get_operations_providers()
         operations = []
@@ -47,6 +48,9 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         return operations
 
     def get_options_providers(self) -> List[Type["AbstractOptionsProvider"]]:
+        if self.options_providers:
+            return self.options_providers
+
         from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
 
         return [
@@ -54,6 +58,9 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         ]
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
+        if self.operations_providers:
+            return self.operations_providers
+
         from wexample_filestate.operations_provider.default_operations_provider import DefaultOperationsProvider
 
         return [

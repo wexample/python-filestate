@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, List, cast, TYPE_CHECKING, Union
+from typing import Optional, List, cast, TYPE_CHECKING, Union, Type
 from pydantic import Field
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
@@ -15,9 +15,11 @@ from wexample_filestate.result.abstract_result import AbstractResult
 if TYPE_CHECKING:
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
+    from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
+    from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 
-class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin):
+class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory):
     children: List[Union[AbstractStateItem, FileStateItemDirectoryTarget, FileStateItemFileTarget]] = []
     io: IOManager = Field(
         default_factory=IOManager,
@@ -125,7 +127,9 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
         cls,
         path: str,
         config: Optional[DictConfig] = None,
-        io: Optional[IOManager] = None
+        io: Optional[IOManager] = None,
+        options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
+        operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None
     ) -> FileStateItemDirectoryTarget:
         import os
         from wexample_helpers.helpers.directory_helper import directory_get_base_name, directory_get_parent_path
@@ -142,4 +146,6 @@ class FileStateItemDirectoryTarget(FileStateItemDirectory, StateItemTargetMixin)
             config=config,
             base_path=directory_get_parent_path(path),
             io=io or IOManager(),
+            options_providers=options_providers,
+            operations_providers=operations_providers
         )
