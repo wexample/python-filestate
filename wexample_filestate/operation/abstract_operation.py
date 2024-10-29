@@ -65,6 +65,3 @@ class AbstractOperation(BaseModel, ABC):
         )
 
         return PromptResponse.from_lines(lines)
-
-    def get_target_file_path(self) -> str:
-        return self.target.path.resolve().as_posix()

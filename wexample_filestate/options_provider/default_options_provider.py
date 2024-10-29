@@ -2,6 +2,7 @@ from typing import List, TYPE_CHECKING, Type
 
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 from wexample_filestate.option.class_option import ClassOption
+from wexample_filestate.option.content_option import ContentOption
 from wexample_filestate.option.name_pattern_option import NamePatternOption
 from wexample_filestate.option.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption
 
@@ -22,6 +23,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
 
         return [
             ClassOption,
+            ContentOption,
             ChildrenOption,
             DefaultContentOption,
             ModeOption,

@@ -9,16 +9,22 @@ if TYPE_CHECKING:
 class AbstractStateManagerTest(ABC):
     state_manager: "FileStateManager"
 
-    def get_package_root_path(self) -> str:
-        return os.path.realpath(os.path.dirname(__file__) + '/../../') + os.sep
+    def _get_package_root_path(self) -> str:
+        return os.path.join(os.path.realpath(os.path.dirname(__file__)), '..', '..', '')
 
-    def get_package_resources_path(self) -> str:
-        return os.path.join(
-            self.get_package_root_path(), 'tests', 'resources'
-        ) + os.sep
+    def _get_test_state_manager_path(self) -> str:
+        return os.path.join(self._get_package_root_path(), 'tests', 'resources', '')
+
+    def _get_absolute_path_from_state_manager(self, relative: str) -> str:
+        return os.path.join(self._get_test_state_manager_path(), relative)
 
     def setup_method(self) -> None:
         from wexample_filestate.file_state_manager import FileStateManager
 
         self.state_manager = FileStateManager.create_from_path(
-            path=self.get_package_resources_path())
+            path=self._get_test_state_manager_path())
+
+    def _assert_file_content_equals(self, file_path: str, expected_value: str, positive: bool = True):
+        from wexample_helpers.helpers.file_helper import file_read
+
+        assert (file_read(file_path) == expected_value) == positive

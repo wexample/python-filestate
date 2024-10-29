@@ -1,11 +1,7 @@
 import os
-from typing import Dict, Optional, List, Any, TYPE_CHECKING
-
+from typing import Dict, Optional, List, Any
 from wexample_filestate.config_value.item_config_value import ItemConfigValue
 from wexample_helpers.const.types import BasicValue
-
-if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 class AggregatedTemplatesConfigValue(ItemConfigValue):
@@ -17,7 +13,7 @@ class AggregatedTemplatesConfigValue(ItemConfigValue):
     def get_value_type() -> type:
         return Any
 
-    def render(self, operation: "AbstractOperation") -> str:
+    def render(self) -> str:
         output = []
 
         for template_content in self.templates:

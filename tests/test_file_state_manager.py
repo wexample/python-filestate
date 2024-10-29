@@ -64,5 +64,5 @@ class TestFileStateManager(AbstractStateManagerTest):
 
     def test_configure_from_file(self):
         self.state_manager.configure_from_file(
-            os.path.join(self.get_package_resources_path(), 'config-test-one.yml')
+            os.path.join(self._get_test_state_manager_path(), 'config-test-one.yml')
         )

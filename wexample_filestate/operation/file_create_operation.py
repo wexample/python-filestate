@@ -4,6 +4,7 @@ import os
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationMixin
 from wexample_filestate.option.default_content_option import DefaultContentOption
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 
 
-class FileCreateOperation(AbstractOperation):
+class FileCreateOperation(FileManipulationMixin, AbstractOperation):
     _original_path_str: str
 
     @staticmethod
@@ -34,14 +35,12 @@ class FileCreateOperation(AbstractOperation):
         return 'Create missing file'
 
     def apply(self) -> None:
-        self._original_path_str = self.get_target_file_path()
+        self._original_path_str = self._get_target_file_path(target=self.target)
         if self.target.is_file():
             default_content = self.target.get_option(DefaultContentOption)
 
             if default_content:
-                content_str = default_content.value.render(
-                    operation=self
-                )
+                content_str = default_content.value.render()
 
                 if content_str:
                     file_write(self._original_path_str, content_str)
