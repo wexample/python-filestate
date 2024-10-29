@@ -1,10 +1,11 @@
-from typing import List, Type, Optional, TYPE_CHECKING, cast
+from typing import List, Type, Optional, TYPE_CHECKING, cast, Any
 from pathlib import Path
 
 from pydantic import BaseModel
 from wexample_config.classes.mixins.multiple_options_providers_mixin import MultipleOptionsProvidersMixin
 from wexample_config.const.types import DictConfig
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
+from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
 from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSourceMixin
 from wexample_helpers.const.types import FileStringOrPath
@@ -20,6 +21,7 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
     source: Optional[StateItemSourceMixin] = None
     options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None
     operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None
+    parent: Optional[TargetFileOrDirectory] = None
 
     def __init__(self, config: DictConfig, **data):
         BaseModel.__init__(self, config=config, **data)
@@ -48,6 +50,9 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         return operations
 
     def get_options_providers(self) -> List[Type["AbstractOptionsProvider"]]:
+        if self.parent:
+            return self.parent.get_options_providers()
+
         if self.options_providers:
             return self.options_providers
 
@@ -58,6 +63,9 @@ class StateItemTargetMixin(MultipleOptionsProvidersMixin, BaseModel):
         ]
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
+        if self.parent:
+            return self.parent.get_operations_providers()
+
         if self.operations_providers:
             return self.operations_providers
 

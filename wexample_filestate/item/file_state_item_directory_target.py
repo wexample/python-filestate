@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, List, cast, TYPE_CHECKING, Union, Type
+from typing import Optional, List, cast, TYPE_CHECKING, Union, Type, Any
 from pydantic import Field
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
@@ -26,9 +26,9 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         description="Handles output to print, allow to share it if defined in a parent context")
     last_result: Optional[AbstractResult] = None
 
-    def __init__(self, config: Optional[DictConfig] = None, **data):
+    def __init__(self, config: Optional[DictConfig] = None,  parent:Optional[Any] = None, **data):
         FileStateItemDirectory.__init__(self, config=config, **data)
-        StateItemTargetMixin.__init__(self, config=config, **data)
+        StateItemTargetMixin.__init__(self, config=config, parent=parent, **data)
 
     def configure_from_file(self, path: FileStringOrPath):
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read

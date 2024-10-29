@@ -30,12 +30,23 @@ class ChildConfig(BaseModel):
                     f"should extend {FileStateItemDirectoryTarget.__name__} "
                     f"or {FileStateItemFileTarget.__name__}")
 
-            print(self.config)
-            return [self.config["class"](base_path=base_path, config=self.config, parent=target)]
+            return [self.config["class"](
+                base_path=base_path,
+                config=self.config,
+                parent=target,
+            )]
 
         if is_file_type or is_actual_file:
-            state_item = FileStateItemFileTarget(base_path=base_path, config=self.config, parent=self)
+            state_item = FileStateItemFileTarget(
+                base_path=base_path,
+                config=self.config,
+                parent=target,
+            )
         else:
-            state_item = FileStateItemDirectoryTarget(base_path=base_path, config=self.config, parent=self)
+            state_item = FileStateItemDirectoryTarget(
+                base_path=base_path,
+                config=self.config,
+                parent=target,
+            )
 
         return [state_item]

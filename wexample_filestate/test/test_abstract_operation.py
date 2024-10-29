@@ -59,14 +59,3 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
     def _operation_test_assert_rollback(self):
         # Rerun initial checkup
         self._operation_test_assert_initial()
-
-    def _assert_state_manager_target_directory_exists(self, name: str, positive: bool = True) -> None:
-        target = self.state_manager.find_by_name_or_fail(name)
-
-        # Target should always exist
-        assert target is not None
-
-        self._assert_dir_exists(
-            target.get_resolved(),
-            positive=positive
-        )
