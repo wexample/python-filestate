@@ -4,7 +4,7 @@ import os
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
 from wexample_filestate.option.default_content_option import DefaultContentOption
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 
 
-class FileCreateOperation(FileManipulationMixin, AbstractOperation):
+class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_path_str: str
 
     @staticmethod

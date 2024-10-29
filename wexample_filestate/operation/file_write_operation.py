@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
 from wexample_filestate.option.content_option import ContentOption
 from wexample_helpers.helpers.file_helper import file_write, file_read
 
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 
 
-class FileWriteOperation(FileManipulationMixin, AbstractOperation):
+class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(target: "TargetFileOrDirectory") -> bool:
         from wexample_filestate.option.content_option import ContentOption

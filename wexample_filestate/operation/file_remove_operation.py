@@ -5,14 +5,14 @@ import shutil
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
     from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 
 
-class FileRemoveOperation(FileManipulationMixin, AbstractOperation):
+class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
         from wexample_filestate.option.should_exist_option import ShouldExistOption

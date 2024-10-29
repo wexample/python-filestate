@@ -9,15 +9,15 @@ if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
 
 
-class FileManipulationMixin(AbstractOperation):
+class FileManipulationOperationMixin(AbstractOperation):
     _original_path_str: str
     _original_file_mode: int
     _original_file_content: str = ''
 
     def _get_target_file_path(self, target: "FileStateItemDirectoryTarget") -> str:
-        return target.path.resolve().as_posix()
+        return target.get_resolved()
 
-    def _backup_target_file(self:Union[HasTargetProtocol, "FileManipulationMixin"]) -> None:
+    def _backup_target_file(self:Union[HasTargetProtocol, "FileManipulationOperationMixin"]) -> None:
         self._original_path_str = self._get_target_file_path(target=self.target)
         self._original_file_mode = self.target.path.stat().st_mode
 
@@ -26,7 +26,7 @@ class FileManipulationMixin(AbstractOperation):
             file_path=self._get_target_file_path(target=self.target),
         )
 
-    def _restore_target_file(self: Union[HasTargetProtocol, "FileManipulationMixin"]) -> None:
+    def _restore_target_file(self: Union[HasTargetProtocol, "FileManipulationOperationMixin"]) -> None:
         import os
         from wexample_helpers.helpers.file_helper import file_write
 

@@ -94,6 +94,7 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
 
         result = FileStateResult(state_manager=self, rollback=True)
 
+        # Fetch applied operations to a new stack.
         if self.last_result:
             for operation in self.last_result.operations:
                 if operation.applied:
