@@ -85,7 +85,7 @@ state_manager.apply()
 
 ## Testing
 
-     pytest -s pip/filestate/tests/
+     pytest -rP -x pip/filestate/tests/
 
 ## License
 
