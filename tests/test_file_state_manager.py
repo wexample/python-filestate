@@ -3,6 +3,7 @@ import os
 import pytest
 
 from wexample_config.config_value.callback_render_config_value import CallbackRenderConfigValue
+from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 
@@ -46,7 +47,6 @@ class TestFileStateManager(AbstractStateManagerTest):
         assert self.state_manager.get_item_name() == "yes"
 
     def test_configure_from_callback_class(self):
-
         def _name():
             return "yow"
 
@@ -60,3 +60,18 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.configure_from_file(
             os.path.join(self._get_test_state_manager_path(), 'config-test-one.yml')
         )
+
+    def test_dump(self):
+        self.state_manager.set_value({
+            'children': [
+                {
+                    'name': TEST_FILE_NAME_SIMPLE_TEXT,
+                    "type": "file",
+                }
+            ]
+        })
+
+        dump = self.state_manager.dump()
+
+        assert dump == {'name': 'resources', 'children': [{'name': 'simple-text.txt', 'type': 'file'}]}
+        assert isinstance(dump, dict)
