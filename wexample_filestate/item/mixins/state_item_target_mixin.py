@@ -1,12 +1,10 @@
-from typing import TYPE_CHECKING, List, Type, Optional
-
 from pathlib import Path
+from typing import TYPE_CHECKING, List, Optional, Type
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
 from wexample_config.const.types import DictConfig
-
 from wexample_helpers.const.types import FileStringOrPath
 
 if TYPE_CHECKING:
@@ -17,6 +15,7 @@ if TYPE_CHECKING:
 
 class StateItemTargetMixin(AbstractNestedConfigOption):
     base_path: FileStringOrPath
+    path: Optional[Path] = None
 
     def __init__(self, config: DictConfig, **data):
         AbstractNestedConfigOption.__init__(self, value=config, **data)
@@ -38,6 +37,7 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
 
     def get_item_name(self) -> Optional[str]:
         from wexample_config.config_option.name_config_option import NameConfigOption
+
         option = self.get_option(NameConfigOption)
 
-        return option.value.get_str() if option else None
+        return option.get_value().get_str() if option else None
