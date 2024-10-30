@@ -1,6 +1,6 @@
-import os
-
 import pytest
+
+from wexample_config.config_value.callback_render_config_value import CallbackRenderConfigValue
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 
@@ -18,10 +18,10 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.set_value({"unexpected_option": "yes"})
 
     def test_configure_class_unexpected(self):
+        from wexample_filestate.exception.config import BadConfigurationClassTypeException
+
         class BadClass:
             pass
-
-        from wexample_filestate.exception.config import BadConfigurationClassTypeException
 
         with pytest.raises(BadConfigurationClassTypeException):
             self.state_manager.set_value({
@@ -31,3 +31,25 @@ class TestFileStateManager(AbstractStateManagerTest):
                     }
                 ]
             })
+
+    def test_configure_from_callback(self):
+        def _name():
+            return "yes"
+
+        self.state_manager.set_value({
+            "name": _name
+        })
+
+        assert self.state_manager.get_name() == "file_state_manager"
+        assert self.state_manager.get_item_name() == "yes"
+
+    def test_configure_from_callback_class(self):
+
+        def _name():
+            return "yow"
+
+        self.state_manager.set_value({
+            'name': CallbackRenderConfigValue(raw=_name),
+        })
+
+        assert self.state_manager.get_item_name() == "yow"
