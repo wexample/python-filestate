@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING, List, Type, Optional
 
 from pathlib import Path
 
@@ -35,3 +35,9 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
         return [
             DefaultOptionsProvider,
         ]
+
+    def get_item_name(self) -> Optional[str]:
+        from wexample_config.config_option.name_config_option import NameConfigOption
+        option = self.get_option(NameConfigOption)
+
+        return option.value.get_str() if option else None
