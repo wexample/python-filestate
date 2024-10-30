@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from wexample_filestate.item.file_state_item_directory_target import (
-    FileStateItemDirectoryTarget,
-)
+from wexample_filestate.item.file_state_item_directory_target import \
+    FileStateItemDirectoryTarget
 
 
 class FileStateManager(FileStateItemDirectoryTarget):

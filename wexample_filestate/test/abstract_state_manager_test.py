@@ -1,8 +1,13 @@
 import os
 from abc import ABC
-from typing import cast
+from typing import TYPE_CHECKING, List, Optional, Type, cast
 
-from wexample_filestate.file_state_manager import FileStateManager
+if TYPE_CHECKING:
+    from wexample_config.options_provider.abstract_options_provider import \
+        AbstractOptionsProvider
+    from wexample_filestate.file_state_manager import FileStateManager
+    from wexample_filestate.operations_provider.abstract_operations_provider import \
+        AbstractOperationsProvider
 
 
 class AbstractStateManagerTest(ABC):
@@ -23,3 +28,32 @@ class AbstractStateManagerTest(ABC):
                 path=self._get_test_state_manager_path(),
             ),
         )
+
+    def _get_test_operations_providers(self) -> Optional[List[Type["AbstractOperationsProvider"]]]:
+        return None
+
+    def _get_test_options_providers(self) -> Optional[List[Type["AbstractOptionsProvider"]]]:
+        return None
+
+    def _assert_file_content_equals(self, file_path: str, expected_value: str, positive: bool = True):
+        from wexample_helpers.helpers.file_helper import file_read
+
+        assert (file_read(file_path) == expected_value) == positive
+
+    def _assert_dir_exists(self, dir_path: str, positive: bool = True):
+        assert (os.path.isdir(dir_path)) == positive
+
+    def _assert_file_exists(self, file_path: str, positive: bool = True):
+        assert (os.path.isfile(file_path)) == positive
+
+    def _assert_state_manager_target_directory_exists(self, name: str, positive: bool = True) -> None:
+        target = self.state_manager.find_by_name_or_fail(name)
+
+        # Target should always exist
+        assert target is not None
+
+        self._assert_dir_exists(
+            target.get_resolved(),
+            positive=positive
+        )
+

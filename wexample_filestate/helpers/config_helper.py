@@ -17,4 +17,6 @@ def config_has_same_type_as_file(config: DictConfig, path: FileStringOrPath) -> 
 
 
 def config_is_item_type(config: DictConfig, type_enum: DiskItemType) -> bool:
-    return config.get("type") and (config["type"] == type_enum or config["type"] == type_enum.value)
+    return config.get("type") is not None and (
+        config["type"] == type_enum or config["type"] == type_enum.value
+    )

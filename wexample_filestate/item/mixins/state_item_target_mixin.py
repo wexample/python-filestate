@@ -1,16 +1,14 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Type
 
-from wexample_config.config_option.abstract_nested_config_option import (
-    AbstractNestedConfigOption,
-)
+from wexample_config.config_option.abstract_nested_config_option import \
+    AbstractNestedConfigOption
 from wexample_config.const.types import DictConfig
 from wexample_helpers.const.types import FileStringOrPath
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import (
-        AbstractOptionsProvider,
-    )
+    from wexample_config.options_provider.abstract_options_provider import \
+        AbstractOptionsProvider
 
 
 class StateItemTargetMixin(AbstractNestedConfigOption):
@@ -27,16 +25,16 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
         if len(providers) > 0:
             return providers
 
-        from wexample_filestate.options_provider.default_options_provider import (
-            DefaultOptionsProvider,
-        )
+        from wexample_filestate.options_provider.default_options_provider import \
+            DefaultOptionsProvider
 
         return [
             DefaultOptionsProvider,
         ]
 
     def get_item_name(self) -> Optional[str]:
-        from wexample_config.config_option.name_config_option import NameConfigOption
+        from wexample_config.config_option.name_config_option import \
+            NameConfigOption
 
         option = self.get_option(NameConfigOption)
 

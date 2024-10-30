@@ -4,7 +4,8 @@ from typing import Any, Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.file_state_item_file import FileStateItemFile
-from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
+from wexample_filestate.item.mixins.state_item_target_mixin import \
+    StateItemTargetMixin
 
 
 class FileStateItemFileTarget(StateItemTargetMixin, FileStateItemFile):
