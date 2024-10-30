@@ -5,10 +5,17 @@ from typing import Optional
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
 from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
+from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.directory_helper import directory_get_base_name, directory_get_parent_path
 
 
 class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory):
+    def configure_from_file(self, path: FileStringOrPath):
+        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
+
+        if yaml_read is not None:
+            self.set_value(raw_value=yaml_read(path))
+
     @classmethod
     def create_from_path(
         cls,

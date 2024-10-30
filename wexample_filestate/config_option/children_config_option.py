@@ -9,7 +9,6 @@ from wexample_filestate.item.file_state_item_file_target import FileStateItemFil
 
 
 class ChildrenConfigOption(BaseChildrenConfigOption):
-
     def set_value(self, raw_value: Any):
         super().set_value(raw_value)
 
