@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
+from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
+from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
 
 
-class FileStateItemDirectoryTarget(BaseModel):
+class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory):
     @classmethod
     def create_from_path(cls):
         return cls()

@@ -3,7 +3,7 @@ from typing import List, TYPE_CHECKING, Type
 from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 if TYPE_CHECKING:
-    from wexample_config.option.abstract_config_option import AbstractConfigOption
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class DefaultOptionsProvider(AbstractOptionsProvider):
@@ -20,6 +20,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.should_exist_config_option import ShouldExistConfigOption
         from wexample_filestate.option.type_config_option import TypeConfigOption
         from wexample_filestate.option.remove_backup_max_file_size_config_option import RemoveBackupMaxFileSizeConfigOption
+        from wexample_config.config_option.name_config_option import NameConfigOption
 
         return [
             ChildrenConfigOption,
