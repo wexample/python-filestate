@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
     def get_options(cls) -> List[Type["AbstractConfigOption"]]:
+        from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+
         # from wexample_filestate.config_option.class_config_option import ClassConfigOption
         # from wexample_filestate.config_option.content_config_option import ContentConfigOption
         # from wexample_filestate.config_option.name_pattern_config_option import NamePatternConfigOption
@@ -23,8 +25,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         # from wexample_filestate.config_option.type_config_option import TypeConfigOption
         # from wexample_filestate.config_option.remove_backup_max_file_size_config_option import RemoveBackupMaxFileSizeConfigOption
         from wexample_config.config_option.name_config_option import NameConfigOption
-
-        # from wexample_config.option.children_config_option import ChildrenConfigOption
 
         return [
             ChildrenConfigOption,

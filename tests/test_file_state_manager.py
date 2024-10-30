@@ -16,3 +16,18 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         with pytest.raises(InvalidOptionException):
             self.state_manager.set_value({"unexpected_option": "yes"})
+
+    def test_configure_class_unexpected(self):
+        class BadClass:
+            pass
+
+        from wexample_filestate.exception.config import BadConfigurationClassTypeException
+
+        with pytest.raises(BadConfigurationClassTypeException):
+            self.state_manager.set_value({
+                "children": [
+                    {
+                        "class": BadClass
+                    }
+                ]
+            })
