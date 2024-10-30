@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from wexample_config.config_value.callback_render_config_value import CallbackRenderConfigValue
@@ -53,3 +55,8 @@ class TestFileStateManager(AbstractStateManagerTest):
         })
 
         assert self.state_manager.get_item_name() == "yow"
+
+    def test_configure_from_file(self):
+        self.state_manager.configure_from_file(
+            os.path.join(self._get_test_state_manager_path(), 'config-test-one.yml')
+        )
