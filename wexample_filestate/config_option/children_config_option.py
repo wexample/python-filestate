@@ -27,6 +27,11 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
 
         AbstractConfigOption.set_value(self, raw_value)
 
+        # If child is not linked to any parent item.
+        if not self.parent:
+            return
+
+        # Parent item shoulb be a file or directory target.
         base_path = self.get_parent().get_resolved()
         for child_config in raw_value:
             item_name = child_config.get("name")

@@ -4,6 +4,7 @@ import pytest
 from wexample_config.config_value.callback_render_config_value import (
     CallbackRenderConfigValue,
 )
+from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
@@ -38,8 +39,28 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         self.state_manager.set_value({"name": _name})
 
-        assert self.state_manager.get_name() == "file_state_manager"
+        assert self.state_manager.get_key() == "file_state_manager"
         assert self.state_manager.get_item_name() == "yes"
+
+    def test_configure_define_child(self):
+        self.state_manager.allow_undefined_keys = True
+        self.state_manager.set_value(
+            {
+                "custom_name": ChildrenConfigOption(value=[
+                    {
+                        "name": TEST_FILE_NAME_SIMPLE_TEXT,
+                        "type": "file",
+                    }
+                ], parent=self.state_manager)
+            }
+        )
+
+        assert self.state_manager.dump() == {
+            'name': 'resources',
+            'children': [{'name': 'simple-text.txt', 'type': 'file'}]
+        }
+
+        self.state_manager.allow_undefined_keys = False
 
     def test_configure_from_callback_class(self):
         def _name():
