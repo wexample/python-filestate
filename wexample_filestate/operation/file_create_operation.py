@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Union, cast
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
-from wexample_filestate.option.default_content_config_option import DefaultContentConfigOption
+from wexample_filestate.config_option.default_content_config_option import DefaultContentConfigOption
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
 if TYPE_CHECKING:
@@ -18,7 +18,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.option.should_exist_config_option import ShouldExistConfigOption
+        from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
 
         if not target.source and target.get_option_value(ShouldExistConfigOption, default=False).is_true():
             return True
@@ -37,10 +37,12 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def apply(self) -> None:
         self._original_path_str = self._get_target_file_path(target=self.target)
         if self.target.is_file():
-            default_content = self.target.get_option(DefaultContentConfigOption)
+            default_content = cast(
+                DefaultContentConfigOption,
+                self.target.get_option(DefaultContentConfigOption))
 
             if default_content:
-                content_str = default_content.value.render()
+                content_str = default_content.render_content()
 
                 if content_str:
                     file_write(self._original_path_str, content_str)

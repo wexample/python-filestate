@@ -1,25 +1,29 @@
 import os
 from typing import Any, Optional, cast
 
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_config.config_option.children_config_option import \
     ChildrenConfigOption as BaseChildrenConfigOption
-from wexample_filestate.const.disk import DiskItemType
+
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
-from wexample_filestate.helpers.config_helper import config_is_item_type
-from wexample_filestate.item.file_state_item_directory_target import \
-    FileStateItemDirectoryTarget
+
 from wexample_filestate.item.file_state_item_file_target import \
     FileStateItemFileTarget
-
+from wexample_filestate.item.file_state_item_directory_target import \
+    FileStateItemDirectoryTarget
 
 class ChildrenConfigOption(BaseChildrenConfigOption):
-    parent: Optional["TargetFileOrDirectory"] = None
+    parent: Optional[TargetFileOrDirectory] = None
+    children: list[TargetFileOrDirectory] = []
 
     def get_parent(self) -> "TargetFileOrDirectory":
-        return cast("TargetFileOrDirectory", super().get_parent())
+        assert self.parent is not None
+        return cast("TargetFileOrDirectory", self.parent)
 
     def set_value(self, raw_value: Any):
+        from wexample_filestate.helpers.config_helper import config_is_item_type
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+
         AbstractConfigOption.set_value(self, raw_value)
 
         base_path = self.get_parent().get_resolved()
@@ -47,6 +51,7 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
                     base_path=base_path,
                     config=child_config,
                     parent=self,
+                    parent_item=self.parent
                 )
 
             else:
@@ -60,12 +65,14 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
                         base_path=base_path,
                         config=child_config,
                         parent=self,
+                        parent_item=self.parent
                     )
                 else:
                     child = FileStateItemDirectoryTarget(
                         base_path=base_path,
                         config=child_config,
                         parent=self,
+                        parent_item=self.parent
                     )
 
             self.children.append(child)

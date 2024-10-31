@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
-from wexample_filestate.option.content_config_option import ContentConfigOption
+from wexample_filestate.config_option.content_config_option import ContentConfigOption
 from wexample_helpers.helpers.file_helper import file_write, file_read
 
 if TYPE_CHECKING:
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(target: "TargetFileOrDirectory") -> bool:
-        from wexample_filestate.option.content_config_option import ContentConfigOption
+        from wexample_filestate.config_option.content_config_option import ContentConfigOption
 
         if target.get_option(ContentConfigOption) is not None:
             current_content = file_read(target.path.resolve().as_posix())

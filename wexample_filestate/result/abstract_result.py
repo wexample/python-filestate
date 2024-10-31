@@ -4,17 +4,17 @@ from typing import TYPE_CHECKING, List
 
 from pydantic import BaseModel
 from wexample_prompt.utils.prompt_response import PromptResponse
+from wexample_filestate.operation.abstract_operation import \
+    AbstractOperation
+
 
 if TYPE_CHECKING:
     from wexample_filestate.item.file_state_item_directory_target import \
         FileStateItemDirectoryTarget
-    from wexample_filestate.operation.abstract_operation import \
-        AbstractOperation
-
 
 class AbstractResult(BaseModel):
     state_manager: "FileStateItemDirectoryTarget"
-    operations: List["AbstractOperation"] = []
+    operations: List[AbstractOperation] = []
     rollback: bool = False
 
     def __repr__(self) -> str:
