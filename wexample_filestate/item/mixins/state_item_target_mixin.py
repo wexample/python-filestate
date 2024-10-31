@@ -5,6 +5,7 @@ from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
 from wexample_config.const.types import DictConfig
+from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.item.file_state_item_directory_source import (
     FileStateItemDirectorySource,
 )
@@ -26,16 +27,25 @@ SourceFileOrDirectory = Union[FileStateItemDirectorySource, FileStateItemFileSou
 
 
 class StateItemTargetMixin(AbstractNestedConfigOption):
-    base_path: FileStringOrPath
+    base_path: Optional[FileStringOrPath] = None
     path: Optional[Path] = None
     source: Optional[SourceFileOrDirectory] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
     parent_item: Any = None
 
     def __init__(self, config: DictConfig, **data):
-        AbstractNestedConfigOption.__init__(self, value=config, **data)
+        data["value"] = config
 
-        self.path = Path(f"{self.base_path}{config['name']}")
+        if data.get("base_path", None) is None:
+            parent_item = data.get("parent_item", None)
+            if parent_item is not None:
+                data["base_path"] = cast(TargetFileOrDirectory, parent_item).get_resolved()
+            else:
+                raise Exception(f'{self.__class__.__name__}: Missing base_path or parent item')
+
+        data["path"] = Path(f"{data.get('base_path')}{config['name']}")
+
+        super().__init__(**data)
 
         if self.path.is_file():
             from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource

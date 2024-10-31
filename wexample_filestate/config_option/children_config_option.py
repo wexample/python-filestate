@@ -31,7 +31,7 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
         if not self.parent:
             return
 
-        # Parent item shoulb be a file or directory target.
+        # Parent item should be a file or directory target.
         base_path = self.get_parent().get_resolved()
         for child_config in raw_value:
             item_name = child_config.get("name")
@@ -55,7 +55,6 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
                     )
 
                 child = class_name(
-                    base_path=base_path,
                     config=child_config,
                     parent=self,
                     parent_item=self.parent,
@@ -69,14 +68,12 @@ class ChildrenConfigOption(BaseChildrenConfigOption):
 
                 if is_file_type or is_actual_file:
                     child = FileStateItemFileTarget(
-                        base_path=base_path,
                         config=child_config,
                         parent=self,
                         parent_item=self.parent,
                     )
                 else:
                     child = FileStateItemDirectoryTarget(
-                        base_path=base_path,
                         config=child_config,
                         parent=self,
                         parent_item=self.parent,
