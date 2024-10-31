@@ -31,7 +31,8 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def _render_new_content(target: "TargetFileOrDirectory") -> str:
         return cast(
-            ContentConfigOption, target.get_option_value(ContentConfigOption)
+            ContentConfigOption,
+            target.get_option_value(ContentConfigOption)
         ).render_content()
 
     def describe_before(self) -> str:
