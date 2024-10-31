@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Type
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
@@ -13,4 +13,4 @@ class ClassConfigOption(AbstractConfigOption):
             FileStateItemFileTarget,
         )
 
-        return FileStateItemDirectoryTarget | FileStateItemFileTarget
+        return Type[FileStateItemDirectoryTarget] | Type[FileStateItemFileTarget]
