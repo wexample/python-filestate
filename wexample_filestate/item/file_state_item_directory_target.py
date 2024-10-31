@@ -27,6 +27,7 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
 
     def get_children_list(self) -> list[TargetFileOrDirectory]:
         from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 
         option = cast(ChildrenConfigOption, self.get_option(ChildrenConfigOption))
         if option is not None:
