@@ -15,7 +15,7 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
         from wexample_config.const.types import DictConfig
 
         class TestClass(FileStateManager):
-            def build_config(self, config: Optional[DictConfig] = None) -> DictConfig:
+            def prepare_value(self, config: Optional[DictConfig] = None) -> DictConfig:
                 config.update({
                     'children': [
                         {
