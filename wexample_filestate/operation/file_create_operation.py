@@ -1,52 +1,73 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Union, cast
 
+from wexample_filestate.config_option.default_content_config_option import (
+    DefaultContentConfigOption,
+)
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.options.default_content_option import DefaultContentOption
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
-    from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+    from wexample_filestate.item.file_state_item_directory_target import (
+        FileStateItemDirectoryTarget,
+    )
+    from wexample_filestate.item.file_state_item_file_target import (
+        FileStateItemFileTarget,
+    )
 
 
-class FileCreateOperation(AbstractOperation):
+class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_path_str: str
 
     @staticmethod
-    def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.options.should_exist_option import ShouldExistOption
+    def applicable(
+        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+    ) -> bool:
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
+        )
 
-        if not target.source and target.get_option_value(ShouldExistOption) is True:
+        if (
+            not target.source
+            and target.get_option_value(
+                ShouldExistConfigOption, default=False
+            ).is_true()
+        ):
             return True
 
         return False
 
     def describe_before(self) -> str:
-        return 'MISSING'
+        return "MISSING"
 
     def describe_after(self) -> str:
-        return 'CREATED'
+        return "CREATED"
 
     def description(self) -> str:
-        return 'Create missing file'
+        return "Create missing file"
 
     def apply(self) -> None:
-        self._original_path_str = self.get_target_file_path()
+        self._original_path_str = self._get_target_file_path(target=self.target)
         if self.target.is_file():
-            content = self.target.get_option_value(DefaultContentOption)
+            default_content = cast(
+                DefaultContentConfigOption,
+                self.target.get_option(DefaultContentConfigOption),
+            )
 
-            if content:
-                if isinstance(content, str):
-                    str_content = content
+            if default_content:
+                content_str = default_content.render_content()
+
+                if content_str:
+                    file_write(self._original_path_str, content_str)
                 else:
-                    str_content = content.render(self.target, current_value='')
-
-                file_write(self._original_path_str, str_content)
+                    file_touch(self._original_path_str)
             else:
-                file_touch(self._original_path_str)
+                file_touch(self.target.get_resolved())
 
         elif self.target.is_directory():
             os.mkdir(self._original_path_str)

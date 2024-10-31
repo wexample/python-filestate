@@ -5,50 +5,49 @@ import shutil
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.options.remove_backup_max_file_size_option import RemoveBackupMaxFileSizeOption, \
-    REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
-from wexample_helpers.helpers.file_helper import file_read, file_write
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
-    from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+    from wexample_filestate.item.file_state_item_directory_target import (
+        FileStateItemDirectoryTarget,
+    )
+    from wexample_filestate.item.file_state_item_file_target import (
+        FileStateItemFileTarget,
+    )
 
 
-class FileRemoveOperation(AbstractOperation):
-    _original_path_str: str
-    _original_file_mode: int
-    _original_file_content: str = ''
-
+class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
-    def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.options.should_exist_option import ShouldExistOption
+    def applicable(
+        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+    ) -> bool:
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
+        )
 
-        if target.source and target.get_option_value(ShouldExistOption) is False:
+        if (
+            target.source
+            and target.get_option_value(
+                ShouldExistConfigOption, default=True
+            ).is_false()
+        ):
             return True
 
         return False
 
     def describe_before(self) -> str:
-        return 'EXISTS'
+        return "EXISTS"
 
     def describe_after(self) -> str:
-        return 'REMOVED'
+        return "REMOVED"
 
     def description(self) -> str:
-        return 'Remove existing file'
+        return "Remove existing file"
 
     def apply(self) -> None:
-        self._original_path_str = self.get_target_file_path()
-        self._original_file_mode = self.target.path.stat().st_mode
-        file_path = self.get_target_file_path()
-        size = os.path.getsize(file_path)
-
-        # Save content if not too large.
-        if size < int(self.target.get_option_value(
-            RemoveBackupMaxFileSizeOption,
-            default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
-        )):
-            self._original_file_content = file_read(file_path)
+        self._backup_target_file()
 
         if self.target.is_file():
             os.remove(self._original_path_str)
@@ -56,8 +55,4 @@ class FileRemoveOperation(AbstractOperation):
             shutil.rmtree(self._original_path_str)
 
     def undo(self) -> None:
-        if self.target.is_file():
-            file_write(self._original_path_str, self._original_file_content)
-            os.chmod(self._original_path_str, self._original_file_mode)
-        elif self.target.is_directory():
-            os.mkdir(self._original_path_str)
+        self._restore_target_file()

@@ -83,6 +83,10 @@ state_manager.configure({
 state_manager.apply()
 ```
 
+## Testing
+
+     pytest -rP -x pip/filestate/tests/
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

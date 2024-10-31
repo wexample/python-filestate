@@ -1,63 +1,89 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union, Optional, cast
+from typing import TYPE_CHECKING, Optional, Union, cast
 
+from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+from wexample_filestate.item.file_state_item_directory_target import (
+    FileStateItemDirectoryTarget,
+)
+from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.options.mode_option import ModeOption
-from wexample_helpers.helpers.file_helper import file_mode_octal_to_num, file_validate_mode_octal_or_fail, \
-    file_change_mode_recursive, file_change_mode, file_path_get_mode_num
+from wexample_helpers.helpers.file_helper import (
+    file_change_mode,
+    file_change_mode_recursive,
+    file_mode_octal_to_num,
+    file_path_get_mode_num,
+    file_validate_mode_octal_or_fail,
+)
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
-    from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+    from wexample_filestate.item.file_state_item_directory_target import (
+        FileStateItemDirectoryTarget,
+    )
+    from wexample_filestate.item.file_state_item_file_target import (
+        FileStateItemFileTarget,
+    )
 
 
 class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
 
     @staticmethod
-    def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
+    def applicable(
+        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+    ) -> bool:
         if target.source:
-            from wexample_filestate.options.mode_option import ModeOption
+            from wexample_filestate.config_option.mode_config_option import (
+                ModeConfigOption,
+            )
 
-            option = cast(ModeOption, target.get_option(ModeOption))
+            option = cast(ModeConfigOption, target.get_option(ModeConfigOption))
             if option:
                 file_validate_mode_octal_or_fail(option.get_octal())
-
-                if file_path_get_mode_num(target.source.path) != option.get_int():
+                if (
+                    file_path_get_mode_num(target.get_source().get_path())
+                    != option.get_int()
+                ):
                     return True
 
         return False
 
     def describe_before(self) -> str:
-        return self.target.source.get_octal_mode()
+        return self.target.get_source().get_octal_mode()
 
     def describe_after(self) -> str:
-        return self.target.get_option_value(ModeOption)
+        return self.target.get_option_value(ModeConfigOption).get_str()
 
     def description(self) -> str:
-        return 'Change file permission'
+        return "Change file permission"
 
     def apply(self) -> None:
-        from wexample_filestate.options.mode_option import ModeOption
-        from wexample_filestate.options.mode_recursive_option import ModeRecursiveOption
+        from wexample_filestate.config_option.mode_recursive_config_option import (
+            ModeRecursiveConfigOption,
+        )
 
-        self._original_octal_mode = self.target.source.get_octal_mode()
-        mode_int = cast(ModeOption, self.target.get_option(ModeOption)).get_int()
+        self._original_octal_mode = self.target.get_source().get_octal_mode()
+        mode_int = cast(
+            ModeConfigOption, self.target.get_option(ModeConfigOption)
+        ).get_int()
+        mode_recursive_option = self.target.get_option(ModeRecursiveConfigOption)
 
-        if self.target.get_option_value(ModeRecursiveOption) is True:
-            file_change_mode(
-                self.target.source.path,
-                mode_int
-            )
+        if (
+            mode_recursive_option
+            and mode_recursive_option.get_value().get_bool() is True
+        ):
+            file_change_mode(self.target.get_source().get_path_str(), mode_int)
         else:
             file_change_mode_recursive(
-                self.target.source.path,
-                mode_int
+                self.target.get_source().get_path_str(), mode_int
             )
 
     def undo(self) -> None:
         file_change_mode_recursive(
-            self.target.source.path,
-            file_mode_octal_to_num(self._original_octal_mode)
+            self.target.get_source().get_path_str(),
+            file_mode_octal_to_num(self._get_original_octal_mode()),
         )
+
+    def _get_original_octal_mode(self) -> str:
+        assert self._original_octal_mode is not None
+        return self._original_octal_mode

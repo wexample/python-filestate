@@ -1,33 +1,18 @@
 from __future__ import annotations
 
-from abc import abstractmethod, ABC
-from typing import List
+from abc import ABC, abstractmethod
+from typing import List, Type
 
 from pydantic import BaseModel
-
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_helpers.helpers.array_helper import array_swap
 from wexample_prompt.utils.prompt_response import PromptResponse
 
 
 class AbstractOperation(BaseModel, ABC):
+    applied: bool = False
     target: TargetFileOrDirectory
-    _before: int | str | None = None
-    _after: int | str | None = None
     _tty_width: int = 80
-    _applied: bool = False
-
-    @property
-    def applied(self):
-        return self._applied
-
-    @applied.setter
-    def applied(self, value: bool):
-        self._applied = value
-
-    @classmethod
-    def get_name(cls):
-        return cls.__name__.lower()
 
     @staticmethod
     @abstractmethod
@@ -54,12 +39,12 @@ class AbstractOperation(BaseModel, ABC):
     def describe_after(self) -> str:
         pass
 
-    def dependencies(self) -> List["AbstractOperation"]:
+    def dependencies(self) -> List[Type["AbstractOperation"]]:
         return []
 
     def to_prompt_response(self, rollback: bool) -> PromptResponse:
         lines = [
-            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, '_')
+            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, "_")
         ]
 
         before, after = array_swap(
@@ -72,14 +57,11 @@ class AbstractOperation(BaseModel, ABC):
 
         lines.extend(
             [
-                f'{self.target.get_item_title()}: {self.target.path.resolve()}',
-                f'{self.description()}:',
-                f'    Before: {before}',
-                f'    After: {after}',
+                f"{self.target.get_item_title()}: {self.target.get_resolved()}",
+                f"{self.description()}:",
+                f"    Before: {before}",
+                f"    After: {after}",
             ]
         )
 
         return PromptResponse.from_lines(lines)
-
-    def get_target_file_path(self) -> str:
-        return self.target.path.resolve().as_posix()
