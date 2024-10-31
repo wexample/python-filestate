@@ -37,6 +37,15 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
 
         self.path = Path(f"{self.base_path}{config['name']}")
 
+        if self.path.is_file():
+            from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
+            self.source = FileStateItemFileSource(
+                path=self.path)
+        elif self.path.is_dir():
+            from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
+            self.source = FileStateItemDirectorySource(
+                path=self.path)
+
     def get_operations(self) -> List[Type["AbstractOperation"]]:
         providers = self.get_operations_providers()
         operations = []

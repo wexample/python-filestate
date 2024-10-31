@@ -2,7 +2,6 @@ import os
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config.child_map_config import ChildMapConfig
 from wexample_filestate.const.disk import DiskItemType
 from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
 from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
@@ -16,7 +15,7 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
         from wexample_config.const.types import DictConfig
 
         class TestClass(FileStateItemFileTarget):
-            def build_config(self, config: Optional[DictConfig] = None) -> DictConfig:
+            def prepare_value(self, config: Optional[DictConfig] = None) -> DictConfig:
                 config.update()
 
                 return config
