@@ -14,7 +14,7 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
         from typing import Optional
         from wexample_config.const.types import DictConfig
 
-        class TestClass(FileStateManager):
+        class TestClassForTestFileCreateFromClassOperation(FileStateManager):
             def prepare_value(self, config: Optional[DictConfig] = None) -> DictConfig:
                 config.update({
                     'children': [
@@ -37,7 +37,7 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
                     "should_exist": True,
                     # Use string instead of enum to test support
                     "type": "dir",
-                    "class": TestClass,
+                    "class": TestClassForTestFileCreateFromClassOperation,
                 }
             ]
         }
