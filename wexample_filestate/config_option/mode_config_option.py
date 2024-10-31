@@ -1,7 +1,9 @@
-from typing import Union, Any
+from typing import Any, Union
 
-from wexample_filestate.const.files import FileSystemPermission
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_filestate.const.files import (
+    FileSystemPermission,
+)
 from wexample_helpers.helpers.file_helper import file_mode_octal_to_num
 
 
@@ -19,11 +21,10 @@ class ModeConfigOption(AbstractConfigOption):
             return value.to_str()
         elif value.is_dict():
             value_dict = value.get_dict()
-            if isinstance(value_dict, FileSystemPermission):
-                if 'mode' in value_dict:
-                    return str(value['mode'])
-        else:
-            raise ValueError(f"Unexpected value in get_octal: {value}")
+            if value_dict.get("mode"):
+                return str(value["mode"])
+
+        raise ValueError(f"Unexpected value in get_octal: {value}")
 
     def get_int(self) -> int:
         return file_mode_octal_to_num(self.get_octal())

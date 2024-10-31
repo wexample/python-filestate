@@ -44,7 +44,7 @@ class AbstractOperation(BaseModel, ABC):
 
     def to_prompt_response(self, rollback: bool) -> PromptResponse:
         lines = [
-            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, '_')
+            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, "_")
         ]
 
         before, after = array_swap(
@@ -57,10 +57,10 @@ class AbstractOperation(BaseModel, ABC):
 
         lines.extend(
             [
-                f'{self.target.get_item_title()}: {self.target.path.resolve()}',
-                f'{self.description()}:',
-                f'    Before: {before}',
-                f'    After: {after}',
+                f"{self.target.get_item_title()}: {self.target.get_resolved()}",
+                f"{self.description()}:",
+                f"    Before: {before}",
+                f"    After: {after}",
             ]
         )
 

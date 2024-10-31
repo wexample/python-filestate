@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
-from wexample_helpers.helpers.file_helper import file_write, file_read
+from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
+from wexample_helpers.helpers.file_helper import file_read, file_write
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectory
@@ -14,10 +16,12 @@ if TYPE_CHECKING:
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(target: "TargetFileOrDirectory") -> bool:
-        from wexample_filestate.config_option.content_config_option import ContentConfigOption
+        from wexample_filestate.config_option.content_config_option import (
+            ContentConfigOption,
+        )
 
         if target.get_option(ContentConfigOption) is not None:
-            current_content = file_read(target.path.resolve().as_posix())
+            current_content = file_read(target.get_resolved())
             new_content = FileWriteOperation._render_new_content(target)
 
             return current_content != new_content
@@ -26,16 +30,18 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def _render_new_content(target: "TargetFileOrDirectory") -> str:
-        return target.get_option_value(ContentConfigOption).render()
+        return cast(
+            ContentConfigOption, target.get_option_value(ContentConfigOption)
+        ).render_content()
 
     def describe_before(self) -> str:
-        return 'CURRENT_CONTENT'
+        return "CURRENT_CONTENT"
 
     def describe_after(self) -> str:
-        return 'REWRITTEN_CONTENT'
+        return "REWRITTEN_CONTENT"
 
     def description(self) -> str:
-        return 'Regenerate file content'
+        return "Regenerate file content"
 
     def apply(self) -> None:
         file_path = self._get_target_file_path(target=self.target)

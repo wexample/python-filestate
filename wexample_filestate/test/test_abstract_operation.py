@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.test.abstract_state_manager_test import \
-    AbstractStateManagerTest
+from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 if TYPE_CHECKING:
-    from wexample_filestate.result.file_state_dry_run_result import \
-        FileStateDryRunResult
+    from wexample_filestate.result.file_state_dry_run_result import (
+        FileStateDryRunResult,
+    )
 
 
 class TestAbstractOperation(AbstractStateManagerTest, ABC):

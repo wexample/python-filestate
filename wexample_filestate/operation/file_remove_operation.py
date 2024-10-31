@@ -5,31 +5,46 @@ import shutil
 from typing import TYPE_CHECKING, Union
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import FileManipulationOperationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
-    from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+    from wexample_filestate.item.file_state_item_directory_target import (
+        FileStateItemDirectoryTarget,
+    )
+    from wexample_filestate.item.file_state_item_file_target import (
+        FileStateItemFileTarget,
+    )
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
-    def applicable(target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]) -> bool:
-        from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
+    def applicable(
+        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+    ) -> bool:
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
+        )
 
-        if target.source and target.get_option_value(ShouldExistConfigOption, default=True).is_false():
+        if (
+            target.source
+            and target.get_option_value(
+                ShouldExistConfigOption, default=True
+            ).is_false()
+        ):
             return True
 
         return False
 
     def describe_before(self) -> str:
-        return 'EXISTS'
+        return "EXISTS"
 
     def describe_after(self) -> str:
-        return 'REMOVED'
+        return "REMOVED"
 
     def description(self) -> str:
-        return 'Remove existing file'
+        return "Remove existing file"
 
     def apply(self) -> None:
         self._backup_target_file()

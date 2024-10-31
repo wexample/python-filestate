@@ -1,11 +1,11 @@
 import os
 
 import pytest
-from wexample_config.config_value.callback_render_config_value import \
-    CallbackRenderConfigValue
+from wexample_config.config_value.callback_render_config_value import (
+    CallbackRenderConfigValue,
+)
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.test.abstract_state_manager_test import \
-    AbstractStateManagerTest
+from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
 
 class TestFileStateManager(AbstractStateManagerTest):
@@ -22,8 +22,9 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.set_value({"unexpected_option": "yes"})
 
     def test_configure_class_unexpected(self):
-        from wexample_filestate.exception.config import \
-            BadConfigurationClassTypeException
+        from wexample_filestate.exception.config import (
+            BadConfigurationClassTypeException,
+        )
 
         class BadClass:
             pass
