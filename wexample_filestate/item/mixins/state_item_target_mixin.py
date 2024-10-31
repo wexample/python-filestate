@@ -1,26 +1,34 @@
-from typing import cast, Any
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional, Type
+from typing import TYPE_CHECKING, Any, List, Optional, Type, Union, cast
 
-from wexample_config.config_option.abstract_nested_config_option import \
-    AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_config.const.types import DictConfig
+from wexample_filestate.item.file_state_item_directory_source import (
+    FileStateItemDirectorySource,
+)
+from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
+from wexample_filestate.operations_provider.abstract_operations_provider import (
+    AbstractOperationsProvider,
+)
 from wexample_helpers.const.types import FileStringOrPath
-from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
-from wexample_filestate.item.mixins.state_item_source_mixin import StateItemSourceMixin
 
 if TYPE_CHECKING:
-    from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_config.options_provider.abstract_options_provider import (
+        AbstractOptionsProvider,
+    )
     from wexample_filestate.operation.abstract_operation import AbstractOperation
-    from wexample_config.options_provider.abstract_options_provider import \
-        AbstractOptionsProvider
+    from wexample_filestate.result.abstract_result import AbstractResult
 
+# Might become the real type, and rename current SourceFileOrDirectoryAnnotation
+SourceFileOrDirectory = Union[FileStateItemDirectorySource, FileStateItemFileSource]
 
 
 class StateItemTargetMixin(AbstractNestedConfigOption):
     base_path: FileStringOrPath
     path: Optional[Path] = None
-    source: Optional[StateItemSourceMixin] = None
+    source: Optional[SourceFileOrDirectory] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
     parent_item: Any = None
 
@@ -34,7 +42,9 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
         operations = []
 
         for provider in providers:
-            operations.extend(cast("AbstractOperationsProvider", provider).get_operations())
+            operations.extend(
+                cast("AbstractOperationsProvider", provider).get_operations()
+            )
 
         return operations
 
@@ -43,8 +53,9 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
         if len(providers) > 0:
             return providers
 
-        from wexample_filestate.options_provider.default_options_provider import \
-            DefaultOptionsProvider
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
+        )
 
         return [
             DefaultOptionsProvider,
@@ -54,26 +65,34 @@ class StateItemTargetMixin(AbstractNestedConfigOption):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 
         for operation_class in self.get_operations():
-            if operation_class.applicable(cast(TargetFileOrDirectory, self)):
-                result.operations.append(operation_class(target=self))
+            self_casted = cast(TargetFileOrDirectory, self)
+            if operation_class.applicable(self_casted):
+                result.operations.append(operation_class(target=self_casted))
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent_item:
-            return cast(StateItemTargetMixin, self.parent_item).get_operations_providers()
+            return cast(
+                StateItemTargetMixin, self.parent_item
+            ).get_operations_providers()
 
         if self.operations_providers:
             return self.operations_providers
 
-        from wexample_filestate.operations_provider.default_operations_provider import DefaultOperationsProvider
+        from wexample_filestate.operations_provider.default_operations_provider import (
+            DefaultOperationsProvider,
+        )
 
         return [
             DefaultOperationsProvider,
         ]
 
     def get_item_name(self) -> Optional[str]:
-        from wexample_config.config_option.name_config_option import \
-            NameConfigOption
+        from wexample_config.config_option.name_config_option import NameConfigOption
 
         option = self.get_option(NameConfigOption)
 
         return option.get_value().get_str() if option else None
+
+    def get_source(self) -> SourceFileOrDirectory:
+        assert self.source is not None
+        return self.source
