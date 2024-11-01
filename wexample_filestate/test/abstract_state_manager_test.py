@@ -66,5 +66,4 @@ class AbstractStateManagerTest(ABC):
 
         # Target should always exist
         assert target is not None
-
         self._assert_dir_exists(target.get_resolved(), positive=positive)
