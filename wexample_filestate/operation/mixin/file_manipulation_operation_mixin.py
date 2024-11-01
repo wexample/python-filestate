@@ -59,3 +59,11 @@ class FileManipulationOperationMixin(AbstractOperation):
 
             return True
         return False
+
+    @staticmethod
+    def option_should_exist_is_true(target: "TargetFileOrDirectory") -> bool:
+        from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
+
+        return target.get_option_value(
+            ShouldExistConfigOption, default=True
+        ).is_true()

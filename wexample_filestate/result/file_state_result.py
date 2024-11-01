@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from wexample_filestate.result.abstract_result import AbstractResult
 
 

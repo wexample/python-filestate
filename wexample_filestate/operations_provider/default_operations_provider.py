@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, List, Type
 
+from wexample_filestate.operation.apply_content_filter_operation import ApplyContentFilterOperation
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
@@ -23,6 +24,7 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         )
 
         return [
+            ApplyContentFilterOperation,
             FileCreateOperation,
             FileRemoveOperation,
             FileWriteOperation,

@@ -28,13 +28,9 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def applicable(
         target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
     ) -> bool:
-        from wexample_filestate.config_option.should_exist_config_option import (
-            ShouldExistConfigOption,
-        )
-
         if (
             not target.source
-            and target.get_option_value(ShouldExistConfigOption, default=False).is_true()
+            and FileManipulationOperationMixin.option_should_exist_is_true(target)
         ):
             return True
 

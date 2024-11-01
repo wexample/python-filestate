@@ -40,11 +40,13 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldExistConfigOption,
         )
         from wexample_filestate.config_option.type_config_option import TypeConfigOption
+        from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
 
         return [
             ChildrenConfigOption,
             ClassConfigOption,
             ContentConfigOption,
+            ContentFilterConfigOption,
             DefaultContentConfigOption,
             ModeConfigOption,
             ModeRecursiveConfigOption,
