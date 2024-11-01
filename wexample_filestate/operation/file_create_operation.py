@@ -34,9 +34,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
         if (
             not target.source
-            and target.get_option_value(
-                ShouldExistConfigOption, default=False
-            ).is_true()
+            and target.get_option_value(ShouldExistConfigOption, default=False).is_true()
         ):
             return True
 
@@ -60,10 +58,10 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
             )
 
             if default_content:
-                content_str = default_content.render_content()
+                default_content_option = self.target.get_option_value(DefaultContentConfigOption)
 
-                if content_str:
-                    file_write(self._original_path_str, content_str)
+                if default_content_option:
+                    file_write(self._original_path_str, default_content_option.get_str())
                 else:
                     file_touch(self._original_path_str)
             else:

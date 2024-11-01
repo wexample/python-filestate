@@ -22,18 +22,11 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
         if target.get_option(ContentConfigOption) is not None:
             current_content = file_read(target.get_resolved())
-            new_content = FileWriteOperation._render_new_content(target)
+            new_content = target.get_option_value(ContentConfigOption).get_str()
 
             return current_content != new_content
 
         return False
-
-    @staticmethod
-    def _render_new_content(target: "TargetFileOrDirectory") -> str:
-        return cast(
-            ContentConfigOption,
-            target.get_option_value(ContentConfigOption)
-        ).render_content()
 
     def describe_before(self) -> str:
         return "CURRENT_CONTENT"
@@ -48,7 +41,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
         file_path = self._get_target_file_path(target=self.target)
         self._backup_target_file()
 
-        file_write(file_path, FileWriteOperation._render_new_content(self.target))
+        file_write(file_path, self.target.get_option_value(ContentConfigOption).get_str())
 
     def undo(self) -> None:
         self._restore_target_file()

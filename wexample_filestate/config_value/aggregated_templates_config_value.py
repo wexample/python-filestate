@@ -13,7 +13,7 @@ class AggregatedTemplatesConfigValue(ItemConfigValue):
     def get_raw_value_allowed_type() -> Any:
         return Any
 
-    def render(self) -> str:
+    def get_str(self, type_check: bool = True) -> str:
         output = []
 
         for template_content in self.templates:

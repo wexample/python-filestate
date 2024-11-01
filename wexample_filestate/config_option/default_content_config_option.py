@@ -1,12 +1,10 @@
-from typing import Any
+from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.config_option.mixin.renderable_config_option_mixin import (
-    RenderableConfigOptionMixin,
-)
+from wexample_config.config_value.config_value import ConfigValue
 
 
-class DefaultContentConfigOption(RenderableConfigOptionMixin, AbstractConfigOption):
+class DefaultContentConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return str
+        return Union[str, ConfigValue]
