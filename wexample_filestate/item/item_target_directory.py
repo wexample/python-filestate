@@ -159,11 +159,13 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if os.path.isfile(path):
             path = os.path.dirname(path)
 
-        return cls(
+        manager = cls(
             item_name=directory_get_base_name(path),
-            config=config,
             base_path=directory_get_parent_path(path),
             io=io or IOManager(),
             options_providers=options_providers,
             operations_providers=operations_providers,
         )
+
+        manager.configure(config=config)
+        return manager
