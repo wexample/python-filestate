@@ -26,7 +26,7 @@ class TestItemChangeModeOperation(TestAbstractOperation):
         }
 
     def _operation_test_assert_initial(self) -> None:
-        assert self.state_manager.path.is_dir() is True
+        assert self.state_manager.get_path().is_dir() is True
         assert self._get_target().source.get_octal_mode() != self._get_expected_mode()
 
     def _operation_test_assert_applied(self):

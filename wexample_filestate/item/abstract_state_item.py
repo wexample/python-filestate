@@ -14,8 +14,8 @@ class AbstractStateItem(BaseModel):
     def get_item_title(self) -> str:
         pass
 
-    def get_resolved(self):
-        return self.path.resolve()
+    def get_resolved(self) -> str:
+        return str(self.get_path().resolve())
 
     @abstractmethod
     def is_file(self) -> bool:
@@ -28,9 +28,7 @@ class AbstractStateItem(BaseModel):
     def get_octal_mode(self: AbstractStateItem) -> str:
         from wexample_helpers.helpers.file_helper import file_path_get_octal_mode
 
-        assert self.path is not None
-
-        return file_path_get_octal_mode(self.path)
+        return file_path_get_octal_mode(self.get_path())
 
     def get_path(self) -> Path:
         assert self.path is not None
