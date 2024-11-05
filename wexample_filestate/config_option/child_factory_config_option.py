@@ -37,19 +37,20 @@ class ChildFactoryConfigOption(ItemTreeConfigOptionMixin, AbstractNestedConfigOp
 
         children = []
         if config.get("name_pattern"):
-            base_path = self.get_parent_item().get_resolved()
+            path = self.get_parent_item().get_path()
+            if path.exists():
+                base_path = self.get_parent_item().get_resolved()
+                pattern = re.compile(config["name_pattern"])
+                for file in os.listdir(base_path):
+                    if pattern.match(file):
+                        path = Path(f"{base_path}{file}")
 
-            pattern = re.compile(config["name_pattern"])
-            for file in os.listdir(base_path):
-                if pattern.match(file):
-                    path = Path(f"{base_path}{file}")
+                        if "type" not in config or config_has_same_type_as_file(config, path):
+                            item_config_copy = copy.deepcopy(config)
 
-                    if "type" not in config or config_has_same_type_as_file(config, path):
-                        item_config_copy = copy.deepcopy(config)
-
-                        children.append(parent_children_config.create_child_item(
-                            child_config=item_config_copy,
-                            item_name=path.name,
-                        ))
+                            children.append(parent_children_config.create_child_item(
+                                child_config=item_config_copy,
+                                item_name=path.name,
+                            ))
 
         return children

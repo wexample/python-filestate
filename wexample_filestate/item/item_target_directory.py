@@ -36,7 +36,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         ItemDirectoryMixin.__init__(self, **data)
         AbstractItemTarget.__init__(self, **data)
 
-
     def build_item_tree(self) -> None:
         super().build_item_tree()
 

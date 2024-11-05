@@ -15,11 +15,11 @@ if TYPE_CHECKING:
 class AbstractStateManagerTest(ABC):
     state_manager: "FileStateManager"
 
-    def _get_package_root_path(self) -> str:
+    def _get_package_root_path(self, test_file_path: str = None) -> str:
         return os.path.join(os.path.realpath(os.path.dirname(__file__)), "..", "..", "")
 
-    def _get_test_state_manager_path(self) -> str:
-        return os.path.join(self._get_package_root_path(), "tests", "resources", "")
+    def _get_test_state_manager_path(self, package_root_path: Optional[str] = None) -> str:
+        return os.path.join(package_root_path or self._get_package_root_path(), "tests", "resources", "")
 
     def _get_absolute_path_from_state_manager(self, relative: str) -> str:
         return os.path.join(self._get_test_state_manager_path(), relative)
@@ -29,12 +29,17 @@ class AbstractStateManagerTest(ABC):
 
         self.state_manager = cast(
             FileStateManager,
-            FileStateManager.create_from_path(
+            self._get_test_manager_class().create_from_path(
                 path=self._get_test_state_manager_path(),
                 options_providers=self._get_test_options_providers(),
                 operations_providers=self._get_test_operations_providers(),
             ),
         )
+
+    def _get_test_manager_class(self):
+        from wexample_filestate.file_state_manager import FileStateManager
+
+        return FileStateManager
 
     def _get_test_operations_providers(
         self,

@@ -29,7 +29,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         target: Union["ItemTargetDirectory", "ItemTargetFile"]
     ) -> bool:
         if (
-            not target.source
+            target.source is None
             and FileManipulationOperationMixin.option_should_exist_is_true(target)
         ):
             return True

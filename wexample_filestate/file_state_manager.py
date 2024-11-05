@@ -7,14 +7,13 @@ from wexample_helpers.helpers.import_helper import import_dummy
 
 
 class FileStateManager(ItemTargetDirectory):
-    def __init__(self, config: DictConfig, **data):
+    def __init__(self, **data):
         ItemTargetDirectory.__init__(self, value=None, **data)
-
-        if config is not None:
-            self.configure(config=config)
 
     def configure(self, config: DictConfig):
         super().configure(config=config)
+
+        # Ass root
         self.build_item_tree()
 
 
