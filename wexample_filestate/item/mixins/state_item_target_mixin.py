@@ -10,6 +10,7 @@ from wexample_filestate.item.file_state_item_directory_source import (
     FileStateItemDirectorySource,
 )
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
+from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
@@ -25,8 +26,7 @@ if TYPE_CHECKING:
 # Might become the real type, and rename current SourceFileOrDirectoryAnnotation
 SourceFileOrDirectory = Union[FileStateItemDirectorySource, FileStateItemFileSource]
 
-
-class StateItemTargetMixin(AbstractNestedConfigOption):
+class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption):
     base_path: Optional[FileStringOrPath] = None
     path: Optional[Path] = None
     source: Optional[SourceFileOrDirectory] = None

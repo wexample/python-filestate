@@ -6,13 +6,14 @@ from typing import Any, TYPE_CHECKING, cast
 
 from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
 from wexample_config.const.types import DictConfig
+from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
     from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
 
 
-class ChildFactoryConfigOption(AbstractNestedConfigOption):
+class ChildFactoryConfigOption(ItemTreeConfigOptionMixin, AbstractNestedConfigOption):
     def get_options_providers(self) -> list[type["AbstractOptionsProvider"]]:
         from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
 

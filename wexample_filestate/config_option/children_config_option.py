@@ -6,6 +6,7 @@ from wexample_config.config_option.children_config_option import (
 )
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.file_state_item_directory_target import (
     FileStateItemDirectoryTarget,
 )
@@ -14,6 +15,7 @@ from wexample_filestate.item.file_state_item_file_target import FileStateItemFil
 
 class ChildrenConfigOption(BaseChildrenConfigOption):
     parent: Optional[TargetFileOrDirectory] = None
+class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
