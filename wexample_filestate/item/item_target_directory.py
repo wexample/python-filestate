@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional, Type, Union, cast
+from typing import TYPE_CHECKING, List, Optional, Type, cast
 
 from pydantic import Field
 from wexample_config.const.types import DictConfig
-from wexample_filestate.item.file_state_item_directory import FileStateItemDirectory
-from wexample_filestate.item.mixins.state_item_target_mixin import StateItemTargetMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.item.abstract_item_target import AbstractItemTarget
+from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_prompt.io_manager import IOManager
 
@@ -24,15 +25,24 @@ if TYPE_CHECKING:
     from wexample_filestate.result.file_state_result import FileStateResult
 
 
-class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory):
+class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     io: IOManager = Field(
         default_factory=IOManager,
         description="Handles output to print, allow to share it if defined in a parent context",
     )
     last_result: AbstractResult | None = None
 
-    def __init__(self, config: DictConfig, **data):
-        StateItemTargetMixin.__init__(self, config=config, **data)
+    def __init__(self, **data):
+        ItemDirectoryMixin.__init__(self, **data)
+        AbstractItemTarget.__init__(self, **data)
+
+
+    def build_item_tree(self) -> None:
+        super().build_item_tree()
+
+        for option in self.options.values():
+            if isinstance(option, ItemTreeConfigOptionMixin):
+                option.build_item_tree()
 
     def configure_from_file(self, path: FileStringOrPath):
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
@@ -52,41 +62,40 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         return []
 
     def build_operations(self, result: "AbstractResult"):
-        from wexample_filestate.const.types_state import TargetFileOrDirectory
+        from wexample_filestate.const.state_items import TargetFileOrDirectory
         super().build_operations(result)
-
 
         for item in self.get_children_list():
             cast(TargetFileOrDirectory, item).build_operations(result)
 
-    def find_by_name_recursive(self, name: str) -> Optional["TargetFileOrDirectoryType"]:
-        found = self.find_by_name(name)
+    def find_by_name_recursive(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
+        found = self.find_by_name(item_name)
         if found:
             return found
 
         for child in self.get_children_list():
             if child.is_directory():
                 result = cast(
-                    FileStateItemDirectoryTarget, child
-                ).find_by_name_recursive(name)
+                    ItemTargetDirectory, child
+                ).find_by_name_recursive(item_name)
                 if result:
                     return result
 
         return None
 
-    def find_by_name(self, name: str) -> Optional["TargetFileOrDirectoryType"]:
+    def find_by_name(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
         for child in self.get_children_list():
-            if child.get_item_name() == name:
+            if child.get_item_name() == item_name:
                 return child
 
         return None
 
-    def find_by_name_or_fail(self, name: str) -> "TargetFileOrDirectoryType":
-        child = self.find_by_name(name)
+    def find_by_name_or_fail(self, item_name: str) -> "TargetFileOrDirectoryType":
+        child = self.find_by_name(item_name)
         if child is None:
             from wexample_filestate.exception.item import ChildNotFoundException
 
-            raise ChildNotFoundException(f"Child not found: {name}")
+            raise ChildNotFoundException(f"Child not found: {item_name}")
 
         return child
 
@@ -137,7 +146,7 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         io: Optional[IOManager] = None,
         options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
         operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
-    ) -> "FileStateItemDirectoryTarget":
+    ) -> "ItemTargetDirectory":
         import os
 
         from wexample_helpers.helpers.directory_helper import (
@@ -151,9 +160,8 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         if os.path.isfile(path):
             path = os.path.dirname(path)
 
-        config["name"] = directory_get_base_name(path)
-
         return cls(
+            item_name=directory_get_base_name(path),
             config=config,
             base_path=directory_get_parent_path(path),
             io=io or IOManager(),

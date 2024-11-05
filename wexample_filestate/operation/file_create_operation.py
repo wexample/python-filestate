@@ -13,11 +13,11 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 from wexample_helpers.helpers.file_helper import file_touch, file_write
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import (
-        FileStateItemDirectoryTarget,
+    from wexample_filestate.item.item_target_directory import (
+        ItemTargetDirectory,
     )
-    from wexample_filestate.item.file_state_item_file_target import (
-        FileStateItemFileTarget,
+    from wexample_filestate.item.item_target_file import (
+        ItemTargetFile,
     )
 
 
@@ -26,7 +26,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def applicable(
-        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+        target: Union["ItemTargetDirectory", "ItemTargetFile"]
     ) -> bool:
         if (
             not target.source

@@ -4,18 +4,18 @@ from typing import Optional
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.child_factory_config_option import ChildFactoryConfigOption
 from wexample_filestate.const.disk import DiskItemType
-from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
 
 
-class TestFileCreateFromClassOperation(TestAbstractOperation):
+class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
     missing_file_name: str = 'simple-readme.md'
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         from typing import Optional
         from wexample_config.const.types import DictConfig
 
-        class TestClass(FileStateItemFileTarget):
+        class TestClass(ItemTargetFile):
             def prepare_value(self, config: Optional[DictConfig] = None) -> DictConfig:
                 config.update()
 
@@ -31,11 +31,23 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
                             "name": "one",
                             "type": DiskItemType.DIRECTORY,
                             "children": [
-                                ChildFactoryConfigOption(value={
+                                ChildFactoryConfigOption(pattern={
                                     'class': TestClass,
                                     'name_pattern': r"^test-collection-[a-z]+-[a-z]+\.txt$",
                                     'type': DiskItemType.FILE,
                                     'should_exist': False,
+                                }),
+                                ChildFactoryConfigOption(pattern={
+                                    'class': TestClass,
+                                    'name_pattern': r"^test-directory-[a-z]$",
+                                    'type': DiskItemType.DIRECTORY,
+                                    'should_exist': True,
+                                    'children': [
+                                        {
+                                            'name': 'file.txt',
+                                            'should_exist': True,
+                                        }
+                                    ]
                                 })
                             ]
                         }

@@ -7,13 +7,13 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_prompt.utils.prompt_response import PromptResponse
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import (
-        FileStateItemDirectoryTarget,
+    from wexample_filestate.item.item_target_directory import (
+        ItemTargetDirectory,
     )
 
 
 class AbstractResult(BaseModel):
-    state_manager: "FileStateItemDirectoryTarget"
+    state_manager: "ItemTargetDirectory"
     operations: List[AbstractOperation] = []
     rollback: bool = False
 

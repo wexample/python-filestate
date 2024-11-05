@@ -16,7 +16,7 @@ class ContentFilterConfigOption(AbstractConfigOption):
     def dump(self) -> Any:
         filters_names = []
 
-        for filter in self.get_filters():
-            filters_names.append(filter.get_name())
+        for content_filter in self.get_filters():
+            filters_names.append(content_filter.get_name())
 
         return f"filters=[','.join(filters_names)]"

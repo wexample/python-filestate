@@ -14,13 +14,13 @@ class TestFileStateManager(AbstractStateManagerTest):
         assert self.state_manager is not None
 
     def test_configure_name(self):
-        self.state_manager.set_value({"name": "yes"})
+        self.state_manager.configure({"name": "yes"})
 
     def test_configure_unexpected(self):
         from wexample_config.exception.option import InvalidOptionException
 
         with pytest.raises(InvalidOptionException):
-            self.state_manager.set_value({"unexpected_option": "yes"})
+            self.state_manager.configure(config={"unexpected_option": "yes"})
 
     def test_configure_class_unexpected(self):
         from wexample_filestate.exception.config import (
@@ -31,20 +31,20 @@ class TestFileStateManager(AbstractStateManagerTest):
             pass
 
         with pytest.raises(BadConfigurationClassTypeException):
-            self.state_manager.set_value({"children": [{"class": BadClass}]})
+            self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
     def test_configure_from_callback(self):
         def _name():
             return "yes"
 
-        self.state_manager.set_value({"name": _name})
+        self.state_manager.configure(config={"name": _name})
 
         assert self.state_manager.get_key() == "file_state_manager"
         assert self.state_manager.get_item_name() == "yes"
 
     def test_configure_define_child(self):
         self.state_manager.allow_undefined_keys = True
-        self.state_manager.set_value(
+        self.state_manager.configure(config=
             {
                 "custom_name": ChildrenConfigOption(value=[
                     {
@@ -66,7 +66,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         def _name():
             return "yow"
 
-        self.state_manager.set_value(
+        self.state_manager.configure(config=
             {
                 "name": CallbackRenderConfigValue(raw=_name),
             }
@@ -80,7 +80,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         )
 
     def test_dump(self):
-        self.state_manager.set_value(
+        self.state_manager.configure(config=
             {
                 "children": [
                     {

@@ -1,21 +1,15 @@
+from abc import ABC
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, List, Optional, Type, Union, cast
+from typing import TYPE_CHECKING, List, Optional, Type, cast, Any
 
-from wexample_config.config_option.abstract_nested_config_option import (
-    AbstractNestedConfigOption,
-)
+from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.name_config_option import NameConfigOption
 from wexample_config.const.types import DictConfig
-from wexample_filestate.const.types_state_items import TargetFileOrDirectory
-from wexample_filestate.item.file_state_item_directory_source import (
-    FileStateItemDirectorySource,
-)
-from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
-from wexample_filestate.const.state_items import SourceFileOrDirectory
+from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
-from wexample_helpers.const.types import FileStringOrPath
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -23,37 +17,46 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_filestate.const.types_state_items import SourceFileOrDirectoryType
+    from wexample_filestate.const.state_items import SourceFileOrDirectory
 
 
-class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption):
-    base_path: Optional[FileStringOrPath] = None
-    path: Optional[Path] = None
-    source: Optional[SourceFileOrDirectory] = None
+class AbstractItemTarget(ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
+    source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
-    parent_item: Any = None
+    item_name: str
 
-    def __init__(self, config: DictConfig, **data):
-        data["value"] = config
+    def configure(self, config: DictConfig):
+        # Assign item name as a config option.
+        if config.get("name", None) is None:
+            config["name"] = self.item_name
 
-        if data.get("base_path", None) is None:
-            parent_item = data.get("parent_item", None)
-            if parent_item is not None:
-                data["base_path"] = cast(TargetFileOrDirectory, parent_item).get_resolved()
-            else:
-                raise Exception(f'{self.__class__.__name__}: Missing base_path or parent item')
+        self.set_value(raw_value=config)
+        self.locate_source(self.get_path())
 
-        data["path"] = Path(f"{data.get('base_path')}{config['name']}")
 
-        super().__init__(**data)
+    def locate_source(self, path: Path) -> "SourceFileOrDirectoryType":
+        if path.is_file():
+            from wexample_filestate.item.item_source_file import ItemSourceFile
+            self.source = ItemSourceFile(
+                path=path,
+            )
+        elif path.is_dir():
+            from wexample_filestate.item.item_source_directory import ItemSourceDirectory
+            self.source = ItemSourceDirectory(
+                path=path,
+            )
 
-        if self.path.is_file():
-            from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
-            self.source = FileStateItemFileSource(
-                path=self.path)
-        elif self.path.is_dir():
-            from wexample_filestate.item.file_state_item_directory_source import FileStateItemDirectorySource
-            self.source = FileStateItemDirectorySource(
-                path=self.path)
+        return self.source
+
+    def get_path(self) -> Path:
+        # Base path is specified, for instance for the tree root.
+        if self.base_path is not None:
+            base_path = self.base_path
+        else:
+            base_path = self.get_parent_item().get_resolved()
+
+        return Path(f"{base_path}{self.get_item_name()}")
 
     def get_operations(self) -> List[Type["AbstractOperation"]]:
         providers = self.get_operations_providers()
@@ -88,10 +91,8 @@ class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption
                 result.operations.append(operation_class(target=self_casted))
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
-        if self.parent_item:
-            return cast(
-                StateItemTargetMixin, self.parent_item
-            ).get_operations_providers()
+        if self.parent:
+            return cast(AbstractItemTarget, self.get_parent_item()).get_operations_providers()
 
         if self.operations_providers:
             return self.operations_providers
@@ -104,13 +105,16 @@ class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption
             DefaultOperationsProvider,
         ]
 
-    def get_item_name(self) -> Optional[str]:
+    def get_item_name(self) -> str:
         from wexample_config.config_option.name_config_option import NameConfigOption
+        return self.get_option(NameConfigOption).get_value().get_str()
 
-        option = self.get_option(NameConfigOption)
-
-        return option.get_value().get_str() if option else None
-
-    def get_source(self) -> SourceFileOrDirectory:
+    def get_source(self) -> "SourceFileOrDirectory":
         assert self.source is not None
         return self.source
+
+    def dump(self) -> Any:
+        output = super().dump()
+        output["name"] = self.get_item_name()
+
+        return output

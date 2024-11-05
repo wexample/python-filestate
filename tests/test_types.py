@@ -1,6 +1,6 @@
 from typing import Type, Any, Union
 
-from wexample_filestate.item.file_state_item_directory_target import FileStateItemDirectoryTarget
+from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 from wexample_helpers.helpers.import_helper import import_dummy
 from wexample_helpers.test.abstract_test_helpers import AbstractTestHelpers
 
@@ -18,8 +18,8 @@ class TestFileStateManager(AbstractTestHelpers):
 
         self._test_type_validate_or_fail(
             success_cases=[
-                (TestClass, Type[FileStateItemDirectoryTarget]),
-                ([ChildFactoryConfigOption()], list[ChildFactoryConfigOption]),
-                ([ChildFactoryConfigOption()], list[Union[dict[str, Any], ChildFactoryConfigOption]])
+                (TestClass, Type[ItemTargetDirectory]),
+                ([ChildFactoryConfigOption(pattern={})], list[ChildFactoryConfigOption]),
+                ([ChildFactoryConfigOption(pattern={})], list[Union[dict[str, Any], ChildFactoryConfigOption]])
             ]
         )

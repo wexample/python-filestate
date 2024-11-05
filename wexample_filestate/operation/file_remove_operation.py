@@ -10,18 +10,18 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import (
-        FileStateItemDirectoryTarget,
+    from wexample_filestate.item.item_target_directory import (
+        ItemTargetDirectory,
     )
-    from wexample_filestate.item.file_state_item_file_target import (
-        FileStateItemFileTarget,
+    from wexample_filestate.item.item_target_file import (
+        ItemTargetFile,
     )
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable(
-        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+        target: Union["ItemTargetDirectory", "ItemTargetFile"]
     ) -> bool:
         if (
             target.source

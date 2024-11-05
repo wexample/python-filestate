@@ -6,11 +6,11 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 class ClassConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_filestate.item.file_state_item_directory_target import (
-            FileStateItemDirectoryTarget,
+        from wexample_filestate.item.item_target_directory import (
+            ItemTargetDirectory,
         )
-        from wexample_filestate.item.file_state_item_file_target import (
-            FileStateItemFileTarget,
+        from wexample_filestate.item.item_target_file import (
+            ItemTargetFile,
         )
 
-        return Type[FileStateItemDirectoryTarget] | Type[FileStateItemFileTarget]
+        return Type[ItemTargetDirectory] | Type[ItemTargetFile]

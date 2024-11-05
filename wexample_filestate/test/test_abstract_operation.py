@@ -37,7 +37,7 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
         config = self._operation_test_setup_configuration()
 
         if config is not None:
-            self.state_manager.set_value(raw_value=config)
+            self.state_manager.configure(config=config)
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         return None

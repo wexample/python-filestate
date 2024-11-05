@@ -1,17 +1,17 @@
 from typing import Union
 
-from wexample_filestate.item.file_state_item_directory_source import (
-    FileStateItemDirectorySource,
+from wexample_filestate.item.item_source_directory import (
+    ItemSourceDirectory,
 )
-from wexample_filestate.item.file_state_item_directory_target import (
-    FileStateItemDirectoryTarget,
+from wexample_filestate.item.item_target_directory import (
+    ItemTargetDirectory,
 )
-from wexample_filestate.item.file_state_item_file_source import (
-    FileStateItemFileSource,
+from wexample_filestate.item.item_source_file import (
+    ItemSourceFile,
 )
-from wexample_filestate.item.file_state_item_file_target import (
-    FileStateItemFileTarget,
+from wexample_filestate.item.item_target_file import (
+    ItemTargetFile,
 )
 
-TargetFileOrDirectory = Union[FileStateItemDirectoryTarget, FileStateItemFileTarget]
-SourceFileOrDirectory = Union[FileStateItemDirectorySource, FileStateItemFileSource]
+TargetFileOrDirectory = Union[ItemTargetDirectory, ItemTargetFile]
+SourceFileOrDirectory = Union[ItemSourceDirectory, ItemSourceFile]

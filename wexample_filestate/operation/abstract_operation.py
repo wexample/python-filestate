@@ -1,23 +1,24 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Type
+from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
-from wexample_filestate.const.state_items import TargetFileOrDirectory
-from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_helpers.helpers.array_helper import array_swap
 from wexample_prompt.utils.prompt_response import PromptResponse
+
+if TYPE_CHECKING:
+    from wexample_filestate.const.state_items import SourceFileOrDirectory, TargetFileOrDirectory
 
 
 class AbstractOperation(BaseModel, ABC):
     applied: bool = False
-    target: TargetFileOrDirectory
+    target: "TargetFileOrDirectory"
     _tty_width: int = 80
 
     @staticmethod
     @abstractmethod
-    def applicable(target: "TargetFileOrDirectoryType") -> bool:
+    def applicable(target: "TargetFileOrDirectory") -> bool:
         pass
 
     @abstractmethod

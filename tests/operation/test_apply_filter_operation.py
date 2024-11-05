@@ -1,4 +1,3 @@
-import os
 from typing import Optional
 
 from wexample_config.config_value.filter.trim_config_value_filter import TrimConfigValueFilter

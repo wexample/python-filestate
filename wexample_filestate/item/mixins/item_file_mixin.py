@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from wexample_filestate.item.abstract_state_item import AbstractStateItem
+from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
 
-class FileStateItemFile(AbstractStateItem):
+class ItemFileMixin(ItemMixin):
     def get_item_title(self) -> str:
         return "File"
 

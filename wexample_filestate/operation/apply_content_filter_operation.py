@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union, cast
+from typing import TYPE_CHECKING, cast
 
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
@@ -8,12 +8,7 @@ from wexample_filestate.operation.file_write_operation import FileWriteOperation
 from wexample_helpers.helpers.file_helper import file_read
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import (
-        FileStateItemDirectoryTarget,
-    )
-    from wexample_filestate.item.file_state_item_file_target import (
-        FileStateItemFileTarget,
-    )
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ApplyContentFilterOperation(FileWriteOperation):
@@ -21,7 +16,7 @@ class ApplyContentFilterOperation(FileWriteOperation):
 
     @staticmethod
     def applicable(
-        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+        target: "TargetFileOrDirectoryType"
     ) -> bool:
         from wexample_filestate.config_option.content_filter_config_option import (
             ContentFilterConfigOption,

@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Union, cast
 
 from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-from wexample_filestate.item.file_state_item_directory_target import (
-    FileStateItemDirectoryTarget,
+from wexample_filestate.item.item_target_directory import (
+    ItemTargetDirectory,
 )
-from wexample_filestate.item.file_state_item_file_target import FileStateItemFileTarget
+from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.helpers.file_helper import (
     file_change_mode,
@@ -17,11 +17,11 @@ from wexample_helpers.helpers.file_helper import (
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.file_state_item_directory_target import (
-        FileStateItemDirectoryTarget,
+    from wexample_filestate.item.item_target_directory import (
+        ItemTargetDirectory,
     )
-    from wexample_filestate.item.file_state_item_file_target import (
-        FileStateItemFileTarget,
+    from wexample_filestate.item.item_target_file import (
+        ItemTargetFile,
     )
 
 
@@ -30,7 +30,7 @@ class ItemChangeModeOperation(AbstractOperation):
 
     @staticmethod
     def applicable(
-        target: Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+        target: Union["ItemTargetDirectory", "ItemTargetFile"]
     ) -> bool:
         if target.source:
             from wexample_filestate.config_option.mode_config_option import (

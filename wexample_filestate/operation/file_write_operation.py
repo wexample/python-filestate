@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
 from wexample_filestate.operation.abstract_operation import AbstractOperation
