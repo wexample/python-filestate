@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.operations_provider.abstract_operations_provider import (
         AbstractOperationsProvider,
     )
@@ -40,7 +40,7 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
-    def get_children_list(self) -> list[TargetFileOrDirectory]:
+    def get_children_list(self) -> list["TargetFileOrDirectoryType"]:
         from wexample_filestate.config_option.children_config_option import (
             ChildrenConfigOption,
         )
@@ -52,17 +52,14 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
         return []
 
     def build_operations(self, result: "AbstractResult"):
+        from wexample_filestate.const.types_state import TargetFileOrDirectory
         super().build_operations(result)
-        from wexample_filestate.item.file_state_item_file_target import (
-            FileStateItemFileTarget,
-        )
+
 
         for item in self.get_children_list():
-            cast(
-                Union[FileStateItemDirectoryTarget, FileStateItemFileTarget], item
-            ).build_operations(result)
+            cast(TargetFileOrDirectory, item).build_operations(result)
 
-    def find_by_name_recursive(self, name: str) -> Optional["TargetFileOrDirectory"]:
+    def find_by_name_recursive(self, name: str) -> Optional["TargetFileOrDirectoryType"]:
         found = self.find_by_name(name)
         if found:
             return found
@@ -77,14 +74,14 @@ class FileStateItemDirectoryTarget(StateItemTargetMixin, FileStateItemDirectory)
 
         return None
 
-    def find_by_name(self, name: str) -> Optional["TargetFileOrDirectory"]:
+    def find_by_name(self, name: str) -> Optional["TargetFileOrDirectoryType"]:
         for child in self.get_children_list():
             if child.get_item_name() == name:
                 return child
 
         return None
 
-    def find_by_name_or_fail(self, name: str) -> "TargetFileOrDirectory":
+    def find_by_name_or_fail(self, name: str) -> "TargetFileOrDirectoryType":
         child = self.find_by_name(name)
         if child is None:
             from wexample_filestate.exception.item import ChildNotFoundException

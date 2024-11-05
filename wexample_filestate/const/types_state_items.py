@@ -23,5 +23,5 @@ if TYPE_CHECKING:
     import_dummy(FileStateItemFileSource)
     import_dummy(FileStateItemDirectorySource)
 
-TargetFileOrDirectory = Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
-SourceFileOrDirectory = Union["FileStateItemDirectorySource", "FileStateItemFileSource"]
+TargetFileOrDirectoryType = Union["FileStateItemDirectoryTarget", "FileStateItemFileTarget"]
+SourceFileOrDirectoryType = Union["FileStateItemDirectorySource", "FileStateItemFileSource"]

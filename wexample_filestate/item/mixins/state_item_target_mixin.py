@@ -11,6 +11,7 @@ from wexample_filestate.item.file_state_item_directory_source import (
 )
 from wexample_filestate.item.file_state_item_file_source import FileStateItemFileSource
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.const.state_items import SourceFileOrDirectory
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
@@ -23,8 +24,6 @@ if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.abstract_result import AbstractResult
 
-# Might become the real type, and rename current SourceFileOrDirectoryAnnotation
-SourceFileOrDirectory = Union[FileStateItemDirectorySource, FileStateItemFileSource]
 
 class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption):
     base_path: Optional[FileStringOrPath] = None
@@ -81,10 +80,10 @@ class StateItemTargetMixin(ItemTreeConfigOptionMixin, AbstractNestedConfigOption
         ]
 
     def build_operations(self, result: "AbstractResult"):
-        from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
         for operation_class in self.get_operations():
-            self_casted = cast(TargetFileOrDirectory, self)
+            self_casted = cast(TargetFileOrDirectoryType, self)
             if operation_class.applicable(self_casted):
                 result.operations.append(operation_class(target=self_casted))
 

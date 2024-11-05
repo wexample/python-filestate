@@ -10,12 +10,12 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 from wexample_helpers.helpers.file_helper import file_read, file_write
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
-    def applicable(target: "TargetFileOrDirectory") -> bool:
+    def applicable(target: "TargetFileOrDirectoryType") -> bool:
         from wexample_filestate.config_option.content_config_option import (
             ContentConfigOption,
         )

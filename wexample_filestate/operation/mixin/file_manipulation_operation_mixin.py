@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Union
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileManipulationOperationMixin(AbstractOperation):
@@ -11,7 +11,7 @@ class FileManipulationOperationMixin(AbstractOperation):
     _original_file_mode: int
     _original_file_content: str = ""
 
-    def _get_target_file_path(self, target: "TargetFileOrDirectory") -> str:
+    def _get_target_file_path(self, target: "TargetFileOrDirectoryType") -> str:
         return target.get_resolved()
 
     def _backup_target_file(self) -> None:
@@ -36,7 +36,7 @@ class FileManipulationOperationMixin(AbstractOperation):
             os.mkdir(self._original_path_str)
 
     def _backup_file_content(
-        self, target: "TargetFileOrDirectory", file_path: str
+        self, target: "TargetFileOrDirectoryType", file_path: str
     ) -> bool:
         import os
 
@@ -61,7 +61,7 @@ class FileManipulationOperationMixin(AbstractOperation):
         return False
 
     @staticmethod
-    def option_should_exist_is_true(target: "TargetFileOrDirectory") -> bool:
+    def option_should_exist_is_true(target: "TargetFileOrDirectoryType") -> bool:
         from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
 
         return target.get_option_value(

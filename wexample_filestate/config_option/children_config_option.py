@@ -7,6 +7,7 @@ from wexample_config.config_option.children_config_option import (
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectory
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.item.file_state_item_directory_target import (
     FileStateItemDirectoryTarget,
 )
@@ -23,7 +24,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
         return list[Union[dict[str, Any], ChildFactoryConfigOption]]
 
-    def get_parent(self) -> "TargetFileOrDirectory":
+    def get_parent(self) -> "TargetFileOrDirectoryType":
         assert self.parent is not None
         return cast("TargetFileOrDirectory", self.parent)
 
@@ -99,5 +100,5 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
         self.children.append(child)
 
-    def get_children(self) -> list[TargetFileOrDirectory]:
-        return cast(list[TargetFileOrDirectory], self.children)
+    def get_children(self) -> list[TargetFileOrDirectoryType]:
+        return cast(list[TargetFileOrDirectoryType], self.children)

@@ -1,13 +1,13 @@
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.const.types_state_items import TargetFileOrDirectory
+from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 
 
 class TestItemChangeModeOperation(TestAbstractOperation):
-    def _get_target(self) -> Optional["TargetFileOrDirectory"]:
+    def _get_target(self) -> Optional["TargetFileOrDirectoryType"]:
         return self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
 
     def _get_expected_mode(self) -> str:
