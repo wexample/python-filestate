@@ -86,32 +86,25 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
             child = class_name(
                 # Name might be not mandatory when using custom class
-                item_name=item_name or child_config.get("name", None),
                 config=child_config,
                 parent=self,
             )
         else:
-            name = item_name or child_config.get("name", None)
-            if name is None:
-                from wexample_filestate.exception.config import MissingNameInConfigurationException
-                raise MissingNameInConfigurationException(
-                    "Name is missing in the child configuration."
-                )
-
             is_file_type = config_is_item_type(child_config, DiskItemType.FILE)
-            # The current item has a parent, so we can try to guess the file type.
-            is_actual_file = isinstance(name, str) and os.path.isfile(
-                os.path.join(self.get_parent_item().get_resolved(), name)
-            )
+            if not is_file_type:
+                name = item_name or child_config.get("name", None)
+                if name:
+                    # The current item has a parent, so we can try to guess the file type.
+                    is_file_type = isinstance(name, str) and os.path.isfile(
+                        os.path.join(self.get_parent_item().get_resolved(), name)
+                    )
 
-            if is_file_type or is_actual_file:
+            if is_file_type:
                 child = ItemTargetFile(
-                    item_name=name,
                     parent=self,
                 )
             else:
                 child = ItemTargetDirectory(
-                    item_name=name,
                     parent=self,
                 )
 

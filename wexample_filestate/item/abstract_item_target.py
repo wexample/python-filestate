@@ -24,13 +24,8 @@ if TYPE_CHECKING:
 class AbstractItemTarget(ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
-    item_name: str
 
     def configure(self, config: DictConfig):
-        # Assign item name as a config option.
-        if config.get("name", None) is None:
-            config["name"] = self.item_name
-
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
 

@@ -160,12 +160,12 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             path = os.path.dirname(path)
 
         manager = cls(
-            item_name=directory_get_base_name(path),
             base_path=directory_get_parent_path(path),
             io=io or IOManager(),
             options_providers=options_providers,
             operations_providers=operations_providers,
         )
 
+        config["name"] = config["name"] if config.get("name") else directory_get_base_name(path)
         manager.configure(config=config)
         return manager
