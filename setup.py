@@ -15,6 +15,11 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["pydantic", "wexample-helpers", "wexample-prompt"],
+    install_requires=[
+        "pydantic",
+        "wexample-config",
+        "wexample-helpers",
+        "wexample-prompt"
+    ],
     python_requires=">=3.6",
 )
