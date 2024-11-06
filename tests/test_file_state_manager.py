@@ -5,6 +5,7 @@ from wexample_config.config_value.callback_render_config_value import (
     CallbackRenderConfigValue,
 )
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
 
@@ -34,7 +35,7 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
     def test_configure_from_callback(self):
-        def _name():
+        def _name(option: "ItemTreeConfigOptionMixin"):
             return "yes"
 
         self.state_manager.configure(config={"name": _name})
@@ -63,7 +64,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.allow_undefined_keys = False
 
     def test_configure_from_callback_class(self):
-        def _name():
+        def _name(option: "ItemTreeConfigOptionMixin"):
             return "yow"
 
         self.state_manager.configure(config=
