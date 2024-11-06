@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, List, Type
 from wexample_config.options_provider.abstract_options_provider import (
     AbstractOptionsProvider,
 )
+from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
@@ -44,6 +45,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
 
         return [
             ChildrenConfigOption,
+            ChildrenFileFactoryConfigOption,
             ClassConfigOption,
             ContentConfigOption,
             ContentFilterConfigOption,
