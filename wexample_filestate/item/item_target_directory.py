@@ -111,7 +111,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_name(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
         for child in self.get_children_list():
-            if child.get_path() == item_name:
+            if child.get_item_name() == item_name:
                 return child
 
         return None
