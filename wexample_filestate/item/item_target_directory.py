@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Type, cast
 
 from pydantic import Field
@@ -67,6 +68,32 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         for item in self.get_children_list():
             cast(TargetFileOrDirectory, item).build_operations(result)
 
+    def find_by_path_recursive(self, path: Path) -> Optional["TargetFileOrDirectoryType"]:
+        found = self.find_by_path(path)
+        if found:
+            return found
+
+        for child in self.get_children_list():
+            if child.is_directory():
+                result = cast(
+                    ItemTargetDirectory, child
+                ).find_by_path_recursive(path)
+                if result:
+                    return result
+
+        return None
+
+    def find_by_path(self, path: Path) -> Optional["TargetFileOrDirectoryType"]:
+        path_str = str(path.resolve())
+
+        print("ok")
+
+        for child in self.get_children_list():
+            if str(child.get_resolved()) == path_str:
+                return child
+
+        return None
+
     def find_by_name_recursive(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
         found = self.find_by_name(item_name)
         if found:
@@ -84,7 +111,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_name(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
         for child in self.get_children_list():
-            if child.get_item_name() == item_name:
+            if child.get_path() == item_name:
                 return child
 
         return None
