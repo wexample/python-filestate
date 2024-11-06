@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.child_factory_config_option import ChildFactoryConfigOption
+from wexample_filestate.config_option.children_filter_config_option import ChildrenFilterConfigOption
 from wexample_filestate.const.disk import DiskItemType
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
@@ -31,13 +31,13 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
                             "name": "one",
                             "type": DiskItemType.DIRECTORY,
                             "children": [
-                                ChildFactoryConfigOption(pattern={
+                                ChildrenFilterConfigOption(pattern={
                                     'class': TestClass,
                                     'name_pattern': r"^test-collection-[a-z]+-[a-z]+\.txt$",
                                     'type': DiskItemType.FILE,
                                     'should_exist': False,
                                 }),
-                                ChildFactoryConfigOption(pattern={
+                                ChildrenFilterConfigOption(pattern={
                                     'class': TestClass,
                                     'name_pattern': r"^test-directory-[a-z]$",
                                     'type': DiskItemType.DIRECTORY,
