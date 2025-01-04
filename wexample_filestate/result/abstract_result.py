@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, List
 
 from pydantic import BaseModel
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_prompt.common.prompt_response import PromptResponse
+from wexample_prompt.responses import BasePromptResponse
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import (
@@ -23,8 +23,8 @@ class AbstractResult(BaseModel):
     def __str__(self) -> str:
         return f"{self.__repr__}"
 
-    def to_prompt_responses(self) -> List[PromptResponse]:
-        output: List[PromptResponse] = []
+    def to_prompt_responses(self) -> List[BasePromptResponse]:
+        output: List[BasePromptResponse] = []
 
         for operation in self.operations:
             output.append(operation.to_prompt_response(self.rollback))

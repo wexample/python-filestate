@@ -5,10 +5,10 @@ from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
 from wexample_helpers.helpers.array_helper import array_swap
-from wexample_prompt.common.prompt_response import PromptResponse
+from wexample_prompt.responses import BasePromptResponse
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.state_items import SourceFileOrDirectory, TargetFileOrDirectory
+    from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 
 class AbstractOperation(BaseModel, ABC):
@@ -44,7 +44,7 @@ class AbstractOperation(BaseModel, ABC):
     def dependencies(self) -> List[Type["AbstractOperation"]]:
         return []
 
-    def to_prompt_response(self, rollback: bool) -> PromptResponse:
+    def to_prompt_response(self, rollback: bool) -> BasePromptResponse:
         lines = [
             f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, "_")
         ]
@@ -66,4 +66,4 @@ class AbstractOperation(BaseModel, ABC):
             ]
         )
 
-        return PromptResponse.from_lines(lines)
+        return BasePromptResponse.create_from_text_lines(lines)
