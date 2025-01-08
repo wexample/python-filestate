@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from wexample_helpers.helpers.import import import_dummy
+from wexample_helpers.helpers.polyfill import polyfill_import
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_source_directory import (
@@ -18,10 +18,10 @@ if TYPE_CHECKING:
         ItemTargetFile,
     )
 
-    import_dummy(ItemTargetFile)
-    import_dummy(ItemTargetDirectory)
-    import_dummy(ItemSourceFile)
-    import_dummy(ItemSourceDirectory)
+    polyfill_import(ItemTargetFile)
+    polyfill_import(ItemTargetDirectory)
+    polyfill_import(ItemSourceFile)
+    polyfill_import(ItemSourceDirectory)
 
 TargetFileOrDirectoryType = Union["ItemTargetDirectory", "ItemTargetFile"]
 SourceFileOrDirectoryType = Union["ItemSourceDirectory", "ItemTargetSource"]
