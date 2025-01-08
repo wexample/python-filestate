@@ -1,7 +1,7 @@
 from typing import Type, Any, Union
 
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_helpers.helpers.import_helper import import_dummy
+from wexample_helpers.helpers.import import import_dummy
 from wexample_helpers.test.abstract_test_helpers import AbstractTestHelpers
 
 

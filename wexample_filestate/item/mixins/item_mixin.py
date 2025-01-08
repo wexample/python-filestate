@@ -24,7 +24,7 @@ class ItemMixin(BaseModel):
         pass
 
     def get_octal_mode(self: ItemMixin) -> str:
-        from wexample_helpers.helpers.file_helper import file_path_get_octal_mode
+        from wexample_helpers.helpers.file import file_path_get_octal_mode
 
         return file_path_get_octal_mode(self.get_path())
 

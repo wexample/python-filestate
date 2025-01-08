@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, cast
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
 from wexample_filestate.operation.file_write_operation import FileWriteOperation
-from wexample_helpers.helpers.file_helper import file_read
+from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType

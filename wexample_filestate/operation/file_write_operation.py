@@ -7,7 +7,7 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
-from wexample_helpers.helpers.file_helper import file_read, file_write
+from wexample_helpers.helpers.file import file_read, file_write
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType

@@ -8,7 +8,7 @@ from wexample_filestate.item.item_target_directory import (
 )
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_helpers.helpers.file_helper import (
+from wexample_helpers.helpers.file import (
     file_change_mode,
     file_change_mode_recursive,
     file_mode_octal_to_num,

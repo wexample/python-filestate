@@ -4,7 +4,7 @@ from wexample_config.config_value.filter.trim_config_value_filter import TrimCon
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
 from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
-from wexample_helpers.helpers.file_helper import file_read
+from wexample_helpers.helpers.file import file_read
 
 
 class TestApplyFilterOperation(TestAbstractOperation):

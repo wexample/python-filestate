@@ -10,7 +10,7 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
-from wexample_helpers.helpers.file_helper import file_touch, file_write
+from wexample_helpers.helpers.file import file_touch, file_write
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import (

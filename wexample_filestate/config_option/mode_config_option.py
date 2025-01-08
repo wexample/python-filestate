@@ -4,7 +4,7 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_filestate.const.files import (
     FileSystemPermission,
 )
-from wexample_helpers.helpers.file_helper import file_mode_octal_to_num
+from wexample_helpers.helpers.file import file_mode_octal_to_num
 
 
 class ModeConfigOption(AbstractConfigOption):

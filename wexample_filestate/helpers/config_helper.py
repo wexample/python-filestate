@@ -1,7 +1,7 @@
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.disk import DiskItemType
 from wexample_helpers.const.types import FileStringOrPath
-from wexample_helpers.helpers.file_helper import file_resolve_path
+from wexample_helpers.helpers.file import file_resolve_path
 
 
 def config_has_same_type_as_file(config: DictConfig, path: FileStringOrPath) -> bool:

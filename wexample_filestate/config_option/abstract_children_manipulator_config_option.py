@@ -66,7 +66,7 @@ class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, Abstra
         )
 
     def _get_directories_filtered(self, base_path: str, recursive: bool = False) -> List[str]:
-        from wexample_helpers.helpers.file_helper import file_get_directories
+        from wexample_helpers.helpers.file import file_get_directories
 
         output = []
         directories = file_get_directories(

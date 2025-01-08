@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-from wexample_helpers.helpers.import_helper import import_dummy
+from wexample_helpers.helpers.import import import_dummy
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_source_directory import (

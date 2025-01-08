@@ -175,7 +175,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     ) -> "ItemTargetDirectory":
         import os
 
-        from wexample_helpers.helpers.directory_helper import (
+        from wexample_helpers.helpers.directory import (
             directory_get_base_name,
             directory_get_parent_path,
         )

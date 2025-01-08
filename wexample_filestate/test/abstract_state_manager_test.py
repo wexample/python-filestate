@@ -54,7 +54,7 @@ class AbstractStateManagerTest(ABC):
     def _assert_file_content_equals(
         self, file_path: str, expected_value: str, positive: bool = True
     ):
-        from wexample_helpers.helpers.file_helper import file_read
+        from wexample_helpers.helpers.file import file_read
 
         assert (file_read(file_path) == expected_value) == positive
 

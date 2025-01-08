@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
-from wexample_helpers.helpers.array_helper import array_swap
+from wexample_helpers.helpers.array import array_swap
 from wexample_prompt.responses import BasePromptResponse
 
 if TYPE_CHECKING:

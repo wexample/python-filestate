@@ -26,7 +26,7 @@ class FileManipulationOperationMixin(AbstractOperation):
     def _restore_target_file(self) -> None:
         import os
 
-        from wexample_helpers.helpers.file_helper import file_write
+        from wexample_helpers.helpers.file import file_write
 
         if self.target.is_file():
             file_write(self._original_path_str, self._original_file_content)
@@ -43,7 +43,7 @@ class FileManipulationOperationMixin(AbstractOperation):
             REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
             RemoveBackupMaxFileSizeConfigOption,
         )
-        from wexample_helpers.helpers.file_helper import file_read
+        from wexample_helpers.helpers.file import file_read
 
         size = os.path.getsize(file_path)
 
