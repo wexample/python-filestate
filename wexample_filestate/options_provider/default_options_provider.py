@@ -4,6 +4,7 @@ from wexample_config.options_provider.abstract_options_provider import (
     AbstractOptionsProvider,
 )
 from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
+from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
@@ -55,6 +56,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             NameConfigOption,
             NamePatternConfigOption,
             RemoveBackupMaxFileSizeConfigOption,
+            ShouldContainLinesConfigOption,
             ShouldExistConfigOption,
             TypeConfigOption,
         ]

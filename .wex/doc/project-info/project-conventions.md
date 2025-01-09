@@ -10,9 +10,11 @@ A `Config Option` defines a `key` that the user can set in the configuration fil
 
 An option can take simple values, such as strings, booleans, integers, etc., or use classes defined in the `config_value` directory.
 
-### Config Option Provider
+Each option should be registered in an Options Provider.
 
-A `Config Option Provider` allows options to be grouped, as certain options may not be relevant for all projects (e.g., depending on the language, framework, etc.).
+### Options Provider
+
+A `Options Provider` allows options to be grouped, as certain options may not be relevant for all projects (e.g., depending on the language, framework, etc.).
 
 ### Config Value
 
