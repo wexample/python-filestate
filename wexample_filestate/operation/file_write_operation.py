@@ -60,6 +60,10 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
         if should_contain_lines_option is not None:
             from pip.helpers.wexample_helpers.helpers.string import string_append_missing_lines
+            
+            # Initialize content from existing file or empty string if file doesn't exist
+            if updated_content is None:
+                updated_content = file_read(self.target.get_resolved()) if os.path.exists(self.target.get_resolved()) else ""
 
             updated_content = string_append_missing_lines(
                 lines=self.target.get_option_value(ShouldContainLinesConfigOption).get_list(),
