@@ -53,24 +53,23 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     def apply(self) -> None:
         content_option = self.target.get_option(ContentConfigOption)
         should_contain_lines_option = self.target.get_option(ShouldContainLinesConfigOption)
+        updated_content = None
 
         if content_option is not None:
-            self._target_file_write(
-                content=self.target.get_option_value(ContentConfigOption).get_str()
-            )
-        elif should_contain_lines_option is not None:
-            required_lines = self.target.get_option_value(ShouldContainLinesConfigOption)
-            current_content = file_read(self._get_target_file_path(self.target)) if os.path.exists(self._get_target_file_path(self.target)) else ""
-            current_lines = current_content.splitlines()
+            updated_content = self.target.get_option_value(ContentConfigOption).get_str()
 
-            # Add missing lines
-            lines_to_add = [line for line in required_lines if line not in current_lines]
-            if lines_to_add:
-                new_content = current_content
-                if new_content and not new_content.endswith('\n'):
-                    new_content += '\n'
-                new_content += '\n'.join(lines_to_add)
-                self._target_file_write(content=new_content)
+        if should_contain_lines_option is not None:
+            from pip.helpers.wexample_helpers.helpers.string import string_append_missing_lines
+
+            updated_content = string_append_missing_lines(
+                lines=self.target.get_option_value(ShouldContainLinesConfigOption).get_list(),
+                content=updated_content
+            )
+
+        if updated_content is not None:
+            self._target_file_write(
+                content=updated_content
+            )
 
     def undo(self) -> None:
         self._restore_target_file()
