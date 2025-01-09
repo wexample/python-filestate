@@ -4,5 +4,4 @@ You are reading this file because you want to get some information before workin
 
 Each directory contains a _summary.md file. Start with these files to quickly find relevant information.
 
-- 📁 contributing: Documentation contribution guidelines
-- 📄 todo.md: Current project status and ongoing tasks
+- 📁 project-info: Project structure and organization details
