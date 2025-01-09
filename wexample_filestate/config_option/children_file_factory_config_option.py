@@ -50,21 +50,24 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         config = self.pattern
         recursive = config.get("recursive", False)
         children = []
-        directories = self._get_directories_filtered(
-            base_path=self.get_parent_item().get_resolved()
-        )
+        resolved_path = self.get_parent_item().get_resolved()
 
-        for directory in directories:
-            directory_path = Path(directory)
-
-            dir_config = self._generate_children_recursive(
-                path=Path(directory_path),
-                recursive=recursive,
+        if os.path.exists(resolved_path):
+            directories = self._get_directories_filtered(
+                base_path=resolved_path
             )
 
-            children.append(self._create_children_from_config(
-                path=directory_path,
-                config=dir_config,
-            ))
+            for directory in directories:
+                directory_path = Path(directory)
+
+                dir_config = self._generate_children_recursive(
+                    path=Path(directory_path),
+                    recursive=recursive,
+                )
+
+                children.append(self._create_children_from_config(
+                    path=directory_path,
+                    config=dir_config,
+                ))
 
         return children

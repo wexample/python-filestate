@@ -86,8 +86,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def find_by_path(self, path: Path) -> Optional["TargetFileOrDirectoryType"]:
         path_str = str(path.resolve())
 
-        print("ok")
-
         for child in self.get_children_list():
             if str(child.get_resolved()) == path_str:
                 return child
