@@ -9,7 +9,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import Item
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
