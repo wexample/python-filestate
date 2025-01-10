@@ -27,15 +27,11 @@ if TYPE_CHECKING:
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    io: IoManager = Field(
-        default_factory=IoManager,
-        description="Handles output to print, allow to share it if defined in a parent context",
-    )
     last_result: AbstractResult | None = None
 
     def __init__(self, **data):
-        ItemDirectoryMixin.__init__(self, **data)
         AbstractItemTarget.__init__(self, **data)
+        ItemDirectoryMixin.__init__(self, **data)
 
     def build_item_tree(self) -> None:
         super().build_item_tree()
@@ -167,7 +163,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         cls,
         path: str,
         config: Optional[DictConfig] = None,
-        io: Optional[IoManager] = None,
+        io_manager: Optional[IoManager] = None,
         options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
         operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
     ) -> "ItemTargetDirectory":
@@ -186,7 +182,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         manager = cls(
             base_path=directory_get_parent_path(path),
-            io=io or IoManager(),
+            io_manager=io_manager or IoManager(),
             options_providers=options_providers,
             operations_providers=operations_providers,
         )

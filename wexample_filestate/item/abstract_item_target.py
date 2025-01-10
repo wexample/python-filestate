@@ -3,10 +3,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Type, cast, Any
 
 from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
-from wexample_config.config_option.name_config_option import NameConfigOption
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
+from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from wexample_filestate.const.state_items import SourceFileOrDirectory
 
 
-class AbstractItemTarget(ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
+class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
 
@@ -83,7 +83,10 @@ class AbstractItemTarget(ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedCon
         for operation_class in self.get_operations():
             self_casted = cast(TargetFileOrDirectoryType, self)
             if operation_class.applicable(self_casted):
-                result.operations.append(operation_class(target=self_casted))
+                result.operations.append(operation_class(
+                    io_manager=self.io,
+                    target=self_casted
+                ))
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent:

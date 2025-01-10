@@ -1,5 +1,5 @@
 import os
-from typing import Any, cast, Union, Optional, List
+from typing import Any, cast, Union, Optional, List, TYPE_CHECKING
 
 from wexample_config.config_option.children_config_option import (
     ChildrenConfigOption as BaseChildrenConfigOption,
@@ -7,6 +7,9 @@ from wexample_config.config_option.children_config_option import (
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+
+if TYPE_CHECKING:
+    from pip.prompt.wexample_prompt.io_manager import IoManager
 
 
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
@@ -87,6 +90,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
                 )
 
             child = class_name(
+                io_manager=self.get_io(),
                 # Name might be not mandatory when using custom class
                 config=child_config,
                 parent=self,
@@ -103,10 +107,12 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
             if is_file_type:
                 child = ItemTargetFile(
+                    io_manager=self.get_io(),
                     parent=self,
                 )
             else:
                 child = ItemTargetDirectory(
+                    io_manager=self.get_io(),
                     parent=self,
                 )
 
@@ -115,3 +121,6 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def get_children(self) -> list[TargetFileOrDirectoryType]:
         return cast(list[TargetFileOrDirectoryType], self.children)
+
+    def get_io(self) -> "IoManager":
+        return self.get_parent_item().io
