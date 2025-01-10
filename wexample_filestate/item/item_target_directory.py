@@ -9,7 +9,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import Item
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
-from wexample_prompt.io_manager import IOManager
+from wexample_prompt.io_manager import IoManager
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -27,8 +27,8 @@ if TYPE_CHECKING:
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    io: IOManager = Field(
-        default_factory=IOManager,
+    io: IoManager = Field(
+        default_factory=IoManager,
         description="Handles output to print, allow to share it if defined in a parent context",
     )
     last_result: AbstractResult | None = None
@@ -167,7 +167,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         cls,
         path: str,
         config: Optional[DictConfig] = None,
-        io: Optional[IOManager] = None,
+        io: Optional[IoManager] = None,
         options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
         operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
     ) -> "ItemTargetDirectory":
@@ -186,7 +186,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         manager = cls(
             base_path=directory_get_parent_path(path),
-            io=io or IOManager(),
+            io=io or IoManager(),
             options_providers=options_providers,
             operations_providers=operations_providers,
         )
