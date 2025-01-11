@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_config.const.types import DictConfig
-
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.helpers.polyfill import polyfill_import

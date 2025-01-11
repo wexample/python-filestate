@@ -6,6 +6,12 @@ from wexample_filestate.result.abstract_result import AbstractResult
 class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
+    def _find_dependency(self, dependency_class) -> AbstractOperation | None:
+        for operation in self.operations:
+            if isinstance(operation, dependency_class):
+                return operation
+        return None
+
     def apply_with_dependencies(self, operation, rollback: bool = False):
         # Retrieve dependencies based on rollback mode
         dependencies = operation.dependencies()
@@ -19,9 +25,7 @@ class FileStateResult(AbstractResult):
 
         # Apply dependencies in the specified order
         for dependency_class in dependencies:
-            dependency = next(
-                op for op in self.operations if isinstance(op, dependency_class)
-            )
+            dependency = self._find_dependency(dependency_class)
             if dependency is not None and dependency not in self._executed_operations:
                 self.apply_with_dependencies(dependency, rollback=rollback)
 
