@@ -5,7 +5,7 @@ from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
 from wexample_helpers.helpers.array import array_swap
-from wexample_prompt.responses import BasePromptResponse
+from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 
 if TYPE_CHECKING:
     from wexample_filestate.const.state_items import TargetFileOrDirectory
