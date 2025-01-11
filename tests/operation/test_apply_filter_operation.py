@@ -26,7 +26,8 @@ class TestApplyFilterOperation(TestAbstractOperation):
 
     def _operation_test_assert_initial(self) -> None:
         assert self.state_manager.dump() == {
-            'name': 'resources', 'children': [
+            'name': 'resources',
+            'children': [
                 {
                     'name': 'trim-text.txt',
                     'type': 'file',

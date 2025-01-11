@@ -30,6 +30,10 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     last_result: AbstractResult | None = None
 
     def __init__(self, **data):
+        # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
+        # attributes during AbstractItemTarget initialization.
+        # The order matters here because Pydantic's model initialization
+        # can override attributes set by previous parent classes.
         ItemDirectoryMixin.__init__(self, **data)
         AbstractItemTarget.__init__(self, **data)
 
