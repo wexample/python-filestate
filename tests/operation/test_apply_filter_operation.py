@@ -3,7 +3,7 @@ from typing import Optional
 from wexample_config.config_value.filter.trim_config_value_filter import TrimConfigValueFilter
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
-from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 from wexample_helpers.helpers.file import file_read
 
 

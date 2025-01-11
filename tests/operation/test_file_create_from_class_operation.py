@@ -3,7 +3,7 @@ from typing import Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.test.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
 class TestFileCreateFromClassOperation(TestAbstractOperation):

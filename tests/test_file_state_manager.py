@@ -7,7 +7,7 @@ from wexample_config.config_value.callback_render_config_value import (
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.test.abstract_state_manager_test import AbstractStateManagerTest
+from wexample_filestate.testing.abstract_state_manager_test import AbstractStateManagerTest
 
 
 class TestFileStateManager(AbstractStateManagerTest):
