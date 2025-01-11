@@ -9,7 +9,7 @@ from wexample_helpers.helpers.polyfill import polyfill_import
 
 class FileStateManager(ItemTargetDirectory):
     def __init__(self, **data):
-        ItemTargetDirectory.__init__(self, value=None, **data)
+        super().__init__(value=None, **data)
 
     def configure(self, config: DictConfig):
         super().configure(config=config)
