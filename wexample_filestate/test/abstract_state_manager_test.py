@@ -15,8 +15,8 @@ if TYPE_CHECKING:
 class AbstractStateManagerTest(ABC):
     state_manager: "FileStateManager"
 
-    def _get_package_root_path(self, test_file_path: str = None) -> str:
-        return os.path.join(os.path.realpath(os.path.dirname(__file__)), "..", "..", "")
+    def _get_package_root_path(self) -> str:
+        return f"{os.path.abspath(os.curdir)}{os.sep}"
 
     def _get_test_state_manager_path(self, package_root_path: Optional[str] = None) -> str:
         return os.path.join(package_root_path or self._get_package_root_path(), "tests", "resources", "")
