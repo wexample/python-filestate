@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import os
+from typing import TYPE_CHECKING
 
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
 from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
@@ -60,10 +60,11 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
         if should_contain_lines_option is not None:
             from wexample_helpers.helpers.string import string_append_missing_lines
-            
+
             # Initialize content from existing file or empty string if file doesn't exist
             if updated_content is None:
-                updated_content = file_read(self.target.get_resolved()) if os.path.exists(self.target.get_resolved()) else ""
+                updated_content = file_read(self.target.get_resolved()) if os.path.exists(
+                    self.target.get_resolved()) else ""
 
             updated_content = string_append_missing_lines(
                 lines=self.target.get_option_value(ShouldContainLinesConfigOption).get_list(),
