@@ -4,11 +4,13 @@ from abc import ABC, abstractmethod
 from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
+
 from wexample_helpers.helpers.array import array_swap
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 
 if TYPE_CHECKING:
     from wexample_filestate.const.state_items import TargetFileOrDirectory
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class AbstractOperation(BaseModel, ABC):
@@ -17,8 +19,18 @@ class AbstractOperation(BaseModel, ABC):
     _tty_width: int = 80
 
     @staticmethod
+    def applicable(cls, target: "TargetFileOrDirectory") -> bool:
+        for option in target.options:
+            if cls.applicable_option(
+                target=target,
+                option=option) is True:
+                return True
+
+        return False
+
+    @staticmethod
     @abstractmethod
-    def applicable(target: "TargetFileOrDirectory") -> bool:
+    def applicable_option(target: "TargetFileOrDirectory", options: "AbstractConfigOption") -> bool:
         pass
 
     @abstractmethod
