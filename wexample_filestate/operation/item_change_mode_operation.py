@@ -29,22 +29,16 @@ class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
 
     @staticmethod
-    def applicable(
-        target: Union["ItemTargetDirectory", "ItemTargetFile"]
+    def applicable_option(
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption"
     ) -> bool:
-        if target.source:
-            from wexample_filestate.config_option.mode_config_option import (
-                ModeConfigOption,
-            )
+        if not target.source:
+            return False
 
-            option = cast(ModeConfigOption, target.get_option(ModeConfigOption))
-            if option:
-                file_validate_mode_octal_or_fail(option.get_octal())
-                if (
-                    file_path_get_mode_num(target.get_source().get_path())
-                    != option.get_int()
-                ):
-                    return True
+        if isinstance(option, ModeConfigOption):
+            file_validate_mode_octal_or_fail(option.get_octal())
+            return file_path_get_mode_num(target.get_source().get_path()) != option.get_int()
 
         return False
 
