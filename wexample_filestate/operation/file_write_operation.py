@@ -18,19 +18,18 @@ if TYPE_CHECKING:
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable_option(target: "TargetFileOrDirectoryType", option: "AbstractConfigOption") -> bool:
-        if FileWriteOperation.applicable_option(target, option):
-            if isinstance(option, ContentConfigOption):
-                current_content = file_read(target.get_resolved()) if os.path.exists(target.get_resolved()) else ""
-                new_content = target.get_option_value(ContentConfigOption).get_str()
-                return current_content != new_content
+        if isinstance(option, ContentConfigOption):
+            current_content = file_read(target.get_resolved()) if os.path.exists(target.get_resolved()) else ""
+            new_content = target.get_option_value(ContentConfigOption).get_str()
+            return current_content != new_content
 
-            if isinstance(option, ShouldContainLinesConfigOption):
-                required_lines = target.get_option_value(ShouldContainLinesConfigOption)
-                if not os.path.exists(target.get_resolved()):
-                    return True
-                current_content = file_read(target.get_resolved())
-                current_lines = current_content.splitlines()
-                return any(line not in current_lines for line in required_lines)
+        if isinstance(option, ShouldContainLinesConfigOption):
+            required_lines = target.get_option_value(ShouldContainLinesConfigOption)
+            if not os.path.exists(target.get_resolved()):
+                return True
+            current_content = file_read(target.get_resolved())
+            current_lines = current_content.splitlines()
+            return any(line not in current_lines for line in required_lines)
 
         return False
 
