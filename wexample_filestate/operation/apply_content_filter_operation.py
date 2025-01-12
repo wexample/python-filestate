@@ -9,22 +9,21 @@ from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class ApplyContentFilterOperation(FileWriteOperation):
     _original_path_str: str
 
     @staticmethod
-    def applicable(
-        target: "TargetFileOrDirectoryType"
+    def applicable_option(
+        target: "TargetFileOrDirectoryType",
+        option: "AbstractConfigOption"
     ) -> bool:
         from wexample_filestate.config_option.content_filter_config_option import (
             ContentFilterConfigOption,
         )
-        if target.source and target.get_option(ContentFilterConfigOption) is not None:
-            return True
-
-        return False
+        return isinstance(option, ContentFilterConfigOption) and target.source
 
     def describe_before(self) -> str:
         return "TO_FILTER"
