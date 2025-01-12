@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 from typing import TYPE_CHECKING
-
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
 from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
 from wexample_filestate.operation.abstract_operation import AbstractOperation
@@ -13,26 +12,25 @@ from wexample_helpers.helpers.file import file_read, file_write
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
-    def applicable(target: "TargetFileOrDirectoryType") -> bool:
-        content_option = target.get_option(ContentConfigOption)
-        should_contain_lines_option = target.get_option(ShouldContainLinesConfigOption)
+    def applicable_option(target: "TargetFileOrDirectoryType", option: "AbstractConfigOption") -> bool:
+        if FileWriteOperation.applicable_option(target, option):
+            if isinstance(option, ContentConfigOption):
+                current_content = file_read(target.get_resolved()) if os.path.exists(target.get_resolved()) else ""
+                new_content = target.get_option_value(ContentConfigOption).get_str()
+                return current_content != new_content
 
-        if content_option is not None:
-            current_content = file_read(target.get_resolved()) if os.path.exists(target.get_resolved()) else ""
-            new_content = target.get_option_value(ContentConfigOption).get_str()
-            return current_content != new_content
-
-        if should_contain_lines_option is not None:
-            required_lines = target.get_option_value(ShouldContainLinesConfigOption)
-            if not os.path.exists(target.get_resolved()):
-                return True
-            current_content = file_read(target.get_resolved())
-            current_lines = current_content.splitlines()
-            return any(line not in current_lines for line in required_lines)
+            if isinstance(option, ShouldContainLinesConfigOption):
+                required_lines = target.get_option_value(ShouldContainLinesConfigOption)
+                if not os.path.exists(target.get_resolved()):
+                    return True
+                current_content = file_read(target.get_resolved())
+                current_lines = current_content.splitlines()
+                return any(line not in current_lines for line in required_lines)
 
         return False
 
