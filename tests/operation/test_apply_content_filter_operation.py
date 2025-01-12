@@ -7,7 +7,7 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 from wexample_helpers.helpers.file import file_read
 
 
-class TestApplyFilterOperation(TestAbstractOperation):
+class TestContentApplyContentFilterOperation(TestAbstractOperation):
     missing_file_name: str = 'simple-readme.md'
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
