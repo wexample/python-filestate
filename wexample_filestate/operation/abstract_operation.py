@@ -18,10 +18,10 @@ class AbstractOperation(BaseModel, ABC):
     target: "TargetFileOrDirectory"
     _tty_width: int = 80
 
-    @staticmethod
-    def applicable(target: "TargetFileOrDirectory") -> bool:
+    @classmethod
+    def applicable(cls, target: "TargetFileOrDirectory") -> bool:
         for option in target.options:
-            if AbstractOperation.applicable_option(
+            if cls.applicable_option(
                 target=target,
                 option=option) is True:
                 return True
