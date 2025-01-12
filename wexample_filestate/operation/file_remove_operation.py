@@ -16,20 +16,19 @@ if TYPE_CHECKING:
     from wexample_filestate.item.item_target_file import (
         ItemTargetFile,
     )
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
-    def applicable(
-        target: Union["ItemTargetDirectory", "ItemTargetFile"]
+    def applicable_option(
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption"
     ) -> bool:
-        if (
+        return (
             target.source
             and not FileManipulationOperationMixin.option_should_exist_is_true(target)
-        ):
-            return True
-
-        return False
+        )
 
     def describe_before(self) -> str:
         return "EXISTS"
