@@ -23,7 +23,11 @@ class ApplyContentFilterOperation(FileWriteOperation):
         from wexample_filestate.config_option.content_filter_config_option import (
             ContentFilterConfigOption,
         )
-        return isinstance(option, ContentFilterConfigOption) and target.source
+
+        if isinstance(option, ContentFilterConfigOption):
+            return target.source is not None
+
+        return False
 
     def describe_before(self) -> str:
         return "TO_FILTER"
