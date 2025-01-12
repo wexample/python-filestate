@@ -11,6 +11,7 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
     FileManipulationOperationMixin,
 )
 from wexample_helpers.helpers.file import file_touch, file_write
+from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import (
@@ -25,16 +26,14 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_path_str: str
 
     @staticmethod
-    def applicable(
-        target: Union["ItemTargetDirectory", "ItemTargetFile"]
+    def applicable_option(
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption"
     ) -> bool:
-        if (
+        return (
             target.source is None
             and FileManipulationOperationMixin.option_should_exist_is_true(target)
-        ):
-            return True
-
-        return False
+        )
 
     def describe_before(self) -> str:
         return "MISSING"
