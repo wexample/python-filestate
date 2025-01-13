@@ -20,7 +20,7 @@ class AbstractOperation(BaseModel, ABC):
 
     @classmethod
     def applicable(cls, target: "TargetFileOrDirectory") -> bool:
-        for option in target.options:
+        for option in target.options.values():
             if cls.applicable_option(
                 target=target,
                 option=option) is True:
