@@ -116,3 +116,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         output["name"] = self.get_item_name()
 
         return output
+
+    def print_dump(self, pretty: bool = True) -> None:
+            from pprint import pprint
+            pprint(self.dump(), indent=2)
