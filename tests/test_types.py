@@ -1,7 +1,7 @@
 from typing import Type, Any, Union
 
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_helpers.helpers.polyfill import polyfill_import
+from wexample_helpers.helpers.polyfill import polyfill_register_global
 from wexample_helpers.test.abstract_test_helpers import AbstractTestHelpers
 
 
@@ -11,7 +11,7 @@ class TestFileStateManager(AbstractTestHelpers):
         from wexample_filestate.config_option.children_filter_config_option import ChildrenFilterConfigOption
         from wexample_filestate.result.abstract_result import AbstractResult
 
-        polyfill_import(AbstractResult)
+        polyfill_register_global(AbstractResult)
 
         class TestClass(FileStateManager):
             pass
