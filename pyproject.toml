@@ -1,23 +1,23 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = [
+    "setuptools",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "wexample-filestate"
 version = "0.0.16"
 description = "A tool for managing file states, with configuration files in YAML."
-readme = { file = "README.md", content-type = "text/markdown" }
-authors = [{name = "weeger", email = "contact@wexample.com"}]
-license = { text = "MIT" }
+authors = [
+    { name = "weeger", email = "contact@wexample.com" },
+]
 requires-python = ">=3.6"
-
-
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
 dependencies = [
     "pydantic",
     "wexample-config",
@@ -25,8 +25,17 @@ dependencies = [
     "wexample-prompt",
 ]
 
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.license]
+text = "MIT"
+
 [project.urls]
 homepage = "https://github.com/wexample/python-filestate"
 
-[tool.setuptools.packages]
-find = { include = ["*"] }
+[tool.setuptools.packages.find]
+include = [
+    "*",
+]
