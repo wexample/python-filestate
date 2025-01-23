@@ -20,9 +20,9 @@ classifiers = [
 ]
 dependencies = [
     "pydantic",
-    "wexample-config",
-    "wexample-helpers",
-    "wexample-prompt",
+    "wexample-config==0.0.18",
+    "wexample-helpers==0.0.18",
+    "wexample-prompt==0.0.17",
 ]
 
 [project.readme]
