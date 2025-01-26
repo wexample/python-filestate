@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "wexample-filestate"
 version = "0.0.20"
-description = "A tool for managing file states, with configuration files in YAML."
+description = "Package that allows you to manage the state of files and directories using YAML configuration files."
 authors = [
     { name = "weeger", email = "contact@wexample.com" },
 ]

@@ -1,0 +1,3 @@
+- **Apply and Modify Permissions and Ownership**: Manage file and directory permissions and ownership individually or recursively.
+- **Create, Modify, and Delete Directories**: Use patterns and regex to create, modify, and delete directories and subdirectories (e.g., ensure each `Entity/MyEntity.php` file has a corresponding `Repository/MyEntityRepository.php`).
+- **Create Files Using Templates and Placeholders**: Generate files from templates with dynamic placeholders.
