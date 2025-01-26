@@ -1,6 +1,8 @@
-# filestate
+# Filestate
 
-`filestate` is a Python package that allows you to manage the state of files and directories using YAML configuration files.
+Package that allows you to manage the state of files and directories using YAML configuration files.
+
+Version: 0.0.20
 
 ## Features
 
@@ -8,13 +10,28 @@
 - **Create, Modify, and Delete Directories**: Use patterns and regex to create, modify, and delete directories and subdirectories (e.g., ensure each `Entity/MyEntity.php` file has a corresponding `Repository/MyEntityRepository.php`).
 - **Create Files Using Templates and Placeholders**: Generate files from templates with dynamic placeholders.
 
+
+## Requirements
+
+- Python >=3.6
+
+## Dependencies
+
+- pip-tools
+- pydantic
+- pytest
+- wexample-config==0.0.20
+- wexample-helpers==0.0.20
+- wexample-prompt==0.0.19
+
 ## Installation
 
-Install `filestate` with pip:
-
+```bash
 pip install wexample-filestate
+```
 
 ## Usage
+
 
 ### Configuration File Example
 
@@ -83,10 +100,10 @@ state_manager.configure({
 state_manager.apply()
 ```
 
-## Testing
+## Links
 
-     pytest -rP -x pip/filestate/tests/
+- Homepage: https://github.com/wexample/python-filestate
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
