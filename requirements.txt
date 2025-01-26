@@ -16,10 +16,6 @@ iniconfig==2.0.0
 # via pytest
 inquirerpy==0.3.4
 # via wexample-prompt
-markdown-it-py==3.0.0
-# via rich
-mdurl==0.1.2
-# via markdown-it-py
 packaging==24.2
 # via
 #   build
@@ -27,7 +23,11 @@ packaging==24.2
 pfzy==0.3.4
 # via inquirerpy
 pip-tools==7.4.1
-# via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
+# via
+#   -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
+#   wexample-config
+#   wexample-helpers
+#   wexample-prompt
 pluggy==1.5.0
 # via pytest
 prompt-toolkit==3.0.50
@@ -35,32 +35,34 @@ prompt-toolkit==3.0.50
 pydantic==2.10.4
 # via
 #   -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
+#   wexample-config
+#   wexample-helpers
 #   wexample-prompt
 pydantic-core==2.27.2
 # via pydantic
-pygments==2.19.1
-# via rich
 pyproject-hooks==1.2.0
 # via
 #   build
 #   pip-tools
 pytest==8.3.4
-# via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
-rich==13.9.4
-# via wexample-prompt
+# via
+#   -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
+#   wexample-config
+#   wexample-helpers
+#   wexample-prompt
 typing-extensions==4.12.2
 # via
 #   pydantic
 #   pydantic-core
 wcwidth==0.2.13
 # via prompt-toolkit
-wexample-config==0.0.20
+wexample-config==0.0.21
 # via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
-wexample-helpers==0.0.20
+wexample-helpers==0.0.21
 # via
 #   -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
 #   wexample-config
-wexample-prompt==0.0.19
+wexample-prompt==0.0.20
 # via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
 wheel==0.45.1
 # via pip-tools

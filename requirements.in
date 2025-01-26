@@ -1,6 +1,6 @@
 pip-tools
 pydantic
 pytest
-wexample-config==0.0.20
-wexample-helpers==0.0.20
-wexample-prompt==0.0.19
+wexample-config==0.0.21
+wexample-helpers==0.0.21
+wexample-prompt==0.0.20
