@@ -14,10 +14,13 @@ class AggregatedTemplatesConfigValue(ConfigValue):
     def get_raw_value_allowed_type() -> Any:
         return Any
 
+    def get_templates(self) -> Optional[List[str]]:
+        return self.templates
+
     def get_str(self, type_check: bool = True) -> str:
         output = []
 
-        for template_content in self.templates:
+        for template_content in self.get_templates():
             output.append(template_content.format(self.parameters))
 
         output_str = os.linesep.join(output)
