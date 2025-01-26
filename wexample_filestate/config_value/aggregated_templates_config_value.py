@@ -3,6 +3,7 @@ from typing import Dict, Optional, List, Any
 
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_helpers.const.types import BasicValue
+from wexample_helpers.helpers.string import string_replace_params
 
 
 class AggregatedTemplatesConfigValue(ConfigValue):
@@ -21,7 +22,7 @@ class AggregatedTemplatesConfigValue(ConfigValue):
         output = []
 
         for template_content in self.get_templates():
-            output.append(template_content.format(self.parameters))
+            output.append(string_replace_params(template_content, self.parameters))
 
         output_str = os.linesep.join(output)
         self.set_str(output_str)
