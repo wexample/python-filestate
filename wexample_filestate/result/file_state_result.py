@@ -4,7 +4,6 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.cli import cli_make_clickable_path
 from wexample_prompt.responses.messages import TaskPromptResponse
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
 
 class FileStateResult(AbstractResult):
@@ -35,9 +34,7 @@ class FileStateResult(AbstractResult):
 
         # Execute the main operation after dependencies if not rollback
         if not rollback and operation not in self._executed_operations:
-            self.state_manager.io.print_response(
-                TitlePromptResponse.create_title("TASK")
-            )
+            self.state_manager.io.title("TASK")
 
             operation.apply()
             operation.applied = True
