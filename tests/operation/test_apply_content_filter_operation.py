@@ -5,10 +5,25 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 from wexample_helpers.helpers.file import file_read
-
+import pytest
+from shutil import copyfile
+import os
 
 class TestContentApplyContentFilterOperation(TestAbstractOperation):
     missing_file_name: str = 'simple-readme.md'
+    test_file_path: str = 'tests/resources/trim-text.txt'
+
+    @pytest.fixture(autouse=True)
+    def setup_and_teardown(self):
+        # Create backup
+        backup_path = f"{self.test_file_path}.bak"
+        copyfile(self.test_file_path, backup_path)
+        
+        yield
+        
+        # Restore from backup
+        copyfile(backup_path, self.test_file_path)
+        os.remove(backup_path)
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         return {
