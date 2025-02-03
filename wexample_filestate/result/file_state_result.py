@@ -3,7 +3,6 @@ from __future__ import annotations
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_helpers.helpers.cli import cli_make_clickable_path
-from wexample_prompt.responses.messages import TaskPromptResponse
 
 
 class FileStateResult(AbstractResult):
@@ -40,14 +39,12 @@ class FileStateResult(AbstractResult):
             operation.applied = True
             self._executed_operations.append(operation)
 
-            self.state_manager.io.print_response(
-                TaskPromptResponse.create_task(
-                    f"{operation.target.get_item_title()}:\n"
-                    f"    → {operation.description()}\n"
-                    f"    → {cli_make_clickable_path(operation.target.get_resolved())}\n"
-                    f"    ⋮ Before: {operation.describe_before()}\n"
-                    f"    ⋮ After: {operation.describe_after()}"
-                )
+            self.state_manager.io.task(
+                message=f"{operation.target.get_item_title()}:\n"
+                        f"    → {operation.description()}\n"
+                        f"    → {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                        f"    ⋮ Before: {operation.describe_before()}\n"
+                        f"    ⋮ After: {operation.describe_after()}",
             )
 
     def apply_operations(self):
