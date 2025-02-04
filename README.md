@@ -2,7 +2,7 @@
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
-Version: 0.0.26
+Version: 0.0.28
 
 ## Features
 
@@ -20,9 +20,9 @@ Version: 0.0.26
 - pip-tools
 - pydantic
 - pytest
-- wexample-config==0.0.26
-- wexample-helpers==0.0.26
-- wexample-prompt==0.0.27
+- wexample-config==0.0.28
+- wexample-helpers==0.0.28
+- wexample-prompt==0.0.29
 
 ## Installation
 
