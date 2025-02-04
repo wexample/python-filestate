@@ -22,7 +22,7 @@ Version: 0.0.26
 - pytest
 - wexample-config==0.0.26
 - wexample-helpers==0.0.26
-- wexample-prompt==0.0.25
+- wexample-prompt==0.0.27
 
 ## Installation
 

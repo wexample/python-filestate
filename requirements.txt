@@ -62,7 +62,7 @@ wexample-helpers==0.0.26
 # via
 #   -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
 #   wexample-config
-wexample-prompt==0.0.25
+wexample-prompt==0.0.27
 # via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
 wheel==0.45.1
 # via pip-tools
