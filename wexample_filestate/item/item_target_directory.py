@@ -28,13 +28,13 @@ if TYPE_CHECKING:
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     last_result: AbstractResult | None = None
 
-    def __init__(self, **data):
+    def __init__(self, **kwargs):
         # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
         # attributes during AbstractItemTarget initialization.
         # The order matters here because Pydantic's model initialization
         # can override attributes set by previous parent classes.
-        ItemDirectoryMixin.__init__(self, **data)
-        AbstractItemTarget.__init__(self, **data)
+        ItemDirectoryMixin.__init__(self, **kwargs)
+        AbstractItemTarget.__init__(self, **kwargs)
 
     def build_item_tree(self) -> None:
         super().build_item_tree()
