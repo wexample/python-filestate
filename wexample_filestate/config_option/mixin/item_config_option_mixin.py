@@ -1,11 +1,9 @@
 from typing import cast, Optional
 
-from pydantic import BaseModel
-
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class ItemTreeConfigOptionMixin(BaseModel):
+class ItemTreeConfigOptionMixin:
     """
     Give properties to every option that can be a part of the file system configuration tree,
     like any file or directory descriptor, and also children option a children factories.

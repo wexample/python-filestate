@@ -185,7 +185,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         manager = cls(
             base_path=directory_get_parent_path(path),
-            io_manager=io_manager or IoManager(),
+            io=io_manager or IoManager(),
             options_providers=options_providers,
             operations_providers=operations_providers,
         )
