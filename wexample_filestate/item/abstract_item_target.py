@@ -25,6 +25,10 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
 
+    def __init__(self, **kwargs):
+        ItemMixin.__init__(self, **kwargs)
+        AbstractNestedConfigOption.__init__(self, **kwargs)
+
     def configure(self, config: DictConfig):
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
