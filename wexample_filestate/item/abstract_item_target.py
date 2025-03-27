@@ -88,7 +88,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             self_casted = cast(TargetFileOrDirectoryType, self)
             if operation_class.applicable(self_casted):
                 result.operations.append(operation_class(
-                    io_manager=self.io,
+                    io=self.io,
                     target=self_casted
                 ))
 
