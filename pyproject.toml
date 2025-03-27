@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wexample-filestate"
-version = "0.0.32"
+version = "0.0.33"
 description = "Package that allows you to manage the state of files and directories using YAML configuration files."
 authors = [
     { name = "weeger", email = "contact@wexample.com" },
@@ -23,8 +23,8 @@ dependencies = [
     "pydantic",
     "pytest",
     "wexample-config>=0.0.32",
-    "wexample-helpers>=0.0.32",
-    "wexample-prompt>=0.0.32",
+    "wexample-helpers>=0.0.34",
+    "wexample-prompt>=0.0.33",
 ]
 
 [project.readme]
