@@ -19,15 +19,17 @@ if TYPE_CHECKING:
     from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_filestate.const.types_state_items import SourceFileOrDirectoryType
     from wexample_filestate.const.state_items import SourceFileOrDirectory
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, io:"IoManager", **kwargs):
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
+        WithRequiredIoManager.__init__(self, io=io)
 
     def configure(self, config: DictConfig):
         self.set_value(raw_value=config)

@@ -90,7 +90,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
                 )
 
             child = class_name(
-                io_manager=self.get_io(),
+                io=self.get_io(),
                 # Name might be not mandatory when using custom class
                 config=child_config,
                 parent=self,
@@ -107,12 +107,12 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
             if is_file_type:
                 child = ItemTargetFile(
-                    io_manager=self.get_io(),
+                    io=self.get_io(),
                     parent=self,
                 )
             else:
                 child = ItemTargetDirectory(
-                    io_manager=self.get_io(),
+                    io=self.get_io(),
                     parent=self,
                 )
 
