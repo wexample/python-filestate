@@ -55,8 +55,6 @@ typing-extensions==4.12.2
 #   pydantic
 #   pydantic-core
 wcwidth==0.2.13
-# via prompt-toolkit
-wexample-config==0.0.37
 # via -r /home/weeger/Desktop/WIP/WEB/WEXAMPLE/PIP/pip/filestate/requirements.in
 wexample-helpers==0.0.54
 # via
