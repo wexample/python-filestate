@@ -22,9 +22,9 @@ dependencies = [
     "pip-tools",
     "pydantic",
     "pytest",
-    "wexample-config==0.0.36",
-    "wexample-helpers>=0.0.52",
-    "wexample-prompt==0.0.34",
+    "wexample-config==0.0.37",
+    "wexample-helpers==0.0.54",
+    "wexample-prompt==0.0.35",
 ]
 
 [project.readme]
