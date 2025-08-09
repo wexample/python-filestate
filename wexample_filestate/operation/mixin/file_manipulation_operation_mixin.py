@@ -64,5 +64,6 @@ class FileManipulationOperationMixin(AbstractOperation):
         from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
 
         return target.get_option_value(
-            ShouldExistConfigOption, default=True
+            ShouldExistConfigOption,
+            default=True
         ).is_true()

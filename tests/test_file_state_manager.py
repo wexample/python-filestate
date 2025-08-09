@@ -18,7 +18,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.configure({"name": "yes"})
 
     def test_configure_unexpected(self):
-        from wexample_config.exception.option import InvalidOptionException
+        from wexample_config.exception.invalid_option_exception import InvalidOptionException
 
         with pytest.raises(InvalidOptionException):
             self.state_manager.configure(config={"unexpected_option": "yes"})

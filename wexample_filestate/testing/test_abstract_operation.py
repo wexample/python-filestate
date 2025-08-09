@@ -22,9 +22,7 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
 
     def _dry_run_and_count_operations(self) -> "FileStateDryRunResult":
         result = self.state_manager.dry_run()
-
-        operations_count = self._operation_get_count()
-        assert len(result.operations) == operations_count
+        assert len(result.operations) == self._operation_get_count()
 
         return result
 
