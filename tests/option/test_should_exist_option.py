@@ -1,6 +1,5 @@
 from typing import Optional, Any
 
-from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
