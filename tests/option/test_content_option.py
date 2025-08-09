@@ -5,7 +5,7 @@ from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
-class TestFileCreateOperation(TestAbstractOperation):
+class TestContentOption(TestAbstractOperation):
     missing_file_name: str = 'simple-text-missing.txt'
     missing_dir_name: str = 'simple-directory-missing'
     test_content: str = 'CHANGED_CONTENT'
