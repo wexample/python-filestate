@@ -6,10 +6,10 @@ from wexample_config.config_option.abstract_nested_config_option import Abstract
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
-from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
+from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -26,7 +26,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
 
-    def __init__(self, io:"IoManager", **kwargs):
+    def __init__(self, io: "IoManager", **kwargs):
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, io=io)
@@ -34,7 +34,6 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
     def configure(self, config: DictConfig):
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
-
 
     def locate_source(self, path: Path) -> "SourceFileOrDirectoryType":
         if path.is_file():
@@ -122,7 +121,3 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         output["name"] = self.get_item_name()
 
         return output
-
-    def print_dump(self, pretty: bool = True) -> None:
-            from pprint import pprint
-            pprint(self.dump(), indent=2)
