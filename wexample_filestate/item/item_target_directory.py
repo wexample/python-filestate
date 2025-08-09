@@ -86,7 +86,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         path_str = str(path.resolve())
 
         for child in self.get_children_list():
-            if str(child.get_resolved()) == path_str:
+            if child.get_resolved() == path_str:
                 return child
 
         return None
