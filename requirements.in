@@ -4,3 +4,4 @@ pytest
 wexample-config==0.0.46
 wexample-helpers==0.0.62
 wexample-prompt==0.0.42
+wexample-file==0.0.1
