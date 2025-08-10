@@ -44,7 +44,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def _target_file_write(self, content: str):
         self._backup_target_file()
-        file_path = self._get_target_file_path(target=self.target)
+        file_path = self.target.get_resolved()
         file_write(file_path, content=content)
 
     def apply(self) -> None:
