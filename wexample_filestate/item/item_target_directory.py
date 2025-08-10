@@ -117,7 +117,10 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if child is None:
             from wexample_filestate.exception.child_not_found_exception import ChildNotFoundException
 
-            raise ChildNotFoundException(f"Child not found: {item_name}")
+            raise ChildNotFoundException(
+                child=item_name,
+                root_item=self
+            )
 
         return child
 
