@@ -1,17 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import List
 from pydantic import BaseModel
+
+from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
-if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import (
-        ItemTargetDirectory,
-    )
-
-
 class AbstractResult(BaseModel):
-    state_manager: "ItemTargetDirectory"
+    state_manager: "AbstractItemTarget"
     operations: List[AbstractOperation] = []
     rollback: bool = False
 

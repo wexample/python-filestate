@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, List, Optional, Type, cast, Any
 
 from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
 from wexample_config.const.types import DictConfig
+from wexample_file.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
@@ -16,20 +17,50 @@ if TYPE_CHECKING:
         AbstractOptionsProvider,
     )
     from wexample_filestate.operation.abstract_operation import AbstractOperation
-    from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_filestate.const.types_state_items import SourceFileOrDirectoryType
     from wexample_filestate.const.state_items import SourceFileOrDirectory
     from wexample_prompt.common.io_manager import IoManager
-
+    from wexample_filestate.result.file_state_result import FileStateResult
+    from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
+    from wexample_filestate.result.abstract_result import AbstractResult
 
 class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
+    last_result: Optional["AbstractResult"] = None
 
     def __init__(self, io: "IoManager", **kwargs):
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, io=io)
+
+    @classmethod
+    def create_from_path(
+            cls,
+            path: PathOrString,
+            config: Optional["DictConfig"] = None,
+            io_manager: Optional["IoManager"] = None,
+            options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
+            operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
+    ) -> "AbstractItemTarget":
+        from wexample_prompt.common.io_manager import IoManager
+        from wexample_helpers.helpers.directory import (
+            directory_get_base_name,
+            directory_get_parent_path,
+        )
+
+        config = config or {}
+
+        manager = cls(
+            base_path=directory_get_parent_path(path),
+            io=io_manager or IoManager(),
+            options_providers=options_providers,
+            operations_providers=operations_providers,
+        )
+
+        config["name"] = config["name"] if config.get("name") else directory_get_base_name(path)
+        manager.configure(config=config)
+        return manager
 
     def configure(self, config: DictConfig):
         self.set_value(raw_value=config)
@@ -121,3 +152,42 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         output["name"] = self.get_item_name()
 
         return output
+
+    def rollback(self) -> "FileStateResult":
+        from wexample_filestate.result.file_state_result import FileStateResult
+
+        result = FileStateResult(state_manager=self, rollback=True)
+
+        # Fetch applied operations to a new stack.
+        if self.last_result:
+            for operation in self.last_result.operations:
+                if operation.applied:
+                    result.operations.append(operation)
+
+        result.apply_operations()
+        self.last_result = result
+
+        return result
+
+    def run(self, result: "AbstractResult") -> "AbstractResult":
+        self.build_operations(result)
+        self.last_result = result
+
+        return self.last_result
+
+    def dry_run(self) -> "FileStateDryRunResult":
+        from wexample_filestate.result.file_state_dry_run_result import (
+            FileStateDryRunResult,
+        )
+
+        return cast(
+            FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self))
+        )
+
+    def apply(self) -> "FileStateResult":
+        from wexample_filestate.result.file_state_result import FileStateResult
+
+        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self)))
+        result.apply_operations()
+
+        return result

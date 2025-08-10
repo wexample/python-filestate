@@ -23,6 +23,9 @@ class WithWorkdirMixin:
             io_manager=io_manager
         )
 
+        # Ensure files state.
+        self.workdir.apply()
+
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(
             path=os.getcwd(),

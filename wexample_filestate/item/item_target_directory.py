@@ -19,15 +19,9 @@ if TYPE_CHECKING:
         AbstractOperationsProvider,
     )
     from wexample_filestate.result.abstract_result import AbstractResult
-    from wexample_filestate.result.file_state_dry_run_result import (
-        FileStateDryRunResult,
-    )
-    from wexample_filestate.result.file_state_result import FileStateResult
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    last_result: AbstractResult | None = None
-
     def __init__(self, **kwargs):
         # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
         # attributes during AbstractItemTarget initialization.
@@ -122,74 +116,25 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return child
 
-    def rollback(self) -> "FileStateResult":
-        from wexample_filestate.result.file_state_result import FileStateResult
-
-        result = FileStateResult(state_manager=self, rollback=True)
-
-        # Fetch applied operations to a new stack.
-        if self.last_result:
-            for operation in self.last_result.operations:
-                if operation.applied:
-                    result.operations.append(operation)
-
-        result.apply_operations()
-        self.last_result = result
-
-        return result
-
-    def run(self, result: "AbstractResult") -> "AbstractResult":
-        self.build_operations(result)
-        self.last_result = result
-
-        return self.last_result
-
-    def dry_run(self) -> "FileStateDryRunResult":
-        from wexample_filestate.result.file_state_dry_run_result import (
-            FileStateDryRunResult,
-        )
-
-        return cast(
-            FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self))
-        )
-
-    def apply(self) -> "FileStateResult":
-        from wexample_filestate.result.file_state_result import FileStateResult
-
-        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self)))
-        result.apply_operations()
-
-        return result
-
     @classmethod
     def create_from_path(
-        cls,
-        path: str,
-        config: Optional[DictConfig] = None,
-        io_manager: Optional[IoManager] = None,
-        options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
-        operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
+            cls,
+            path: str,
+            config: Optional["DictConfig"] = None,
+            io_manager: Optional["IoManager"] = None,
+            options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
+            operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
     ) -> "ItemTargetDirectory":
         import os
-
-        from wexample_helpers.helpers.directory import (
-            directory_get_base_name,
-            directory_get_parent_path,
-        )
-
-        config = config or {}
 
         # If path is a file, ignore file name a keep parent directory.
         if os.path.isfile(path):
             path = os.path.dirname(path)
 
-        manager = cls(
-            base_path=directory_get_parent_path(path),
-            io=io_manager or IoManager(),
+        return super().create_from_path(
+            path=path,
+            config=config,
+            io_manager=io_manager,
             options_providers=options_providers,
-            operations_providers=operations_providers,
+            operations_providers=operations_providers
         )
-
-        config["name"] = config["name"] if config.get("name") else directory_get_base_name(path)
-        manager.configure(config=config)
-        return manager
