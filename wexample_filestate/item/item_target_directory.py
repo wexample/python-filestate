@@ -66,7 +66,8 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         for item in self.get_children_list():
             cast(TargetFileOrDirectory, item).build_operations(result)
 
-    def find_by_path_recursive(self, path: Path) -> Optional["TargetFileOrDirectoryType"]:
+    def find_by_path_recursive(self, path: FileStringOrPath) -> Optional["TargetFileOrDirectoryType"]:
+        path = Path(path)
         found = self.find_by_path(path)
         if found:
             return found
@@ -81,8 +82,8 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_path(self, path: Path) -> Optional["TargetFileOrDirectoryType"]:
-        path_str = str(path.resolve())
+    def find_by_path(self, path: FileStringOrPath) -> Optional["TargetFileOrDirectoryType"]:
+        path_str = str(Path(path).resolve())
 
         for child in self.get_children_list():
             if child.get_resolved() == path_str:

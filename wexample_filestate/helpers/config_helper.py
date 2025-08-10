@@ -4,7 +4,7 @@ from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.helpers.file import file_resolve_path
 
 
-def config_has_same_type_as_file(config: DictConfig, path: FileStringOrPath) -> bool:
+def config_has_same_type_as_path(config: DictConfig, path: FileStringOrPath) -> bool:
     resolved_path = file_resolve_path(path)
 
     if resolved_path.is_file() and config_is_item_type(config, DiskItemType.FILE):

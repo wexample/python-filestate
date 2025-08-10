@@ -32,7 +32,7 @@ class ItemMixin(BaseModel):
 
     def get_path(self) -> Path:
         assert self.path is not None
-        return Path(f"{self.path}")
+        return self.path
 
     def get_path_str(self) -> str:
         return str(self.get_path())

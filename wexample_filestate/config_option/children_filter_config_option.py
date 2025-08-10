@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     def generate_children(self) -> List["TargetFileOrDirectoryType"]:
-        from wexample_filestate.helpers.config_helper import config_has_same_type_as_file
+        from wexample_filestate.helpers.config_helper import config_has_same_type_as_path
         config = self.pattern
         children = []
 
@@ -26,6 +26,6 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
                 for file in os.listdir(base_path):
                     path = Path(f"{base_path}{file}")
                     if self._path_match_patterns(str(path)):
-                        if "type" not in config or config_has_same_type_as_file(config, path):
+                        if "type" not in config or config_has_same_type_as_path(config, path):
                             children.append(self._create_children_from_config(path, config))
         return children

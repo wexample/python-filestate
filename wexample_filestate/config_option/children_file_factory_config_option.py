@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
@@ -15,9 +15,9 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
     pattern: DictConfig
 
     def _generate_children_recursive(
-        self,
-        path: Path,
-        recursive: bool = False,
+            self,
+            path: Path,
+            recursive: bool = False,
     ) -> DictConfig:
         dir_config = {
             "name": path.name,

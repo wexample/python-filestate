@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
+
+if TYPE_CHECKING:
+    from wexample_file.common.local_directory import LocalDirectory
 
 
 class ItemDirectoryMixin(ItemMixin):
@@ -17,3 +22,7 @@ class ItemDirectoryMixin(ItemMixin):
 
     def is_directory(self) -> bool:
         return True
+
+    def get_local_directory(self) -> "LocalDirectory":
+        from wexample_file.common.local_directory import LocalDirectory
+        return LocalDirectory(path=self.get_path())
