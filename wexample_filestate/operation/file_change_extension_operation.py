@@ -24,7 +24,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     ) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
 
-        if target.source.is_file() and isinstance(option, ShouldHaveExtensionConfigOption):
+        if target.source and target.is_file() and isinstance(option, ShouldHaveExtensionConfigOption):
             assert isinstance(target.source, ItemSourceFile)
             if target.source.get_local_file().get_extension() != option.get_value().get_str():
                 return True

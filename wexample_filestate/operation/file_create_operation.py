@@ -46,9 +46,10 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def apply(self) -> None:
         self._original_path_str = self.target.get_resolved()
-        local_file = self.target.get_local_file()
 
         if self.target.is_file():
+            local_file = self.target.get_local_file()
+
             default_content = cast(
                 DefaultContentConfigOption,
                 self.target.get_option(DefaultContentConfigOption),
