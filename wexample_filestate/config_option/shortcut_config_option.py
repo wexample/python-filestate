@@ -2,7 +2,6 @@ from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
-from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 
 
 class ShortcutConfigOption(AbstractConfigOption):
@@ -16,8 +15,10 @@ class ShortcutConfigOption(AbstractConfigOption):
         # The parent should always be a path item.
         assert isinstance(self.parent, AbstractItemTarget)
 
-        # The root should always be a directory.
+        # If no parent, root might be a file as it returns itself.
         root = self.parent.get_root()
-        assert isinstance(root, ItemTargetDirectory)
+        assert isinstance(root, AbstractItemTarget)
 
-        root.set_shortcut(self.get_value().get_str(), self.parent)
+        # Register shortcuts only in root directories.
+        if root != self.parent and root.is_directory():
+            root.set_shortcut(self.get_value().get_str(), self.parent)
