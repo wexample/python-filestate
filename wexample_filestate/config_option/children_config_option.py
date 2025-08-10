@@ -72,24 +72,22 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
         if "class" in child_config:
-            class_name = child_config.get("class")
+            class_definition = child_config.get("class")
 
             if not issubclass(
-                class_name, ItemTargetDirectory
+                    class_definition, ItemTargetDirectory
             ) and not issubclass(
                 child_config.get("class"), ItemTargetFile
             ):
-                from wexample_filestate.exception.config import (
+                from wexample_filestate.exception.bad_configuration_class_type_exception import (
                     BadConfigurationClassTypeException,
                 )
 
                 raise BadConfigurationClassTypeException(
-                    f"Class {child_config['class'].__name__} option "
-                    f"should extend {ItemTargetDirectory.__name__} "
-                    f"or {ItemTargetFile.__name__}"
+                    class_definition=class_definition
                 )
 
-            child = class_name(
+            child = class_definition(
                 io=self.get_io(),
                 # Name might be not mandatory when using custom class
                 config=child_config,

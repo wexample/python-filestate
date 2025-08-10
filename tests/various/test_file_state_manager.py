@@ -24,7 +24,7 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.configure(config={"unexpected_option": "yes"})
 
     def test_configure_class_unexpected(self):
-        from wexample_filestate.exception.config import (
+        from wexample_filestate.exception.bad_configuration_class_type_exception import (
             BadConfigurationClassTypeException,
         )
 
