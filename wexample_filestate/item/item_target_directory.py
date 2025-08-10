@@ -3,11 +3,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Type, cast
 
+from pydantic import Field
+
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
+from wexample_helpers.const.types import StringKeysDict
 from wexample_prompt.common.io_manager import IoManager
 
 if TYPE_CHECKING:
@@ -22,6 +25,8 @@ if TYPE_CHECKING:
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
+    shortcuts: StringKeysDict = Field(default_factory=dict)
+
     def __init__(self, **kwargs):
         # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
         # attributes during AbstractItemTarget initialization.
@@ -110,11 +115,38 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def find_by_name_or_fail(self, item_name: str) -> "TargetFileOrDirectoryType":
         child = self.find_by_name(item_name)
         if child is None:
-            from wexample_filestate.exception.item import ChildNotFoundException
+            from wexample_filestate.exception.child_not_found_exception import ChildNotFoundException
 
             raise ChildNotFoundException(f"Child not found: {item_name}")
 
         return child
+
+    def get_shortcut(self, name: str) -> Optional["AbstractItemTarget"]:
+        return self.shortcuts[name] if name in self.shortcuts else None
+
+    def get_shortcut_or_fail(self, name: str) -> Optional["AbstractItemTarget"]:
+        shortcut = self.get_shortcut(name=name)
+
+        if shortcut is None:
+            from wexample_filestate.exception.undefined_shortcut_exception import UndefinedShortcutException
+
+            raise UndefinedShortcutException(
+                shortcut=name,
+                root_item=self
+            )
+
+    def set_shortcut(self, name: str, children: "AbstractItemTarget"):
+        if name in self.shortcuts:
+            from wexample_filestate.exception.existing_shortcut_exception import ExistingShortcutException
+
+            raise ExistingShortcutException(
+                shortcut=name,
+                new_item=children,
+                existing_item=self.shortcuts[name],
+                root_item=self
+            )
+
+        self.shortcuts[name] = children
 
     @classmethod
     def create_from_path(
