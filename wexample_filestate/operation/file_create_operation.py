@@ -45,7 +45,9 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         return "Create missing file"
 
     def apply(self) -> None:
-        self._original_path_str = self._get_target_file_path(target=self.target)
+        self._original_path_str = self.target.get_resolved()
+        local_file = self.target.get_local_file()
+
         if self.target.is_file():
             default_content = cast(
                 DefaultContentConfigOption,
@@ -56,11 +58,11 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
                 default_content_option = self.target.get_option_value(DefaultContentConfigOption)
 
                 if default_content_option:
-                    file_write(self._original_path_str, default_content_option.get_str())
+                    local_file.write(default_content_option.get_str())
                 else:
-                    file_touch(self._original_path_str)
+                    local_file.touch()
             else:
-                file_touch(self.target.get_resolved())
+                local_file.touch()
 
         elif self.target.is_directory():
             os.mkdir(self._original_path_str)

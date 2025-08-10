@@ -11,16 +11,13 @@ class FileManipulationOperationMixin(AbstractOperation):
     _original_file_mode: int
     _original_file_content: str = ""
 
-    def _get_target_file_path(self, target: "TargetFileOrDirectoryType") -> str:
-        return target.get_resolved()
-
     def _backup_target_file(self) -> None:
-        self._original_path_str = self._get_target_file_path(target=self.target)
+        self._original_path_str = self.target.get_resolved()
         self._original_file_mode = self.target.get_path().stat().st_mode
 
         self._backup_file_content(
             target=self.target,
-            file_path=self._get_target_file_path(target=self.target),
+            file_path=self._original_path_str,
         )
 
     def _restore_target_file(self) -> None:

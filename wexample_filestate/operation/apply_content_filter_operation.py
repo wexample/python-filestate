@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, cast
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
 from wexample_filestate.operation.file_write_operation import FileWriteOperation
-from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -17,8 +16,8 @@ class ApplyContentFilterOperation(FileWriteOperation):
 
     @staticmethod
     def applicable_option(
-        target: "TargetFileOrDirectoryType",
-        option: "AbstractConfigOption"
+            target: "TargetFileOrDirectoryType",
+            option: "AbstractConfigOption"
     ) -> bool:
         from wexample_filestate.config_option.content_filter_config_option import (
             ContentFilterConfigOption,
@@ -39,11 +38,13 @@ class ApplyContentFilterOperation(FileWriteOperation):
         return "Apply given filters on content"
 
     def apply(self) -> None:
+        from wexample_filestate.item.item_target_file import ItemTargetFile
+        assert isinstance(self.target, ItemTargetFile)
         filters = cast(ContentFilterConfigOption, self.target.get_option(ContentFilterConfigOption)).get_filters()
 
         self._target_file_write(
             content=ConfigValue.apply_filters(
-                content=file_read(self._get_target_file_path(target=self.target)),
+                content=self.target.get_local_file().read(),
                 filters=filters,
             )
         )
