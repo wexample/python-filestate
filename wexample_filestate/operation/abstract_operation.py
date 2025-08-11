@@ -19,8 +19,9 @@ class AbstractOperation(BaseModel, ABC):
     target: "TargetFileOrDirectory"
     _tty_width: int = 80
 
+    @classmethod
     @abstractmethod
-    def get_scope(self) -> Scope:
+    def get_scope(cls) -> Scope:
         pass
 
     @classmethod

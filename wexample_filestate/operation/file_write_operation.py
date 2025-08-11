@@ -17,7 +17,9 @@ if TYPE_CHECKING:
 
 
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
-    def get_scope(self) -> Scope:
+
+    @classmethod
+    def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
     @staticmethod

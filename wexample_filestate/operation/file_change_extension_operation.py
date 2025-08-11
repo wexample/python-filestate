@@ -18,7 +18,8 @@ if TYPE_CHECKING:
 class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_extension: Optional[str] = None
 
-    def get_scope(self) -> Scope:
+    @classmethod
+    def get_scope(cls) -> Scope:
         return Scope.NAME
 
     @staticmethod

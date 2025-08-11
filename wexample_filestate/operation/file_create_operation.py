@@ -25,7 +25,8 @@ if TYPE_CHECKING:
 class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_path_str: str
 
-    def get_scope(self) -> Scope:
+    @classmethod
+    def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
     @staticmethod

@@ -29,7 +29,8 @@ if TYPE_CHECKING:
 class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
 
-    def get_scope(self) -> Scope:
+    @classmethod
+    def get_scope(cls) -> Scope:
         return Scope.PERMISSIONS
 
     @staticmethod
