@@ -1,7 +1,10 @@
 from enum import Enum, auto
 
 class Scope(Enum):
-    NAME = auto()
-    LOCATION = auto()
-    PERMISSIONS = auto()
     CONTENT = auto()
+    LOCATION = auto()
+    NAME = auto()
+    OWNERSHIP = auto()
+    PERMISSIONS = auto()
+    SYMLINK_TARGET = auto()
+    TIMESTAMPS = auto()

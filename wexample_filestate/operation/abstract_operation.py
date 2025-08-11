@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from wexample_helpers.helpers.array import array_swap
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_filestate.const.state_items import TargetFileOrDirectory
@@ -17,6 +18,10 @@ class AbstractOperation(BaseModel, ABC):
     applied: bool = False
     target: "TargetFileOrDirectory"
     _tty_width: int = 80
+
+    @abstractmethod
+    def get_scope(self) -> Scope:
+        pass
 
     @classmethod
     def applicable(cls, target: "TargetFileOrDirectory") -> bool:
