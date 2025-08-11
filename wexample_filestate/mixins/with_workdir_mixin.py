@@ -42,6 +42,11 @@ class WithWorkdirMixin:
             io=io_manager
         )
 
+    def _rebuild_workdir_content(self):
+        self.workdir.apply(scopes={
+            Scope.CONTENT,
+        })
+
     def _get_workdir_state_manager_class(
             self,
             entrypoint_path: str,
