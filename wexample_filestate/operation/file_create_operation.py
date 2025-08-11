@@ -3,15 +3,15 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Union, cast
 
+from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.config_option.default_content_config_option import (
     DefaultContentConfigOption,
 )
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
-from wexample_helpers.helpers.file import file_touch, file_write
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import (
@@ -25,14 +25,17 @@ if TYPE_CHECKING:
 class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     _original_path_str: str
 
+    def get_scope(self) -> Scope:
+        return Scope.LOCATION
+
     @staticmethod
     def applicable_option(
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption"
+            target: Union["ItemTargetDirectory", "ItemTargetFile"],
+            option: "AbstractConfigOption"
     ) -> bool:
         return (
-            target.source is None
-            and FileManipulationOperationMixin.option_should_exist_is_true(target)
+                target.source is None
+                and FileManipulationOperationMixin.option_should_exist_is_true(target)
         )
 
     def describe_before(self) -> str:

@@ -9,6 +9,7 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
     FileManipulationOperationMixin,
 )
 from wexample_helpers.helpers.file import file_read, file_write
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -16,6 +17,9 @@ if TYPE_CHECKING:
 
 
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
+    def get_scope(self) -> Scope:
+        return Scope.CONTENT
+
     @staticmethod
     def applicable_option(target: "TargetFileOrDirectoryType", option: "AbstractConfigOption") -> bool:
         if isinstance(option, ContentConfigOption):

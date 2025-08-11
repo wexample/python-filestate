@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, cast
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
 from wexample_filestate.operation.file_write_operation import FileWriteOperation
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -13,6 +14,9 @@ if TYPE_CHECKING:
 
 class ApplyContentFilterOperation(FileWriteOperation):
     _original_path_str: str
+
+    def get_scope(self) -> Scope:
+        return Scope.CONTENT
 
     @staticmethod
     def applicable_option(

@@ -14,6 +14,7 @@ from wexample_helpers.helpers.file import (
     file_path_get_mode_num,
     file_validate_mode_octal_or_fail,
 )
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import AbstractConfigOption
@@ -27,6 +28,9 @@ if TYPE_CHECKING:
 
 class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: Optional[str] = None
+
+    def get_scope(self) -> Scope:
+        return Scope.PERMISSIONS
 
     @staticmethod
     def applicable_option(
