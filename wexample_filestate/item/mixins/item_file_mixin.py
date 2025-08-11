@@ -24,3 +24,6 @@ class ItemFileMixin(ItemMixin):
 
     def read(self) -> Any:
         return self.get_local_file().read()
+
+    def write(self, content: str) -> Any:
+        return self.get_local_file().write(content)
