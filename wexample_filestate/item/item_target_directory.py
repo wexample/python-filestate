@@ -54,10 +54,13 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def build_operations(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None):
         from wexample_filestate.const.state_items import TargetFileOrDirectory
-        super().build_operations(result)
+        super().build_operations(result, scopes=scopes)
 
         for item in self.get_children_list():
-            cast(TargetFileOrDirectory, item).build_operations(result)
+            cast(TargetFileOrDirectory, item).build_operations(
+                result=result,
+                scopes=scopes
+            )
 
     def find_by_path_recursive(self, path: FileStringOrPath) -> Optional["TargetFileOrDirectoryType"]:
         path = Path(path)
