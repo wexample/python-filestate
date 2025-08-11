@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
@@ -21,3 +21,6 @@ class ItemFileMixin(ItemMixin):
     def get_local_file(self) -> "LocalFile":
         from wexample_file.common.local_file import LocalFile
         return LocalFile(path=self.get_path())
+
+    def read(self) -> Any:
+        return self.get_local_file().read()

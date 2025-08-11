@@ -1,26 +1,18 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional, Type, cast
+from typing import TYPE_CHECKING, Optional, cast
 
 from pydantic import Field
 
-from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.const.types import StringKeysDict
-from wexample_prompt.common.io_manager import IoManager
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import (
-        AbstractOptionsProvider,
-    )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.operations_provider.abstract_operations_provider import (
-        AbstractOperationsProvider,
-    )
     from wexample_filestate.result.abstract_result import AbstractResult
 
 
@@ -156,21 +148,14 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def create_from_path(
             cls,
             path: str,
-            config: Optional["DictConfig"] = None,
-            io_manager: Optional["IoManager"] = None,
-            options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
-            operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
+            **kwargs
     ) -> "ItemTargetDirectory":
-        import os
-
         # If path is a file, ignore file name a keep parent directory.
-        if os.path.isfile(path):
-            path = os.path.dirname(path)
+        path = Path(path)
+        if path.is_file():
+            path = path.parent
 
         return super().create_from_path(
             path=path,
-            config=config,
-            io_manager=io_manager,
-            options_providers=options_providers,
-            operations_providers=operations_providers
+            **kwargs
         )

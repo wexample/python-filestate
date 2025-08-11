@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
     from wexample_filestate.result.abstract_result import AbstractResult
 
+
 class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
@@ -39,11 +40,8 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             cls,
             path: PathOrString,
             config: Optional["DictConfig"] = None,
-            io_manager: Optional["IoManager"] = None,
-            options_providers: Optional[List[Type["AbstractOptionsProvider"]]] = None,
-            operations_providers: Optional[List[Type["AbstractOperationsProvider"]]] = None,
+            **kwargs
     ) -> "AbstractItemTarget":
-        from wexample_prompt.common.io_manager import IoManager
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
             directory_get_parent_path,
@@ -53,9 +51,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
         manager = cls(
             base_path=directory_get_parent_path(path),
-            io=io_manager or IoManager(),
-            options_providers=options_providers,
-            operations_providers=operations_providers,
+            **kwargs
         )
 
         config["name"] = config["name"] if config.get("name") else directory_get_base_name(path)

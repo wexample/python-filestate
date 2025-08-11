@@ -1,8 +1,10 @@
-from typing import Optional, Type
+from typing import Optional, TYPE_CHECKING
 
-from wexample_config.const.types import DictConfig
 from wexample_filestate.file_state_manager import FileStateManager
-from wexample_prompt.common.io_manager import IoManager
+
+if TYPE_CHECKING:
+    from wexample_prompt.common.io_manager import IoManager
+    from wexample_config.const.types import DictConfig
 
 
 class WithWorkdirMixin:
@@ -12,15 +14,15 @@ class WithWorkdirMixin:
     def _init_workdir(
             self,
             entrypoint_path: str,
-            io_manager: IoManager,
-            config: Optional[DictConfig] = None
+            io_manager: "IoManager",
+            config: Optional["DictConfig"] = None
     ) -> None:
         import os
 
-        self.workdir = (self._get_workdir_state_manager_class()).create_from_path(
-            path=entrypoint_path,
-            config=config or {},
-            io_manager=io_manager
+        self.workdir = self._get_workdir_state_manager_class(
+            entrypoint_path=entrypoint_path,
+            io_manager=io_manager,
+            config=config,
         )
 
         # Ensure files state.
@@ -29,8 +31,17 @@ class WithWorkdirMixin:
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(
             path=os.getcwd(),
-            io_manager=io_manager
+            io=io_manager
         )
 
-    def _get_workdir_state_manager_class(self) -> Type[FileStateManager]:
-        return FileStateManager
+    def _get_workdir_state_manager_class(
+            self,
+            entrypoint_path: str,
+            io_manager: "IoManager",
+            config: Optional["DictConfig"] = None
+    ) -> FileStateManager:
+        return FileStateManager.create_from_path(
+            path=entrypoint_path,
+            config=config or {},
+            io=io_manager
+        )
