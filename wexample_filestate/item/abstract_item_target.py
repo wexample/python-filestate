@@ -1,6 +1,6 @@
 from abc import ABC
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional, Type, cast, Any
+from typing import TYPE_CHECKING, List, Optional, Type, cast, Any, Set
 
 from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
 from wexample_config.const.types import DictConfig
@@ -11,6 +11,7 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
     AbstractOperationsProvider,
 )
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -109,16 +110,17 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             DefaultOptionsProvider,
         ]
 
-    def build_operations(self, result: "AbstractResult"):
+    def build_operations(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None):
         from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
         for operation_class in self.get_operations():
             self_casted = cast(TargetFileOrDirectoryType, self)
-            if operation_class.applicable(self_casted):
-                result.operations.append(operation_class(
+            if operation_class.applicable(self_casted) and (scopes is None or operation_class.get_scope() in scopes):
+                op = operation_class(
                     io=self.io,
                     target=self_casted
-                ))
+                )
+                result.operations.append(op)
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent:
@@ -165,25 +167,25 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
         return result
 
-    def run(self, result: "AbstractResult") -> "AbstractResult":
-        self.build_operations(result)
+    def run(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None) -> "AbstractResult":
+        self.build_operations(result, scopes=scopes)
         self.last_result = result
 
         return self.last_result
 
-    def dry_run(self) -> "FileStateDryRunResult":
+    def dry_run(self, scopes: Optional[Set[Scope]] = None) -> "FileStateDryRunResult":
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
         )
 
         return cast(
-            FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self))
+            FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self), scopes=scopes)
         )
 
-    def apply(self) -> "FileStateResult":
+    def apply(self, scopes: Optional[Set[Scope]] = None) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 
-        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self)))
+        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self), scopes=scopes))
         result.apply_operations()
 
         return result

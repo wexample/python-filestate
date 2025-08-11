@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, cast
+from typing import TYPE_CHECKING, Optional, cast, Set
 
 from pydantic import Field
 
@@ -10,6 +10,7 @@ from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.const.types import StringKeysDict
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -51,7 +52,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return []
 
-    def build_operations(self, result: "AbstractResult"):
+    def build_operations(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None):
         from wexample_filestate.const.state_items import TargetFileOrDirectory
         super().build_operations(result)
 
