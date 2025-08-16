@@ -116,11 +116,12 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         for operation_class in self.get_operations():
             self_casted = cast(TargetFileOrDirectoryType, self)
             if operation_class.applicable(self_casted) and (scopes is None or operation_class.get_scope() in scopes):
-                op = operation_class(
-                    io=self.io,
-                    target=self_casted
+                result.operations.append(
+                    operation_class(
+                        io=self.io,
+                        target=self_casted
+                    )
                 )
-                result.operations.append(op)
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent:
@@ -178,9 +179,10 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             FileStateDryRunResult,
         )
 
-        return cast(
-            FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self), scopes=scopes)
-        )
+        result = cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self), scopes=scopes))
+        result.apply_operations()
+
+        return result
 
     def apply(self, scopes: Optional[Set[Scope]] = None) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
