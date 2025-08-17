@@ -6,12 +6,12 @@ from wexample_config.config_option.abstract_nested_config_option import Abstract
 from wexample_config.const.types import DictConfig
 from wexample_file.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
-from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -179,15 +179,15 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             FileStateDryRunResult,
         )
 
-        result = cast(FileStateDryRunResult, self.run(FileStateDryRunResult(state_manager=self), scopes=scopes))
+        result = cast(FileStateDryRunResult, self.run(result=FileStateDryRunResult(state_manager=self), scopes=scopes))
         result.apply_operations()
 
         return result
 
-    def apply(self, scopes: Optional[Set[Scope]] = None) -> "FileStateResult":
+    def apply(self, interactive: bool = False, scopes: Optional[Set[Scope]] = None) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 
-        result = cast(FileStateResult, self.run(FileStateResult(state_manager=self), scopes=scopes))
-        result.apply_operations()
+        result = cast(FileStateResult, self.run(result=FileStateResult(state_manager=self), scopes=scopes))
+        result.apply_operations(interactive=interactive)
 
         return result

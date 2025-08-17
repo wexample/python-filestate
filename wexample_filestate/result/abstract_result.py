@@ -1,27 +1,30 @@
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import List
+
 from pydantic import BaseModel
 
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
 
-class AbstractResult(BaseModel):
+
+class AbstractResult(PrintableMixin, BaseModel):
     state_manager: "AbstractItemTarget"
     operations: List[AbstractOperation] = []
     rollback: bool = False
 
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}>"
-
-    def __str__(self) -> str:
-        return f"{self.__repr__}"
+    @abstractmethod
+    def _apply_single_operation(self, operation: "AbstractOperation", interactive: bool = False) -> None:
+        pass
 
     def apply_with_dependencies(
             self,
             operation: "AbstractOperation",
             dry_run: bool = False,
-            rollback: bool = False
+            rollback: bool = False,
+            interactive: bool = False
     ) -> None:
         from wexample_helpers.helpers.cli import cli_make_clickable_path
 
@@ -41,13 +44,17 @@ class AbstractResult(BaseModel):
             if dependency is not None and dependency not in self._executed_operations:
                 self.apply_with_dependencies(
                     operation=dependency,
+                    interactive=dependency,
                     rollback=rollback
                 )
 
         # Execute the main operation after dependencies if not rollback
         if not rollback and operation not in self._executed_operations:
             self.state_manager.io.title("TASK")
-            self._apply_single_operation(operation=operation)
+            self._apply_single_operation(
+                operation=operation,
+                interactive=interactive
+            )
 
             operation.applied = True
             self._executed_operations.append(operation)
@@ -60,7 +67,7 @@ class AbstractResult(BaseModel):
                         f"    ⋮ After: {operation.describe_after()}",
             )
 
-    def apply_operations(self) -> None:
+    def apply_operations(self, interactive: bool = False) -> None:
         self._executed_operations = []
 
         # Define order of operations based on rollback mode
@@ -69,6 +76,7 @@ class AbstractResult(BaseModel):
         # Apply each operation with its dependencies in the correct order
         for operation in operations:
             self.apply_with_dependencies(
+                interactive=interactive,
                 operation=operation,
                 dry_run=True,
                 rollback=self.rollback)
