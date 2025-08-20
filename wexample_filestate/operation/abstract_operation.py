@@ -61,27 +61,3 @@ class AbstractOperation(BaseModel, ABC):
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
         return []
-
-    def to_prompt_response(self, rollback: bool) -> "EchoPromptResponse":
-        lines = [
-            f'{"TASK" if not rollback else "ROLLBACK"} '.ljust(self._tty_width, "_")
-        ]
-
-        before, after = array_swap(
-            [
-                self.describe_before(),
-                self.describe_after(),
-            ],
-            do_swap=rollback,
-        )
-
-        lines.extend(
-            [
-                f"{self.target.get_item_title()}: {self.target.get_resolved()}",
-                f"{self.description()}:",
-                f"    Before: {before}",
-                f"    After: {after}",
-            ]
-        )
-
-        return EchoPromptResponse.create_echo(message=lines)
