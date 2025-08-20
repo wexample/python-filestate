@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def get_scope(cls) -> Scope:
-        return Scope.NAME
+        return Scope.CONTENT
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
         from wexample_filestate.operation.file_create_operation import FileCreateOperation
