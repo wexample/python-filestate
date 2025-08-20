@@ -47,13 +47,13 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
 
     def describe_before(self) -> str:
-        return f"The file contains the leading or the trailing char {repr(self._get_trimmed_char())} that should be trimmed."
+        return f"The file contains a leading or trailing character {repr(self._get_trimmed_char())} that should be trimmed."
 
     def describe_after(self) -> str:
-        return f"The file content has been trimmed from the char {repr(self._get_trimmed_char())}."
+        return f"The file content has been trimmed to remove the character {repr(self._get_trimmed_char())}."
 
     def description(self) -> str:
-        return "Trim the file content according the given char."
+        return "Trim the file content according to the given character."
 
     def apply(self) -> None:
         self._target_file_write(
