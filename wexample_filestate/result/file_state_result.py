@@ -29,4 +29,8 @@ class FileStateResult(AbstractResult):
                 operation.apply()
                 return True
 
-        return False
+            return False
+
+        # Non interactive.
+        operation.apply()
+        return True
