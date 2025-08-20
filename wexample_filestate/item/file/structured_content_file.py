@@ -12,6 +12,11 @@ class StructuredContentFile(ItemTargetFile):
             super().read()
         )
 
+    def read_as_config(self) -> YamlContent:
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
+
+        return NestedConfigValue(raw=self.read())
+
     @abstractmethod
     def _parse_file_content(self, content: str) -> Any:
         pass
