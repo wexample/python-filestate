@@ -41,7 +41,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldExistConfigOption,
         )
         from wexample_filestate.config_option.type_config_option import TypeConfigOption
-        from wexample_filestate.config_option.content_filter_config_option import ContentFilterConfigOption
         from wexample_filestate.config_option.shortcut_config_option import ShortcutConfigOption
         from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
         from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
@@ -51,7 +50,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ChildrenFileFactoryConfigOption,
             ClassConfigOption,
             ContentConfigOption,
-            ContentFilterConfigOption,
             DefaultContentConfigOption,
             ModeConfigOption,
             ModeRecursiveConfigOption,
