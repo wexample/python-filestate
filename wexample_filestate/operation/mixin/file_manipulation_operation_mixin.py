@@ -32,7 +32,7 @@ class FileManipulationOperationMixin(AbstractOperation):
             os.mkdir(self._original_path_str)
 
     def _backup_file_content(
-        self, target: "TargetFileOrDirectoryType", file_path: str
+            self, target: "TargetFileOrDirectoryType", file_path: str
     ) -> bool:
         import os
 
@@ -46,15 +46,19 @@ class FileManipulationOperationMixin(AbstractOperation):
 
         # Save content if not too large.
         if size < int(
-            target.get_option_value(
-                RemoveBackupMaxFileSizeConfigOption,
-                default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
-            ).get_int()
+                target.get_option_value(
+                    RemoveBackupMaxFileSizeConfigOption,
+                    default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
+                ).get_int()
         ):
             self._original_file_content = file_read(file_path)
 
             return True
         return False
+
+    def _target_file_write(self, content: str) -> None:
+        self._backup_target_file()
+        self.target.get_local_file().write(content=content)
 
     @staticmethod
     def option_should_exist_is_true(target: "TargetFileOrDirectoryType") -> bool:

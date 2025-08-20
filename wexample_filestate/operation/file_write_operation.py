@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import os
 from typing import TYPE_CHECKING
+
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
 from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
-from wexample_helpers.helpers.file import file_read, file_write
-from wexample_filestate.enum.scopes import Scope
+from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -47,11 +48,6 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def description(self) -> str:
         return "Regenerate file content"
-
-    def _target_file_write(self, content: str):
-        self._backup_target_file()
-        file_path = self.target.get_resolved()
-        file_write(file_path, content=content)
 
     def apply(self) -> None:
         content_option = self.target.get_option(ContentConfigOption)
