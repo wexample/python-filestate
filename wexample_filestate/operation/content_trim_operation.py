@@ -42,7 +42,8 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
                 return False
 
             # Accept both list form ["trim"] and dict form {"trim": {...}}
-            has_trim = value.has_item_in_list("trim") or value.has_key_in_dict("trim")
+            has_trim = value.has_item_in_list(TextFilterConfigOption.OPTION_NAME_TRIM) or value.has_key_in_dict(
+                TextFilterConfigOption.OPTION_NAME_TRIM)
             if has_trim:
                 content = target.get_local_file().read()
                 char = option.get_trimmed_char()

@@ -1,11 +1,14 @@
-from typing import Any, Union, List
+from typing import Any, Union, List, ClassVar
 
-from wexample_helpers.const.types import StringKeysDict
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_config.config_value.nested_config_value import NestedConfigValue
+from wexample_helpers.const.types import StringKeysDict
 
 
 class TextFilterConfigOption(AbstractConfigOption):
+    OPTION_NAME_TRIM: ClassVar[str] = "trim"
+    OPTION_NAME_ENSURE_NEWLINE: ClassVar[str] = "ensure_newline"
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return Union[List[str], StringKeysDict]
