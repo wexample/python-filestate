@@ -5,11 +5,9 @@ from typing import List, Type, TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from wexample_helpers.helpers.array import array_swap
 from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
     from wexample_filestate.const.state_items import TargetFileOrDirectory
     from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
@@ -28,8 +26,8 @@ class AbstractOperation(BaseModel, ABC):
     def applicable(cls, target: "TargetFileOrDirectory") -> bool:
         for option in target.options.values():
             if cls.applicable_option(
-                target=target,
-                option=option) is True:
+                    target=target,
+                    option=option) is True:
                 return True
 
         return False
