@@ -20,9 +20,12 @@ class FileStateResult(AbstractResult):
 
     def _apply_single_operation(self, operation: "AbstractOperation", interactive: bool = False) -> bool:
         if interactive:
+            from wexample_helpers.helpers.cli import cli_make_clickable_path
+
             if self.state_manager.io.confirm(
-                    question=f"{operation.description()}\n"
-                             f"Do you want to apply this operation: {operation.describe_after()}",
+                    question=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                             f"{operation.describe_before()}\n"
+                             f"Do you want to apply this operation: {operation.description()}",
                     choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
                     default="yes"
             ).is_ok():

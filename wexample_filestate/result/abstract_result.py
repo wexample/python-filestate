@@ -61,9 +61,8 @@ class AbstractResult(PrintableMixin, BaseModel):
                 self._executed_operations.append(operation)
 
                 self.state_manager.io.task(
-                    message=f"{operation.target.get_item_title()}:\n"
+                    message=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
                             f"    → {operation.description()}\n"
-                            f"    → {cli_make_clickable_path(operation.target.get_resolved())}\n"
                             f"    ⋮ Before: {operation.describe_before()}\n"
                             f"    ⋮ After: {operation.describe_after()}",
                 )

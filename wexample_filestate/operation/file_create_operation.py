@@ -40,10 +40,10 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         )
 
     def describe_before(self) -> str:
-        return "MISSING"
+        return f"The file does not exists on the system."
 
     def describe_after(self) -> str:
-        return "CREATED"
+        return f"The file has been created."
 
     def description(self) -> str:
         return "Create missing file"
