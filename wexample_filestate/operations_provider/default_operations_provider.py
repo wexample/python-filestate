@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, List, Type
 
+from wexample_filestate.operation.content_trim_operation import ContentTrimOperation
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
@@ -24,6 +25,7 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         )
 
         return [
+            ContentTrimOperation,
             FileChangeExtensionOperation,
             FileCreateOperation,
             FileRemoveOperation,

@@ -25,15 +25,15 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable_option(target: "TargetFileOrDirectoryType", option: "AbstractConfigOption") -> bool:
         if isinstance(option, ContentConfigOption):
-            current_content = file_read(target.get_resolved()) if os.path.exists(target.get_resolved()) else ""
+            current_content = target.get_local_file().read()
             new_content = target.get_option_value(ContentConfigOption).get_str()
             return current_content != new_content
 
         if isinstance(option, ShouldContainLinesConfigOption):
             required_lines = target.get_option_value(ShouldContainLinesConfigOption)
-            if not os.path.exists(target.get_resolved()):
+            if not target.get_local_file().path.exists():
                 return True
-            current_content = file_read(target.get_resolved())
+            current_content = target.get_local_file().read()
             current_lines = current_content.splitlines()
             return any(line not in current_lines for line in required_lines)
 

@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, List, Type
 from wexample_config.options_provider.abstract_options_provider import (
     AbstractOptionsProvider,
 )
-from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
@@ -44,6 +43,8 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.shortcut_config_option import ShortcutConfigOption
         from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
         from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
+        from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
 
         return [
             ChildrenConfigOption,
@@ -60,5 +61,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldContainLinesConfigOption,
             ShouldExistConfigOption,
             ShouldHaveExtensionConfigOption,
+            TextFilterConfigOption,
             TypeConfigOption,
         ]
