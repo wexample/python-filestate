@@ -23,6 +23,7 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         from wexample_filestate.operation.item_change_mode_operation import (
             ItemChangeModeOperation,
         )
+        from wexample_filestate.operation.yaml_sort_recursive_operation import YamlSortRecursiveOperation
 
         return [
             ContentTrimOperation,
@@ -31,4 +32,5 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
             FileRemoveOperation,
             FileWriteOperation,
             ItemChangeModeOperation,
+            YamlSortRecursiveOperation
         ]

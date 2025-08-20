@@ -45,6 +45,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
         from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
         from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
+        from wexample_filestate.config_option.yaml_filter_config_option import YamlFilterConfigOption
 
         return [
             ChildrenConfigOption,
@@ -63,4 +64,5 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldHaveExtensionConfigOption,
             TextFilterConfigOption,
             TypeConfigOption,
+            YamlFilterConfigOption,
         ]
