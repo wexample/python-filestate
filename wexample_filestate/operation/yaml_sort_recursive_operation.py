@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union, List, Type
+from typing import TYPE_CHECKING, Union, List, Type, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.enum.scopes import Scope
@@ -8,6 +8,7 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
+from wexample_helpers_yaml.const.types import YamlContent
 
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import ItemTargetDirectory
@@ -42,9 +43,44 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
             if value is None:
                 return False
 
-            return value.has_item_in_list("sort_recursive")
+            # Only applicable if the flag is set (support list or dict form)
+            has_flag = value.has_item_in_list("sort_recursive") or value.has_key_in_dict("sort_recursive")
+            if not has_flag:
+                return False
+
+            # read() already returns parsed YAML (dict/list) or None for YAML files
+            # Use internal helper to detect if sorting is needed
+            return not YamlSortRecursiveOperation._is_sorted(
+                data=target.get_local_file().read()
+            )
 
         return False
+
+    @staticmethod
+    def _is_sorted(data: Any) -> bool:
+        """Return True if the current YAML content is already recursively key-sorted."""
+        import yaml
+
+        if not isinstance(data, str):
+            return True
+
+        try:
+            data = yaml.safe_load(data)
+        except Exception:
+            # Unparseable, consider it not applicable for sorting
+            return True
+
+        def sort_rec(obj):
+            if isinstance(obj, dict):
+                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
+            if isinstance(obj, list):
+                return [sort_rec(v) for v in obj]
+            return obj
+
+        sorted_data = sort_rec(data)
+        current_dump = yaml.safe_dump(data, sort_keys=False)
+        sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
+        return current_dump == sorted_dump
 
     def description(self) -> str:
         return "Sort YAML keys recursively in alphabetical order."
@@ -58,8 +94,9 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
     def apply(self) -> None:
         import yaml
 
-        raw = self.target.get_local_file().read()
-        data = yaml.safe_load(raw)
+        data = self.target.get_local_file().read()
+        if isinstance(data, str):
+            data = yaml.safe_load(data)
 
         def sort_rec(obj):
             if isinstance(obj, dict):
