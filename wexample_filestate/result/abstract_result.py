@@ -16,7 +16,7 @@ class AbstractResult(PrintableMixin, BaseModel):
     rollback: bool = False
 
     @abstractmethod
-    def _apply_single_operation(self, operation: "AbstractOperation", interactive: bool = False) -> None:
+    def _apply_single_operation(self, operation: "AbstractOperation", interactive: bool = False) -> bool:
         pass
 
     def apply_with_dependencies(
@@ -51,21 +51,28 @@ class AbstractResult(PrintableMixin, BaseModel):
         # Execute the main operation after dependencies if not rollback
         if not rollback and operation not in self._executed_operations:
             self.state_manager.io.title("TASK")
-            self._apply_single_operation(
+            applied = self._apply_single_operation(
                 operation=operation,
                 interactive=interactive
             )
 
-            operation.applied = True
-            self._executed_operations.append(operation)
+            if applied:
+                operation.applied = True
+                self._executed_operations.append(operation)
 
-            self.state_manager.io.task(
-                message=f"{operation.target.get_item_title()}:\n"
-                        f"    → {operation.description()}\n"
-                        f"    → {cli_make_clickable_path(operation.target.get_resolved())}\n"
-                        f"    ⋮ Before: {operation.describe_before()}\n"
-                        f"    ⋮ After: {operation.describe_after()}",
-            )
+                self.state_manager.io.task(
+                    message=f"{operation.target.get_item_title()}:\n"
+                            f"    → {operation.description()}\n"
+                            f"    → {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                            f"    ⋮ Before: {operation.describe_before()}\n"
+                            f"    ⋮ After: {operation.describe_after()}",
+                )
+            else:
+                self.state_manager.io.log(
+                    message=f"⚡ {operation.target.get_item_title()}:\n"
+                            f"    → {operation.description()}\n"
+                            f"    ⋮  Operation aborted"
+                )
 
     def apply_operations(self, interactive: bool = False) -> None:
         self._executed_operations = []
