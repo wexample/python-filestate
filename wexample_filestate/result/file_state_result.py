@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from wexample_filestate.result.abstract_result import AbstractResult
-from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+from wexample_prompt.responses.interactive.confirm_prompt_response import (
+    ConfirmPromptResponse,
+)
 
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
@@ -18,16 +20,18 @@ class FileStateResult(AbstractResult):
                 return operation
         return None
 
-    def _apply_single_operation(self, operation: "AbstractOperation", interactive: bool = False) -> bool:
+    def _apply_single_operation(
+        self, operation: "AbstractOperation", interactive: bool = False
+    ) -> bool:
         if interactive:
             from wexample_helpers.helpers.cli import cli_make_clickable_path
 
             if self.state_manager.io.confirm(
-                    question=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
-                             f"{operation.describe_before()}\n"
-                             f"Do you want to apply this operation: {operation.description()}",
-                    choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
-                    default="yes"
+                question=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                f"{operation.describe_before()}\n"
+                f"Do you want to apply this operation: {operation.description()}",
+                choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+                default="yes",
             ).is_ok():
                 operation.apply()
                 return True

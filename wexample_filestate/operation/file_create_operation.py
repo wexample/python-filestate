@@ -31,12 +31,12 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def applicable_option(
-            target: Union["ItemTargetDirectory", "ItemTargetFile"],
-            option: "AbstractConfigOption"
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption",
     ) -> bool:
         return (
-                target.source is None
-                and FileManipulationOperationMixin.option_should_exist_is_true(target)
+            target.source is None
+            and FileManipulationOperationMixin.option_should_exist_is_true(target)
         )
 
     def describe_before(self) -> str:
@@ -60,7 +60,9 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
             )
 
             if default_content:
-                default_content_option = self.target.get_option_value(DefaultContentConfigOption)
+                default_content_option = self.target.get_option_value(
+                    DefaultContentConfigOption
+                )
 
                 if default_content_option:
                     local_file.write(default_content_option.get_str())

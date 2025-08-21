@@ -14,10 +14,10 @@ class WithWorkdirMixin:
     host_workdir: FileStateManager = None
 
     def _init_workdir(
-            self,
-            entrypoint_path: str,
-            io_manager: "IoManager",
-            config: Optional["DictConfig"] = None
+        self,
+        entrypoint_path: str,
+        io_manager: "IoManager",
+        config: Optional["DictConfig"] = None,
     ) -> None:
         import os
 
@@ -28,35 +28,36 @@ class WithWorkdirMixin:
         )
 
         # Ensure files state, but not content at this point.
-        self.workdir.apply(scopes={
-            Scope.LOCATION,
-            Scope.NAME,
-            Scope.OWNERSHIP,
-            Scope.PERMISSIONS,
-            Scope.SYMLINK_TARGET,
-            Scope.TIMESTAMPS,
-        },
-            verbosity=VerbosityLevel.QUIET)
+        self.workdir.apply(
+            scopes={
+                Scope.LOCATION,
+                Scope.NAME,
+                Scope.OWNERSHIP,
+                Scope.PERMISSIONS,
+                Scope.SYMLINK_TARGET,
+                Scope.TIMESTAMPS,
+            },
+            verbosity=VerbosityLevel.QUIET,
+        )
 
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(
-            path=os.getcwd(),
-            io=io_manager
+            path=os.getcwd(), io=io_manager
         )
 
     def _rebuild_workdir_content(self):
-        self.workdir.apply(scopes={
-            Scope.CONTENT,
-        })
+        self.workdir.apply(
+            scopes={
+                Scope.CONTENT,
+            }
+        )
 
     def _get_workdir_state_manager_class(
-            self,
-            entrypoint_path: str,
-            io_manager: "IoManager",
-            config: Optional["DictConfig"] = None
+        self,
+        entrypoint_path: str,
+        io_manager: "IoManager",
+        config: Optional["DictConfig"] = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
-            path=entrypoint_path,
-            config=config or {},
-            io=io_manager
+            path=entrypoint_path, config=config or {}, io=io_manager
         )

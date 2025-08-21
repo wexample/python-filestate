@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class Scope(Enum):
     CONTENT = auto()
     LOCATION = auto()

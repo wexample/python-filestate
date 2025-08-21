@@ -3,8 +3,9 @@ from typing import TYPE_CHECKING, List
 from pydantic import Field
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
-    AbstractChildrenManipulationConfigOption
+from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
+    AbstractChildrenManipulationConfigOption,
+)
 from wexample_filestate.const.disk import DiskItemType
 
 if TYPE_CHECKING:
@@ -21,14 +22,14 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
     )
 
     def _generate_children_recursive(
-            self,
-            path: Path,
+        self,
+        path: Path,
     ) -> DictConfig:
         dir_config = {
             "name": path.name,
             "type": DiskItemType.DIRECTORY,
             "children": [],
-            "should_exist": True
+            "should_exist": True,
         }
 
         if self._path_match_patterns(path.name):
@@ -36,7 +37,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
                 {
                     "name": self.pattern["name"],
                     "type": self.pattern["type"],
-                    "should_exist": True
+                    "should_exist": True,
                 }
             )
 
@@ -57,9 +58,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         path = self.get_parent_item().get_path()
 
         if path.exists():
-            directories = self._get_directories_filtered(
-                base_path=path
-            )
+            directories = self._get_directories_filtered(base_path=path)
 
             for directory in directories:
                 directory_path = Path(directory)
@@ -68,9 +67,11 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
                     path=directory_path,
                 )
 
-                children.append(self._create_children_from_config(
-                    path=directory_path,
-                    config=dir_config,
-                ))
+                children.append(
+                    self._create_children_from_config(
+                        path=directory_path,
+                        config=dir_config,
+                    )
+                )
 
         return children

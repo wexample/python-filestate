@@ -4,11 +4,7 @@ from wexample_helpers.exception.undefined_exception import UndefinedException
 
 
 class BadConfigurationClassTypeException(UndefinedException):
-    def __init__(
-            self,
-            class_definition: Any,
-            **kwargs
-    ):
+    def __init__(self, class_definition: Any, **kwargs):
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
@@ -21,7 +17,7 @@ class BadConfigurationClassTypeException(UndefinedException):
                     f"Expected a class (subclass of '{ItemTargetDirectory.__name__}' or "
                     f"'{ItemTargetFile.__name__}'), got {class_definition!r}."
                 ),
-                **kwargs
+                **kwargs,
             )
             return
 
@@ -31,5 +27,5 @@ class BadConfigurationClassTypeException(UndefinedException):
                 f"Expected a subclass of '{ItemTargetDirectory.__name__}' or "
                 f"'{ItemTargetFile.__name__}'."
             ),
-            **kwargs
+            **kwargs,
         )

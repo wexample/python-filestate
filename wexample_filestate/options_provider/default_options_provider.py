@@ -40,12 +40,24 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldExistConfigOption,
         )
         from wexample_filestate.config_option.type_config_option import TypeConfigOption
-        from wexample_filestate.config_option.shortcut_config_option import ShortcutConfigOption
-        from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
-        from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
-        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
-        from wexample_filestate.config_option.children_file_factory_config_option import ChildrenFileFactoryConfigOption
-        from wexample_filestate.config_option.yaml_filter_config_option import YamlFilterConfigOption
+        from wexample_filestate.config_option.shortcut_config_option import (
+            ShortcutConfigOption,
+        )
+        from wexample_filestate.config_option.should_contain_lines_config_option import (
+            ShouldContainLinesConfigOption,
+        )
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
+        from wexample_filestate.config_option.text_filter_config_option import (
+            TextFilterConfigOption,
+        )
+        from wexample_filestate.config_option.children_file_factory_config_option import (
+            ChildrenFileFactoryConfigOption,
+        )
+        from wexample_filestate.config_option.yaml_filter_config_option import (
+            YamlFilterConfigOption,
+        )
 
         return [
             ChildrenConfigOption,

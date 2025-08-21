@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from wexample_filestate.item.item_target_file import (
         ItemTargetFile,
     )
-    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -29,7 +31,7 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     @staticmethod
     def applicable_option(
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption"
+        option: "AbstractConfigOption",
     ) -> bool:
         return (
             target.source

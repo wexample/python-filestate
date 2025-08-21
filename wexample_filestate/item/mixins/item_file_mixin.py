@@ -20,6 +20,7 @@ class ItemFileMixin(ItemMixin):
 
     def get_local_file(self) -> "LocalFile":
         from wexample_file.common.local_file import LocalFile
+
         return LocalFile(path=self.get_path())
 
     def read(self) -> Any:

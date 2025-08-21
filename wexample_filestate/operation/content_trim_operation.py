@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Union, Optional, List, Type
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
+from wexample_filestate.config_option.text_filter_config_option import (
+    TextFilterConfigOption,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
@@ -23,27 +25,34 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return Scope.CONTENT
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
-        return [
-            FileCreateOperation
-        ]
+        return [FileCreateOperation]
 
     @staticmethod
     def applicable_option(
-            target: Union["ItemTargetDirectory", "ItemTargetFile"],
-            option: "AbstractConfigOption"
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption",
     ) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
+        from wexample_filestate.config_option.text_filter_config_option import (
+            TextFilterConfigOption,
+        )
 
-        if target.is_file() and target.get_local_file().path.exists() and isinstance(option, TextFilterConfigOption):
+        if (
+            target.is_file()
+            and target.get_local_file().path.exists()
+            and isinstance(option, TextFilterConfigOption)
+        ):
             value = option.get_value()
             if value is None:
                 return False
 
             # Accept both list form ["trim"] and dict form {"trim": {...}}
-            has_trim = value.has_item_in_list(TextFilterConfigOption.OPTION_NAME_TRIM) or value.has_key_in_dict(
-                TextFilterConfigOption.OPTION_NAME_TRIM)
+            has_trim = value.has_item_in_list(
+                TextFilterConfigOption.OPTION_NAME_TRIM
+            ) or value.has_key_in_dict(TextFilterConfigOption.OPTION_NAME_TRIM)
             if has_trim:
                 content = target.get_local_file().read()
                 char = option.get_trimmed_char()
@@ -64,9 +73,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def apply(self) -> None:
         self._target_file_write(
-            content=self.target.get_local_file().read().strip(
-                self._get_trimmed_char()
-            )
+            content=self.target.get_local_file().read().strip(self._get_trimmed_char())
         )
 
     def undo(self) -> None:

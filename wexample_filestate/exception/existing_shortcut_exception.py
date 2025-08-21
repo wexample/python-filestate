@@ -10,12 +10,12 @@ class ExistingShortcutException(UndefinedException):
     error_code: str = "FILE_STATE_EXISTING_SHORTCUT"
 
     def __init__(
-            self,
-            shortcut: str,
-            new_item: "AbstractItemTarget",
-            existing_item: "AbstractItemTarget",
-            root_item: "AbstractItemTarget",
-            **kwargs
+        self,
+        shortcut: str,
+        new_item: "AbstractItemTarget",
+        existing_item: "AbstractItemTarget",
+        root_item: "AbstractItemTarget",
+        **kwargs,
     ):
         super().__init__(
             message=(
@@ -25,5 +25,5 @@ class ExistingShortcutException(UndefinedException):
                 f"'{new_item.get_item_name()}' in root {root_item.get_item_title()} "
                 f"'{root_item.get_item_name()}'."
             ),
-            **kwargs
+            **kwargs,
         )

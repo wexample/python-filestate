@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union, List, Type
 
-from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
+from wexample_filestate.config_option.text_filter_config_option import (
+    TextFilterConfigOption,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
@@ -12,7 +14,9 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
-    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
 
 
 class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -21,19 +25,21 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
         return Scope.NAME
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 
     @staticmethod
     def applicable_option(
-            target: Union["ItemTargetDirectory", "ItemTargetFile"],
-            option: "AbstractConfigOption",
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption",
     ) -> bool:
         if (
-                target.is_file()
-                and target.get_local_file().path.exists()
-                and isinstance(option, TextFilterConfigOption)
+            target.is_file()
+            and target.get_local_file().path.exists()
+            and isinstance(option, TextFilterConfigOption)
         ):
             value = option.get_value()
             if value is None:
@@ -41,8 +47,10 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
             # Support both list form ["ensure_newline"] and dict form {"ensure_newline": true}
             has_flag = value.has_item_in_list(
-                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE) or value.has_key_in_dict(
-                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE)
+                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE
+            ) or value.has_key_in_dict(
+                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE
+            )
             if not has_flag:
                 return False
 

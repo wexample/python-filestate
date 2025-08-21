@@ -2,21 +2,31 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Any, TYPE_CHECKING, List, cast
 
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_config.const.types import DictConfig
 from wexample_file.const.types import PathOrString
-from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import AbstractOptionsProvider
+    from wexample_config.options_provider.abstract_options_provider import (
+        AbstractOptionsProvider,
+    )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, AbstractNestedConfigOption):
+class AbstractChildrenManipulationConfigOption(
+    ItemTreeConfigOptionMixin, AbstractNestedConfigOption
+):
     pattern: DictConfig
 
     def get_options_providers(self) -> list[type["AbstractOptionsProvider"]]:
-        from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
+        )
 
         return [
             DefaultOptionsProvider,
@@ -32,7 +42,9 @@ class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, Abstra
 
     def _path_match_patterns(self, path: str):
         import re
-        from wexample_filestate.config_option.name_pattern_config_option import NamePatternConfigOption
+        from wexample_filestate.config_option.name_pattern_config_option import (
+            NamePatternConfigOption,
+        )
 
         config = self.pattern
         option_name = NamePatternConfigOption.get_name()
@@ -51,9 +63,13 @@ class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, Abstra
 
         return True
 
-    def _create_children_from_config(self, path: Path, config: dict) -> "TargetFileOrDirectoryType":
+    def _create_children_from_config(
+        self, path: Path, config: dict
+    ) -> "TargetFileOrDirectoryType":
         import copy
-        from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+        from wexample_filestate.config_option.children_config_option import (
+            ChildrenConfigOption,
+        )
 
         item_config_copy = copy.deepcopy(config)
 
@@ -66,13 +82,13 @@ class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, Abstra
             child_config=item_config_copy,
         )
 
-    def _get_directories_filtered(self, base_path: PathOrString, recursive: bool = False) -> List[str]:
+    def _get_directories_filtered(
+        self, base_path: PathOrString, recursive: bool = False
+    ) -> List[str]:
         from wexample_helpers.helpers.file import file_get_directories
 
         output = []
-        directories = file_get_directories(
-            path=base_path
-        )
+        directories = file_get_directories(path=base_path)
 
         for directory in directories:
             if self._path_match_patterns(directory):
@@ -81,8 +97,7 @@ class AbstractChildrenManipulationConfigOption(ItemTreeConfigOptionMixin, Abstra
                 if recursive is True:
                     output.extend(
                         self._get_directories_filtered(
-                            base_path=directory,
-                            recursive=recursive
+                            base_path=directory, recursive=recursive
                         )
                     )
 

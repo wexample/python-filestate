@@ -2,10 +2,14 @@ from abc import ABC
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Type, cast, Any, Set
 
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_config.const.types import DictConfig
 from wexample_file.const.types import PathOrString
-from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
@@ -23,12 +27,20 @@ if TYPE_CHECKING:
     from wexample_filestate.const.state_items import SourceFileOrDirectory
     from wexample_prompt.common.io_manager import IoManager
     from wexample_filestate.result.file_state_result import FileStateResult
-    from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
+    from wexample_filestate.result.file_state_dry_run_result import (
+        FileStateDryRunResult,
+    )
     from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
+class AbstractItemTarget(
+    WithRequiredIoManager,
+    ItemMixin,
+    ItemTreeConfigOptionMixin,
+    AbstractNestedConfigOption,
+    ABC,
+):
     source: Optional["SourceFileOrDirectory"] = None
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
     last_result: Optional["AbstractResult"] = None
@@ -40,10 +52,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
     @classmethod
     def create_from_path(
-            cls,
-            path: PathOrString,
-            config: Optional["DictConfig"] = None,
-            **kwargs
+        cls, path: PathOrString, config: Optional["DictConfig"] = None, **kwargs
     ) -> "AbstractItemTarget":
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -52,24 +61,18 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
         config = config or {}
 
-        manager = cls(
-            base_path=directory_get_parent_path(path),
-            **kwargs
-        )
+        manager = cls(base_path=directory_get_parent_path(path), **kwargs)
 
-        config["name"] = config["name"] if config.get("name") else directory_get_base_name(path)
+        config["name"] = (
+            config["name"] if config.get("name") else directory_get_base_name(path)
+        )
         manager.configure(config=config)
         return manager
 
     @classmethod
-    def create_from_config(
-            cls,
-            **kwargs
-    ) -> "AbstractItemTarget":
-        config = kwargs.get('config')
-        instance = cls(
-            **kwargs
-        )
+    def create_from_config(cls, **kwargs) -> "AbstractItemTarget":
+        config = kwargs.get("config")
+        instance = cls(**kwargs)
         instance.configure(config)
 
         return instance
@@ -81,11 +84,15 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
     def locate_source(self, path: Path) -> "SourceFileOrDirectoryType":
         if path.is_file():
             from wexample_filestate.item.item_source_file import ItemSourceFile
+
             self.source = ItemSourceFile(
                 path=path,
             )
         elif path.is_dir():
-            from wexample_filestate.item.item_source_directory import ItemSourceDirectory
+            from wexample_filestate.item.item_source_directory import (
+                ItemSourceDirectory,
+            )
+
             self.source = ItemSourceDirectory(
                 path=path,
             )
@@ -126,27 +133,29 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         ]
 
     def build_operations(
-            self: "TargetFileOrDirectoryType", result: "AbstractResult",
-            scopes: Optional[Set[Scope]] = None
+        self: "TargetFileOrDirectoryType",
+        result: "AbstractResult",
+        scopes: Optional[Set[Scope]] = None,
     ) -> None:
         self.io.indentation_up()
-        self.io.log(f'Building operations for: {self.get_path()}')
+        self.io.log(f"Building operations for: {self.get_path()}")
 
         for operation_class in self.get_operations():
-            if operation_class.applicable(self) and (scopes is None or operation_class.get_scope() in scopes):
-                self.io.log(f'Building operation: {operation_class.get_snake_short_class_name()}')
-                result.operations.append(
-                    operation_class(
-                        io=self.io,
-                        target=self
-                    )
+            if operation_class.applicable(self) and (
+                scopes is None or operation_class.get_scope() in scopes
+            ):
+                self.io.log(
+                    f"Building operation: {operation_class.get_snake_short_class_name()}"
                 )
+                result.operations.append(operation_class(io=self.io, target=self))
 
         self.io.indentation_down()
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent:
-            return cast(AbstractItemTarget, self.get_parent_item()).get_operations_providers()
+            return cast(
+                AbstractItemTarget, self.get_parent_item()
+            ).get_operations_providers()
 
         if self.operations_providers:
             return self.operations_providers
@@ -161,6 +170,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
     def get_item_name(self) -> str:
         from wexample_config.config_option.name_config_option import NameConfigOption
+
         return self.get_option(NameConfigOption).get_value().get_str()
 
     def get_source(self) -> "SourceFileOrDirectory":
@@ -202,10 +212,10 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         return result
 
     def apply(
-            self,
-            interactive: bool = False,
-            scopes: Optional[Set[Scope]] = None,
-            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT
+        self,
+        interactive: bool = False,
+        scopes: Optional[Set[Scope]] = None,
+        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
     ) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 
@@ -220,7 +230,7 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
             self.io.info(
                 message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
-                verbosity=verbosity
+                verbosity=verbosity,
             )
 
         return result

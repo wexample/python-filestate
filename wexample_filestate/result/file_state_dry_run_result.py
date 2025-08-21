@@ -9,5 +9,7 @@ if TYPE_CHECKING:
 
 
 class FileStateDryRunResult(AbstractResult):
-    def _apply_single_operation(self, operation: "AbstractOperation", interactive:bool = False) -> bool:
+    def _apply_single_operation(
+        self, operation: "AbstractOperation", interactive: bool = False
+    ) -> bool:
         return True

@@ -19,11 +19,15 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
             FileRemoveOperation,
         )
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
-        from wexample_filestate.operation.file_change_extension_operation import FileChangeExtensionOperation
+        from wexample_filestate.operation.file_change_extension_operation import (
+            FileChangeExtensionOperation,
+        )
         from wexample_filestate.operation.item_change_mode_operation import (
             ItemChangeModeOperation,
         )
-        from wexample_filestate.operation.yaml_sort_recursive_operation import YamlSortRecursiveOperation
+        from wexample_filestate.operation.yaml_sort_recursive_operation import (
+            YamlSortRecursiveOperation,
+        )
 
         return [
             ContentTrimOperation,
@@ -32,5 +36,5 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
             FileRemoveOperation,
             FileWriteOperation,
             ItemChangeModeOperation,
-            YamlSortRecursiveOperation
+            YamlSortRecursiveOperation,
         ]

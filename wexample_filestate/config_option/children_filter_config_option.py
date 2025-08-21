@@ -1,9 +1,12 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Callable, Optional
 
-from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
-    AbstractChildrenManipulationConfigOption
-from wexample_filestate.config_option.name_pattern_config_option import NamePatternConfigOption
+from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
+    AbstractChildrenManipulationConfigOption,
+)
+from wexample_filestate.config_option.name_pattern_config_option import (
+    NamePatternConfigOption,
+)
 from wexample_filestate.const.disk import DiskItemType
 from pydantic import Field
 
@@ -24,8 +27,15 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         description="Search recursively under the base path; apply filters/name_pattern to all descendants.",
     )
 
-    def _include_entry(self, entry_path: Path, config: dict, entry_filter: Optional[Callable[[Path], bool]]) -> bool:
-        from wexample_filestate.helpers.config_helper import config_has_same_type_as_path
+    def _include_entry(
+        self,
+        entry_path: Path,
+        config: dict,
+        entry_filter: Optional[Callable[[Path], bool]],
+    ) -> bool:
+        from wexample_filestate.helpers.config_helper import (
+            config_has_same_type_as_path,
+        )
 
         requested_type = config.get("type")
         if requested_type == DiskItemType.DIRECTORY and not entry_path.is_dir():
@@ -51,7 +61,12 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
             return False
         return True
 
-    def _build_dir_tree(self, base_dir: Path, config: dict, entry_filter: Optional[Callable[[Path], bool]]) -> Optional[dict]:
+    def _build_dir_tree(
+        self,
+        base_dir: Path,
+        config: dict,
+        entry_filter: Optional[Callable[[Path], bool]],
+    ) -> Optional[dict]:
         """Build a nested DictConfig preserving the directory structure; returns None if empty when filtering files only."""
         dir_config: dict = {
             "name": base_dir.name,
@@ -73,9 +88,15 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         for entry in base_dir.iterdir():
             if entry.is_dir():
                 sub = self._build_dir_tree(entry, config, entry_filter)
-                if sub is not None and (sub.get("children") or config.get("type") == DiskItemType.DIRECTORY):
+                if sub is not None and (
+                    sub.get("children") or config.get("type") == DiskItemType.DIRECTORY
+                ):
                     # If filtering directories, also include dirs that match themselves
-                    if config.get("type") == DiskItemType.DIRECTORY and self._include_entry(entry, config, entry_filter):
+                    if config.get(
+                        "type"
+                    ) == DiskItemType.DIRECTORY and self._include_entry(
+                        entry, config, entry_filter
+                    ):
                         # Replace sub root with configured directory attributes
                         sub = {
                             "name": entry.name,
@@ -89,21 +110,29 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         if not dir_config["children"] and config.get("type") == DiskItemType.FILE:
             return None
         return dir_config
+
     def generate_children(self) -> List["TargetFileOrDirectoryType"]:
-        from wexample_filestate.helpers.config_helper import config_has_same_type_as_path
+        from wexample_filestate.helpers.config_helper import (
+            config_has_same_type_as_path,
+        )
+
         config = self.pattern
         children = []
 
         name_pattern_option_name = NamePatternConfigOption.get_name()
         parent_item = self.get_parent_item()
-        has_callable_filter = callable(self.filter) if self.filter is not None else False
+        has_callable_filter = (
+            callable(self.filter) if self.filter is not None else False
+        )
 
         # Trigger generation if either a name_pattern is present or a callable filter is provided
         if config.get(name_pattern_option_name) or has_callable_filter:
             base_path: Path = parent_item.get_path()
             if base_path.exists():
                 # Use the instance field `filter` when provided
-                entry_filter: Optional[Callable[[Path], bool]] = self.filter if has_callable_filter else None
+                entry_filter: Optional[Callable[[Path], bool]] = (
+                    self.filter if has_callable_filter else None
+                )
 
                 if self.recursive:
                     # Preserve hierarchy: build nested trees for subdirectories, and add base-level files
@@ -117,7 +146,9 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
                                         config=tree,
                                     )
                                 )
-                        elif entry.is_file() and self._include_entry(entry, config, entry_filter):
+                        elif entry.is_file() and self._include_entry(
+                            entry, config, entry_filter
+                        ):
                             file_cfg = dict(config)
                             file_cfg["name"] = entry.name
                             file_cfg.setdefault("type", DiskItemType.FILE)

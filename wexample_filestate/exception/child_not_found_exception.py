@@ -10,16 +10,11 @@ class ChildNotFoundException(UndefinedException):
     error_code: str = "FILE_STATE_CHILD_NOT_FOUND"
 
     def __init__(
-            self,
-            child: str,
-            root_item: Optional["AbstractItemTarget"] = None,
-            **kwargs
+        self, child: str, root_item: Optional["AbstractItemTarget"] = None, **kwargs
     ):
         context = (
             f" in {root_item.get_item_title()} '{root_item.get_item_name()}'"
-            if root_item is not None else ""
+            if root_item is not None
+            else ""
         )
-        super().__init__(
-            message=f"Child '{child}' not found{context}.",
-            **kwargs
-        )
+        super().__init__(message=f"Child '{child}' not found{context}.", **kwargs)

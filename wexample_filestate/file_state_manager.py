@@ -18,7 +18,10 @@ class FileStateManager(ItemTargetDirectory):
 
 
 from wexample_filestate.result.abstract_result import AbstractResult
-from wexample_filestate.const.state_items import TargetFileOrDirectory, SourceFileOrDirectory
+from wexample_filestate.const.state_items import (
+    TargetFileOrDirectory,
+    SourceFileOrDirectory,
+)
 
 polyfill_import([TargetFileOrDirectory, SourceFileOrDirectory])
 polyfill_register_global([AbstractResult])

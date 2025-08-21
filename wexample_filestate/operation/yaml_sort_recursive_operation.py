@@ -21,30 +21,34 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         return Scope.CONTENT
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 
     @staticmethod
     def applicable_option(
-            target: Union["ItemTargetDirectory", "ItemTargetFile"],
-            option: "AbstractConfigOption",
+        target: Union["ItemTargetDirectory", "ItemTargetFile"],
+        option: "AbstractConfigOption",
     ) -> bool:
         from wexample_filestate.config_option.yaml_filter_config_option import (
             YamlFilterConfigOption,
         )
 
         if (
-                target.is_file()
-                and target.get_local_file().path.exists()
-                and isinstance(option, YamlFilterConfigOption)
+            target.is_file()
+            and target.get_local_file().path.exists()
+            and isinstance(option, YamlFilterConfigOption)
         ):
             value = option.get_value()
             if value is None:
                 return False
 
             # Only applicable if the flag is set (support list or dict form)
-            has_flag = value.has_item_in_list("sort_recursive") or value.has_key_in_dict("sort_recursive")
+            has_flag = value.has_item_in_list(
+                "sort_recursive"
+            ) or value.has_key_in_dict("sort_recursive")
             if not has_flag:
                 return False
 

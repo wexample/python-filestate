@@ -17,7 +17,9 @@ from wexample_helpers.helpers.file import (
 from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
     from wexample_filestate.item.item_target_directory import (
         ItemTargetDirectory,
     )
@@ -36,19 +38,23 @@ class ItemChangeModeOperation(AbstractOperation):
     @staticmethod
     def applicable_option(
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption"
+        option: "AbstractConfigOption",
     ) -> bool:
         if not target.source:
             return False
 
         if isinstance(option, ModeConfigOption):
             file_validate_mode_octal_or_fail(option.get_octal())
-            return file_path_get_mode_num(target.get_source().get_path()) != option.get_int()
+            return (
+                file_path_get_mode_num(target.get_source().get_path())
+                != option.get_int()
+            )
 
         return False
 
     def describe_before(self) -> str:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+
         current_octal = self.target.get_source().get_octal_mode()
         target_octal = self.target.get_option_value(ModeConfigOption).get_str()
         path = self.target.get_path().as_posix()
@@ -56,6 +62,7 @@ class ItemChangeModeOperation(AbstractOperation):
 
     def describe_after(self) -> str:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+
         path = self.target.get_path().as_posix()
         target_octal = self.target.get_option_value(ModeConfigOption).get_str()
         return f"Permissions for '{path}' are now set to {target_octal}."

@@ -18,8 +18,12 @@ class AbstractStateManagerTest(ABC):
     def _get_package_root_path(self) -> str:
         return f"{os.path.abspath(os.curdir)}{os.sep}"
 
-    def _get_test_state_manager_path(self, package_root_path: Optional[str] = None) -> str:
-        return os.path.join(package_root_path or self._get_package_root_path(), "tests", "resources", "")
+    def _get_test_state_manager_path(
+        self, package_root_path: Optional[str] = None
+    ) -> str:
+        return os.path.join(
+            package_root_path or self._get_package_root_path(), "tests", "resources", ""
+        )
 
     def _get_absolute_path_from_state_manager(self, relative: str) -> str:
         return os.path.join(self._get_test_state_manager_path(), relative)
@@ -44,17 +48,17 @@ class AbstractStateManagerTest(ABC):
         return FileStateManager
 
     def _get_test_operations_providers(
-            self,
+        self,
     ) -> Optional[List[Type["AbstractOperationsProvider"]]]:
         return None
 
     def _get_test_options_providers(
-            self,
+        self,
     ) -> Optional[List[Type["AbstractOptionsProvider"]]]:
         return None
 
     def _assert_file_content_equals(
-            self, file_path: str, expected_value: str, positive: bool = True
+        self, file_path: str, expected_value: str, positive: bool = True
     ):
         from wexample_helpers.helpers.file import file_read
 
@@ -67,7 +71,7 @@ class AbstractStateManagerTest(ABC):
         assert (os.path.isfile(file_path)) == positive
 
     def _assert_state_manager_target_directory_exists(
-            self, item_name: str, positive: bool = True
+        self, item_name: str, positive: bool = True
     ) -> None:
         target = self.state_manager.find_by_name_or_fail(item_name)
 
