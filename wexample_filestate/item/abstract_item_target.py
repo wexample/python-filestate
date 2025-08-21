@@ -116,14 +116,20 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             self: "TargetFileOrDirectoryType", result: "AbstractResult",
             scopes: Optional[Set[Scope]] = None
     ) -> None:
+        self.io.indentation_up()
+        self.io.log(f'Building operations for: {self.get_path()}')
+
         for operation_class in self.get_operations():
             if operation_class.applicable(self) and (scopes is None or operation_class.get_scope() in scopes):
+                self.io.log(f'Building operation: {operation_class.get_snake_short_class_name()}')
                 result.operations.append(
                     operation_class(
                         io=self.io,
                         target=self
                     )
                 )
+
+        self.io.indentation_down()
 
     def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
         if self.parent:
