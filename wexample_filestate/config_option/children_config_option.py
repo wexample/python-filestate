@@ -97,23 +97,40 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         else:
             # Stricter resolution policy:
             # 1) If an explicit type is provided, use it.
-            # 2) Otherwise, attempt to infer from the real filesystem (if the target exists).
-            # 3) If the target does not exist and no explicit type is provided, raise an error.
+            # 2) If explicit type is provided and the path exists, verify it matches the filesystem.
+            # 3) Otherwise, attempt to infer from the real filesystem (if the target exists).
+            # 4) If the target does not exist and no explicit type is provided, raise an error.
             is_file_type = config_is_item_type(child_config, DiskItemType.FILE)
             has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
 
+            name = item_name or child_config.get("name", None)
+            path = None
+            if isinstance(name, str) and name:
+                path = self.get_parent_item().get_path() / name
+
+            # If explicit type is provided and we can resolve a path, verify when it exists
+            if (is_file_type or has_explicit_dir) and path is not None and path.exists():
+                if is_file_type and not path.is_file():
+                    raise ValueError(
+                        f"ChildrenConfigOption: child '{path}' is configured as FILE but is a directory on disk."
+                    )
+                if has_explicit_dir and not path.is_dir():
+                    raise ValueError(
+                        f"ChildrenConfigOption: child '{path}' is configured as DIRECTORY but is a file on disk."
+                    )
+
+            # If no explicit type, try to infer from filesystem
             if not (is_file_type or has_explicit_dir):
-                name = item_name or child_config.get("name", None)
                 if not isinstance(name, str) or not name:
                     raise ValueError(
                         "ChildrenConfigOption: missing 'type' and 'name' to infer child item type."
                     )
 
-                full_path = os.path.join(self.get_parent_item().get_resolved(), name)
-                if os.path.exists(full_path):
-                    if os.path.isfile(full_path):
+                assert path is not None
+                if path.exists():
+                    if path.is_file():
                         is_file_type = True
-                    elif os.path.isdir(full_path):
+                    elif path.is_dir():
                         is_file_type = False
                 else:
                     raise ValueError(
