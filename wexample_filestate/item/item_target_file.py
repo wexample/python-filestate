@@ -10,6 +10,6 @@ from wexample_filestate.item.mixins.item_file_mixin import ItemFileMixin
 class ItemTargetFile(ItemFileMixin, AbstractItemTarget):
     config: Optional[DictConfig] = None
 
-    def __init__(self, **data):
+    def __init__(self, **data) -> None:
         ItemFileMixin.__init__(self, **data)
         AbstractItemTarget.__init__(self, **data)

@@ -3,11 +3,13 @@ from abc import ABC
 from typing import TYPE_CHECKING, List, Optional, Type, cast
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import \
-        AbstractOptionsProvider
+    from wexample_config.options_provider.abstract_options_provider import (
+        AbstractOptionsProvider,
+    )
     from wexample_filestate.file_state_manager import FileStateManager
-    from wexample_filestate.operations_provider.abstract_operations_provider import \
-        AbstractOperationsProvider
+    from wexample_filestate.operations_provider.abstract_operations_provider import (
+        AbstractOperationsProvider,
+    )
 
 
 class AbstractStateManagerTest(ABC):
@@ -57,15 +59,15 @@ class AbstractStateManagerTest(ABC):
 
     def _assert_file_content_equals(
         self, file_path: str, expected_value: str, positive: bool = True
-    ):
+    ) -> None:
         from wexample_helpers.helpers.file import file_read
 
         assert (file_read(file_path) == expected_value) == positive
 
-    def _assert_dir_exists(self, dir_path: str, positive: bool = True):
+    def _assert_dir_exists(self, dir_path: str, positive: bool = True) -> None:
         assert (os.path.isdir(dir_path)) == positive
 
-    def _assert_file_exists(self, file_path: str, positive: bool = True):
+    def _assert_file_exists(self, file_path: str, positive: bool = True) -> None:
         assert (os.path.isfile(file_path)) == positive
 
     def _assert_state_manager_target_directory_exists(

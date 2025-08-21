@@ -1,8 +1,7 @@
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.testing.test_abstract_operation import \
-    TestAbstractOperation
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 from wexample_helpers.helpers.file import file_read, file_write
 
 
@@ -47,7 +46,7 @@ class TestFileWriteOperation(TestAbstractOperation):
                 line not in content.splitlines()
             ), f"Required line '{line}' should not be present yet"
 
-    def _operation_test_assert_applied(self):
+    def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_resolved())
         lines = content.splitlines()

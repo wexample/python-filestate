@@ -16,7 +16,7 @@ class ExistingShortcutException(UndefinedException):
         existing_item: "AbstractItemTarget",
         root_item: "AbstractItemTarget",
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             message=(
                 f"Shortcut '{shortcut}' is already in use by "

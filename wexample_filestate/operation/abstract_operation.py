@@ -5,12 +5,14 @@ from typing import TYPE_CHECKING, List, Type
 
 from pydantic import BaseModel
 from wexample_filestate.enum.scopes import Scope
-from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import \
-    HasSnakeShortClassNameClassMixin
+from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
+    HasSnakeShortClassNameClassMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import \
-        AbstractConfigOption
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
     from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 

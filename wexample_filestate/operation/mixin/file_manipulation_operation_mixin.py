@@ -3,8 +3,7 @@ from typing import TYPE_CHECKING
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import \
-        TargetFileOrDirectoryType
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileManipulationOperationMixin(AbstractOperation):
@@ -39,7 +38,8 @@ class FileManipulationOperationMixin(AbstractOperation):
 
         from wexample_filestate.config_option.remove_backup_max_file_size_config_option import (
             REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
-            RemoveBackupMaxFileSizeConfigOption)
+            RemoveBackupMaxFileSizeConfigOption,
+        )
         from wexample_helpers.helpers.file import file_read
 
         size = os.path.getsize(file_path)
@@ -62,7 +62,8 @@ class FileManipulationOperationMixin(AbstractOperation):
 
     @staticmethod
     def option_should_exist_is_true(target: "TargetFileOrDirectoryType") -> bool:
-        from wexample_filestate.config_option.should_exist_config_option import \
-            ShouldExistConfigOption
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
+        )
 
         return target.get_option_value(ShouldExistConfigOption, default=True).is_true()

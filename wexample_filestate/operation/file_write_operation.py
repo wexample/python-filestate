@@ -3,21 +3,22 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from wexample_filestate.config_option.content_config_option import \
-    ContentConfigOption
-from wexample_filestate.config_option.should_contain_lines_config_option import \
-    ShouldContainLinesConfigOption
+from wexample_filestate.config_option.content_config_option import ContentConfigOption
+from wexample_filestate.config_option.should_contain_lines_config_option import (
+    ShouldContainLinesConfigOption,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import \
-    FileManipulationOperationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import \
-        AbstractConfigOption
-    from wexample_filestate.const.types_state_items import \
-        TargetFileOrDirectoryType
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -99,8 +100,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             ).get_str()
 
         if should_contain_lines_option is not None:
-            from wexample_helpers.helpers.string import \
-                string_append_missing_lines
+            from wexample_helpers.helpers.string import string_append_missing_lines
 
             # Initialize content from existing file or empty string if file doesn't exist
             if updated_content is None:

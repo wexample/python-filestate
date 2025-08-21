@@ -2,8 +2,7 @@ from typing import Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.testing.test_abstract_operation import \
-    TestAbstractOperation
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
 class TestContentConfigOption(TestAbstractOperation):
@@ -38,7 +37,7 @@ class TestContentConfigOption(TestAbstractOperation):
             positive=False,
         )
 
-    def _operation_test_assert_applied(self):
+    def _operation_test_assert_applied(self) -> None:
         self._assert_file_content_equals(
             file_path=self._get_absolute_path_from_state_manager(
                 TEST_FILE_NAME_SIMPLE_TEXT

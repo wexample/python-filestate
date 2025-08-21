@@ -1,7 +1,6 @@
 from typing import Optional, cast
 
-from wexample_filestate.const.types_state_items import \
-    TargetFileOrDirectoryType
+from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ItemTreeConfigOptionMixin:

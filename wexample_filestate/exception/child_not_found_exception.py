@@ -11,7 +11,7 @@ class ChildNotFoundException(UndefinedException):
 
     def __init__(
         self, child: str, root_item: Optional["AbstractItemTarget"] = None, **kwargs
-    ):
+    ) -> None:
         context = (
             f" in {root_item.get_item_title()} '{root_item.get_item_name()}'"
             if root_item is not None

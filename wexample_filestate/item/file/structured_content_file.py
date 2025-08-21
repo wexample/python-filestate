@@ -6,8 +6,7 @@ from wexample_helpers.const.types import StructuredData
 from wexample_helpers_yaml.const.types import YamlContent
 
 if TYPE_CHECKING:
-    from wexample_config.config_value.nested_config_value import \
-        NestedConfigValue
+    from wexample_config.config_value.nested_config_value import NestedConfigValue
 
 
 class StructuredContentFile(ItemTargetFile):
@@ -15,8 +14,7 @@ class StructuredContentFile(ItemTargetFile):
         return self._parse_file_content(super().read())
 
     def read_as_config(self) -> "NestedConfigValue":
-        from wexample_config.config_value.nested_config_value import \
-            NestedConfigValue
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
 
         return NestedConfigValue(raw=self.read())
 

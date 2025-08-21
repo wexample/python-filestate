@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING, List
 
 from pydantic import Field
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
-    AbstractChildrenManipulationConfigOption
+from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
+    AbstractChildrenManipulationConfigOption,
+)
 from wexample_filestate.const.disk import DiskItemType
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import \
-        TargetFileOrDirectoryType
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):

@@ -1,10 +1,10 @@
 from typing import ClassVar, Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.should_have_extension_config_option import \
-    ShouldHaveExtensionConfigOption
-from wexample_filestate.item.file.structured_content_file import \
-    StructuredContentFile
+from wexample_filestate.config_option.should_have_extension_config_option import (
+    ShouldHaveExtensionConfigOption,
+)
+from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 from wexample_helpers.const.types import StructuredData
 from wexample_helpers_yaml.const.types import YamlContent
 

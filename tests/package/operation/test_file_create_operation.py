@@ -2,8 +2,7 @@ import os
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.testing.test_abstract_operation import \
-    TestAbstractOperation
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
 class TestFileCreateOperation(TestAbstractOperation):
@@ -44,7 +43,7 @@ class TestFileCreateOperation(TestAbstractOperation):
             target_file.get_resolved()
         ), "The file should not exist"
 
-    def _operation_test_assert_applied(self):
+    def _operation_test_assert_applied(self) -> None:
         target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
 

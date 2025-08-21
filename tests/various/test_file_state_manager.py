@@ -1,34 +1,38 @@
 import os
 
 import pytest
-from wexample_config.config_value.callback_render_config_value import \
-    CallbackRenderConfigValue
-from wexample_filestate.config_option.children_config_option import \
-    ChildrenConfigOption
-from wexample_filestate.config_option.mixin.item_config_option_mixin import \
-    ItemTreeConfigOptionMixin
+from wexample_config.config_value.callback_render_config_value import (
+    CallbackRenderConfigValue,
+)
+from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.testing.abstract_state_manager_test import \
-    AbstractStateManagerTest
+from wexample_filestate.testing.abstract_state_manager_test import (
+    AbstractStateManagerTest,
+)
 
 
 class TestFileStateManager(AbstractStateManagerTest):
-    def test_setup(self):
+    def test_setup(self) -> None:
         assert self.state_manager is not None
 
-    def test_configure_name(self):
+    def test_configure_name(self) -> None:
         self.state_manager.configure({"name": "yes"})
 
-    def test_configure_unexpected(self):
-        from wexample_config.exception.invalid_option_exception import \
-            InvalidOptionException
+    def test_configure_unexpected(self) -> None:
+        from wexample_config.exception.invalid_option_exception import (
+            InvalidOptionException,
+        )
 
         with pytest.raises(InvalidOptionException):
             self.state_manager.configure(config={"unexpected_option": "yes"})
 
-    def test_configure_class_unexpected(self):
-        from wexample_filestate.exception.bad_configuration_class_type_exception import \
-            BadConfigurationClassTypeException
+    def test_configure_class_unexpected(self) -> None:
+        from wexample_filestate.exception.bad_configuration_class_type_exception import (
+            BadConfigurationClassTypeException,
+        )
 
         class BadClass:
             pass
@@ -36,8 +40,8 @@ class TestFileStateManager(AbstractStateManagerTest):
         with pytest.raises(BadConfigurationClassTypeException):
             self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
-    def test_configure_from_callback(self):
-        def _name(option: "ItemTreeConfigOptionMixin"):
+    def test_configure_from_callback(self) -> str:
+        def _name(option: "ItemTreeConfigOptionMixin") -> str:
             return "yes"
 
         self.state_manager.configure(config={"name": _name})
@@ -45,7 +49,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         assert self.state_manager.get_key() == "file_state_manager"
         assert self.state_manager.get_item_name() == "yes"
 
-    def test_configure_define_child(self):
+    def test_configure_define_child(self) -> None:
         self.state_manager.allow_undefined_keys = True
         self.state_manager.configure(
             config={
@@ -68,7 +72,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         self.state_manager.allow_undefined_keys = False
 
-    def test_configure_from_callback_class(self):
+    def test_configure_from_callback_class(self) -> str:
         def _name(option: "ItemTreeConfigOptionMixin"):
             return "yow"
 
@@ -80,12 +84,12 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         assert self.state_manager.get_item_name() == "yow"
 
-    def test_configure_from_file(self):
+    def test_configure_from_file(self) -> None:
         self.state_manager.configure_from_file(
             os.path.join(self._get_test_state_manager_path(), "config-test-one.yml")
         )
 
-    def test_dump(self):
+    def test_dump(self) -> None:
         self.state_manager.configure(
             config={
                 "children": [

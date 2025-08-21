@@ -5,24 +5,23 @@ from typing import TYPE_CHECKING, Optional, Set, cast
 
 from pydantic import Field
 from wexample_file.const.types import PathOrString
-from wexample_filestate.config_option.mixin.item_config_option_mixin import \
-    ItemTreeConfigOptionMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
-from wexample_filestate.item.mixins.item_directory_mixin import \
-    ItemDirectoryMixin
+from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
 from wexample_helpers.const.types import FileStringOrPath, StringKeysDict
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import \
-        TargetFileOrDirectoryType
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     shortcuts: StringKeysDict = Field(default_factory=dict)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
         # attributes during AbstractItemTarget initialization.
         # The order matters here because Pydantic's model initialization
@@ -37,15 +36,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             if isinstance(option, ItemTreeConfigOptionMixin):
                 option.build_item_tree()
 
-    def configure_from_file(self, path: FileStringOrPath):
+    def configure_from_file(self, path: FileStringOrPath) -> None:
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
 
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
     def get_children_list(self) -> list["TargetFileOrDirectoryType"]:
-        from wexample_filestate.config_option.children_config_option import \
-            ChildrenConfigOption
+        from wexample_filestate.config_option.children_config_option import (
+            ChildrenConfigOption,
+        )
 
         option = cast(ChildrenConfigOption, self.get_option(ChildrenConfigOption))
         if option is not None:
@@ -55,7 +55,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def build_operations(
         self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None
-    ):
+    ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
         super().build_operations(result, scopes=scopes)
@@ -119,8 +119,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def find_by_name_or_fail(self, item_name: str) -> "TargetFileOrDirectoryType":
         child = self.find_by_name(item_name)
         if child is None:
-            from wexample_filestate.exception.child_not_found_exception import \
-                ChildNotFoundException
+            from wexample_filestate.exception.child_not_found_exception import (
+                ChildNotFoundException,
+            )
 
             raise ChildNotFoundException(child=item_name, root_item=self)
 
@@ -133,15 +134,17 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         shortcut = self.get_shortcut(name=name)
 
         if shortcut is None:
-            from wexample_filestate.exception.undefined_shortcut_exception import \
-                UndefinedShortcutException
+            from wexample_filestate.exception.undefined_shortcut_exception import (
+                UndefinedShortcutException,
+            )
 
             raise UndefinedShortcutException(shortcut=name, root_item=self)
 
-    def set_shortcut(self, name: str, children: "AbstractItemTarget"):
+    def set_shortcut(self, name: str, children: "AbstractItemTarget") -> None:
         if name in self.shortcuts:
-            from wexample_filestate.exception.existing_shortcut_exception import \
-                ExistingShortcutException
+            from wexample_filestate.exception.existing_shortcut_exception import (
+                ExistingShortcutException,
+            )
 
             raise ExistingShortcutException(
                 shortcut=name,

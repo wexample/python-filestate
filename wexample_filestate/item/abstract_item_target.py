@@ -2,31 +2,36 @@ from abc import ABC
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, List, Optional, Set, Type, cast
 
-from wexample_config.config_option.abstract_nested_config_option import \
-    AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_config.const.types import DictConfig
 from wexample_file.const.types import PathOrString
-from wexample_filestate.config_option.mixin.item_config_option_mixin import \
-    ItemTreeConfigOptionMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
-from wexample_filestate.operations_provider.abstract_operations_provider import \
-    AbstractOperationsProvider
+from wexample_filestate.operations_provider.abstract_operations_provider import (
+    AbstractOperationsProvider,
+)
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.mixins.with_required_io_manager import \
-    WithRequiredIoManager
+from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import \
-        AbstractOptionsProvider
+    from wexample_config.options_provider.abstract_options_provider import (
+        AbstractOptionsProvider,
+    )
     from wexample_filestate.const.state_items import SourceFileOrDirectory
     from wexample_filestate.const.types_state_items import (
-        SourceFileOrDirectoryType, TargetFileOrDirectoryType)
-    from wexample_filestate.operation.abstract_operation import \
-        AbstractOperation
+        SourceFileOrDirectoryType,
+        TargetFileOrDirectoryType,
+    )
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.abstract_result import AbstractResult
-    from wexample_filestate.result.file_state_dry_run_result import \
-        FileStateDryRunResult
+    from wexample_filestate.result.file_state_dry_run_result import (
+        FileStateDryRunResult,
+    )
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_prompt.common.io_manager import IoManager
 
@@ -42,7 +47,7 @@ class AbstractItemTarget(
     operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
     last_result: Optional["AbstractResult"] = None
 
-    def __init__(self, io: "IoManager", **kwargs):
+    def __init__(self, io: "IoManager", **kwargs) -> None:
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, io=io)
@@ -52,7 +57,9 @@ class AbstractItemTarget(
         cls, path: PathOrString, config: Optional["DictConfig"] = None, **kwargs
     ) -> "AbstractItemTarget":
         from wexample_helpers.helpers.directory import (
-            directory_get_base_name, directory_get_parent_path)
+            directory_get_base_name,
+            directory_get_parent_path,
+        )
 
         config = config or {}
 
@@ -72,7 +79,7 @@ class AbstractItemTarget(
 
         return instance
 
-    def configure(self, config: DictConfig):
+    def configure(self, config: DictConfig) -> None:
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
 
@@ -84,8 +91,9 @@ class AbstractItemTarget(
                 path=path,
             )
         elif path.is_dir():
-            from wexample_filestate.item.item_source_directory import \
-                ItemSourceDirectory
+            from wexample_filestate.item.item_source_directory import (
+                ItemSourceDirectory,
+            )
 
             self.source = ItemSourceDirectory(
                 path=path,
@@ -118,8 +126,9 @@ class AbstractItemTarget(
         if len(providers) > 0:
             return providers
 
-        from wexample_filestate.options_provider.default_options_provider import \
-            DefaultOptionsProvider
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
+        )
 
         return [
             DefaultOptionsProvider,
@@ -153,16 +162,16 @@ class AbstractItemTarget(
         if self.operations_providers:
             return self.operations_providers
 
-        from wexample_filestate.operations_provider.default_operations_provider import \
-            DefaultOperationsProvider
+        from wexample_filestate.operations_provider.default_operations_provider import (
+            DefaultOperationsProvider,
+        )
 
         return [
             DefaultOperationsProvider,
         ]
 
     def get_item_name(self) -> str:
-        from wexample_config.config_option.name_config_option import \
-            NameConfigOption
+        from wexample_config.config_option.name_config_option import NameConfigOption
 
         return self.get_option(NameConfigOption).get_value().get_str()
 
@@ -193,8 +202,9 @@ class AbstractItemTarget(
         return result
 
     def dry_run(self, scopes: Optional[Set[Scope]] = None) -> "FileStateDryRunResult":
-        from wexample_filestate.result.file_state_dry_run_result import \
-            FileStateDryRunResult
+        from wexample_filestate.result.file_state_dry_run_result import (
+            FileStateDryRunResult,
+        )
 
         result = FileStateDryRunResult(state_manager=self)
         self.last_result = result

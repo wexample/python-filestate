@@ -2,17 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Union
 
-from wexample_config.config_option.abstract_config_option import \
-    AbstractConfigOption
+from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.item_source_file import ItemSourceFile
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import \
-    FileManipulationOperationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import \
-        ItemTargetDirectory
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
@@ -28,8 +27,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:
-        from wexample_filestate.config_option.should_have_extension_config_option import \
-            ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
 
         if (
             target.source
@@ -45,8 +45,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return False
 
     def describe_before(self) -> str:
-        from wexample_filestate.config_option.should_have_extension_config_option import \
-            ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
 
         current_ext = (
             self.target.get_source().get_local_file().get_extension()
@@ -62,8 +63,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return f"The file '{path}' has extension '.{current_ext}' but should be '.{expected_ext}'. Its extension will be corrected."
 
     def describe_after(self) -> str:
-        from wexample_filestate.config_option.should_have_extension_config_option import \
-            ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
 
         expected_ext = self.target.get_option_value(
             ShouldHaveExtensionConfigOption
@@ -75,8 +77,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return "Ensure the file extension matches the configured requirement, correcting it when necessary."
 
     def apply(self) -> None:
-        from wexample_filestate.config_option.should_have_extension_config_option import \
-            ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
 
         self._original_extension = self.target.get_path().with_suffix("").name
 

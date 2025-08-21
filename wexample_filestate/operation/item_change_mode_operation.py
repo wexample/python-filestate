@@ -2,23 +2,24 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Union, cast
 
-from wexample_filestate.config_option.mode_config_option import \
-    ModeConfigOption
+from wexample_filestate.config_option.mode_config_option import ModeConfigOption
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_helpers.helpers.file import (file_change_mode,
-                                           file_change_mode_recursive,
-                                           file_mode_octal_to_num,
-                                           file_path_get_mode_num,
-                                           file_validate_mode_octal_or_fail)
+from wexample_helpers.helpers.file import (
+    file_change_mode,
+    file_change_mode_recursive,
+    file_mode_octal_to_num,
+    file_path_get_mode_num,
+    file_validate_mode_octal_or_fail,
+)
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import \
-        AbstractConfigOption
-    from wexample_filestate.item.item_target_directory import \
-        ItemTargetDirectory
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
@@ -47,8 +48,7 @@ class ItemChangeModeOperation(AbstractOperation):
         return False
 
     def describe_before(self) -> str:
-        from wexample_filestate.config_option.mode_config_option import \
-            ModeConfigOption
+        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
 
         current_octal = self.target.get_source().get_octal_mode()
         target_octal = self.target.get_option_value(ModeConfigOption).get_str()
@@ -56,8 +56,7 @@ class ItemChangeModeOperation(AbstractOperation):
         return f"The item '{path}' has permissions {current_octal} but should be {target_octal}. Permissions will be updated."
 
     def describe_after(self) -> str:
-        from wexample_filestate.config_option.mode_config_option import \
-            ModeConfigOption
+        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
 
         path = self.target.get_path().as_posix()
         target_octal = self.target.get_option_value(ModeConfigOption).get_str()
@@ -67,8 +66,9 @@ class ItemChangeModeOperation(AbstractOperation):
         return "Ensure file or directory permissions match the configured mode."
 
     def apply(self) -> None:
-        from wexample_filestate.config_option.mode_recursive_config_option import \
-            ModeRecursiveConfigOption
+        from wexample_filestate.config_option.mode_recursive_config_option import (
+            ModeRecursiveConfigOption,
+        )
 
         self._original_octal_mode = self.target.get_source().get_octal_mode()
         mode_int = cast(

@@ -45,7 +45,7 @@ class WithWorkdirMixin:
             path=os.getcwd(), io=io_manager
         )
 
-    def _rebuild_workdir_content(self):
+    def _rebuild_workdir_content(self) -> None:
         self.workdir.apply(
             scopes={
                 Scope.CONTENT,

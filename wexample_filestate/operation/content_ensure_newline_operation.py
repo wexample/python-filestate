@@ -2,18 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Type, Union
 
-from wexample_filestate.config_option.text_filter_config_option import \
-    TextFilterConfigOption
+from wexample_filestate.config_option.text_filter_config_option import (
+    TextFilterConfigOption,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import \
-    FileManipulationOperationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import \
-        AbstractConfigOption
-    from wexample_filestate.item.item_target_directory import \
-        ItemTargetDirectory
+    from wexample_config.config_option.abstract_config_option import (
+        AbstractConfigOption,
+    )
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
@@ -23,8 +25,9 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
         return Scope.NAME
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.file_create_operation import \
-            FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 

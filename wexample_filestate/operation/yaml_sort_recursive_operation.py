@@ -2,17 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, List, Type, Union
 
-from wexample_config.config_option.abstract_config_option import \
-    AbstractConfigOption
+from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import \
-    FileManipulationOperationMixin
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
+    FileManipulationOperationMixin,
+)
 from wexample_helpers_yaml.const.types import YamlContent
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import \
-        ItemTargetDirectory
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
@@ -22,8 +21,9 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         return Scope.CONTENT
 
     def dependencies(self) -> List[Type["AbstractOperation"]]:
-        from wexample_filestate.operation.file_create_operation import \
-            FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 
@@ -32,8 +32,9 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:
-        from wexample_filestate.config_option.yaml_filter_config_option import \
-            YamlFilterConfigOption
+        from wexample_filestate.config_option.yaml_filter_config_option import (
+            YamlFilterConfigOption,
+        )
 
         if (
             target.is_file()
