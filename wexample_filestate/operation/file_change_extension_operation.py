@@ -22,8 +22,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     def get_scope(cls) -> Scope:
         return Scope.NAME
 
-    @staticmethod
+    @classmethod
     def applicable_option(
+            cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:

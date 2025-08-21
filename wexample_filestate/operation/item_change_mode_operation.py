@@ -30,8 +30,9 @@ class ItemChangeModeOperation(AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.PERMISSIONS
 
-    @staticmethod
+    @classmethod
     def applicable_option(
+            cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:

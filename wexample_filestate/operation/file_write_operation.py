@@ -27,8 +27,9 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    @staticmethod
+    @classmethod
     def applicable_option(
+            cls,
         target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
     ) -> bool:
         if isinstance(option, ContentConfigOption):

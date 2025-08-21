@@ -25,8 +25,10 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
-    @staticmethod
+
+    @classmethod
     def applicable_option(
+            cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:

@@ -27,8 +27,9 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
         return [FileCreateOperation]
 
-    @staticmethod
+    @classmethod
     def applicable_option(
+            cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:

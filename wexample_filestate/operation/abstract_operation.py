@@ -34,9 +34,10 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
 
         return False
 
-    @staticmethod
+    @classmethod
     @abstractmethod
     def applicable_option(
+            cls,
         target: "TargetFileOrDirectory", option: "AbstractConfigOption"
     ) -> bool:
         pass
