@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING, List
 
@@ -36,17 +35,18 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
             )
 
         if recursive:
-            for entry in os.listdir(path):
-                full_path = Path(os.path.join(path, entry))
-                if full_path.is_dir():
-                    dir_config["children"].append(self._generate_children_recursive(
-                        path=Path(full_path),
-                        recursive=recursive
-                    ))
+            # Iterate safely over child entries using Path API
+            for entry in path.iterdir():
+                if entry.is_dir():
+                    dir_config["children"].append(
+                        self._generate_children_recursive(
+                            path=entry,
+                            recursive=recursive,
+                        )
+                    )
         return dir_config
 
     def generate_children(self) -> List["TargetFileOrDirectoryType"]:
-        from pathlib import Path
         config = self.pattern
         recursive = config.get("recursive", False)
         children = []
@@ -61,7 +61,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
                 directory_path = Path(directory)
 
                 dir_config = self._generate_children_recursive(
-                    path=Path(directory_path),
+                    path=directory_path,
                     recursive=recursive,
                 )
 
