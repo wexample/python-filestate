@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
     from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionMixin, AbstractNestedConfigOption, ABC):
@@ -111,16 +112,16 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             DefaultOptionsProvider,
         ]
 
-    def build_operations(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None):
-        from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-
+    def build_operations(
+            self: "TargetFileOrDirectoryType", result: "AbstractResult",
+            scopes: Optional[Set[Scope]] = None
+    ) -> None:
         for operation_class in self.get_operations():
-            self_casted = cast(TargetFileOrDirectoryType, self)
-            if operation_class.applicable(self_casted) and (scopes is None or operation_class.get_scope() in scopes):
+            if operation_class.applicable(self) and (scopes is None or operation_class.get_scope() in scopes):
                 result.operations.append(
                     operation_class(
                         io=self.io,
-                        target=self_casted
+                        target=self
                     )
                 )
 
