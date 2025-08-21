@@ -26,7 +26,7 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @classmethod
     def applicable_option(
-            cls,
+        cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:

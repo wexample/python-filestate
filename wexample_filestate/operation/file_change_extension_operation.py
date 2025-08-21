@@ -24,7 +24,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
 
     @classmethod
     def applicable_option(
-            cls,
+        cls,
         target: Union["ItemTargetDirectory", "ItemTargetFile"],
         option: "AbstractConfigOption",
     ) -> bool:
