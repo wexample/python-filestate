@@ -36,13 +36,22 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return False
 
     def describe_before(self) -> str:
-        return "HAVE_BAD_EXTENSION"
+        from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
+        current_ext = self.target.get_source().get_local_file().get_extension() if self.target.get_source() else None
+        expected_ext = self.target.get_option_value(ShouldHaveExtensionConfigOption).get_str()
+        path = self.target.get_path().name
+        if current_ext is None:
+            return f"The file '{path}' has no detectable extension but should have '.{expected_ext}'."
+        return f"The file '{path}' has extension '.{current_ext}' but should be '.{expected_ext}'. Its extension will be corrected."
 
     def describe_after(self) -> str:
-        return "HAVE_PROPER_EXTENSION"
+        from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
+        expected_ext = self.target.get_option_value(ShouldHaveExtensionConfigOption).get_str()
+        path = self.target.get_path().with_suffix("").name
+        return f"The file '{path}' now has the expected extension '.{expected_ext}'."
 
     def description(self) -> str:
-        return "Manage file extension by correcting its extension or triggering an error"
+        return "Ensure the file extension matches the configured requirement, correcting it when necessary."
 
     def apply(self) -> None:
         from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption

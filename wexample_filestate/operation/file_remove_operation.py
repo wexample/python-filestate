@@ -37,13 +37,16 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
         )
 
     def describe_before(self) -> str:
-        return "EXISTS"
+        path = self.target.get_path().as_posix()
+        kind = "directory" if self.target.is_directory() else "file"
+        return f"The {kind} '{path}' exists but is configured to be absent. It will be removed."
 
     def describe_after(self) -> str:
-        return "REMOVED"
+        path = self.target.get_path().as_posix()
+        return f"'{path}' has been removed as requested by configuration."
 
     def description(self) -> str:
-        return "Remove existing file"
+        return "Remove a file or directory that should not exist according to configuration."
 
     def apply(self) -> None:
         self._backup_target_file()
