@@ -16,7 +16,10 @@ class YamlFile(StructuredContentFile):
 
     def _parse_file_content(self, content: str) -> YamlContent:
         import yaml
-        return yaml.safe_load(content)
+        try:
+            return yaml.safe_load(content)
+        except:
+            return {}
 
     def _prepare_content_to_write(self, content: StructuredData) -> str:
         import yaml
