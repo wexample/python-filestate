@@ -9,7 +9,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import Item
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 if TYPE_CHECKING:
-    from pip.prompt.wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
@@ -62,16 +62,17 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return children
 
     def create_child_item(
-        self,
-        child_config: DictConfig,
-        item_name: Optional[str] = None
+            self,
+            child_config: DictConfig,
+            item_name: Optional[str] = None
     ) -> "TargetFileOrDirectoryType":
         from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.helpers.config_helper import config_is_item_type
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_filestate.config_option.class_config_option import ClassConfigOption
 
-        if "class" in child_config:
+        if ClassConfigOption.get_snake_short_class_name() in child_config:
             class_definition = child_config.get("class")
 
             if not issubclass(
@@ -87,7 +88,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
                     class_definition=class_definition
                 )
 
-            child = class_definition(
+            child = class_definition.create_from_config(
                 io=self.get_io(),
                 # Name might be not mandatory when using custom class
                 config=child_config,
@@ -114,7 +115,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
                     parent=self,
                 )
 
-        child.configure(child_config)
+            child.configure(child_config)
         return child
 
     def get_children(self) -> list[TargetFileOrDirectoryType]:

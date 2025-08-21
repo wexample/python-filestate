@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Optional, cast, Set
 
 from pydantic import Field
 
+from wexample_file.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
@@ -151,7 +152,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     @classmethod
     def create_from_path(
             cls,
-            path: str,
+            path: PathOrString,
             **kwargs
     ) -> "ItemTargetDirectory":
         # If path is a file, ignore file name a keep parent directory.

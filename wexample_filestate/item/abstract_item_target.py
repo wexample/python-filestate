@@ -61,6 +61,19 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
         manager.configure(config=config)
         return manager
 
+    @classmethod
+    def create_from_config(
+            cls,
+            **kwargs
+    ) -> "AbstractItemTarget":
+        config = kwargs.get('config')
+        instance = cls(
+            **kwargs
+        )
+        instance.configure(config)
+
+        return instance
+
     def configure(self, config: DictConfig):
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
