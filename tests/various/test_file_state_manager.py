@@ -5,9 +5,13 @@ from wexample_config.config_value.callback_render_config_value import (
     CallbackRenderConfigValue,
 )
 from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
-from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-from wexample_filestate.testing.abstract_state_manager_test import AbstractStateManagerTest
+from wexample_filestate.testing.abstract_state_manager_test import (
+    AbstractStateManagerTest,
+)
 
 
 class TestFileStateManager(AbstractStateManagerTest):
@@ -18,7 +22,9 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.configure({"name": "yes"})
 
     def test_configure_unexpected(self):
-        from wexample_config.exception.invalid_option_exception import InvalidOptionException
+        from wexample_config.exception.invalid_option_exception import (
+            InvalidOptionException,
+        )
 
         with pytest.raises(InvalidOptionException):
             self.state_manager.configure(config={"unexpected_option": "yes"})
@@ -45,20 +51,23 @@ class TestFileStateManager(AbstractStateManagerTest):
 
     def test_configure_define_child(self):
         self.state_manager.allow_undefined_keys = True
-        self.state_manager.configure(config=
-            {
-                "custom_name": ChildrenConfigOption(value=[
-                    {
-                        "name": TEST_FILE_NAME_SIMPLE_TEXT,
-                        "type": "file",
-                    }
-                ], parent=self.state_manager)
+        self.state_manager.configure(
+            config={
+                "custom_name": ChildrenConfigOption(
+                    value=[
+                        {
+                            "name": TEST_FILE_NAME_SIMPLE_TEXT,
+                            "type": "file",
+                        }
+                    ],
+                    parent=self.state_manager,
+                )
             }
         )
 
         assert self.state_manager.dump() == {
-            'name': 'resources',
-            'children': [{'name': 'simple-text.txt', 'type': 'file'}]
+            "name": "resources",
+            "children": [{"name": "simple-text.txt", "type": "file"}],
         }
 
         self.state_manager.allow_undefined_keys = False
@@ -67,8 +76,8 @@ class TestFileStateManager(AbstractStateManagerTest):
         def _name(option: "ItemTreeConfigOptionMixin"):
             return "yow"
 
-        self.state_manager.configure(config=
-            {
+        self.state_manager.configure(
+            config={
                 "name": CallbackRenderConfigValue(raw=_name),
             }
         )
@@ -81,8 +90,8 @@ class TestFileStateManager(AbstractStateManagerTest):
         )
 
     def test_dump(self):
-        self.state_manager.configure(config=
-            {
+        self.state_manager.configure(
+            config={
                 "children": [
                     {
                         "name": TEST_FILE_NAME_SIMPLE_TEXT,

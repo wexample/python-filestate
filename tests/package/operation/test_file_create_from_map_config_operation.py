@@ -2,14 +2,16 @@ import os
 from typing import Optional
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.children_filter_config_option import ChildrenFilterConfigOption
+from wexample_filestate.config_option.children_filter_config_option import (
+    ChildrenFilterConfigOption,
+)
 from wexample_filestate.const.disk import DiskItemType
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
 class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
-    missing_file_name: str = 'simple-readme.md'
+    missing_file_name: str = "simple-readme.md"
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         from typing import Optional
@@ -31,29 +33,32 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
                             "name": "one",
                             "type": DiskItemType.DIRECTORY,
                             "children": [
-                                ChildrenFilterConfigOption(pattern={
-                                    'class': TestClass,
-                                    'name_pattern': r"^test-collection-[a-z]+-[a-z]+\.txt$",
-                                    'type': DiskItemType.FILE,
-                                    'should_exist': False,
-                                }),
-                                ChildrenFilterConfigOption(pattern={
-                                    'class': TestClass,
-                                    'name_pattern': r"^test-directory-[a-z]$",
-                                    'type': DiskItemType.DIRECTORY,
-                                    'should_exist': True,
-                                    'children': [
-                                        {
-                                            'name': 'file.txt',
-                                            'should_exist': True,
-                                        }
-                                    ]
-                                })
-                            ]
+                                ChildrenFilterConfigOption(
+                                    pattern={
+                                        "class": TestClass,
+                                        "name_pattern": r"^test-collection-[a-z]+-[a-z]+\.txt$",
+                                        "type": DiskItemType.FILE,
+                                        "should_exist": False,
+                                    }
+                                ),
+                                ChildrenFilterConfigOption(
+                                    pattern={
+                                        "class": TestClass,
+                                        "name_pattern": r"^test-directory-[a-z]$",
+                                        "type": DiskItemType.DIRECTORY,
+                                        "should_exist": True,
+                                        "children": [
+                                            {
+                                                "name": "file.txt",
+                                                "should_exist": True,
+                                            }
+                                        ],
+                                    }
+                                ),
+                            ],
                         }
-                    ]
+                    ],
                 }
-
             ]
         }
 
@@ -61,12 +66,17 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
         return 3
 
     def _operation_test_assert_initial(self) -> None:
-        target_file = self.state_manager.find_by_name_recursive("test-collection-one-one.txt")
+        target_file = self.state_manager.find_by_name_recursive(
+            "test-collection-one-one.txt"
+        )
 
         assert os.path.exists(target_file.get_resolved()), "The file should exist"
 
     def _operation_test_assert_applied(self):
-        target_file = self.state_manager.find_by_name_recursive("test-collection-one-one.txt")
+        target_file = self.state_manager.find_by_name_recursive(
+            "test-collection-one-one.txt"
+        )
 
         assert not os.path.exists(
-            target_file.get_resolved()), "The target file have been removed because it matches the name pattern"
+            target_file.get_resolved()
+        ), "The target file have been removed because it matches the name pattern"

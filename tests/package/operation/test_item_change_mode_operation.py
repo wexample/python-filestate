@@ -12,16 +12,14 @@ class TestItemChangeModeOperation(TestAbstractOperation):
 
     def _get_expected_mode(self) -> str:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+
         target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
         return target.get_option_value(ModeConfigOption).get_str()
 
     def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
         return {
-            'children': [
-                {
-                    'name': TEST_FILE_NAME_SIMPLE_TEXT,
-                    'mode': '644'
-                },
+            "children": [
+                {"name": TEST_FILE_NAME_SIMPLE_TEXT, "mode": "644"},
             ]
         }
 
