@@ -31,7 +31,8 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             return current_content != new_content
 
         if isinstance(option, ShouldContainLinesConfigOption):
-            required_lines = target.get_option_value(ShouldContainLinesConfigOption)
+            # Use the same representation as describe_before(): a list of strings
+            required_lines = target.get_option_value(ShouldContainLinesConfigOption).get_list()
             if not target.get_local_file().path.exists():
                 return True
             current_content = target.get_local_file().read()
@@ -41,13 +42,34 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
         return False
 
     def describe_before(self) -> str:
-        return "CURRENT_CONTENT"
+        content_option = self.target.get_option(ContentConfigOption)
+        should_contain_lines_option = self.target.get_option(ShouldContainLinesConfigOption)
+
+        if content_option is not None:
+            return "The file content does not match the configured content and will be rewritten."
+
+        if should_contain_lines_option is not None:
+            current_content = self.target.get_local_file().read() if self.target.get_local_file().path.exists() else ""
+            current_lines = current_content.splitlines()
+            required_lines = self.target.get_option_value(ShouldContainLinesConfigOption).get_list()
+            missing = [l for l in required_lines if l not in current_lines]
+            if missing:
+                return f"The file is missing required lines which will be appended: {missing}."
+            return "The file already contains all required lines."
+
+        return "The file content may need to be regenerated based on configuration."
 
     def describe_after(self) -> str:
-        return "REWRITTEN_CONTENT"
+        if self.target.get_option(ContentConfigOption) is not None:
+            return "The file content has been rewritten to exactly match the configured content."
+
+        if self.target.get_option(ShouldContainLinesConfigOption) is not None:
+            return "All required lines are now present in the file."
+
+        return "The file content has been updated according to configuration."
 
     def description(self) -> str:
-        return "Regenerate file content"
+        return "Write or update file content to comply with configured content or required lines."
 
     def apply(self) -> None:
         content_option = self.target.get_option(ContentConfigOption)
