@@ -169,18 +169,14 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
         return result
 
-    def run(self, result: "AbstractResult", scopes: Optional[Set[Scope]] = None) -> "AbstractResult":
-        self.build_operations(result, scopes=scopes)
-        self.last_result = result
-
-        return self.last_result
-
     def dry_run(self, scopes: Optional[Set[Scope]] = None) -> "FileStateDryRunResult":
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
         )
 
-        result = cast(FileStateDryRunResult, self.run(result=FileStateDryRunResult(state_manager=self), scopes=scopes))
+        result = FileStateDryRunResult(state_manager=self)
+        self.last_result = result
+        self.build_operations(result=result, scopes=scopes)
         result.apply_operations()
 
         return result
@@ -193,7 +189,10 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
     ) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 
-        result = cast(FileStateResult, self.run(result=FileStateResult(state_manager=self), scopes=scopes))
+        result = FileStateResult(state_manager=self)
+        self.last_result = result
+        self.build_operations(result=result, scopes=scopes)
+
         if len(result.operations) > 0:
             result.apply_operations(interactive=interactive)
         else:
