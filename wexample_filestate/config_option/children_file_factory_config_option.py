@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, List
+from pydantic import Field
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
@@ -11,12 +12,17 @@ if TYPE_CHECKING:
 
 
 class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
+    # Pattern is a template used to create generated child configs (e.g., name/type for files to add under each matched directory)
     pattern: DictConfig
+    # Whether to recurse into subdirectories when generating children from the base path
+    recursive: bool = Field(
+        default=False,
+        description="Recurse into subdirectories when generating children from matched directories.",
+    )
 
     def _generate_children_recursive(
             self,
             path: Path,
-            recursive: bool = False,
     ) -> DictConfig:
         dir_config = {
             "name": path.name,
@@ -34,21 +40,19 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
                 }
             )
 
-        if recursive:
+        if self.recursive:
             # Iterate safely over child entries using Path API
             for entry in path.iterdir():
                 if entry.is_dir():
                     dir_config["children"].append(
                         self._generate_children_recursive(
                             path=entry,
-                            recursive=recursive,
                         )
                     )
         return dir_config
 
     def generate_children(self) -> List["TargetFileOrDirectoryType"]:
         config = self.pattern
-        recursive = config.get("recursive", False)
         children = []
         path = self.get_parent_item().get_path()
 
@@ -62,7 +66,6 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
 
                 dir_config = self._generate_children_recursive(
                     path=directory_path,
-                    recursive=recursive,
                 )
 
                 children.append(self._create_children_from_config(
