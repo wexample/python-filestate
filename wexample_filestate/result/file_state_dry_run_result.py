@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING
 from wexample_filestate.result.abstract_result import AbstractResult
 
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.operation.abstract_operation import \
+        AbstractOperation
 
 
 class FileStateDryRunResult(AbstractResult):

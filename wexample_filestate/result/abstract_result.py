@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import List
 
 from pydantic import BaseModel
-
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin

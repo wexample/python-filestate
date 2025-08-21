@@ -4,22 +4,17 @@ import os
 import shutil
 from typing import TYPE_CHECKING, Union
 
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
-)
 from wexample_filestate.enum.scopes import Scope
+from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import \
+    FileManipulationOperationMixin
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import (
-        ItemTargetDirectory,
-    )
-    from wexample_filestate.item.item_target_file import (
-        ItemTargetFile,
-    )
-    from wexample_config.config_option.abstract_config_option import (
-        AbstractConfigOption,
-    )
+    from wexample_config.config_option.abstract_config_option import \
+        AbstractConfigOption
+    from wexample_filestate.item.item_target_directory import \
+        ItemTargetDirectory
+    from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):

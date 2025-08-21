@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Optional, List, Any
+from typing import Any, Dict, List, Optional
 
 from wexample_config.config_value.config_value import ConfigValue
 from wexample_helpers.const.types import BasicValue

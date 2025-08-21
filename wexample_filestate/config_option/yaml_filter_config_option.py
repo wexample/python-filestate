@@ -1,7 +1,8 @@
-from typing import Any, Union, List
+from typing import Any, List, Union
 
+from wexample_config.config_option.abstract_config_option import \
+    AbstractConfigOption
 from wexample_helpers.const.types import StringKeysDict
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class YamlFilterConfigOption(AbstractConfigOption):

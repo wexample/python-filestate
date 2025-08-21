@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel
-
 from wexample_helpers.const.types import FileStringOrPath
 
 

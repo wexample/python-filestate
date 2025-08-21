@@ -5,7 +5,8 @@ from wexample_helpers.exception.undefined_exception import UndefinedException
 
 class BadConfigurationClassTypeException(UndefinedException):
     def __init__(self, class_definition: Any, **kwargs):
-        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+        from wexample_filestate.item.item_target_directory import \
+            ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
         # If not given a type at all, report the actual type/value

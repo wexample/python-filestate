@@ -3,12 +3,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from wexample_filestate.result.abstract_result import AbstractResult
-from wexample_prompt.responses.interactive.confirm_prompt_response import (
-    ConfirmPromptResponse,
-)
+from wexample_prompt.responses.interactive.confirm_prompt_response import \
+    ConfirmPromptResponse
 
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.operation.abstract_operation import \
+        AbstractOperation
 
 
 class FileStateResult(AbstractResult):

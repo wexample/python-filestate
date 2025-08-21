@@ -1,6 +1,7 @@
-from typing import Any, Union, List, ClassVar
+from typing import Any, ClassVar, List, Union
 
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_config.config_option.abstract_config_option import \
+    AbstractConfigOption
 from wexample_config.config_value.nested_config_value import NestedConfigValue
 from wexample_helpers.const.types import StringKeysDict
 

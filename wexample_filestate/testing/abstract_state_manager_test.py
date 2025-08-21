@@ -3,13 +3,11 @@ from abc import ABC
 from typing import TYPE_CHECKING, List, Optional, Type, cast
 
 if TYPE_CHECKING:
-    from wexample_config.options_provider.abstract_options_provider import (
-        AbstractOptionsProvider,
-    )
+    from wexample_config.options_provider.abstract_options_provider import \
+        AbstractOptionsProvider
     from wexample_filestate.file_state_manager import FileStateManager
-    from wexample_filestate.operations_provider.abstract_operations_provider import (
-        AbstractOperationsProvider,
-    )
+    from wexample_filestate.operations_provider.abstract_operations_provider import \
+        AbstractOperationsProvider
 
 
 class AbstractStateManagerTest(ABC):

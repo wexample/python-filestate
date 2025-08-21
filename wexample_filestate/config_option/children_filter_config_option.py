@@ -1,17 +1,16 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Callable, Optional
+from typing import TYPE_CHECKING, Callable, List, Optional
 
-from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
-    AbstractChildrenManipulationConfigOption,
-)
-from wexample_filestate.config_option.name_pattern_config_option import (
-    NamePatternConfigOption,
-)
-from wexample_filestate.const.disk import DiskItemType
 from pydantic import Field
+from wexample_filestate.config_option.abstract_children_manipulator_config_option import \
+    AbstractChildrenManipulationConfigOption
+from wexample_filestate.config_option.name_pattern_config_option import \
+    NamePatternConfigOption
+from wexample_filestate.const.disk import DiskItemType
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.const.types_state_items import \
+        TargetFileOrDirectoryType
 
 
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
@@ -33,9 +32,8 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         config: dict,
         entry_filter: Optional[Callable[[Path], bool]],
     ) -> bool:
-        from wexample_filestate.helpers.config_helper import (
-            config_has_same_type_as_path,
-        )
+        from wexample_filestate.helpers.config_helper import \
+            config_has_same_type_as_path
 
         requested_type = config.get("type")
         if requested_type == DiskItemType.DIRECTORY and not entry_path.is_dir():
@@ -112,9 +110,8 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def generate_children(self) -> List["TargetFileOrDirectoryType"]:
-        from wexample_filestate.helpers.config_helper import (
-            config_has_same_type_as_path,
-        )
+        from wexample_filestate.helpers.config_helper import \
+            config_has_same_type_as_path
 
         config = self.pattern
         children = []
