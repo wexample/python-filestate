@@ -2,6 +2,7 @@ from typing import Optional, TYPE_CHECKING
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.file_state_manager import FileStateManager
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
@@ -34,7 +35,8 @@ class WithWorkdirMixin:
             Scope.PERMISSIONS,
             Scope.SYMLINK_TARGET,
             Scope.TIMESTAMPS,
-        })
+        },
+            verbosity=VerbosityLevel.QUIET)
 
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(

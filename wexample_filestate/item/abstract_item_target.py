@@ -11,6 +11,7 @@ from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
@@ -184,7 +185,12 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
 
         return result
 
-    def apply(self, interactive: bool = False, scopes: Optional[Set[Scope]] = None) -> "FileStateResult":
+    def apply(
+            self,
+            interactive: bool = False,
+            scopes: Optional[Set[Scope]] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT
+    ) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 
         result = cast(FileStateResult, self.run(result=FileStateResult(state_manager=self), scopes=scopes))
@@ -192,6 +198,10 @@ class AbstractItemTarget(WithRequiredIoManager, ItemMixin, ItemTreeConfigOptionM
             result.apply_operations(interactive=interactive)
         else:
             from wexample_helpers.helpers.cli import cli_make_clickable_path
-            self.io.info(f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ")
+
+            self.io.info(
+                message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
+                verbosity=verbosity
+            )
 
         return result
