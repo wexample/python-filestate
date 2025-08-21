@@ -95,13 +95,29 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
                 parent=self,
             )
         else:
+            # Stricter resolution policy:
+            # 1) If an explicit type is provided, use it.
+            # 2) Otherwise, attempt to infer from the real filesystem (if the target exists).
+            # 3) If the target does not exist and no explicit type is provided, raise an error.
             is_file_type = config_is_item_type(child_config, DiskItemType.FILE)
-            if not is_file_type:
+            has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
+
+            if not (is_file_type or has_explicit_dir):
                 name = item_name or child_config.get("name", None)
-                if name:
-                    # The current item has a parent, so we can try to guess the file type.
-                    is_file_type = isinstance(name, str) and os.path.isfile(
-                        os.path.join(self.get_parent_item().get_resolved(), name)
+                if not isinstance(name, str) or not name:
+                    raise ValueError(
+                        "ChildrenConfigOption: missing 'type' and 'name' to infer child item type."
+                    )
+
+                full_path = os.path.join(self.get_parent_item().get_resolved(), name)
+                if os.path.exists(full_path):
+                    if os.path.isfile(full_path):
+                        is_file_type = True
+                    elif os.path.isdir(full_path):
+                        is_file_type = False
+                else:
+                    raise ValueError(
+                        "ChildrenConfigOption: missing 'type' in child_config and target does not exist to infer type."
                     )
 
             if is_file_type:
