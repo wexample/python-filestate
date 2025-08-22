@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Union
 
 from wexample_helpers.helpers.polyfill import polyfill_register_global

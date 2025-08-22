@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, cast
 
 from wexample_filestate.config_option.mode_config_option import ModeConfigOption

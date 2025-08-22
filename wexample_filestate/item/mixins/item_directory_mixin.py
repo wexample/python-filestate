@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
