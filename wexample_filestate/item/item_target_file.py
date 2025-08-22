@@ -8,7 +8,7 @@ from wexample_filestate.item.mixins.item_file_mixin import ItemFileMixin
 
 
 class ItemTargetFile(ItemFileMixin, AbstractItemTarget):
-    config: Optional[DictConfig] = None
+    config: DictConfig | None = None
 
     def __init__(self, **data) -> None:
         ItemFileMixin.__init__(self, **data)

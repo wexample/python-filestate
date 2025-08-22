@@ -9,14 +9,14 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 class TestFileCreateFromClassOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         from typing import Optional
 
         from wexample_config.const.types import DictConfig
         from wexample_filestate.file_state_manager import FileStateManager
 
         class TestClassForTestFileCreateFromClassOperation(FileStateManager):
-            def prepare_value(self, config: Optional[DictConfig] = None) -> DictConfig:
+            def prepare_value(self, config: DictConfig | None = None) -> DictConfig:
                 config.update(
                     {
                         "children": [

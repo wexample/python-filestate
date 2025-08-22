@@ -37,7 +37,7 @@ class AbstractChildrenManipulationConfigOption(
         return DictConfig
 
     @abstractmethod
-    def generate_children(self) -> List["TargetFileOrDirectoryType"]:
+    def generate_children(self) -> list["TargetFileOrDirectoryType"]:
         pass
 
     def _path_match_patterns(self, path: str) -> bool:
@@ -86,7 +86,7 @@ class AbstractChildrenManipulationConfigOption(
 
     def _get_directories_filtered(
         self, base_path: PathOrString, recursive: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         from wexample_helpers.helpers.file import file_get_directories
 
         output = []

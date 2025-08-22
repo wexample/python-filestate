@@ -8,4 +8,4 @@ class YamlFilterConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         # Accept both list form ["sort_recursive"] and dict form if extended later
-        return Union[List[str], StringKeysDict]
+        return Union[list[str], StringKeysDict]

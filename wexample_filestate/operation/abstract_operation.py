@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     applied: bool = False
-    target: "TargetFileOrDirectory"
+    target: TargetFileOrDirectory
     _tty_width: int = 80
 
     @classmethod
@@ -27,7 +27,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         pass
 
     @classmethod
-    def applicable(cls, target: "TargetFileOrDirectory") -> bool:
+    def applicable(cls, target: TargetFileOrDirectory) -> bool:
         for option in target.options.values():
             if cls.applicable_option(target=target, option=option) is True:
                 return True
@@ -37,7 +37,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     @classmethod
     @abstractmethod
     def applicable_option(
-        cls, target: "TargetFileOrDirectory", option: "AbstractConfigOption"
+        cls, target: TargetFileOrDirectory, option: AbstractConfigOption
     ) -> bool:
         pass
 
@@ -61,5 +61,5 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def describe_after(self) -> str:
         pass
 
-    def dependencies(self) -> List[Type["AbstractOperation"]]:
+    def dependencies(self) -> list[type[AbstractOperation]]:
         return []

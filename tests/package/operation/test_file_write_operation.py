@@ -10,7 +10,7 @@ class TestFileWriteOperation(TestAbstractOperation):
     initial_content: str = "Initial line 1\nInitial line 2"
     required_lines: list = ["Required line 1", "Required line 2"]
 
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType
 
         return {

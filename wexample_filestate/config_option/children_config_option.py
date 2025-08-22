@@ -43,7 +43,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         for child in children:
             child.build_item_tree()
 
-    def create_children_items(self) -> List["TargetFileOrDirectoryType"]:
+    def create_children_items(self) -> list["TargetFileOrDirectoryType"]:
         from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
             AbstractChildrenManipulationConfigOption,
         )
@@ -65,7 +65,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return children
 
     def create_child_item(
-        self, child_config: DictConfig, item_name: Optional[str] = None
+        self, child_config: DictConfig, item_name: str | None = None
     ) -> "TargetFileOrDirectoryType":
         from wexample_filestate.config_option.class_config_option import (
             ClassConfigOption,

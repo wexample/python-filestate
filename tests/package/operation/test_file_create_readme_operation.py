@@ -11,7 +11,7 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 class TestFileCreateReadmeOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType
 
         return {

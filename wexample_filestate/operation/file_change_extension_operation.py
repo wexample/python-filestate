@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOperation):
-    _original_extension: Optional[str] = None
+    _original_extension: str | None = None
 
     @classmethod
     def get_scope(cls) -> Scope:
@@ -25,8 +25,8 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     @classmethod
     def applicable_option(
         cls,
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption",
+        target: ItemTargetDirectory | ItemTargetFile,
+        option: AbstractConfigOption,
     ) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,

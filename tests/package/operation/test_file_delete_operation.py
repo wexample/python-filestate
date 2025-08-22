@@ -7,7 +7,7 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestFileDeleteOperation(TestAbstractOperation):
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         return {
             "children": [
                 {

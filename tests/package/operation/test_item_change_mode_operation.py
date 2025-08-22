@@ -16,7 +16,7 @@ class TestItemChangeModeOperation(TestAbstractOperation):
         target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
         return target.get_option_value(ModeConfigOption).get_str()
 
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         return {
             "children": [
                 {"name": TEST_FILE_NAME_SIMPLE_TEXT, "mode": "644"},

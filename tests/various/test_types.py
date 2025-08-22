@@ -20,7 +20,7 @@ class TestFileStateManager(AbstractTestHelpers):
 
         self._test_type_validate_or_fail(
             success_cases=[
-                (TestClass, Type[ItemTargetDirectory]),
+                (TestClass, type[ItemTargetDirectory]),
                 (
                     [ChildrenFilterConfigOption(pattern={})],
                     list[ChildrenFilterConfigOption],

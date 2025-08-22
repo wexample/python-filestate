@@ -44,7 +44,7 @@ class AbstractItemTarget(
     ABC,
 ):
     source: Optional["SourceFileOrDirectory"] = None
-    operations_providers: Optional[List[Type[AbstractOperationsProvider]]] = None
+    operations_providers: list[type[AbstractOperationsProvider]] | None = None
     last_result: Optional["AbstractResult"] = None
 
     def __init__(self, io: "IoManager", **kwargs) -> None:
@@ -110,7 +110,7 @@ class AbstractItemTarget(
 
         return Path(f"{base_path}{self.get_item_name()}")
 
-    def get_operations(self) -> List[Type["AbstractOperation"]]:
+    def get_operations(self) -> list[type["AbstractOperation"]]:
         providers = self.get_operations_providers()
         operations = []
 
@@ -121,7 +121,7 @@ class AbstractItemTarget(
 
         return operations
 
-    def get_options_providers(self) -> List[Type["AbstractOptionsProvider"]]:
+    def get_options_providers(self) -> list[type["AbstractOptionsProvider"]]:
         providers = super().get_options_providers()
         if len(providers) > 0:
             return providers
@@ -137,7 +137,7 @@ class AbstractItemTarget(
     def build_operations(
         self: "TargetFileOrDirectoryType",
         result: "AbstractResult",
-        scopes: Optional[Set[Scope]] = None,
+        scopes: set[Scope] | None = None,
     ) -> None:
         self.io.indentation_up()
         self.io.log(f"Building operations for: {self.get_path()}")
@@ -153,7 +153,7 @@ class AbstractItemTarget(
 
         self.io.indentation_down()
 
-    def get_operations_providers(self) -> List[Type["AbstractOperationsProvider"]]:
+    def get_operations_providers(self) -> list[type["AbstractOperationsProvider"]]:
         if self.parent:
             return cast(
                 AbstractItemTarget, self.get_parent_item()
@@ -201,7 +201,7 @@ class AbstractItemTarget(
 
         return result
 
-    def dry_run(self, scopes: Optional[Set[Scope]] = None) -> "FileStateDryRunResult":
+    def dry_run(self, scopes: set[Scope] | None = None) -> "FileStateDryRunResult":
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
         )
@@ -216,8 +216,8 @@ class AbstractItemTarget(
     def apply(
         self,
         interactive: bool = False,
-        scopes: Optional[Set[Scope]] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        scopes: set[Scope] | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
     ) -> "FileStateResult":
         from wexample_filestate.result.file_state_result import FileStateResult
 

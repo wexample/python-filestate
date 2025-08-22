@@ -24,7 +24,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
     def get_scope(cls) -> Scope:
         return Scope.NAME
 
-    def dependencies(self) -> List[Type["AbstractOperation"]]:
+    def dependencies(self) -> list[type[AbstractOperation]]:
         from wexample_filestate.operation.file_create_operation import (
             FileCreateOperation,
         )
@@ -34,8 +34,8 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
     @classmethod
     def applicable_option(
         cls,
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption",
+        target: ItemTargetDirectory | ItemTargetFile,
+        option: AbstractConfigOption,
     ) -> bool:
         if (
             target.is_file()

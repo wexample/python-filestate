@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, List, Optional
+from collections.abc import Callable
 
 from pydantic import Field
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
@@ -17,7 +18,7 @@ if TYPE_CHECKING:
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
-    filter: Optional[Callable[[Path], bool]] = Field(
+    filter: Callable[[Path], bool] | None = Field(
         default=None,
         description="Use this callback to filter out the files to preserve.",
     )
@@ -31,7 +32,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         self,
         entry_path: Path,
         config: dict,
-        entry_filter: Optional[Callable[[Path], bool]],
+        entry_filter: Callable[[Path], bool] | None,
     ) -> bool:
         from wexample_filestate.helpers.config_helper import (
             config_has_same_type_as_path,
@@ -65,8 +66,8 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         self,
         base_dir: Path,
         config: dict,
-        entry_filter: Optional[Callable[[Path], bool]],
-    ) -> Optional[dict]:
+        entry_filter: Callable[[Path], bool] | None,
+    ) -> dict | None:
         """Build a nested DictConfig preserving the directory structure; returns None if empty when filtering files only."""
         dir_config: dict = {
             "name": base_dir.name,
@@ -111,7 +112,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
             return None
         return dir_config
 
-    def generate_children(self) -> List["TargetFileOrDirectoryType"]:
+    def generate_children(self) -> list["TargetFileOrDirectoryType"]:
         from wexample_filestate.helpers.config_helper import (
             config_has_same_type_as_path,
         )
@@ -130,7 +131,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
             base_path: Path = parent_item.get_path()
             if base_path.exists():
                 # Use the instance field `filter` when provided
-                entry_filter: Optional[Callable[[Path], bool]] = (
+                entry_filter: Callable[[Path], bool] | None = (
                     self.filter if has_callable_filter else None
                 )
 

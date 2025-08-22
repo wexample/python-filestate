@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class DefaultOperationsProvider(AbstractOperationsProvider):
     @staticmethod
-    def get_operations() -> List[Type["AbstractOperation"]]:
+    def get_operations() -> list[type["AbstractOperation"]]:
         from wexample_filestate.operation.file_change_extension_operation import (
             FileChangeExtensionOperation,
         )

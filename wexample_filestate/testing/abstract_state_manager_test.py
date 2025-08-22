@@ -19,7 +19,7 @@ class AbstractStateManagerTest(ABC):
         return f"{os.path.abspath(os.curdir)}{os.sep}"
 
     def _get_test_state_manager_path(
-        self, package_root_path: Optional[str] = None
+        self, package_root_path: str | None = None
     ) -> str:
         return os.path.join(
             package_root_path or self._get_package_root_path(), "tests", "resources", ""
@@ -49,12 +49,12 @@ class AbstractStateManagerTest(ABC):
 
     def _get_test_operations_providers(
         self,
-    ) -> Optional[List[Type["AbstractOperationsProvider"]]]:
+    ) -> list[type["AbstractOperationsProvider"]] | None:
         return None
 
     def _get_test_options_providers(
         self,
-    ) -> Optional[List[Type["AbstractOptionsProvider"]]]:
+    ) -> list[type["AbstractOptionsProvider"]] | None:
         return None
 
     def _assert_file_content_equals(

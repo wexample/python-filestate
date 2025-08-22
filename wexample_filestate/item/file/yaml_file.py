@@ -29,7 +29,7 @@ class YamlFile(StructuredContentFile):
 
         return yaml.dump(content)
 
-    def prepare_value(self, raw_value: Optional[DictConfig] = None) -> DictConfig:
+    def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
         config = super().prepare_value(raw_value=raw_value)
 
         config[ShouldHaveExtensionConfigOption.get_snake_short_class_name()] = (

@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class ItemChangeModeOperation(AbstractOperation):
-    _original_octal_mode: Optional[str] = None
+    _original_octal_mode: str | None = None
 
     @classmethod
     def get_scope(cls) -> Scope:
@@ -33,8 +33,8 @@ class ItemChangeModeOperation(AbstractOperation):
     @classmethod
     def applicable_option(
         cls,
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption",
+        target: ItemTargetDirectory | ItemTargetFile,
+        option: AbstractConfigOption,
     ) -> bool:
         if not target.source:
             return False

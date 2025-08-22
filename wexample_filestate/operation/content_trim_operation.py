@@ -18,13 +18,13 @@ if TYPE_CHECKING:
 
 
 class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
-    _original_extension: Optional[str] = None
+    _original_extension: str | None = None
 
     @classmethod
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    def dependencies(self) -> List[Type["AbstractOperation"]]:
+    def dependencies(self) -> list[type[AbstractOperation]]:
         from wexample_filestate.operation.file_create_operation import (
             FileCreateOperation,
         )
@@ -34,8 +34,8 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def applicable_option(
         cls,
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption",
+        target: ItemTargetDirectory | ItemTargetFile,
+        option: AbstractConfigOption,
     ) -> bool:
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,

@@ -10,7 +10,7 @@ class TestContentConfigOption(TestAbstractOperation):
     missing_dir_name: str = "simple-directory-missing"
     test_content: str = "CHANGED_CONTENT"
 
-    def _operation_test_setup_configuration(self) -> Optional[DictConfig]:
+    def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType
 
         return {

@@ -28,8 +28,8 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def applicable_option(
         cls,
-        target: Union["ItemTargetDirectory", "ItemTargetFile"],
-        option: "AbstractConfigOption",
+        target: ItemTargetDirectory | ItemTargetFile,
+        option: AbstractConfigOption,
     ) -> bool:
         return (
             target.source is None

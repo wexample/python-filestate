@@ -8,14 +8,14 @@ from wexample_helpers.helpers.string import string_replace_params
 
 class AggregatedTemplatesConfigValue(ConfigValue):
     raw: Any = None
-    templates: Optional[List[str]] = []
-    parameters: Optional[Dict[str, BasicValue]] = {}
+    templates: list[str] | None = []
+    parameters: dict[str, BasicValue] | None = {}
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return Any
 
-    def get_templates(self) -> Optional[List[str]]:
+    def get_templates(self) -> list[str] | None:
         return self.templates
 
     def get_str(self, type_check: bool = True) -> str:

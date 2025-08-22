@@ -9,4 +9,4 @@ class ClassConfigOption(AbstractConfigOption):
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
-        return Type[ItemTargetDirectory] | Type[ItemTargetFile]
+        return type[ItemTargetDirectory] | type[ItemTargetFile]

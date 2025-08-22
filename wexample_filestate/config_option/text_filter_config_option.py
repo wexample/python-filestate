@@ -11,7 +11,7 @@ class TextFilterConfigOption(AbstractConfigOption):
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return Union[List[str], StringKeysDict]
+        return Union[list[str], StringKeysDict]
 
     def get_value_class_type(self) -> type[NestedConfigValue]:
         # Use NestedConfigValue to ease nested access like search('trim.char')

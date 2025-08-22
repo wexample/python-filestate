@@ -10,19 +10,19 @@ from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
 
 
 class AbstractResult(PrintableMixin, BaseModel):
-    state_manager: "AbstractItemTarget"
-    operations: List[AbstractOperation] = []
+    state_manager: AbstractItemTarget
+    operations: list[AbstractOperation] = []
     rollback: bool = False
 
     @abstractmethod
     def _apply_single_operation(
-        self, operation: "AbstractOperation", interactive: bool = False
+        self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         pass
 
     def apply_with_dependencies(
         self,
-        operation: "AbstractOperation",
+        operation: AbstractOperation,
         dry_run: bool = False,
         rollback: bool = False,
         interactive: bool = False,

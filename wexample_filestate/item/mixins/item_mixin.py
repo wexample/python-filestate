@@ -9,8 +9,8 @@ from wexample_helpers.const.types import FileStringOrPath
 
 
 class ItemMixin(BaseModel):
-    base_path: Optional[FileStringOrPath] = None
-    path: Optional[Path] = None
+    base_path: FileStringOrPath | None = None
+    path: Path | None = None
 
     @abstractmethod
     def get_item_title(self) -> str:
