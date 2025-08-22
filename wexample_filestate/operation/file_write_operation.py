@@ -7,6 +7,9 @@ from wexample_filestate.config_option.content_config_option import ContentConfig
 from wexample_filestate.config_option.should_contain_lines_config_option import (
     ShouldContainLinesConfigOption,
 )
+from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+    ShouldNotContainLinesConfigOption,
+)
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
@@ -47,12 +50,26 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             current_lines = current_content.splitlines()
             return any(line not in current_lines for line in required_lines)
 
+        if isinstance(option, ShouldNotContainLinesConfigOption):
+            # If file does not exist, there's nothing to remove yet, so not applicable.
+            if not target.get_local_file().path.exists():
+                return False
+            forbidden_lines = target.get_option_value(
+                ShouldNotContainLinesConfigOption
+            ).get_list()
+            current_content = target.get_local_file().read()
+            current_lines = current_content.splitlines()
+            return any(line in current_lines for line in forbidden_lines)
+
         return False
 
     def describe_before(self) -> str:
         content_option = self.target.get_option(ContentConfigOption)
         should_contain_lines_option = self.target.get_option(
             ShouldContainLinesConfigOption
+        )
+        should_not_contain_lines_option = self.target.get_option(
+            ShouldNotContainLinesConfigOption
         )
 
         if content_option is not None:
@@ -73,6 +90,21 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
                 return f"The file is missing required lines which will be appended: {missing}."
             return "The file already contains all required lines."
 
+        if should_not_contain_lines_option is not None:
+            current_content = (
+                self.target.get_local_file().read()
+                if self.target.get_local_file().path.exists()
+                else ""
+            )
+            current_lines = current_content.splitlines()
+            forbidden_lines = self.target.get_option_value(
+                ShouldNotContainLinesConfigOption
+            ).get_list()
+            present = [l for l in forbidden_lines if l in current_lines]
+            if present:
+                return f"The file contains forbidden lines which will be removed: {present}."
+            return "The file does not contain any forbidden lines."
+
         return "The file content may need to be regenerated based on configuration."
 
     def describe_after(self) -> str:
@@ -82,15 +114,24 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
         if self.target.get_option(ShouldContainLinesConfigOption) is not None:
             return "All required lines are now present in the file."
 
+        if self.target.get_option(ShouldNotContainLinesConfigOption) is not None:
+            return "All forbidden lines have been removed from the file."
+
         return "The file content has been updated according to configuration."
 
     def description(self) -> str:
-        return "Write or update file content to comply with configured content or required lines."
+        return (
+            "Write or update file content to comply with configured content, enforce required lines, "
+            "and remove forbidden lines."
+        )
 
     def apply(self) -> None:
         content_option = self.target.get_option(ContentConfigOption)
         should_contain_lines_option = self.target.get_option(
             ShouldContainLinesConfigOption
+        )
+        should_not_contain_lines_option = self.target.get_option(
+            ShouldNotContainLinesConfigOption
         )
         updated_content = None
 
@@ -116,6 +157,29 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
                 ).get_list(),
                 content=updated_content,
             )
+
+        if should_not_contain_lines_option is not None:
+            # Initialize content if not set yet
+            if updated_content is None:
+                updated_content = (
+                    file_read(self.target.get_resolved())
+                    if os.path.exists(self.target.get_resolved())
+                    else ""
+                )
+
+            # Remove any line that exactly matches one of the forbidden lines
+            forbidden = set(
+                self.target.get_option_value(ShouldNotContainLinesConfigOption).get_list()
+            )
+            original = updated_content
+            lines = original.splitlines()
+            kept_lines = [l for l in lines if l not in forbidden]
+
+            # Preserve trailing newline if present in original content
+            trailing_newline = original.endswith("\n")
+            updated_content = "\n".join(kept_lines)
+            if trailing_newline and (updated_content or lines):
+                updated_content += "\n"
 
         if updated_content is not None:
             self._target_file_write(content=updated_content)

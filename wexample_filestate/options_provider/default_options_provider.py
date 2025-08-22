@@ -50,6 +50,9 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.should_contain_lines_config_option import (
             ShouldContainLinesConfigOption,
         )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
+        )
         from wexample_filestate.config_option.should_exist_config_option import (
             ShouldExistConfigOption,
         )
@@ -78,6 +81,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             RemoveBackupMaxFileSizeConfigOption,
             ShortcutConfigOption,
             ShouldContainLinesConfigOption,
+            ShouldNotContainLinesConfigOption,
             ShouldExistConfigOption,
             ShouldHaveExtensionConfigOption,
             TextFilterConfigOption,
