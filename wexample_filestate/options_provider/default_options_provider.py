@@ -28,6 +28,9 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.content_config_option import (
             ContentConfigOption,
         )
+        from wexample_filestate.config_option.content_options_config_option import (
+            ContentOptionsConfigOption,
+        )
         from wexample_filestate.config_option.default_content_config_option import (
             DefaultContentConfigOption,
         )
@@ -60,7 +63,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.yaml_filter_config_option import (
             YamlFilterConfigOption,
         )
-        from wexample_filestate.config_option.content_options_config_option import ContentOptionsConfigOption
 
         return [
             ChildrenConfigOption,
