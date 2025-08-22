@@ -62,5 +62,5 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def describe_after(self) -> str:
         pass
 
-    def dependencies(self) -> list[type["AbstractOperation"]]:
+    def dependencies(self) -> list[type[AbstractOperation]]:
         return []

@@ -10,7 +10,7 @@ class ShouldExistConfigOption(AbstractConfigOption):
         super().__init__(
             # Default is true when class is passed to a set of config.
             value=value if value is not None else True,
-            **data
+            **data,
         )
 
     @staticmethod

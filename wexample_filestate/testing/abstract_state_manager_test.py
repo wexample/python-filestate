@@ -49,12 +49,12 @@ class AbstractStateManagerTest(ABC):
 
     def _get_test_operations_providers(
         self,
-    ) -> list[type["AbstractOperationsProvider"]] | None:
+    ) -> list[type[AbstractOperationsProvider]] | None:
         return None
 
     def _get_test_options_providers(
         self,
-    ) -> list[type["AbstractOptionsProvider"]] | None:
+    ) -> list[type[AbstractOptionsProvider]] | None:
         return None
 
     def _assert_file_content_equals(

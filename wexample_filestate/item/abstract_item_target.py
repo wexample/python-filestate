@@ -112,7 +112,7 @@ class AbstractItemTarget(
 
         return Path(f"{base_path}{self.get_item_name()}")
 
-    def get_operations(self) -> list[type["AbstractOperation"]]:
+    def get_operations(self) -> list[type[AbstractOperation]]:
         providers = self.get_operations_providers()
         operations = []
 
@@ -123,7 +123,7 @@ class AbstractItemTarget(
 
         return operations
 
-    def get_options_providers(self) -> list[type["AbstractOptionsProvider"]]:
+    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
         providers = super().get_options_providers()
         if len(providers) > 0:
             return providers
@@ -155,7 +155,7 @@ class AbstractItemTarget(
 
         self.io.indentation_down()
 
-    def get_operations_providers(self) -> list[type["AbstractOperationsProvider"]]:
+    def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
         if self.parent:
             return cast(
                 AbstractItemTarget, self.get_parent_item()

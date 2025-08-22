@@ -11,9 +11,7 @@ if TYPE_CHECKING:
 class UndefinedShortcutException(UndefinedException):
     error_code: str = "FILE_STATE_UNDEFINED_SHORTCUT"
 
-    def __init__(
-        self, shortcut: str, root_item: AbstractItemTarget, **kwargs
-    ) -> None:
+    def __init__(self, shortcut: str, root_item: AbstractItemTarget, **kwargs) -> None:
         super().__init__(
             message=(
                 f"Shortcut '{shortcut}' is not defined in root "

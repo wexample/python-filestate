@@ -10,5 +10,5 @@ if TYPE_CHECKING:
 
 class AbstractOperationsProvider(BaseModel):
     @staticmethod
-    def get_operations() -> list[type["AbstractOperation"]]:
+    def get_operations() -> list[type[AbstractOperation]]:
         return []

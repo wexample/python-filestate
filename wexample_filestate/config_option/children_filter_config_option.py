@@ -114,7 +114,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
             return None
         return dir_config
 
-    def generate_children(self) -> list["TargetFileOrDirectoryType"]:
+    def generate_children(self) -> list[TargetFileOrDirectoryType]:
         pass
 
         config = self.pattern

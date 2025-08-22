@@ -9,7 +9,7 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestItemChangeModeOperation(TestAbstractOperation):
-    def _get_target(self) -> Optional["TargetFileOrDirectoryType"]:
+    def _get_target(self) -> TargetFileOrDirectoryType | None:
         return self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
 
     def _get_expected_mode(self) -> str:

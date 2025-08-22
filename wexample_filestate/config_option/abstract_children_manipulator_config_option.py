@@ -25,7 +25,7 @@ class AbstractChildrenManipulationConfigOption(
 ):
     pattern: DictConfig
 
-    def get_options_providers(self) -> list[type["AbstractOptionsProvider"]]:
+    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
         from wexample_filestate.options_provider.default_options_provider import (
             DefaultOptionsProvider,
         )
@@ -39,7 +39,7 @@ class AbstractChildrenManipulationConfigOption(
         return DictConfig
 
     @abstractmethod
-    def generate_children(self) -> list["TargetFileOrDirectoryType"]:
+    def generate_children(self) -> list[TargetFileOrDirectoryType]:
         pass
 
     def _path_match_patterns(self, path: str) -> bool:

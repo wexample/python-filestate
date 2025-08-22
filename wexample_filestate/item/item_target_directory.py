@@ -42,7 +42,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
-    def get_children_list(self) -> list["TargetFileOrDirectoryType"]:
+    def get_children_list(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.config_option.children_config_option import (
             ChildrenConfigOption,
         )
@@ -81,9 +81,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_path(
-        self, path: FileStringOrPath
-    ) -> TargetFileOrDirectoryType | None:
+    def find_by_path(self, path: FileStringOrPath) -> TargetFileOrDirectoryType | None:
         path_str = str(Path(path).resolve())
 
         for child in self.get_children_list():
