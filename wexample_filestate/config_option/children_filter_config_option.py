@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
-from collections.abc import Callable
 
 from pydantic import Field
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (

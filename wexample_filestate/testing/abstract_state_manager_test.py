@@ -18,9 +18,7 @@ class AbstractStateManagerTest(ABC):
     def _get_package_root_path(self) -> str:
         return f"{os.path.abspath(os.curdir)}{os.sep}"
 
-    def _get_test_state_manager_path(
-        self, package_root_path: str | None = None
-    ) -> str:
+    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> str:
         return os.path.join(
             package_root_path or self._get_package_root_path(), "tests", "resources", ""
         )
