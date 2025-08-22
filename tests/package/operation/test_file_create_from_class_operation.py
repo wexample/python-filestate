@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from wexample_config.const.types import DictConfig

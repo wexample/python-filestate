@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.content_trim_operation import ContentTrimOperation

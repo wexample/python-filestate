@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 
 from wexample_filestate.item.item_source_directory import ItemSourceDirectory

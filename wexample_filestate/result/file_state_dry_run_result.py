@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from wexample_filestate.result.abstract_result import AbstractResult

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 from wexample_helpers.helpers.file import file_read, file_write

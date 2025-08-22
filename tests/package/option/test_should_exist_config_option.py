@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
