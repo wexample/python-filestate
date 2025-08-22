@@ -12,7 +12,7 @@ class UndefinedShortcutException(UndefinedException):
     error_code: str = "FILE_STATE_UNDEFINED_SHORTCUT"
 
     def __init__(
-        self, shortcut: str, root_item: "AbstractItemTarget", **kwargs
+        self, shortcut: str, root_item: AbstractItemTarget, **kwargs
     ) -> None:
         super().__init__(
             message=(

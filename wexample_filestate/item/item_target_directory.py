@@ -54,7 +54,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return []
 
     def build_operations(
-        self, result: "AbstractResult", scopes: set[Scope] | None = None
+        self, result: AbstractResult, scopes: set[Scope] | None = None
     ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -67,7 +67,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_path_recursive(
         self, path: FileStringOrPath
-    ) -> "TargetFileOrDirectoryType | None":
+    ) -> TargetFileOrDirectoryType | None:
         path = Path(path)
         found = self.find_by_path(path)
         if found:
@@ -94,7 +94,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_name_recursive(
         self, item_name: str
-    ) -> "TargetFileOrDirectoryType | None":
+    ) -> TargetFileOrDirectoryType | None:
         found = self.find_by_name(item_name)
         if found:
             return found

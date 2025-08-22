@@ -25,7 +25,7 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @classmethod
     def applicable_option(
-        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
+        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         return (
             target.source

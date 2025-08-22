@@ -68,7 +68,7 @@ class AbstractChildrenManipulationConfigOption(
 
     def _create_children_from_config(
         self, path: Path, config: dict
-    ) -> "TargetFileOrDirectoryType":
+    ) -> TargetFileOrDirectoryType:
         import copy
 
         from wexample_filestate.config_option.children_config_option import (

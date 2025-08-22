@@ -24,7 +24,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
         return list[Union[dict[str, Any], AbstractChildrenManipulationConfigOption]]
 
-    def get_parent(self) -> "TargetFileOrDirectoryType":
+    def get_parent(self) -> TargetFileOrDirectoryType:
         assert self.parent is not None
         return cast("TargetFileOrDirectory", self.parent)
 
@@ -67,7 +67,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None
-    ) -> "TargetFileOrDirectoryType":
+    ) -> TargetFileOrDirectoryType:
         from wexample_filestate.config_option.class_config_option import (
             ClassConfigOption,
         )
@@ -160,5 +160,5 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     def get_children(self) -> list[TargetFileOrDirectoryType]:
         return cast(list[TargetFileOrDirectoryType], self.children)
 
-    def get_io(self) -> "IoManager":
+    def get_io(self) -> IoManager:
         return self.get_parent_item().io

@@ -21,7 +21,7 @@ class FileStateResult(AbstractResult):
         return None
 
     def _apply_single_operation(
-        self, operation: "AbstractOperation", interactive: bool = False
+        self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         if interactive:
             from wexample_helpers.helpers.cli import cli_make_clickable_path

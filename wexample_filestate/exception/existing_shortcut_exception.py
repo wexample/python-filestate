@@ -14,9 +14,9 @@ class ExistingShortcutException(UndefinedException):
     def __init__(
         self,
         shortcut: str,
-        new_item: "AbstractItemTarget",
-        existing_item: "AbstractItemTarget",
-        root_item: "AbstractItemTarget",
+        new_item: AbstractItemTarget,
+        existing_item: AbstractItemTarget,
+        root_item: AbstractItemTarget,
         **kwargs,
     ) -> None:
         super().__init__(

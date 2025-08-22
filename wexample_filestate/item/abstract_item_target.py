@@ -49,7 +49,7 @@ class AbstractItemTarget(
     operations_providers: list[type[AbstractOperationsProvider]] | None = None
     last_result: AbstractResult | None = None
 
-    def __init__(self, io: "IoManager", **kwargs) -> None:
+    def __init__(self, io: IoManager, **kwargs) -> None:
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, io=io)
@@ -57,7 +57,7 @@ class AbstractItemTarget(
     @classmethod
     def create_from_path(
         cls, path: PathOrString, config: DictConfig | None = None, **kwargs
-    ) -> "AbstractItemTarget":
+    ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
             directory_get_parent_path,
@@ -85,7 +85,7 @@ class AbstractItemTarget(
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
 
-    def locate_source(self, path: Path) -> "SourceFileOrDirectoryType":
+    def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
         if path.is_file():
             from wexample_filestate.item.item_source_file import ItemSourceFile
 
@@ -137,8 +137,8 @@ class AbstractItemTarget(
         ]
 
     def build_operations(
-        self: "TargetFileOrDirectoryType",
-        result: "AbstractResult",
+        self: TargetFileOrDirectoryType,
+        result: AbstractResult,
         scopes: set[Scope] | None = None,
     ) -> None:
         self.io.indentation_up()
@@ -177,7 +177,7 @@ class AbstractItemTarget(
 
         return self.get_option(NameConfigOption).get_value().get_str()
 
-    def get_source(self) -> "SourceFileOrDirectory":
+    def get_source(self) -> SourceFileOrDirectory:
         assert self.source is not None
         return self.source
 
@@ -187,7 +187,7 @@ class AbstractItemTarget(
 
         return output
 
-    def rollback(self) -> "FileStateResult":
+    def rollback(self) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
 
         result = FileStateResult(state_manager=self, rollback=True)
@@ -203,7 +203,7 @@ class AbstractItemTarget(
 
         return result
 
-    def dry_run(self, scopes: set[Scope] | None = None) -> "FileStateDryRunResult":
+    def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
         )
@@ -220,7 +220,7 @@ class AbstractItemTarget(
         interactive: bool = False,
         scopes: set[Scope] | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-    ) -> "FileStateResult":
+    ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
 
         result = FileStateResult(state_manager=self)

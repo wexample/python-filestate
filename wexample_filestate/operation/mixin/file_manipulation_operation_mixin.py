@@ -34,7 +34,7 @@ class FileManipulationOperationMixin(AbstractOperation):
             os.mkdir(self._original_path_str)
 
     def _backup_file_content(
-        self, target: "TargetFileOrDirectoryType", file_path: str
+        self, target: TargetFileOrDirectoryType, file_path: str
     ) -> bool:
         import os
 
@@ -63,7 +63,7 @@ class FileManipulationOperationMixin(AbstractOperation):
         self.target.get_local_file().write(content=content)
 
     @staticmethod
-    def option_should_exist_is_true(target: "TargetFileOrDirectoryType") -> bool:
+    def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
         from wexample_filestate.config_option.should_exist_config_option import (
             ShouldExistConfigOption,
         )

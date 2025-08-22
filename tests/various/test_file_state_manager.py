@@ -43,7 +43,7 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
     def test_configure_from_callback(self) -> str:
-        def _name(option: "ItemTreeConfigOptionMixin") -> str:
+        def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yes"
 
         self.state_manager.configure(config={"name": _name})
@@ -75,7 +75,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.allow_undefined_keys = False
 
     def test_configure_from_callback_class(self) -> str:
-        def _name(option: "ItemTreeConfigOptionMixin"):
+        def _name(option: ItemTreeConfigOptionMixin):
             return "yow"
 
         self.state_manager.configure(

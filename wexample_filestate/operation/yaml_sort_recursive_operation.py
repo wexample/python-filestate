@@ -27,7 +27,7 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
     @classmethod
     def applicable_option(
-        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
+        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         from wexample_filestate.config_option.yaml_filter_config_option import (
             YamlFilterConfigOption,

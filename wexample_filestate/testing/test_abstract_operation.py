@@ -24,7 +24,7 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
         self._operation_test_rollback()
         self._operation_test_assert_rollback()
 
-    def _dry_run_and_count_operations(self) -> "FileStateDryRunResult":
+    def _dry_run_and_count_operations(self) -> FileStateDryRunResult:
         result = self.state_manager.dry_run()
         assert len(result.operations) == self._operation_get_count()
 

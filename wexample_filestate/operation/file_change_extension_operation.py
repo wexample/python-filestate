@@ -23,7 +23,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
 
     @classmethod
     def applicable_option(
-        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
+        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
