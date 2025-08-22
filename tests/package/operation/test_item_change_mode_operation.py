@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
