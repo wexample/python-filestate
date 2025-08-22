@@ -21,7 +21,7 @@ class ItemDirectoryMixin(ItemMixin):
     def is_directory(self) -> bool:
         return True
 
-    def get_local_directory(self) -> LocalDirectory:
+    def get_local_directory(self) -> "LocalDirectory":
         from wexample_file.common.local_directory import LocalDirectory
 
         return LocalDirectory(path=self.get_path())

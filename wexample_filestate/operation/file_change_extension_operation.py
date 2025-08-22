@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.enum.scopes import Scope
@@ -9,8 +9,7 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-    from wexample_filestate.item.item_target_file import ItemTargetFile
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -22,9 +21,9 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
 
     @classmethod
     def applicable_option(
-        cls,
-        target: ItemTargetDirectory | ItemTargetFile,
-        option: AbstractConfigOption,
+            cls,
+            target: "TargetFileOrDirectoryType",
+            option: "AbstractConfigOption"
     ) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,

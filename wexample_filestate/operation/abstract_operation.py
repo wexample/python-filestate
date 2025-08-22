@@ -6,12 +6,12 @@ from wexample_filestate.enum.scopes import Scope
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
+from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
-    from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
@@ -25,7 +25,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         pass
 
     @classmethod
-    def applicable(cls, target: TargetFileOrDirectory) -> bool:
+    def applicable(cls, target: "TargetFileOrDirectory") -> bool:
         for option in target.options.values():
             if cls.applicable_option(target=target, option=option) is True:
                 return True
@@ -35,7 +35,9 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     @classmethod
     @abstractmethod
     def applicable_option(
-        cls, target: TargetFileOrDirectory, option: AbstractConfigOption
+            cls,
+            target: "TargetFileOrDirectoryType",
+            option: "AbstractConfigOption"
     ) -> bool:
         pass
 
@@ -59,5 +61,5 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def describe_after(self) -> str:
         pass
 
-    def dependencies(self) -> list[type[AbstractOperation]]:
+    def dependencies(self) -> list[type["AbstractOperation"]]:
         return []

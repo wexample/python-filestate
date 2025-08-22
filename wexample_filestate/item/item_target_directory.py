@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Optional
 
 from pydantic import Field
 from wexample_file.const.types import PathOrString
@@ -40,7 +40,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
-    def get_children_list(self) -> list[TargetFileOrDirectoryType]:
+    def get_children_list(self) -> list["TargetFileOrDirectoryType"]:
         from wexample_filestate.config_option.children_config_option import (
             ChildrenConfigOption,
         )
@@ -52,7 +52,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return []
 
     def build_operations(
-        self, result: AbstractResult, scopes: set[Scope] | None = None
+        self, result: "AbstractResult", scopes: set[Scope] | None = None
     ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -65,7 +65,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_path_recursive(
         self, path: FileStringOrPath
-    ) -> TargetFileOrDirectoryType | None:
+    ) -> "TargetFileOrDirectoryType | None":
         path = Path(path)
         found = self.find_by_path(path)
         if found:
@@ -79,7 +79,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_path(self, path: FileStringOrPath) -> TargetFileOrDirectoryType | None:
+    def find_by_path(self, path: FileStringOrPath) -> Optional["TargetFileOrDirectoryType"]:
         path_str = str(Path(path).resolve())
 
         for child in self.get_children_list():
@@ -90,7 +90,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_name_recursive(
         self, item_name: str
-    ) -> TargetFileOrDirectoryType | None:
+    ) -> "TargetFileOrDirectoryType | None":
         found = self.find_by_name(item_name)
         if found:
             return found
@@ -105,14 +105,14 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_name(self, item_name: str) -> TargetFileOrDirectoryType | None:
+    def find_by_name(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
         for child in self.get_children_list():
             if child.get_item_name() == item_name:
                 return child
 
         return None
 
-    def find_by_name_or_fail(self, item_name: str) -> TargetFileOrDirectoryType:
+    def find_by_name_or_fail(self, item_name: str) -> "TargetFileOrDirectoryType":
         child = self.find_by_name(item_name)
         if child is None:
             from wexample_filestate.exception.child_not_found_exception import (
@@ -152,7 +152,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         self.shortcuts[name] = children
 
     @classmethod
-    def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
+    def create_from_path(cls, path: PathOrString, **kwargs) -> "ItemTargetDirectory":
         # If path is a file, ignore file name a keep parent directory.
         path = Path(path)
         if path.is_file():

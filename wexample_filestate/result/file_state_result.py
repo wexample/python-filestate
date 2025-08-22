@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_prompt.responses.interactive.confirm_prompt_response import (
@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
-    def _find_dependency(self, dependency_class) -> AbstractOperation | None:
+    def _find_dependency(self, dependency_class) -> Optional["AbstractOperation"]:
         for operation in self.operations:
             if isinstance(operation, dependency_class):
                 return operation
         return None
 
     def _apply_single_operation(
-        self, operation: AbstractOperation, interactive: bool = False
+        self, operation: "AbstractOperation", interactive: bool = False
     ) -> bool:
         if interactive:
             from wexample_helpers.helpers.cli import cli_make_clickable_path

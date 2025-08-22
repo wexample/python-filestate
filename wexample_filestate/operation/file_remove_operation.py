@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from wexample_filestate.item.item_target_file import ItemTargetFile
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -24,9 +25,9 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @classmethod
     def applicable_option(
-        cls,
-        target: ItemTargetDirectory | ItemTargetFile,
-        option: AbstractConfigOption,
+            cls,
+            target: "TargetFileOrDirectoryType",
+            option: "AbstractConfigOption"
     ) -> bool:
         return (
             target.source
