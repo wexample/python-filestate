@@ -2,9 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_filestate.operation.content_lines_sort_operation import (
-    ContentLinesSortOperation,
-)
 from wexample_filestate.operation.content_trim_operation import ContentTrimOperation
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
@@ -33,9 +30,16 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         from wexample_filestate.operation.yaml_sort_recursive_operation import (
             YamlSortRecursiveOperation,
         )
+        from wexample_filestate.operation.content_lines_sort_operation import (
+            ContentLinesSortOperation,
+        )
+        from wexample_filestate.operation.content_lines_unique_operation import (
+            ContentLinesUniqueOperation,
+        )
 
         return [
             ContentLinesSortOperation,
+            ContentLinesUniqueOperation,
             ContentTrimOperation,
             FileChangeExtensionOperation,
             FileCreateOperation,
