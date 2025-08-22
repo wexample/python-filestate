@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any, ClassVar
 
 from typing import Any
 
@@ -13,9 +14,8 @@ class ContentOptionsConfigOption(AbstractConfigOption):
         { "content_options": ["lines_sort"] }
     """
 
-    OPTION_NAME_LINES_SORT: str = "lines_sort"
+    OPTION_NAME_LINES_SORT: ClassVar[str] = "lines_sort"
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        # Use ConfigValue to leverage list helpers like has_item_in_list
-        return ConfigValue
+        return list[str]

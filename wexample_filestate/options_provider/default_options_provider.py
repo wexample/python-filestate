@@ -60,12 +60,14 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.yaml_filter_config_option import (
             YamlFilterConfigOption,
         )
+        from wexample_filestate.config_option.content_options_config_option import ContentOptionsConfigOption
 
         return [
             ChildrenConfigOption,
             ChildrenFileFactoryConfigOption,
             ClassConfigOption,
             ContentConfigOption,
+            ContentOptionsConfigOption,
             DefaultContentConfigOption,
             ModeConfigOption,
             ModeRecursiveConfigOption,
