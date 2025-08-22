@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
@@ -45,9 +45,9 @@ class AbstractItemTarget(
     AbstractNestedConfigOption,
     ABC,
 ):
-    source: Optional["SourceFileOrDirectory"] = None
+    source: SourceFileOrDirectory | None = None
     operations_providers: list[type[AbstractOperationsProvider]] | None = None
-    last_result: Optional["AbstractResult"] = None
+    last_result: AbstractResult | None = None
 
     def __init__(self, io: "IoManager", **kwargs) -> None:
         ItemMixin.__init__(self, **kwargs)
@@ -56,7 +56,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: Optional["DictConfig"] = None, **kwargs
+        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> "AbstractItemTarget":
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -74,7 +74,7 @@ class AbstractItemTarget(
         return manager
 
     @classmethod
-    def create_from_config(cls, **kwargs) -> "AbstractItemTarget":
+    def create_from_config(cls, **kwargs) -> AbstractItemTarget:
         config = kwargs.get("config")
         instance = cls(**kwargs)
         instance.configure(config)

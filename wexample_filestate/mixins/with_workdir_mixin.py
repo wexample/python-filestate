@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.file_state_manager import FileStateManager
@@ -19,7 +19,7 @@ class WithWorkdirMixin:
         self,
         entrypoint_path: str,
         io_manager: "IoManager",
-        config: Optional["DictConfig"] = None,
+        config: DictConfig | None = None,
     ) -> None:
         import os
 
@@ -58,7 +58,7 @@ class WithWorkdirMixin:
         self,
         entrypoint_path: str,
         io_manager: "IoManager",
-        config: Optional["DictConfig"] = None,
+        config: DictConfig | None = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io_manager

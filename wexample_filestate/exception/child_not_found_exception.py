@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from wexample_helpers.exception.undefined_exception import UndefinedException
 
@@ -12,7 +12,7 @@ class ChildNotFoundException(UndefinedException):
     error_code: str = "FILE_STATE_CHILD_NOT_FOUND"
 
     def __init__(
-        self, child: str, root_item: Optional["AbstractItemTarget"] = None, **kwargs
+        self, child: str, root_item: AbstractItemTarget | None = None, **kwargs
     ) -> None:
         context = (
             f" in {root_item.get_item_title()} '{root_item.get_item_name()}'"

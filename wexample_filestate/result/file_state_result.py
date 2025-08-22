@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from wexample_filestate.result.abstract_result import AbstractResult
 from wexample_prompt.responses.interactive.confirm_prompt_response import (
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
-    def _find_dependency(self, dependency_class) -> Optional["AbstractOperation"]:
+    def _find_dependency(self, dependency_class) -> AbstractOperation | None:
         for operation in self.operations:
             if isinstance(operation, dependency_class):
                 return operation

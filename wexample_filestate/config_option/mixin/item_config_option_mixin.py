@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, cast
+from typing import cast
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
@@ -11,12 +11,12 @@ class ItemTreeConfigOptionMixin:
     like any file or directory descriptor, and also children option a children factories.
     """
 
-    def get_parent_item_or_none(self) -> Optional["TargetFileOrDirectoryType"]:
+    def get_parent_item_or_none(self) -> TargetFileOrDirectoryType | None:
         if self.parent:
             return self.get_parent_item()
         return None
 
-    def get_parent_item(self) -> "TargetFileOrDirectoryType":
+    def get_parent_item(self) -> TargetFileOrDirectoryType:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
         # In all case, when asking for parent item,

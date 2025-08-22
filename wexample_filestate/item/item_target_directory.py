@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, cast
+from typing import TYPE_CHECKING, cast
 
 from pydantic import Field
 from wexample_file.const.types import PathOrString
@@ -83,7 +83,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def find_by_path(
         self, path: FileStringOrPath
-    ) -> Optional["TargetFileOrDirectoryType"]:
+    ) -> TargetFileOrDirectoryType | None:
         path_str = str(Path(path).resolve())
 
         for child in self.get_children_list():
@@ -109,14 +109,14 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_name(self, item_name: str) -> Optional["TargetFileOrDirectoryType"]:
+    def find_by_name(self, item_name: str) -> TargetFileOrDirectoryType | None:
         for child in self.get_children_list():
             if child.get_item_name() == item_name:
                 return child
 
         return None
 
-    def find_by_name_or_fail(self, item_name: str) -> "TargetFileOrDirectoryType":
+    def find_by_name_or_fail(self, item_name: str) -> TargetFileOrDirectoryType:
         child = self.find_by_name(item_name)
         if child is None:
             from wexample_filestate.exception.child_not_found_exception import (
@@ -156,7 +156,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         self.shortcuts[name] = children
 
     @classmethod
-    def create_from_path(cls, path: PathOrString, **kwargs) -> "ItemTargetDirectory":
+    def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
         # If path is a file, ignore file name a keep parent directory.
         path = Path(path)
         if path.is_file():
