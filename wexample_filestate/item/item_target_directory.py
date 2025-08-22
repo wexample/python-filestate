@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Set, cast
+from typing import TYPE_CHECKING, cast
 
 from pydantic import Field
 from wexample_file.const.types import PathOrString

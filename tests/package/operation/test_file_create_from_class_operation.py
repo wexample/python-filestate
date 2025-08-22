@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
@@ -10,7 +9,7 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
-        from typing import Optional
+        pass
 
         from wexample_config.const.types import DictConfig
         from wexample_filestate.file_state_manager import FileStateManager

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_helpers.const.types import StringKeysDict

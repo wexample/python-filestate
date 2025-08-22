@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.abstract_state_manager_test import (

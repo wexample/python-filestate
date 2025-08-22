@@ -1,4 +1,3 @@
-from typing import Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT

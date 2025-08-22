@@ -1,5 +1,4 @@
-import os
-from typing import TYPE_CHECKING, Any, List, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Union, cast
 
 from wexample_config.config_option.children_config_option import (
     ChildrenConfigOption as BaseChildrenConfigOption,

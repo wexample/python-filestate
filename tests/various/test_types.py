@@ -1,4 +1,4 @@
-from typing import Any, Type, Union
+from typing import Any, Union
 
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 from wexample_helpers.helpers.polyfill import polyfill_register_global

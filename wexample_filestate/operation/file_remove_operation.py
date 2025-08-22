@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation

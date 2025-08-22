@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from pydantic import Field
 from wexample_config.const.types import DictConfig

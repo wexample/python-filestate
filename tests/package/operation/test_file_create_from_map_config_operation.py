@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.children_filter_config_option import (
@@ -14,7 +13,7 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
-        from typing import Optional
+        pass
 
         from wexample_config.const.types import DictConfig
 

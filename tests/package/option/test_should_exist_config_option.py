@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Union, cast
+from typing import TYPE_CHECKING, cast
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.config_option.default_content_config_option import (

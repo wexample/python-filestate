@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, List, Type
+from abc import abstractmethod
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 from wexample_filestate.enum.scopes import Scope

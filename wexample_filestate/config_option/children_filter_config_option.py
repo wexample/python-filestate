@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from pydantic import Field
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
@@ -113,9 +113,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def generate_children(self) -> list["TargetFileOrDirectoryType"]:
-        from wexample_filestate.helpers.config_helper import (
-            config_has_same_type_as_path,
-        )
+        pass
 
         config = self.pattern
         children = []

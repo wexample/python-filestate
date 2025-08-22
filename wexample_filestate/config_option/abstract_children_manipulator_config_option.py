@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, List, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,

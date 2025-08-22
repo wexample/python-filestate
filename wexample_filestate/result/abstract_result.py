@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import List
 
 from pydantic import BaseModel
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget

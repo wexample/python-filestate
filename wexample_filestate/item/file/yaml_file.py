@@ -1,4 +1,4 @@
-from typing import ClassVar, Optional
+from typing import ClassVar
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.should_have_extension_config_option import (
