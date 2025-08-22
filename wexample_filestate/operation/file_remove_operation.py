@@ -12,8 +12,6 @@ if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
-    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-    from wexample_filestate.item.item_target_file import ItemTargetFile
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 

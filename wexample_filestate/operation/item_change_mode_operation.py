@@ -2,8 +2,6 @@ from typing import TYPE_CHECKING, cast
 
 from wexample_filestate.config_option.mode_config_option import ModeConfigOption
 from wexample_filestate.enum.scopes import Scope
-from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.helpers.file import (
     file_change_mode,
@@ -18,8 +16,6 @@ if TYPE_CHECKING:
         AbstractConfigOption,
     )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-    from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
 class ItemChangeModeOperation(AbstractOperation):
