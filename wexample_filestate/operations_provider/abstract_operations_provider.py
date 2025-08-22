@@ -5,6 +5,7 @@ from pydantic import BaseModel
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
+
 class AbstractOperationsProvider(BaseModel):
     @staticmethod
     def get_operations() -> list[type["AbstractOperation"]]:

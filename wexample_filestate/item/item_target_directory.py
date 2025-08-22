@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, cast, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 from pydantic import Field
 from wexample_file.const.types import PathOrString
@@ -79,7 +79,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
-    def find_by_path(self, path: FileStringOrPath) -> Optional["TargetFileOrDirectoryType"]:
+    def find_by_path(
+        self, path: FileStringOrPath
+    ) -> Optional["TargetFileOrDirectoryType"]:
         path_str = str(Path(path).resolve())
 
         for child in self.get_children_list():

@@ -10,10 +10,10 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -30,9 +30,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
     @classmethod
     def applicable_option(
-            cls,
-            target: "TargetFileOrDirectoryType",
-            option: "AbstractConfigOption"
+        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
     ) -> bool:
         if (
             target.is_file()

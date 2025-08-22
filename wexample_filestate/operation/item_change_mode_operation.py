@@ -27,9 +27,7 @@ class ItemChangeModeOperation(AbstractOperation):
 
     @classmethod
     def applicable_option(
-            cls,
-            target: "TargetFileOrDirectoryType",
-            option: "AbstractConfigOption"
+        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
     ) -> bool:
         if not target.source:
             return False

@@ -2,16 +2,17 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
+from wexample_filestate.const.state_items import TargetFileOrDirectory
 from wexample_filestate.enum.scopes import Scope
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
-from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
@@ -35,9 +36,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     @classmethod
     @abstractmethod
     def applicable_option(
-            cls,
-            target: "TargetFileOrDirectoryType",
-            option: "AbstractConfigOption"
+        cls, target: "TargetFileOrDirectoryType", option: "AbstractConfigOption"
     ) -> bool:
         pass
 
