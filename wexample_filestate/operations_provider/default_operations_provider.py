@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_filestate.operation.content_lines_sort_operation import ContentLinesSortOperation
 from wexample_filestate.operation.content_trim_operation import ContentTrimOperation
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
@@ -32,6 +33,7 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         )
 
         return [
+            ContentLinesSortOperation,
             ContentTrimOperation,
             FileChangeExtensionOperation,
             FileCreateOperation,
