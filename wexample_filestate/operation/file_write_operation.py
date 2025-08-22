@@ -30,12 +30,33 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
+    # ----------------------------
+    # Internal helpers (factorized)
+    # ----------------------------
+    @staticmethod
+    def _get_current_content_from_target(target: "TargetFileOrDirectoryType") -> str:
+        local_file = target.get_local_file()
+        return local_file.read() if local_file.path.exists() else ""
+
+    @staticmethod
+    def _get_current_lines_from_target(target: "TargetFileOrDirectoryType") -> list[str]:
+        return FileWriteOperation._get_current_content_from_target(target).splitlines()
+
+    @staticmethod
+    def _join_with_original_newline(lines: list[str], original: str) -> str:
+        """Join lines using \n and preserve a trailing newline if present in original."""
+        trailing_newline = original.endswith("\n")
+        updated = "\n".join(lines)
+        if trailing_newline and (updated or original.splitlines()):
+            updated += "\n"
+        return updated
+
     @classmethod
     def applicable_option(
         cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if isinstance(option, ContentConfigOption):
-            current_content = target.get_local_file().read()
+            current_content = cls._get_current_content_from_target(target)
             new_content = target.get_option_value(ContentConfigOption).get_str()
             return current_content != new_content
 
@@ -46,8 +67,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             ).get_list()
             if not target.get_local_file().path.exists():
                 return True
-            current_content = target.get_local_file().read()
-            current_lines = current_content.splitlines()
+            current_lines = cls._get_current_lines_from_target(target)
             return any(line not in current_lines for line in required_lines)
 
         if isinstance(option, ShouldNotContainLinesConfigOption):
@@ -57,8 +77,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             forbidden_lines = target.get_option_value(
                 ShouldNotContainLinesConfigOption
             ).get_list()
-            current_content = target.get_local_file().read()
-            current_lines = current_content.splitlines()
+            current_lines = cls._get_current_lines_from_target(target)
             return any(line in current_lines for line in forbidden_lines)
 
         return False
@@ -76,12 +95,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             return "The file content does not match the configured content and will be rewritten."
 
         if should_contain_lines_option is not None:
-            current_content = (
-                self.target.get_local_file().read()
-                if self.target.get_local_file().path.exists()
-                else ""
-            )
-            current_lines = current_content.splitlines()
+            current_lines = self._get_current_lines_from_target(self.target)
             required_lines = self.target.get_option_value(
                 ShouldContainLinesConfigOption
             ).get_list()
@@ -91,12 +105,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             return "The file already contains all required lines."
 
         if should_not_contain_lines_option is not None:
-            current_content = (
-                self.target.get_local_file().read()
-                if self.target.get_local_file().path.exists()
-                else ""
-            )
-            current_lines = current_content.splitlines()
+            current_lines = self._get_current_lines_from_target(self.target)
             forbidden_lines = self.target.get_option_value(
                 ShouldNotContainLinesConfigOption
             ).get_list()
@@ -161,11 +170,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
         if should_not_contain_lines_option is not None:
             # Initialize content if not set yet
             if updated_content is None:
-                updated_content = (
-                    file_read(self.target.get_resolved())
-                    if os.path.exists(self.target.get_resolved())
-                    else ""
-                )
+                updated_content = self._get_current_content_from_target(self.target)
 
             # Remove any line that exactly matches one of the forbidden lines
             forbidden = set(
@@ -176,10 +181,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             kept_lines = [l for l in lines if l not in forbidden]
 
             # Preserve trailing newline if present in original content
-            trailing_newline = original.endswith("\n")
-            updated_content = "\n".join(kept_lines)
-            if trailing_newline and (updated_content or lines):
-                updated_content += "\n"
+            updated_content = self._join_with_original_newline(kept_lines, original)
 
         if updated_content is not None:
             self._target_file_write(content=updated_content)
