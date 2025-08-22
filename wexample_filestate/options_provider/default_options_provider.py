@@ -50,14 +50,14 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.config_option.should_contain_lines_config_option import (
             ShouldContainLinesConfigOption,
         )
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
-            ShouldNotContainLinesConfigOption,
-        )
         from wexample_filestate.config_option.should_exist_config_option import (
             ShouldExistConfigOption,
         )
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
+        )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
         )
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,

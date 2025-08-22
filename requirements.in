@@ -1,6 +1,5 @@
 pip-tools
 pydantic
-pytest
 wexample-config
 wexample-file
 wexample-prompt

@@ -34,12 +34,14 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     # Internal helpers (factorized)
     # ----------------------------
     @staticmethod
-    def _get_current_content_from_target(target: "TargetFileOrDirectoryType") -> str:
+    def _get_current_content_from_target(target: TargetFileOrDirectoryType) -> str:
         local_file = target.get_local_file()
         return local_file.read() if local_file.path.exists() else ""
 
     @staticmethod
-    def _get_current_lines_from_target(target: "TargetFileOrDirectoryType") -> list[str]:
+    def _get_current_lines_from_target(
+        target: TargetFileOrDirectoryType,
+    ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 
     @staticmethod
@@ -174,7 +176,9 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
             # Remove any line that exactly matches one of the forbidden lines
             forbidden = set(
-                self.target.get_option_value(ShouldNotContainLinesConfigOption).get_list()
+                self.target.get_option_value(
+                    ShouldNotContainLinesConfigOption
+                ).get_list()
             )
             original = updated_content
             lines = original.splitlines()
