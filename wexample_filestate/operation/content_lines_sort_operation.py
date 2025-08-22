@@ -61,6 +61,15 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
             out += "\n"
         return out
 
+    def describe_before(self) -> str:
+        return "The file lines are not sorted alphabetically."
+
+    def describe_after(self) -> str:
+        return "The file lines have been sorted alphabetically."
+
+    def description(self) -> str:
+        return "Sort the file content lines alphabetically (lexicographic order)."
+
     def apply(self) -> None:
         src = self.target.get_local_file().read()
         updated = self._sorted_lines_content(src)

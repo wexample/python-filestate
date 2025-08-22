@@ -1,10 +1,9 @@
 from __future__ import annotations
-from typing import Any, ClassVar
 
 from typing import Any
+from typing import ClassVar
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_config.config_value.config_value import ConfigValue
 
 
 class ContentOptionsConfigOption(AbstractConfigOption):
