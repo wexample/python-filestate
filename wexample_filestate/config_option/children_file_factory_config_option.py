@@ -55,7 +55,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
-        config = self.pattern
+        self.pattern
         children = []
         path = self.get_parent_item().get_path()
 
