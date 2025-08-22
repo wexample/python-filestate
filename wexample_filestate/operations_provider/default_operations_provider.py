@@ -14,6 +14,12 @@ if TYPE_CHECKING:
 class DefaultOperationsProvider(AbstractOperationsProvider):
     @staticmethod
     def get_operations() -> list[type[AbstractOperation]]:
+        from wexample_filestate.operation.content_lines_sort_operation import (
+            ContentLinesSortOperation,
+        )
+        from wexample_filestate.operation.content_lines_unique_operation import (
+            ContentLinesUniqueOperation,
+        )
         from wexample_filestate.operation.file_change_extension_operation import (
             FileChangeExtensionOperation,
         )
@@ -29,12 +35,6 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         )
         from wexample_filestate.operation.yaml_sort_recursive_operation import (
             YamlSortRecursiveOperation,
-        )
-        from wexample_filestate.operation.content_lines_sort_operation import (
-            ContentLinesSortOperation,
-        )
-        from wexample_filestate.operation.content_lines_unique_operation import (
-            ContentLinesUniqueOperation,
         )
 
         return [
