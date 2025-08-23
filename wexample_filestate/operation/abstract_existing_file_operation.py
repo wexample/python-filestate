@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import PrivateAttr
+
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
@@ -81,7 +82,8 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
             return False
 
         # If preview is None, consider that as "no change needed".
-        self._changed_source = self.preview_source_change(target)
+        if self._changed_source is None:
+            self._changed_source = self.preview_source_change(target)
         if self._changed_source is None:
             return False
 
