@@ -145,13 +145,15 @@ class AbstractItemTarget(
         self.io.log(f"Building operations for: {self.get_path()}")
 
         for operation_class in self.get_operations():
-            if operation_class.applicable(self) and (
-                scopes is None or operation_class.get_scope() in scopes
+            # Instantiate first; we'll test applicability on the instance.
+            operation = operation_class(io=self.io, target=self)
+            if operation.applicable(self) and (
+                scopes is None or operation.get_scope() in scopes
             ):
                 self.io.log(
                     f"Building operation: {operation_class.get_snake_short_class_name()}"
                 )
-                result.operations.append(operation_class(io=self.io, target=self))
+                result.operations.append(operation)
 
         self.io.indentation_down()
 
