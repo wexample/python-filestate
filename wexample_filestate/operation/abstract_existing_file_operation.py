@@ -56,14 +56,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         if not cls._is_existing_file(target):
             return False
 
-        current = cls._read_current_src(target)
-        # Normalize None to empty string for consistent comparison
-        current = current if current is not None else ""
-
+        current = cls._read_current_non_empty_src(target)
         preview = cls.preview_source_change(target)
-        # Treat None as "no change proposed"
-        if preview is None:
-            return False
-
         return preview != current
 
