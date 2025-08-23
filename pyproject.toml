@@ -23,9 +23,9 @@ dependencies = [
     "pydantic",
     "pytest",
     "wexample-config",
-    "wexample-prompt",
     "wexample-file",
-    "xmltodict"
+    "wexample-prompt",
+    "xmltodict",
 ]
 
 [project.readme]
