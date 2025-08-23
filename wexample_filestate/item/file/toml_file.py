@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from wexample_helpers_toml.const.types import TomlContent  # type: ignore
-
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 from wexample_helpers.const.types import StructuredData
+from wexample_helpers_toml.const.types import TomlContent  # type: ignore
 
 
 class TomlFile(StructuredContentFile):
