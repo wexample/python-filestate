@@ -30,14 +30,14 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     @classmethod
     def applicable(cls, target: TargetFileOrDirectory) -> bool:
         for option in target.options.values():
-            if cls.applicable_opteration(target=target, option=option) is True:
+            if cls.applicable_operation(target=target, option=option) is True:
                 return True
 
         return False
 
     @classmethod
     @abstractmethod
-    def applicable_option(
+    def applicable_operation(
         cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         pass

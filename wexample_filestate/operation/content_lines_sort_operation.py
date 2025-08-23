@@ -29,7 +29,7 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
         return Scope.CONTENT
 
     @classmethod
-    def applicable_option(
+    def applicable_operation(
         cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
