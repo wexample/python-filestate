@@ -90,3 +90,5 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         if changed is not None:
             self._target_file_write(content=changed)
 
+    def undo(self) -> None:
+        self._restore_target_file()
