@@ -241,7 +241,9 @@ class AbstractItemTarget(
 
         return result
 
-    def find_closest(self, class_type: type[AbstractItemTarget]) -> AbstractItemTarget | None:
+    def find_closest(
+        self, class_type: type[AbstractItemTarget]
+    ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 
         Traverses parents via self.get_parent_item_or_none() until a match is found
