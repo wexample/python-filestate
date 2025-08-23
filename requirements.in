@@ -3,3 +3,4 @@ pydantic
 wexample-config
 wexample-file
 wexample-prompt
+toml

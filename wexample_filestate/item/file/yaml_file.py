@@ -2,10 +2,6 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.should_have_extension_config_option import (
-    ShouldHaveExtensionConfigOption,
-)
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 from wexample_helpers.const.types import StructuredData
 from wexample_helpers_yaml.const.types import YamlContent
@@ -30,12 +26,3 @@ class YamlFile(StructuredContentFile):
         import yaml
 
         return yaml.dump(content)
-
-    def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
-        config = super().prepare_value(raw_value=raw_value)
-
-        config[ShouldHaveExtensionConfigOption.get_snake_short_class_name()] = (
-            self._expected_file_name_extension()
-        )
-
-        return config
