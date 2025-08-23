@@ -84,3 +84,9 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
             return False
 
         return preview != current
+
+    def apply(self) -> None:
+        changed = self.preview_source_change(self.target)
+        if changed is not None:
+            self._target_file_write(content=changed)
+
