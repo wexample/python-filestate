@@ -1,4 +1,5 @@
 """Helper functions for filestate inline markers used in TOML comments."""
+
 from __future__ import annotations
 
 from wexample_filestate.const.filestate_markers import (
