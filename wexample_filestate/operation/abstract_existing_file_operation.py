@@ -56,7 +56,14 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         if not cls._is_existing_file(target):
             return False
 
-        current = cls._read_current_non_empty_src(target)
+        # Read the exact current content (may be an empty string).
+        current = cls._read_current_src(target)
+        assert isinstance(current, str)
+
+        # If preview is None, consider that as "no change needed".
         preview = cls.preview_source_change(target)
+        if preview is None:
+            return False
+
         return preview != current
 
