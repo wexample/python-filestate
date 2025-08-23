@@ -1,7 +1,0 @@
-pip-tools
-pydantic
-toml
-wexample-config
-wexample-file
-wexample-prompt
-xmltodict
