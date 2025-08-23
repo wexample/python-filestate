@@ -23,13 +23,12 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         return (
             target.source
-            and not FileManipulationOperationMixin.option_should_exist_is_true(target)
+            and not self.option_should_exist_is_true(target)
         )
 
     def describe_before(self) -> str:

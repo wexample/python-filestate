@@ -21,9 +21,8 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     def get_scope(cls) -> Scope:
         return Scope.NAME
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,

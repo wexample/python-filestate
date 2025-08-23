@@ -30,9 +30,8 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
         return [FileCreateOperation]
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,

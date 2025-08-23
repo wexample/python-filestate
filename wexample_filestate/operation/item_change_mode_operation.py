@@ -27,9 +27,8 @@ class ItemChangeModeOperation(AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.PERMISSIONS
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if not target.source:
             return False

@@ -24,9 +24,8 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         return (
             target.source is None

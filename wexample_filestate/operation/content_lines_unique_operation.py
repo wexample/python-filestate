@@ -28,9 +28,8 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
             return False
@@ -47,7 +46,7 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
             return False
 
         src = local_file.read()
-        unique_src = cls._unique_lines_content(src)
+        unique_src = self._unique_lines_content(src)
         return unique_src != src
 
     @staticmethod

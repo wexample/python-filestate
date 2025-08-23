@@ -30,9 +30,8 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
         return [FileCreateOperation]
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if (
             target.is_file()

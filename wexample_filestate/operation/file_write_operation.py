@@ -53,12 +53,11 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             updated += "\n"
         return updated
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if isinstance(option, ContentConfigOption):
-            current_content = cls._get_current_content_from_target(target)
+            current_content = self._get_current_content_from_target(target)
             new_content = target.get_option_value(ContentConfigOption).get_str()
             return current_content != new_content
 
@@ -69,7 +68,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             ).get_list()
             if not target.get_local_file().path.exists():
                 return True
-            current_lines = cls._get_current_lines_from_target(target)
+            current_lines = self._get_current_lines_from_target(target)
             return any(line not in current_lines for line in required_lines)
 
         if isinstance(option, ShouldNotContainLinesConfigOption):
@@ -79,7 +78,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             forbidden_lines = target.get_option_value(
                 ShouldNotContainLinesConfigOption
             ).get_list()
-            current_lines = cls._get_current_lines_from_target(target)
+            current_lines = self._get_current_lines_from_target(target)
             return any(line in current_lines for line in forbidden_lines)
 
         return False

@@ -28,9 +28,8 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    @classmethod
     def applicable_operation(
-        cls, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
             return False
@@ -47,7 +46,7 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
             return False
 
         src = local_file.read()
-        sorted_src = cls._sorted_lines_content(src)
+        sorted_src = self._sorted_lines_content(src)
         return sorted_src != src
 
     @staticmethod
