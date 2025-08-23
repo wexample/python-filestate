@@ -25,7 +25,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         return Scope.LOCATION
 
     def applicable_operation(
-            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         return (
             target.source is None

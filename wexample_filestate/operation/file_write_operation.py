@@ -54,7 +54,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
         return updated
 
     def applicable_operation(
-            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if isinstance(option, ContentConfigOption):
             current_content = self._get_current_content_from_target(target)

@@ -29,7 +29,7 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
         return Scope.CONTENT
 
     def applicable_operation(
-            self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
     ) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
             return False
