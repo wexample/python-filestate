@@ -112,6 +112,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         # Prune empty directories when filtering files only
         if not dir_config["children"] and config.get("type") == DiskItemType.FILE:
             return None
+
         return dir_config
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
