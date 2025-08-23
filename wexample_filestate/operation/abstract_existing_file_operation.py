@@ -30,24 +30,40 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         return target.is_file() and local_file.path.exists()
 
     @staticmethod
+    def _read_current_str_or_fail(target: "TargetFileOrDirectoryType") -> str:
+        src = AbstractExistingFileOperation._read_current_src(target)
+        assert isinstance(src, str)
+        return src
+
+    @staticmethod
     def _read_current_non_empty_src(target: "TargetFileOrDirectoryType") -> str | None:
         src = AbstractExistingFileOperation._read_current_src(target)
         return src if src is not None and src.strip() != "" else None
 
     @staticmethod
     def _read_current_src(target: "TargetFileOrDirectoryType") -> str | None:
-        """Read current file content if it exists, else return empty string."""
+        """Read current file content if it exists; return None if it does not exist."""
         return target.get_local_file().read() if AbstractExistingFileOperation._is_existing_file(target) else None
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         pass
 
     @classmethod
     def source_need_change(cls, target: TargetFileOrDirectoryType) -> bool:
-        src = cls._read_current_non_empty_src(target)
-        if src is None:
+        # If the file does not exist, do not attempt any change.
+        if not cls._is_existing_file(target):
             return False
 
-        return cls.preview_source_change(target) != src
+        current = cls._read_current_src(target)
+        # Normalize None to empty string for consistent comparison
+        current = current if current is not None else ""
+
+        preview = cls.preview_source_change(target)
+        # Treat None as "no change proposed"
+        if preview is None:
+            return False
+
+        return preview != current
+
