@@ -27,16 +27,16 @@ class ItemChangeModeOperation(AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.PERMISSIONS
 
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+        self, option: AbstractConfigOption
     ) -> bool:
-        if not target.source:
+        if not self.target.source:
             return False
 
         if isinstance(option, ModeConfigOption):
             file_validate_mode_octal_or_fail(option.get_octal())
             return (
-                file_path_get_mode_num(target.get_source().get_path())
+                file_path_get_mode_num(self.target.get_source().get_path())
                 != option.get_int()
             )
 

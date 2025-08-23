@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
+
 from wexample_filestate.const.state_items import TargetFileOrDirectory
 from wexample_filestate.enum.scopes import Scope
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
@@ -14,7 +15,6 @@ if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
@@ -27,16 +27,16 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def get_scope(cls) -> Scope:
         pass
 
-    def applicable(self, target: TargetFileOrDirectory) -> bool:
-        for option in target.options.values():
-            if self.applicable_operation(target=target, option=option) is True:
+    def applicable(self) -> bool:
+        for option in self.target.options.values():
+            if self.applicable_for_option(option=option) is True:
                 return True
 
         return False
 
     @abstractmethod
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+            self, option: AbstractConfigOption
     ) -> bool:
         pass
 

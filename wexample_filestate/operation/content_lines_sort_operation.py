@@ -28,8 +28,8 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+        self, option: AbstractConfigOption
     ) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
             return False
@@ -40,8 +40,8 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
         ):
             return False
 
-        local_file = target.get_local_file()
-        if not target.is_file() or not local_file.path.exists():
+        local_file = self.target.get_local_file()
+        if not self.target.is_file() or not local_file.path.exists():
             # If the file doesn't exist, nothing to sort yet.
             return False
 

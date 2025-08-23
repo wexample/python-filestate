@@ -30,12 +30,12 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
         return [FileCreateOperation]
 
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+        self, option: AbstractConfigOption
     ) -> bool:
         if (
-            target.is_file()
-            and target.get_local_file().path.exists()
+            self.target.is_file()
+            and self.target.get_local_file().path.exists()
             and isinstance(option, TextFilterConfigOption)
         ):
             value = option.get_value()
@@ -51,7 +51,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
             if not has_flag:
                 return False
 
-            content = target.get_local_file().read()
+            content = self.target.get_local_file().read()
             return not content.endswith("\n")
 
         return False

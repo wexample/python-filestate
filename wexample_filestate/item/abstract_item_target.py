@@ -147,7 +147,7 @@ class AbstractItemTarget(
         for operation_class in self.get_operations():
             # Instantiate first; we'll test applicability on the instance.
             operation = operation_class(io=self.io, target=self)
-            if operation.applicable(self) and (
+            if operation.applicable() and (
                 scopes is None or operation.get_scope() in scopes
             ):
                 self.io.log(

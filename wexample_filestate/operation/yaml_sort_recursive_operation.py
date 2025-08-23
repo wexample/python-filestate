@@ -25,16 +25,16 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
         return [FileCreateOperation]
 
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+        self, option: AbstractConfigOption
     ) -> bool:
         from wexample_filestate.config_option.yaml_filter_config_option import (
             YamlFilterConfigOption,
         )
 
         if (
-            target.is_file()
-            and target.get_local_file().path.exists()
+                self.target.is_file()
+            and self.target.get_local_file().path.exists()
             and isinstance(option, YamlFilterConfigOption)
         ):
             value = option.get_value()
@@ -51,7 +51,7 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
             # read() already returns parsed YAML (dict/list) or None for YAML files
             # Use internal helper to detect if sorting is needed
             return not YamlSortRecursiveOperation._is_sorted(
-                data=target.get_local_file().read()
+                data=self.target.get_local_file().read()
             )
 
         return False

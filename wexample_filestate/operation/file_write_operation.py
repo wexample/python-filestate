@@ -53,32 +53,32 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             updated += "\n"
         return updated
 
-    def applicable_operation(
-        self, target: TargetFileOrDirectoryType, option: AbstractConfigOption
+    def applicable_for_option(
+        self, option: AbstractConfigOption
     ) -> bool:
         if isinstance(option, ContentConfigOption):
-            current_content = self._get_current_content_from_target(target)
-            new_content = target.get_option_value(ContentConfigOption).get_str()
+            current_content = self._get_current_content_from_target(self.target)
+            new_content = self.target.get_option_value(ContentConfigOption).get_str()
             return current_content != new_content
 
         if isinstance(option, ShouldContainLinesConfigOption):
             # Use the same representation as describe_before(): a list of strings
-            required_lines = target.get_option_value(
+            required_lines = self.target.get_option_value(
                 ShouldContainLinesConfigOption
             ).get_list()
-            if not target.get_local_file().path.exists():
+            if not self.target.get_local_file().path.exists():
                 return True
-            current_lines = self._get_current_lines_from_target(target)
+            current_lines = self._get_current_lines_from_target(self.target)
             return any(line not in current_lines for line in required_lines)
 
         if isinstance(option, ShouldNotContainLinesConfigOption):
             # If file does not exist, there's nothing to remove yet, so not applicable.
-            if not target.get_local_file().path.exists():
+            if not self.target.get_local_file().path.exists():
                 return False
-            forbidden_lines = target.get_option_value(
+            forbidden_lines = self.target.get_option_value(
                 ShouldNotContainLinesConfigOption
             ).get_list()
-            current_lines = self._get_current_lines_from_target(target)
+            current_lines = self._get_current_lines_from_target(self.target)
             return any(line in current_lines for line in forbidden_lines)
 
         return False
