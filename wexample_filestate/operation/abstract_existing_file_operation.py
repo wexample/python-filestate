@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
 
 class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
+    _changed_source: ClassVar[str | None] = None
+
     """Base class for operations that require the target to be an existing file on disk.
 
     This class only abstracts the existence check (no extension or name check).
@@ -63,32 +65,30 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         pass
 
-    @classmethod
-    def source_need_change(cls, target: TargetFileOrDirectoryType) -> bool:
+    def source_need_change(self, target: TargetFileOrDirectoryType) -> bool:
         # If the file does not exist, do not attempt any change.
-        if not cls._is_existing_file(target):
+        if not self._is_existing_file(target):
             return False
 
         # Read the exact current content (may be an empty string).
-        current = cls._read_current_src(target)
+        current = self._read_current_src(target)
         assert isinstance(current, str)
 
         # If current content is empty/whitespace-only and the operation
         # does not apply on empty content, consider "no change needed".
-        if current.strip() == "" and not cls._apply_on_empty_content():
+        if current.strip() == "" and not self._apply_on_empty_content():
             return False
 
         # If preview is None, consider that as "no change needed".
-        preview = cls.preview_source_change(target)
+        preview = self.preview_source_change(target)
         if preview is None:
             return False
 
         return preview != current
 
     def apply(self) -> None:
-        changed = self.preview_source_change(self.target)
-        if changed is not None:
-            self._target_file_write(content=changed)
+        if self._changed_source is not None:
+            self._target_file_write(content=self._changed_source)
 
     def undo(self) -> None:
         self._restore_target_file()
