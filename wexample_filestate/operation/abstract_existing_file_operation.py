@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
+
+from pydantic import PrivateAttr
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
@@ -14,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
-    _changed_source: ClassVar[str | None] = None
+    _changed_source: [str | None] = PrivateAttr(default=None)
 
     """Base class for operations that require the target to be an existing file on disk.
 
@@ -80,11 +82,11 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
             return False
 
         # If preview is None, consider that as "no change needed".
-        preview = self.preview_source_change(target)
-        if preview is None:
+        self._changed_source = self.preview_source_change(target)
+        if self._changed_source is None:
             return False
 
-        return preview != current
+        return self._changed_source != current
 
     def apply(self) -> None:
         if self._changed_source is not None:
