@@ -24,6 +24,15 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
+    @classmethod
+    def _apply_on_empty_content(cls) -> bool:
+        """Indicate whether the operation is applicable on empty/whitespace-only files.
+
+        By default, operations are NOT applicable on empty content.
+        Subclasses may override to allow applicability on empty files.
+        """
+        return False
+
     @staticmethod
     def _is_existing_file(target: "TargetFileOrDirectoryType") -> bool:
         local_file = target.get_local_file()
@@ -59,6 +68,11 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         # Read the exact current content (may be an empty string).
         current = cls._read_current_src(target)
         assert isinstance(current, str)
+
+        # If current content is empty/whitespace-only and the operation
+        # does not apply on empty content, consider "no change needed".
+        if current.strip() == "" and not cls._apply_on_empty_content():
+            return False
 
         # If preview is None, consider that as "no change needed".
         preview = cls.preview_source_change(target)
