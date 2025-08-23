@@ -24,11 +24,9 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         return (
-                self.target.source is None
+            self.target.source is None
             and FileManipulationOperationMixin.option_should_exist_is_true(self.target)
         )
 

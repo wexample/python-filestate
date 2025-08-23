@@ -26,9 +26,7 @@ class ItemChangeModeOperation(AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.PERMISSIONS
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         if not self.target.source:
             return False
 

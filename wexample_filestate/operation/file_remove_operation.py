@@ -22,9 +22,7 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         return self.target.source and not self.option_should_exist_is_true(self.target)
 
     def describe_before(self) -> str:

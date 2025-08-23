@@ -30,15 +30,13 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
         return [FileCreateOperation]
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
         )
 
         if (
-                self.target.is_file()
+            self.target.is_file()
             and self.target.get_local_file().path.exists()
             and isinstance(option, TextFilterConfigOption)
         ):

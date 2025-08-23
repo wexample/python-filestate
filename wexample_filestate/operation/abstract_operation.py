@@ -34,9 +34,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         return False
 
     @abstractmethod
-    def applicable_for_option(
-            self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         pass
 
     @abstractmethod

@@ -21,21 +21,19 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     def get_scope(cls) -> Scope:
         return Scope.NAME
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
         )
 
         if (
-                self.target.source
+            self.target.source
             and self.target.is_file()
             and isinstance(option, ShouldHaveExtensionConfigOption)
         ):
             assert isinstance(self.target.source, ItemSourceFile)
             if (
-                    self.target.source.get_local_file().get_extension()
+                self.target.source.get_local_file().get_extension()
                 != option.get_value().get_str()
             ):
                 return True

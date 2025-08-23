@@ -27,9 +27,7 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         if not isinstance(option, ContentOptionsConfigOption):
             return False
 
