@@ -25,6 +25,7 @@ dependencies = [
     "wexample-config",
     "wexample-prompt",
     "wexample-file",
+    "xmltodict"
 ]
 
 [project.readme]
