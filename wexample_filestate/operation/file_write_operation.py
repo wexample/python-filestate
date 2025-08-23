@@ -53,9 +53,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             updated += "\n"
         return updated
 
-    def applicable_for_option(
-        self, option: AbstractConfigOption
-    ) -> bool:
+    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         if isinstance(option, ContentConfigOption):
             current_content = self._get_current_content_from_target(self.target)
             new_content = self.target.get_option_value(ContentConfigOption).get_str()

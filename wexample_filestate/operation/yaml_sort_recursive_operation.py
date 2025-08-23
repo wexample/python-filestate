@@ -10,7 +10,7 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    pass
 
 
 class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperation):
