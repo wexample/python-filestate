@@ -34,25 +34,29 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         return False
 
     @staticmethod
-    def _is_existing_file(target: "TargetFileOrDirectoryType") -> bool:
+    def _is_existing_file(target: TargetFileOrDirectoryType) -> bool:
         local_file = target.get_local_file()
         return target.is_file() and local_file.path.exists()
 
     @staticmethod
-    def _read_current_str_or_fail(target: "TargetFileOrDirectoryType") -> str:
+    def _read_current_str_or_fail(target: TargetFileOrDirectoryType) -> str:
         src = AbstractExistingFileOperation._read_current_src(target)
         assert isinstance(src, str)
         return src
 
     @staticmethod
-    def _read_current_non_empty_src(target: "TargetFileOrDirectoryType") -> str | None:
+    def _read_current_non_empty_src(target: TargetFileOrDirectoryType) -> str | None:
         src = AbstractExistingFileOperation._read_current_src(target)
         return src if src is not None and src.strip() != "" else None
 
     @staticmethod
-    def _read_current_src(target: "TargetFileOrDirectoryType") -> str | None:
+    def _read_current_src(target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content if it exists; return None if it does not exist."""
-        return target.get_local_file().read() if AbstractExistingFileOperation._is_existing_file(target) else None
+        return (
+            target.get_local_file().read()
+            if AbstractExistingFileOperation._is_existing_file(target)
+            else None
+        )
 
     @classmethod
     @abstractmethod
@@ -80,4 +84,3 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
             return False
 
         return preview != current
-
