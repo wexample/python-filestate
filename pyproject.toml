@@ -22,6 +22,7 @@ dependencies = [
     "wexample-file",
     "wexample-prompt",
     "xmltodict",
+    "python-dotenv",
 ]
 
 [project.readme]

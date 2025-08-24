@@ -21,9 +21,8 @@ class StructuredContentFile(ItemTargetFile):
 
         return NestedConfigValue(raw=self.read())
 
-    @abstractmethod
     def _parse_file_content(self, content: str) -> Any:
-        pass
+        return content
 
     def write(self, content: StructuredData) -> YamlContent:
         return super().write(content=self._prepare_content_to_write(content))
@@ -32,9 +31,8 @@ class StructuredContentFile(ItemTargetFile):
     def _prepare_content_to_write(self, content: StructuredData) -> str:
         pass
 
-    @abstractmethod
-    def _expected_file_name_extension(self) -> str:
-        pass
+    def _expected_file_name_extension(self) -> str | None:
+        return None
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
         expected_extension = self._expected_file_name_extension()
@@ -46,7 +44,7 @@ class StructuredContentFile(ItemTargetFile):
             )
 
             raw_value[ShouldHaveExtensionConfigOption.get_snake_short_class_name()] = (
-                self._expected_file_name_extension()
+                expected_extension
             )
 
         return raw_value
