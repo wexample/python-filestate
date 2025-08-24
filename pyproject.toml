@@ -17,12 +17,12 @@ classifiers = [
 ]
 dependencies = [
     "pydantic>=2,<3",
+    "python-dotenv",
     "toml",
     "wexample-config",
     "wexample-file",
     "wexample-prompt",
     "xmltodict",
-    "python-dotenv",
 ]
 
 [project.readme]

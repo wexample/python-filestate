@@ -27,4 +27,7 @@ class EnvFile(StructuredContentFile):
         # Unused now that write() is overridden. Keep a no-op textual fallback.
         if not isinstance(content, dict):
             return ""
-        return "\n".join(f"{k}={v if v is not None else ''}" for k, v in content.items()) + "\n"
+        return (
+            "\n".join(f"{k}={v if v is not None else ''}" for k, v in content.items())
+            + "\n"
+        )
