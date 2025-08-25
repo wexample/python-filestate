@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Callable, Type
 
 from pydantic import Field
+
 from wexample_file.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
@@ -16,6 +17,7 @@ from wexample_helpers.const.types import FileStringOrPath, StringKeysDict
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
@@ -54,7 +56,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return []
 
     def build_operations(
-        self, result: AbstractResult, scopes: set[Scope] | None = None
+            self, result: AbstractResult, scopes: set[Scope] | None = None
     ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -66,7 +68,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             )
 
     def find_by_path_recursive(
-        self, path: FileStringOrPath
+            self, path: FileStringOrPath
     ) -> TargetFileOrDirectoryType | None:
         path = Path(path)
         found = self.find_by_path(path)
@@ -90,8 +92,40 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return None
 
+    def for_each_child_recursive(
+            self, callback: Callable
+    ) -> None:
+        for child in self.get_children_list():
+            if isinstance(child, ItemTargetDirectory):
+                child.for_each_child_recursive(callback)
+
+            callback(child)
+
+    def for_each_child_file_recursive(self, callback: Callable) -> None:
+        from wexample_filestate.item.item_target_file import ItemTargetFile
+        self.for_each_child_of_type_recursive(
+            class_type=ItemTargetFile,
+            callback=callback,
+        )
+
+    def for_each_child_of_type_recursive(self, class_type: Type[AbstractItemTarget], callback: Callable) -> None:
+        def _only_type(item: AbstractItemTarget):
+            if isinstance(item, class_type):
+                callback(item)
+
+        self.for_each_child_recursive(_only_type)
+
+    def for_each_child_of_type(
+            self,
+            class_type: Type[AbstractItemTarget],
+            callback: Callable[[AbstractItemTarget], None],
+    ) -> None:
+        for child in self.get_children_list():
+            if isinstance(child, class_type):
+                callback(child)
+
     def find_by_name_recursive(
-        self, item_name: str
+            self, item_name: str
     ) -> TargetFileOrDirectoryType | None:
         found = self.find_by_name(item_name)
         if found:
