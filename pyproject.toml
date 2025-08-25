@@ -22,6 +22,7 @@ dependencies = [
     "wexample-config",
     "wexample-file",
     "wexample-prompt",
+    "wexample-helpers-yaml",
     "xmltodict",
 ]
 

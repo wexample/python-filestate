@@ -21,29 +21,52 @@ class SearchResult(ExtendedBaseModel):
         return line, column
 
     @classmethod
-    def create_one_if_match(cls, search: str, item: ItemTargetFile) -> SearchResult | None:
+    def create_one_if_match(
+        cls,
+        search: str,
+        item: ItemTargetFile,
+        *,
+        regex: bool = False,
+        flags: int = 0,
+    ) -> SearchResult | None:
         """Return the first match as a SearchResult or None.
 
-        Line and column are 1-based.
+        Supports literal substring search by default. If ``regex=True``,
+        interprets ``search`` as a regular expression and applies ``flags``
+        (e.g., ``re.MULTILINE``). Line and column are 1-based.
         """
         if not search:
             return None
 
         content = item.read()
-        idx = content.find(search)
-        if idx == -1:
-            return None
+        if regex:
+            import re
+            m = re.search(search, content, flags)
+            if not m:
+                return None
+            idx = m.start()
+        else:
+            idx = content.find(search)
+            if idx == -1:
+                return None
 
         line, column = cls._compute_line_col(content, idx)
-
         return cls(item=item, searched=search, line=line, column=column)
 
     @classmethod
-    def create_for_all_matches(cls, search: str, item: ItemTargetFile) -> list[SearchResult]:
-        """Return all non-overlapping matches as a list of SearchResult.
+    def create_for_all_matches(
+        cls,
+        search: str,
+        item: ItemTargetFile,
+        *,
+        regex: bool = False,
+        flags: int = 0,
+    ) -> list[SearchResult]:
+        """Return all matches as a list of SearchResult.
 
-        Matches are discovered left-to-right using str.find, advancing by
-        the length of the search string to avoid overlapping matches.
+        By default performs literal, non-overlapping substring matches using
+        ``str.find``. With ``regex=True``, uses ``re.finditer`` to collect all
+        matches (including overlapping if your pattern allows via lookahead).
         Line and column are 1-based.
         """
         if not search:
@@ -51,16 +74,23 @@ class SearchResult(ExtendedBaseModel):
 
         content = item.read()
         results: list[SearchResult] = []
-        start = 0
-        while True:
-            idx = content.find(search, start)
-            if idx == -1:
-                break
-            line, column = cls._compute_line_col(content, idx)
-            results.append(cls(item=item, searched=search, line=line, column=column))
-            start = idx + len(search)
-
-        return results
+        if regex:
+            import re
+            for m in re.finditer(search, content, flags):
+                idx = m.start()
+                line, column = cls._compute_line_col(content, idx)
+                results.append(cls(item=item, searched=search, line=line, column=column))
+            return results
+        else:
+            start = 0
+            while True:
+                idx = content.find(search, start)
+                if idx == -1:
+                    break
+                line, column = cls._compute_line_col(content, idx)
+                results.append(cls(item=item, searched=search, line=line, column=column))
+                start = idx + len(search)
+            return results
 
     # Backward-compatibility alias (deprecated)
     @classmethod
