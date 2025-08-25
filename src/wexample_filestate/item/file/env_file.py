@@ -17,7 +17,7 @@ class EnvFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_ENV
 
-    def read(self) -> StructuredData:
+    def read(self, reload: bool = True) -> StructuredData:
         # Delegate parsing to python-dotenv without touching os.environ
         from dotenv import dotenv_values
 
