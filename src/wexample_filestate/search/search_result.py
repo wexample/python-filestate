@@ -7,10 +7,10 @@ from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 
 
 class SearchResult(ExtendedBaseModel):
-    item: ItemTargetFile = Field()
-    searched: str = Field()
-    line: int = Field()
-    column: int = Field()
+    item: ItemTargetFile = Field(description="The target file that was searched.")
+    searched: str = Field(description="The search string used to find matches.")
+    line: int = Field(description="1-based line number where the match starts.")
+    column: int = Field(description="1-based column number where the match starts.")
 
     @staticmethod
     def _compute_line_col(content: str, idx: int) -> tuple[int, int]:
