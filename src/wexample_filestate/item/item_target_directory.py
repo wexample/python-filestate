@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, cast, Callable, Type
 
 from pydantic import Field
 
-from wexample_file.const.types import PathOrString
+from wexample_helpers.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
