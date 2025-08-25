@@ -33,7 +33,6 @@ class StructuredContentFile(ItemTargetFile):
     def _prepare_content_to_write(self, content: Any) -> str:
         """If needed, transform source content (like dict or class) to a writable format (basically str),
         when using, for instance, default write method. Might be useless if write is overridden."""
-        pass
 
     def _expected_file_name_extension(self) -> str | None:
         return None

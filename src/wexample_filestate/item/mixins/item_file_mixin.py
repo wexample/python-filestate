@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pydantic import PrivateAttr
-
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
 if TYPE_CHECKING:

@@ -27,7 +27,7 @@ class TomlFile(StructuredContentFile):
             # On parse error, return an empty TOMLDocument instead of a dict
             return document()
 
-    def _prepare_content_to_write(self, content: "TOMLDocument | dict | None") -> str:
+    def _prepare_content_to_write(self, content: TOMLDocument | dict | None) -> str:
         """Serialize a TOMLDocument (preferred) or a plain dict to TOML.
         Using tomlkit.dumps preserves comments/formatting when content is a TOMLDocument.
         """

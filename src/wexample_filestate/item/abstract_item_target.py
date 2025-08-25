@@ -8,7 +8,6 @@ from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
 from wexample_config.const.types import DictConfig
-from wexample_helpers.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
@@ -17,6 +16,7 @@ from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
+from wexample_helpers.const.types import PathOrString
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 

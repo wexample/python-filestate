@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pydantic import Field
-
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 

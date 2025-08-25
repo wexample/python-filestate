@@ -17,7 +17,6 @@ from wexample_helpers.const.types import FileStringOrPath, StringKeysDict
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
-    from wexample_filestate.item.item_target_file import ItemTargetFile
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
