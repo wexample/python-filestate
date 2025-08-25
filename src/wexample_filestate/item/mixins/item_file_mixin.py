@@ -13,6 +13,10 @@ if TYPE_CHECKING:
 class ItemFileMixin(ItemMixin):
     _content_cache: Any = PrivateAttr(default=None)
 
+    @property
+    def content(self) -> Any:
+        return self._content_cache
+
     def get_item_title(self) -> str:
         return "File"
 
@@ -28,9 +32,9 @@ class ItemFileMixin(ItemMixin):
         return LocalFile(path=self.get_path())
 
     def read(self, reload: bool = True) -> Any:
-        if not reload and self._content_cache:
-            return self._content_cache
-        return self.get_local_file().read()
+        if reload == True or self._content_cache is None:
+            self._content_cache = self.get_local_file().read()
+        return self._content_cache
 
     def write(self, content: str) -> Any:
         return self.get_local_file().write(content)

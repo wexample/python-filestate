@@ -12,7 +12,11 @@ if TYPE_CHECKING:
 
 class StructuredContentFile(ItemTargetFile):
     def read(self, reload: bool = True) -> Any:
-        return self._parse_file_content(super().read(reload=reload))
+        if reload == True or self._content_cache is None:
+            self._content_cache = self._parse_file_content(
+                super().read(reload=reload)
+            )
+        return self._content_cache
 
     def read_as_config(self) -> NestedConfigValue:
         from wexample_config.config_value.nested_config_value import NestedConfigValue
