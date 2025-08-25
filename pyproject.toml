@@ -19,10 +19,10 @@ dependencies = [
     "pydantic>=2,<3",
     "python-dotenv",
     "toml",
-    "wexample-config",
-    "wexample-file",
-    "wexample-prompt",
-    "wexample-helpers-yaml",
+    "wexample-config==0.0.48",
+    "wexample-file==0.0.3",
+    "wexample-helpers-yaml==0.0.64",
+    "wexample-prompt==0.0.43",
     "xmltodict",
 ]
 
