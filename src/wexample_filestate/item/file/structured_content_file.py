@@ -5,15 +5,13 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_file import ItemTargetFile
-from wexample_helpers.const.types import StructuredData
-from wexample_helpers_yaml.const.types import YamlContent
 
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
 
 
 class StructuredContentFile(ItemTargetFile):
-    def read(self) -> YamlContent:
+    def read(self) -> Any:
         return self._parse_file_content(super().read())
 
     def read_as_config(self) -> NestedConfigValue:
@@ -24,11 +22,13 @@ class StructuredContentFile(ItemTargetFile):
     def _parse_file_content(self, content: str) -> Any:
         return content
 
-    def write(self, content: StructuredData) -> YamlContent:
+    def write(self, content: Any) -> Any:
         return super().write(content=self._prepare_content_to_write(content))
 
     @abstractmethod
-    def _prepare_content_to_write(self, content: StructuredData) -> str:
+    def _prepare_content_to_write(self, content: Any) -> str:
+        """If needed, transform source content (like dict or class) to a writable format (basically str),
+        when using, for instance, default write method. Might be useless if write is overridden."""
         pass
 
     def _expected_file_name_extension(self) -> str | None:
