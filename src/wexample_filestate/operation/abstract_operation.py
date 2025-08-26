@@ -62,6 +62,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
 
     def _build_value(self, value: Any) -> Any:
         from wexample_config.config_value.config_value import ConfigValue
+
         """
         First version, might be tested / replaced / abstracted to every callable option.
         Always return the built (resolved) value, never a callable:
@@ -92,5 +93,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def _build_str_value(self, value: Any) -> str:
         built = self._build_value(value)
         if not isinstance(built, str):
-            raise TypeError(f"Expected string value, got {type(built).__name__}: {built}")
+            raise TypeError(
+                f"Expected string value, got {type(built).__name__}: {built}"
+            )
         return built

@@ -1,19 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
-from collections.abc import Callable
 
 from pydantic import Field
-
-from wexample_helpers.const.types import PathOrString
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
-from wexample_helpers.const.types import FileStringOrPath, StringKeysDict
+from wexample_helpers.const.types import FileStringOrPath, PathOrString, StringKeysDict
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
