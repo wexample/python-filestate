@@ -26,7 +26,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def get_parent(self) -> TargetFileOrDirectoryType:
         assert self.parent is not None
-        return cast("TargetFileOrDirectory", self.parent)
+        return self.parent
 
     def set_value(self, raw_value: Any) -> None:
         from wexample_config.config_option.abstract_config_option import (

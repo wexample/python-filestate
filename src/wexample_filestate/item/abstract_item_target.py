@@ -253,3 +253,15 @@ class AbstractItemTarget(
                 return current  # type: ignore[return-value]
             current = current.get_parent_item_or_none()
         return None
+
+    def get_env_parameter(self, key: str, default: str | None = None) -> str | None:
+        """If no environment parameter defined by current item, ask its parent.
+        The default behavior is to return default value but should be replaced by,
+        for instance, .env loading in specific contexts"""
+        parent_item = self.get_parent_item_or_none()
+        if parent_item:
+            return parent_item.get_env_parameter(
+                key=key,
+                default=default,
+            )
+        return default
