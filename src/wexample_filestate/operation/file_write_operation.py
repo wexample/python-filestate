@@ -30,9 +30,6 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     def get_scope(cls) -> Scope:
         return Scope.CONTENT
 
-    # ----------------------------
-    # Internal helpers (factorized)
-    # ----------------------------
     @staticmethod
     def _get_current_content_from_target(target: TargetFileOrDirectoryType) -> str:
         local_file = target.get_local_file()
@@ -40,7 +37,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def _get_current_lines_from_target(
-        target: TargetFileOrDirectoryType,
+            target: TargetFileOrDirectoryType,
     ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 
@@ -56,8 +53,11 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         if isinstance(option, ContentConfigOption):
             current_content = self._get_current_content_from_target(self.target)
-            new_content = self.target.get_option_value(ContentConfigOption).get_str()
-            return current_content != new_content
+            option = self.target.get_option_value(ContentConfigOption)
+            if option is not None:
+                new_content = option.get_str()
+                return current_content != new_content
+            return False
 
         if isinstance(option, ShouldContainLinesConfigOption):
             # Use the same representation as describe_before(): a list of strings
