@@ -13,9 +13,7 @@ if TYPE_CHECKING:
 class StructuredContentFile(ItemTargetFile):
     def read(self, reload: bool = True) -> Any:
         if reload == True or self._content_cache is None:
-            self._content_cache = self._parse_file_content(
-                super().read(reload=reload)
-            )
+            self._content_cache = self._parse_file_content(super().read(reload=reload))
         return self._content_cache
 
     def read_as_config(self) -> NestedConfigValue:
@@ -32,7 +30,8 @@ class StructuredContentFile(ItemTargetFile):
     @abstractmethod
     def _prepare_content_to_write(self, content: Any) -> str:
         """If needed, transform source content (like dict or class) to a writable format (basically str),
-        when using, for instance, default write method. Might be useless if write is overridden."""
+        when using, for instance, default write method. Might be useless if write is overridden.
+        """
 
     def _expected_file_name_extension(self) -> str | None:
         return None

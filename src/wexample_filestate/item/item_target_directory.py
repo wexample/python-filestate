@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, cast, Callable, Type
+from typing import TYPE_CHECKING, cast
+from collections.abc import Callable
 
 from pydantic import Field
 
@@ -107,7 +108,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             callback=callback,
         )
 
-    def for_each_child_of_type_recursive(self, class_type: Type[AbstractItemTarget], callback: Callable) -> None:
+    def for_each_child_of_type_recursive(self, class_type: type[AbstractItemTarget], callback: Callable) -> None:
         def _only_type(item: AbstractItemTarget):
             if isinstance(item, class_type):
                 callback(item)
@@ -116,7 +117,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def for_each_child_of_type(
             self,
-            class_type: Type[AbstractItemTarget],
+            class_type: type[AbstractItemTarget],
             callback: Callable[[AbstractItemTarget], None],
     ) -> None:
         for child in self.get_children_list():

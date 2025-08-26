@@ -12,7 +12,6 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
 )
 
 if TYPE_CHECKING:
-    from wexample_config.config_value.config_value import ConfigValue
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 
@@ -16,7 +16,7 @@ class TomlFile(StructuredContentFile):
 
     def _parse_file_content(self, content: str) -> TOMLDocument:
         # Use tomlkit to preserve comments and formatting during round-trip
-        from tomlkit import parse, document
+        from tomlkit import document, parse
 
         try:
             if content is None or content == "":
@@ -31,7 +31,7 @@ class TomlFile(StructuredContentFile):
         """Serialize a TOMLDocument (preferred) or a plain dict to TOML.
         Using tomlkit.dumps preserves comments/formatting when content is a TOMLDocument.
         """
-        from tomlkit import dumps, document
+        from tomlkit import document, dumps
 
         try:
             if content is None:

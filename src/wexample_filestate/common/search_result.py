@@ -40,6 +40,7 @@ class SearchResult(ExtendedBaseModel):
         content = item.read()
         if regex:
             import re
+
             m = re.search(search, content, flags)
             if not m:
                 return None
@@ -75,10 +76,13 @@ class SearchResult(ExtendedBaseModel):
         results: list[SearchResult] = []
         if regex:
             import re
+
             for m in re.finditer(search, content, flags):
                 idx = m.start()
                 line, column = cls._compute_line_col(content, idx)
-                results.append(cls(item=item, searched=search, line=line, column=column))
+                results.append(
+                    cls(item=item, searched=search, line=line, column=column)
+                )
             return results
         else:
             start = 0
@@ -87,7 +91,9 @@ class SearchResult(ExtendedBaseModel):
                 if idx == -1:
                     break
                 line, column = cls._compute_line_col(content, idx)
-                results.append(cls(item=item, searched=search, line=line, column=column))
+                results.append(
+                    cls(item=item, searched=search, line=line, column=column)
+                )
                 start = idx + len(search)
             return results
 
