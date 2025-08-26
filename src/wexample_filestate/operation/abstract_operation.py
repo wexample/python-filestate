@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
+
 from wexample_filestate.const.state_items import TargetFileOrDirectory
 from wexample_filestate.enum.scopes import Scope
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
@@ -11,6 +12,7 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
 )
 
 if TYPE_CHECKING:
+    from wexample_config.config_value.config_value import ConfigValue
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
@@ -59,3 +61,16 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
 
     def dependencies(self) -> list[type[AbstractOperation]]:
         return []
+
+    def _build_value(self, value: ConfigValue) -> Any:
+        if value.is_str():
+            return value.get_str()
+        elif value.is_dict() and "pattern" in value.get_dict():
+            path = self.target.get_path()
+            value_dict = value.get_dict()
+
+            return value_dict["pattern"].format(
+                **{"name": path.name, "path": str(path)}
+            )
+
+        return value.get_str()
