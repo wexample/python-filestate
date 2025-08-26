@@ -18,6 +18,6 @@ class HtmlFile(StructuredContentFile):
         # they can pass a BeautifulSoup object to write(), which will be cast to str.
         return content
 
-    def _prepare_content_to_write(self, content: StructuredData) -> str:
+    def make_writable_content(self, content: StructuredData) -> str:
         # Accept string content or any object convertible to string (e.g., BeautifulSoup)
         return content if isinstance(content, str) else str(content)

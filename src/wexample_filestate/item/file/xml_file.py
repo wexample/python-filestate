@@ -21,7 +21,7 @@ class XmlFile(StructuredContentFile):
         except Exception:
             return {}
 
-    def _prepare_content_to_write(self, content: StructuredData) -> str:
+    def make_writable_content(self, content: StructuredData) -> str:
         import xmltodict
 
         if isinstance(content, str):

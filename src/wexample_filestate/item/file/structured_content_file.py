@@ -25,10 +25,10 @@ class StructuredContentFile(ItemTargetFile):
         return content
 
     def write(self, content: Any) -> Any:
-        return super().write(content=self._prepare_content_to_write(content))
+        return super().write(content=self.make_writable_content(content))
 
     @abstractmethod
-    def _prepare_content_to_write(self, content: Any) -> str:
+    def make_writable_content(self, content: Any) -> str:
         """If needed, transform source content (like dict or class) to a writable format (basically str),
         when using, for instance, default write method. Might be useless if write is overridden.
         """
