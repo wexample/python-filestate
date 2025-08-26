@@ -1,8 +1,8 @@
-# Filestate
+# wexample-filestate
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
-Version: 0.0.30
+Version: 0.0.46
 
 ## Features
 
@@ -13,16 +13,18 @@ Version: 0.0.30
 
 ## Requirements
 
-- Python >=3.6
+- Python >=3.10
 
 ## Dependencies
 
-- pip-tools
-- pydantic
-- pytest
-- wexample-config==0.0.30
-- wexample-helpers==0.0.30
-- wexample-prompt==0.0.31
+- pydantic>=2,<3
+- python-dotenv
+- toml
+- wexample-config==0.0.48
+- wexample-file==0.0.3
+- wexample-helpers-yaml==0.0.64
+- wexample-prompt==0.0.43
+- xmltodict
 
 ## Installation
 
