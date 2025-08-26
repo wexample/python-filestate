@@ -16,10 +16,10 @@ class WithWorkdirMixin:
     host_workdir: FileStateManager = None
 
     def _init_workdir(
-            self,
-            entrypoint_path: str,
-            io: IoManager,
-            config: DictConfig | None = None,
+        self,
+        entrypoint_path: str,
+        io: IoManager,
+        config: DictConfig | None = None,
     ) -> None:
         import os
 
@@ -48,9 +48,7 @@ class WithWorkdirMixin:
         io.default_response_verbosity = original_verbosity
 
         # The calling workdir may be in a virtual env host system.
-        self.host_workdir = FileStateManager.create_from_path(
-            path=os.getcwd(), io=io
-        )
+        self.host_workdir = FileStateManager.create_from_path(path=os.getcwd(), io=io)
 
     def _rebuild_workdir_content(self) -> None:
         self.workdir.apply(
@@ -60,10 +58,10 @@ class WithWorkdirMixin:
         )
 
     def _get_workdir_state_manager_class(
-            self,
-            entrypoint_path: str,
-            io: IoManager,
-            config: DictConfig | None = None,
+        self,
+        entrypoint_path: str,
+        io: IoManager,
+        config: DictConfig | None = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io
