@@ -62,15 +62,32 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def dependencies(self) -> list[type[AbstractOperation]]:
         return []
 
-    def _build_value(self, value: ConfigValue) -> Any:
-        if value.is_str():
-            return value.get_str()
-        elif value.is_dict() and "pattern" in value.get_dict():
-            path = self.target.get_path()
-            value_dict = value.get_dict()
+    def _build_value(self, value: Any) -> Any:
+        from wexample_config.config_value.config_value import ConfigValue
+        """
+        First version, might be tested / replaced / abstracted to every callable option.
+        - If value is a ConfigValue: return its underlying raw or computed value;
+          if it's a callable, execute it with self.target.
+        - If value is a callable: execute it with self.target.
+        - If value is a str: return it as-is.
+        - Explicitly drop legacy dict {'pattern': ...} support by not interpreting it.
+        """
+        # ConfigValue case
+        if isinstance(value, ConfigValue):
+            if value.is_callable():
+                fn = value.get_callable()
+                return fn(self.target)
+            if value.is_str():
+                return value.get_str()
+            return value.raw
 
-            return value_dict["pattern"].format(
-                **{"name": path.name, "path": str(path)}
-            )
+        # Plain callable
+        if callable(value):
+            return value(self.target)
 
-        return value.get_str()
+        # Plain string
+        if isinstance(value, str):
+            return value
+
+        # Fallback: return as-is (caller may coerce or error)
+        return value
