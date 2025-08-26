@@ -4,7 +4,7 @@ from typing import Any, Union
 
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 from wexample_helpers.helpers.polyfill import polyfill_register_global
-from wexample_helpers.test.abstract_test_helpers import AbstractTestHelpers
+from wexample_helpers.testing.abstract_test_helpers import AbstractTestHelpers
 
 
 class TestFileStateManager(AbstractTestHelpers):
