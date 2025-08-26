@@ -37,7 +37,7 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @staticmethod
     def _get_current_lines_from_target(
-            target: TargetFileOrDirectoryType,
+        target: TargetFileOrDirectoryType,
     ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 

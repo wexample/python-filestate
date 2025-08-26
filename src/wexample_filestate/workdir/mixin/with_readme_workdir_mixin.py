@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.text_filter_config_option import (
@@ -9,14 +9,18 @@ from wexample_filestate.config_option.text_filter_config_option import (
 from wexample_filestate.const.disk import DiskItemType
 
 if TYPE_CHECKING:
-    from wexample_filestate.config_value.readme_content_config_value import ReadmeContentConfigValue
+    from wexample_filestate.config_value.readme_content_config_value import (
+        ReadmeContentConfigValue,
+    )
 
 
 class WithReadmeWorkdirMixin:
     README_FILENAME: ClassVar[str] = "README.md"
 
     def append_readme(self, config: DictConfig | None = None) -> DictConfig:
-        from wexample_filestate.config_value.readme_content_config_value import ReadmeContentConfigValue
+        from wexample_filestate.config_value.readme_content_config_value import (
+            ReadmeContentConfigValue,
+        )
 
         config.get("children").append(
             {
