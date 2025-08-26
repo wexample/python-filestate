@@ -66,28 +66,33 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         from wexample_config.config_value.config_value import ConfigValue
         """
         First version, might be tested / replaced / abstracted to every callable option.
-        - If value is a ConfigValue: return its underlying raw or computed value;
-          if it's a callable, execute it with self.target.
-        - If value is a callable: execute it with self.target.
-        - If value is a str: return it as-is.
-        - Explicitly drop legacy dict {'pattern': ...} support by not interpreting it.
+        Always return the built (resolved) value, never a callable:
+        - ConfigValue callable -> execute with self.target and return result
+        - ConfigValue str -> return str
+        - ConfigValue other -> return raw (then resolved below if callable)
+        - Plain callable -> execute with self.target and return result
+        - Plain str -> return as-is
+        - Other -> return as-is
+        Legacy dict {'pattern': ...} is intentionally unsupported.
         """
         # ConfigValue case
         if isinstance(value, ConfigValue):
             if value.is_callable():
                 fn = value.get_callable()
-                return fn(self.target)
-            if value.is_str():
-                return value.get_str()
-            return value.raw
+                value = fn(self.target)
+            elif value.is_str():
+                value = value.get_str()
+            else:
+                value = value.raw
 
-        # Plain callable
+        # Resolve plain callable
         if callable(value):
-            return value(self.target)
+            value = value(self.target)
 
-        # Plain string
-        if isinstance(value, str):
-            return value
-
-        # Fallback: return as-is (caller may coerce or error)
         return value
+
+    def _build_str_value(self, value: Any) -> str:
+        built = self._build_value(value)
+        if not isinstance(built, str):
+            raise TypeError(f"Expected string value, got {type(built).__name__}: {built}")
+        return built
