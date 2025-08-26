@@ -109,7 +109,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
 
     def for_each_child_of_type_recursive(self, class_type: type[AbstractItemTarget], callback: Callable) -> None:
-        def _only_type(item: AbstractItemTarget):
+        def _only_type(item: AbstractItemTarget) -> None:
             if isinstance(item, class_type):
                 callback(item)
 
