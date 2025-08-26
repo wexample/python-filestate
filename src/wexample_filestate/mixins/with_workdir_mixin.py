@@ -16,18 +16,22 @@ class WithWorkdirMixin:
     host_workdir: FileStateManager = None
 
     def _init_workdir(
-        self,
-        entrypoint_path: str,
-        io_manager: IoManager,
-        config: DictConfig | None = None,
+            self,
+            entrypoint_path: str,
+            io: IoManager,
+            config: DictConfig | None = None,
     ) -> None:
         import os
 
         self.workdir = self._get_workdir_state_manager_class(
             entrypoint_path=entrypoint_path,
-            io_manager=io_manager,
+            io=io,
             config=config,
         )
+
+        # Hide core config logs
+        original_verbosity = io.default_response_verbosity
+        io.default_response_verbosity = VerbosityLevel.MAXIMUM
 
         # Ensure files state, but not content at this point.
         self.workdir.apply(
@@ -39,12 +43,13 @@ class WithWorkdirMixin:
                 Scope.SYMLINK_TARGET,
                 Scope.TIMESTAMPS,
             },
-            verbosity=VerbosityLevel.QUIET,
         )
+
+        io.default_response_verbosity = original_verbosity
 
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(
-            path=os.getcwd(), io=io_manager
+            path=os.getcwd(), io=io
         )
 
     def _rebuild_workdir_content(self) -> None:
@@ -55,11 +60,11 @@ class WithWorkdirMixin:
         )
 
     def _get_workdir_state_manager_class(
-        self,
-        entrypoint_path: str,
-        io_manager: IoManager,
-        config: DictConfig | None = None,
+            self,
+            entrypoint_path: str,
+            io: IoManager,
+            config: DictConfig | None = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
-            path=entrypoint_path, config=config or {}, io=io_manager
+            path=entrypoint_path, config=config or {}, io=io
         )

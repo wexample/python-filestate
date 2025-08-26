@@ -17,7 +17,6 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
     AbstractOperationsProvider,
 )
 from wexample_helpers.const.types import PathOrString
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
@@ -219,7 +218,6 @@ class AbstractItemTarget(
         self,
         interactive: bool = False,
         scopes: set[Scope] | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
 
@@ -234,7 +232,6 @@ class AbstractItemTarget(
 
             self.io.info(
                 message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
-                verbosity=verbosity,
             )
 
         return result
