@@ -22,7 +22,7 @@ class YamlFile(StructuredContentFile):
         except:
             return {}
 
-    def writable(self, content: StructuredData) -> str:
+    def writable(self, content: StructuredData | None = None) -> str:
         import yaml
 
-        return yaml.dump(content)
+        return yaml.dump(content or self.read())

@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import PrivateAttr
+
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
@@ -39,8 +40,9 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
 
     @staticmethod
     def _is_existing_file(target: TargetFileOrDirectoryType) -> bool:
-        local_file = target.get_local_file()
-        return target.is_file() and local_file.path.exists()
+        if not target.source or not target.is_file():
+            return False
+        return target.get_local_file().path.exists()
 
     @staticmethod
     def _read_current_str_or_fail(target: TargetFileOrDirectoryType) -> str:
@@ -56,11 +58,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     @staticmethod
     def _read_current_src(target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content if it exists; return None if it does not exist."""
-        return (
-            target.get_local_file().read()
-            if AbstractExistingFileOperation._is_existing_file(target)
-            else None
-        )
+        return target.get_local_file().read()
 
     @classmethod
     @abstractmethod

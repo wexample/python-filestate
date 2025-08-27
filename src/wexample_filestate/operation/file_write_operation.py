@@ -9,6 +9,7 @@ from wexample_filestate.config_option.should_contain_lines_config_option import 
 from wexample_filestate.config_option.should_not_contain_lines_config_option import (
     ShouldNotContainLinesConfigOption,
 )
+from wexample_filestate.item.file.toml_file import TomlFile
 from wexample_filestate.operation.abstract_existing_file_operation import (
     AbstractExistingFileOperation,
 )
@@ -40,6 +41,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
             assert isinstance(content_option, ContentConfigValue)
             updated_content = content_option.build_content()
 
+        # Compare the original file content to the overridden version,
+        # if target class is producing some content changes.
+        class_level_changed_content = target.writable(content=updated_content)
+        if updated_content != class_level_changed_content:
+            updated_content = class_level_changed_content
+
         # Ensure required lines are present
         should_contain_lines_option = target.get_option_value(ShouldContainLinesConfigOption)
         if should_contain_lines_option and not should_contain_lines_option.is_none():
@@ -63,13 +70,6 @@ class FileWriteOperation(AbstractExistingFileOperation):
             lines = base.splitlines()
             kept_lines = [l for l in lines if l not in forbidden]
             updated_content = cls._join_with_original_newline(kept_lines, base)
-
-        # Compare the original file content to the overridden version,
-        # if target class is producing some content changes.
-        class_level_changed_content = target.writable()
-        if target.read() != class_level_changed_content:
-            return class_level_changed_content
-
         # If nothing produced, no change.
         if updated_content is None:
             return None
@@ -98,18 +98,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return updated
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        # Delegate to the parent logic which computes and caches preview via source_need_change.
-        if isinstance(
-                option,
-                (
-                        ContentConfigOption,
-                        ShouldContainLinesConfigOption,
-                        ShouldNotContainLinesConfigOption,
-                ),
-        ):
-            return self.source_need_change(self.target)
-
-        return False
+        return self.source_need_change(self.target)
 
     def describe_before(self) -> str:
         content_option = self.target.get_option(ContentConfigOption)

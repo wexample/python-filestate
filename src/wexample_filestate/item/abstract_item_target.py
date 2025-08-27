@@ -152,7 +152,7 @@ class AbstractItemTarget(
                 scopes is None or operation.get_scope() in scopes
             ):
                 self.io.task(
-                    f"Applicable operation: {operation_class.get_snake_short_class_name()}"
+                    f"Applicable operation \"{operation_class.get_snake_short_class_name()}\" on: {self.get_path()}"
                 )
                 result.operations.append(operation)
 

@@ -21,8 +21,10 @@ class XmlFile(StructuredContentFile):
         except Exception:
             return {}
 
-    def writable(self, content: StructuredData) -> str:
+    def writable(self, content: StructuredData | None = None) -> str:
         import xmltodict
+
+        content = content or self.read()
 
         if isinstance(content, str):
             # Already XML string
