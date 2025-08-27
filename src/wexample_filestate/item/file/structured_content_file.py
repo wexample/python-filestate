@@ -6,6 +6,7 @@ from pydantic import PrivateAttr
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_file import ItemTargetFile
+from wexample_helpers.const.types import Scalar
 
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
@@ -100,6 +101,12 @@ class StructuredContentFile(ItemTargetFile):
         # Delegate normalization to NestedConfigValue
         raw = cfg.to_dict()
         return self.dumps(raw)
+
+    def write_config_value(self, key: str, value: Scalar) -> None:
+        """Set a string value at key in the config and persist in one call."""
+        cfg = self.read_config()
+        cfg.get_config_item(key).set_str(str(value))
+        self.write_config(cfg)
 
     def clear(self):
         super().clear()
