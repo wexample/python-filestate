@@ -30,26 +30,26 @@ class TomlFile(StructuredContentFile):
             # On parse error, return an empty TOMLDocument instead of a dict
             return document()
 
-    def dumps(self, value: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
+    def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
         from tomlkit import dumps as toml_dumps, document
 
-        if value is None:
+        if content is None:
             return toml_dumps(document())
 
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
             from tomlkit import TOMLDocument as _TOMLDocument
-            if isinstance(value, _TOMLDocument):
-                return toml_dumps(value)
+            if isinstance(content, _TOMLDocument):
+                return toml_dumps(content)
         except Exception:
             pass
 
         # Otherwise, attempt to create a TOMLDocument from a dict-like value
-        if isinstance(value, dict):
+        if isinstance(content, dict):
             doc = document()
-            for k, v in value.items():
+            for k, v in content.items():
                 doc[k] = v
             return toml_dumps(doc)
 
         # Fallback: stringify
-        return str(value)
+        return str(content)

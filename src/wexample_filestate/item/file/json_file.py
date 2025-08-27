@@ -22,6 +22,6 @@ class JsonFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, value: StructuredData | None) -> str:
+    def dumps(self, content: StructuredData | None) -> str:
         import json
-        return json.dumps(value or {}, ensure_ascii=False, indent=2)
+        return json.dumps(content or {}, ensure_ascii=False, indent=2)

@@ -29,8 +29,8 @@ class EnvFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, value: StructuredData | None) -> str:
+    def dumps(self, content: StructuredData | None) -> str:
         # Produce .env textual content from a dict-like mapping
-        if not isinstance(value, dict):
+        if not isinstance(content, dict):
             return ""
-        return "\n".join(f"{k}={'' if v is None else v}" for k, v in value.items()) + "\n"
+        return "\n".join(f"{k}={'' if v is None else v}" for k, v in content.items()) + "\n"

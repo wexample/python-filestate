@@ -19,8 +19,8 @@ class HtmlFile(StructuredContentFile):
         # operate on the returned text externally.
         return text
 
-    def dumps(self, value: StructuredData | None) -> str:
+    def dumps(self, content: StructuredData | None) -> str:
         # Accept string content or any object convertible to string (e.g., BeautifulSoup)
-        if isinstance(value, str):
-            return value
-        return str(value or "")
+        if isinstance(content, str):
+            return content
+        return str(content or "")

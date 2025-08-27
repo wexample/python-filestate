@@ -23,12 +23,12 @@ class XmlFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, value: StructuredData | None) -> str:
+    def dumps(self, content: StructuredData | None) -> str:
         import xmltodict
-        if isinstance(value, str):
+        if isinstance(content, str):
             # Already XML string
-            return value
+            return content
         try:
-            return xmltodict.unparse(value or {}, pretty=True)
+            return xmltodict.unparse(content or {}, pretty=True)
         except Exception:
-            return str(value)
+            return str(content)

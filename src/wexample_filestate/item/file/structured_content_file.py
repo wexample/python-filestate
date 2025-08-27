@@ -18,7 +18,7 @@ class StructuredContentFile(ItemTargetFile):
 
     def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
         if reload or self._parsed_cache is None:
-            text = super().read(reload=reload)
+            text = super().read_text(reload=reload)
             self._parsed_cache = self.loads(text, strict=strict)
             # Invalidate config cache when parsed is reloaded
             if reload:
@@ -50,28 +50,28 @@ class StructuredContentFile(ItemTargetFile):
 
         return raw_value
 
-    def write_parsed(self, value: Any | None = None) -> None:
+    def write_parsed(self, content: Any | None = None) -> None:
         # If nothing provided, use cache
-        if value is None:
+        if content is None:
             if self._parsed_cache is None:
                 raise ValueError("No parsed content to write")
-            value = self._parsed_cache
-        text = self.dumps(value)
+            content = self._parsed_cache
+        text = self.dumps(content)
         # Persist via text writer from base mixin
         self.write_text(content=text)
         # Update caches consistently
-        self._parsed_cache = value
+        self._parsed_cache = content
         self._content_cache_config = None
 
-    def preview_write(self, value: Any | None = None) -> str:
+    def preview_write(self, content: Any | None = None) -> str:
         """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
-        if value is None:
+        if content is None:
             # Use current parsed cache or read from disk without reload
-            value = self._parsed_cache if self._parsed_cache is not None else self.read_parsed(reload=False)
+            content = self._parsed_cache if self._parsed_cache is not None else self.read_parsed(reload=False)
         # If a raw textual payload is provided, parse it first to apply subclass rules/defaults
-        if isinstance(value, str):
-            value = self.loads(value, strict=False)
-        text = self.dumps(value)
+        if isinstance(content, str):
+            content = self.loads(content, strict=False)
+        text = self.dumps(content)
         return text
 
     def clear(self):
@@ -84,6 +84,6 @@ class StructuredContentFile(ItemTargetFile):
         # Default fallback: return as-is (no parsing). Subclasses should override.
         return text
 
-    def dumps(self, value: Any) -> str:
+    def dumps(self, content: Any) -> str:
         # Default fallback: stringify. Subclasses should override for structured formats.
-        return str(value)
+        return str(content)
