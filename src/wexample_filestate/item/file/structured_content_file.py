@@ -25,7 +25,9 @@ class StructuredContentFile(ItemTargetFile):
                 self._content_cache_config = None
         return self._parsed_cache
 
-    def read_config(self) -> NestedConfigValue:
+    def read_config(self, reload: bool = False) -> NestedConfigValue:
+        if reload:
+            self._content_cache_config = None
         if self._content_cache_config is None:
             from wexample_config.config_value.nested_config_value import NestedConfigValue
             self._content_cache_config = NestedConfigValue(raw=self.read_parsed())
@@ -63,6 +65,21 @@ class StructuredContentFile(ItemTargetFile):
         self._parsed_cache = content
         self._content_cache_config = None
 
+    def write_config(self, value: "NestedConfigValue" | None = None) -> None:
+        """Write from a NestedConfigValue by converting to raw primitives, then persisting.
+
+        If value is None, uses the cached config. Keeps the config cache aligned after write.
+        """
+        cfg = value if value is not None else self._content_cache_config
+        if cfg is None:
+            raise ValueError("No config to write")
+        # Delegate normalization to NestedConfigValue
+        raw = cfg.to_dict()
+        # Write using the parsed pipeline to ensure consistent cache updates
+        self.write_parsed(raw)
+        # Keep the config cache aligned with what we just wrote
+        self._content_cache_config = cfg
+
     def preview_write(self, content: Any | None = None) -> str:
         """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
         if content is None:
@@ -73,6 +90,16 @@ class StructuredContentFile(ItemTargetFile):
             content = self.loads(content, strict=False)
         text = self.dumps(content)
         return text
+
+    def preview_write_config(self, value: "NestedConfigValue" | None = None) -> str:
+        """Preview write from a NestedConfigValue without I/O, by dumping its raw representation."""
+        cfg = value if value is not None else self._content_cache_config
+        if cfg is None:
+            # Fallback to parsed preview if no config is available
+            return self.preview_write()
+        # Delegate normalization to NestedConfigValue
+        raw = cfg.to_dict()
+        return self.dumps(raw)
 
     def clear(self):
         super().clear()
