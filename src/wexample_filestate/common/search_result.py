@@ -72,7 +72,7 @@ class SearchResult(ExtendedBaseModel):
         if not search:
             return []
 
-        content = item.read()
+        content = item.read_text()
         results: list[SearchResult] = []
         if regex:
             import re
