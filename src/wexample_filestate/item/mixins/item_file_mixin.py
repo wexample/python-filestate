@@ -58,23 +58,31 @@ class ItemFileMixin(ItemMixin):
             self._text_cache = self.decode_bytes(raw, encoding=encoding)
         return self._text_cache
 
-    def write_bytes(self, content: bytes | None = None, encoding: str | None = None) -> None:
+    def write_bytes(
+        self, content: bytes | None = None, encoding: str | None = None
+    ) -> None:
         data = content if content is not None else self._bytes_cache
         if data is None:
             raise ValueError("No bytes content to write")
         # LocalFile exposes a text write API; decode bytes to text first
         text = self.decode_bytes(data, encoding=encoding)
-        self.get_local_file().write(content=text, encoding=encoding or self.default_encoding())
+        self.get_local_file().write(
+            content=text, encoding=encoding or self.default_encoding()
+        )
         # Update caches: keep bytes as source and refresh text from decoded value
         self._bytes_cache = data
         self._text_cache = text
 
-    def write_text(self, content: str | None = None, encoding: str | None = None) -> None:
+    def write_text(
+        self, content: str | None = None, encoding: str | None = None
+    ) -> None:
         text = content if content is not None else self._text_cache
         if text is None:
             raise ValueError("No text content to write")
         # Persist to disk using LocalFile text API
-        self.get_local_file().write(content=text, encoding=encoding or self.default_encoding())
+        self.get_local_file().write(
+            content=text, encoding=encoding or self.default_encoding()
+        )
         # Update caches: keep text, refresh bytes from text
         self._text_cache = text
         self._bytes_cache = self.encode_text(text, encoding=encoding)
@@ -89,7 +97,15 @@ class ItemFileMixin(ItemMixin):
     def preview_write_text(self, content: str | None = None) -> str:
         """Return the exact text that would be written, without performing I/O."""
         # Choose source text: explicit content, cached text, or current file text
-        source = content if content is not None else (self._text_cache if self._text_cache is not None else self.read_text(reload=False))
+        source = (
+            content
+            if content is not None
+            else (
+                self._text_cache
+                if self._text_cache is not None
+                else self.read_text(reload=False)
+            )
+        )
         return source
 
     def preview_write(self, content: Any | None = None) -> str:

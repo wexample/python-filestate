@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pydantic import PrivateAttr
-
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.const.types import Scalar
@@ -30,7 +29,9 @@ class StructuredContentFile(ItemTargetFile):
         if reload:
             self._content_cache_config = None
         if self._content_cache_config is None:
-            from wexample_config.config_value.nested_config_value import NestedConfigValue
+            from wexample_config.config_value.nested_config_value import (
+                NestedConfigValue,
+            )
             self._content_cache_config = NestedConfigValue(raw=self.read_parsed())
 
         return self._content_cache_config
