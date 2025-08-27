@@ -20,10 +20,10 @@ Version: 0.0.47
 - pydantic>=2,<3
 - python-dotenv
 - toml
-- wexample-config==0.0.48
-- wexample-file==0.0.3
-- wexample-helpers-yaml==0.0.64
-- wexample-prompt==0.0.43
+- wexample-config==0.0.49
+- wexample-file==0.0.4
+- wexample-helpers-yaml==0.0.65
+- wexample-prompt==0.0.44
 - xmltodict
 
 ## Installation
