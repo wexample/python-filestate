@@ -27,6 +27,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         from wexample_filestate.config_value.content_config_value import (
             ContentConfigValue,
         )
+
         """Compute the prospective new content for the target file.
 
         Returns the updated content string if a change is needed, otherwise None.
@@ -49,7 +50,9 @@ class FileWriteOperation(AbstractExistingFileOperation):
             updated_content = class_level_changed_content
 
         # Ensure required lines are present
-        should_contain_lines_option = target.get_option_value(ShouldContainLinesConfigOption)
+        should_contain_lines_option = target.get_option_value(
+            ShouldContainLinesConfigOption
+        )
         if should_contain_lines_option and not should_contain_lines_option.is_none():
             from wexample_helpers.helpers.string import string_append_missing_lines
 
@@ -63,11 +66,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
         should_not_contain_lines_option = target.get_option_value(
             ShouldNotContainLinesConfigOption
         )
-        if should_not_contain_lines_option and not should_not_contain_lines_option.is_none():
+        if (
+            should_not_contain_lines_option
+            and not should_not_contain_lines_option.is_none()
+        ):
             base = current if updated_content is None else updated_content
-            forbidden = set(
-                should_not_contain_lines_option.get_list()
-            )
+            forbidden = set(should_not_contain_lines_option.get_list())
             lines = base.splitlines()
             kept_lines = [l for l in lines if l not in forbidden]
             updated_content = cls._join_with_original_newline(kept_lines, base)
@@ -85,7 +89,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @staticmethod
     def _get_current_lines_from_target(
-            target: TargetFileOrDirectoryType,
+        target: TargetFileOrDirectoryType,
     ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 

@@ -37,11 +37,7 @@ class ItemFileMixin(ItemMixin):
 
     def write(self, content: Any = None) -> Any:
         return super().write(
-            content=self.writable(
-                self.override(
-                    content=content or self.read()
-                )
-            )
+            content=self.writable(self.override(content=content or self.read()))
         )
 
     def override(self, content: Any = None) -> Any:
