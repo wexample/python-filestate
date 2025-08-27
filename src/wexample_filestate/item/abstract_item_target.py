@@ -19,6 +19,7 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
 from wexample_helpers.const.types import PathOrString
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -39,7 +40,7 @@ if TYPE_CHECKING:
 
 
 class AbstractItemTarget(
-    WithIoManager,
+    WithIoMethods,
     ItemMixin,
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
@@ -57,7 +58,7 @@ class AbstractItemTarget(
     ) -> None:
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
-        WithIoManager.__init__(self, io=io, parent_io_handler=parent_io_handler)
+        WithIoMethods.__init__(self, io=io, parent_io_handler=parent_io_handler)
 
     @classmethod
     def create_from_path(

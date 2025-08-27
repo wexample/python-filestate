@@ -45,7 +45,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         # Compare the original file content to the overridden version,
         # if target class is producing some content changes.
-        class_level_changed_content = target.writable(content=updated_content)
+        class_level_changed_content = target.preview_write(content=updated_content)
         if updated_content != class_level_changed_content:
             updated_content = class_level_changed_content
 
