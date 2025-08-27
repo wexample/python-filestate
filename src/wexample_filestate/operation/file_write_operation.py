@@ -90,33 +90,16 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return updated
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        if isinstance(option, ContentConfigOption):
-            current_content = self._get_current_content_from_target(self.target)
-            option = self.target.get_option_value(ContentConfigOption)
-            if option is not None:
-                new_content = option.get_str()
-                return current_content != new_content
-            return False
-
-        if isinstance(option, ShouldContainLinesConfigOption):
-            # Use the same representation as describe_before(): a list of strings
-            required_lines = self.target.get_option_value(
-                ShouldContainLinesConfigOption
-            ).get_list()
-            if not self.target.get_local_file().path.exists():
-                return True
-            current_lines = self._get_current_lines_from_target(self.target)
-            return any(line not in current_lines for line in required_lines)
-
-        if isinstance(option, ShouldNotContainLinesConfigOption):
-            # If file does not exist, there's nothing to remove yet, so not applicable.
-            if not self.target.get_local_file().path.exists():
-                return False
-            forbidden_lines = self.target.get_option_value(
-                ShouldNotContainLinesConfigOption
-            ).get_list()
-            current_lines = self._get_current_lines_from_target(self.target)
-            return any(line in current_lines for line in forbidden_lines)
+        # Delegate to the parent logic which computes and caches preview via source_need_change.
+        if isinstance(
+            option,
+            (
+                ContentConfigOption,
+                ShouldContainLinesConfigOption,
+                ShouldNotContainLinesConfigOption,
+            ),
+        ):
+            return self.source_need_change(self.target)
 
         return False
 
