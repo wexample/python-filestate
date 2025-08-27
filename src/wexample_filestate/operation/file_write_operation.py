@@ -24,6 +24,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
+        from wexample_filestate.config_value.content_config_value import ContentConfigValue
         """Compute the prospective new content for the target file.
 
         Returns the updated content string if a change is needed, otherwise None.
@@ -34,29 +35,30 @@ class FileWriteOperation(AbstractExistingFileOperation):
         updated_content: str | None = None
 
         # Exact content override
-        content_option = target.get_option(ContentConfigOption)
-        if content_option is not None:
-            updated_content = target.get_option_value(ContentConfigOption).get_str()
+        content_option = target.get_option_value(ContentConfigOption)
+        if content_option and not content_option.is_none():
+            assert isinstance(content_option, ContentConfigValue)
+            updated_content = content_option.build_content()
 
         # Ensure required lines are present
-        should_contain_lines_option = target.get_option(ShouldContainLinesConfigOption)
-        if should_contain_lines_option is not None:
+        should_contain_lines_option = target.get_option_value(ShouldContainLinesConfigOption)
+        if should_contain_lines_option and not should_contain_lines_option.is_none():
             from wexample_helpers.helpers.string import string_append_missing_lines
 
             base = current if updated_content is None else updated_content
             updated_content = string_append_missing_lines(
-                lines=target.get_option_value(ShouldContainLinesConfigOption).get_list(),
+                lines=should_contain_lines_option.get_list(),
                 content=base,
             )
 
         # Remove forbidden lines if present
-        should_not_contain_lines_option = target.get_option(
+        should_not_contain_lines_option = target.get_option_value(
             ShouldNotContainLinesConfigOption
         )
-        if should_not_contain_lines_option is not None:
+        if should_not_contain_lines_option and not should_not_contain_lines_option.is_none():
             base = current if updated_content is None else updated_content
             forbidden = set(
-                target.get_option_value(ShouldNotContainLinesConfigOption).get_list()
+                should_not_contain_lines_option.get_list()
             )
             lines = base.splitlines()
             kept_lines = [l for l in lines if l not in forbidden]
