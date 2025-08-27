@@ -80,7 +80,7 @@ class ItemFileMixin(ItemMixin):
         self._text_cache = text
         self._bytes_cache = self.encode_text(text, encoding=encoding)
 
-    def clear(self):
+    def clear(self) -> None:
         self.clear_caches()
 
     def clear_caches(self) -> None:

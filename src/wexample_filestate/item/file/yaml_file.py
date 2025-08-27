@@ -28,6 +28,7 @@ class YamlFile(StructuredContentFile):
 
     def dumps(self, content: StructuredData | None) -> str:
         import yaml
+
         # Avoid dumping ConfigValue directly; convert to primitive via str by default
         def _normalize(v):
             if isinstance(v, ConfigValue):

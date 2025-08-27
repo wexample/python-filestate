@@ -15,6 +15,7 @@ class XmlFile(StructuredContentFile):
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> StructuredData:
         import xmltodict
+
         try:
             parsed = xmltodict.parse(text)
             return parsed or {}
@@ -25,6 +26,7 @@ class XmlFile(StructuredContentFile):
 
     def dumps(self, content: StructuredData | None) -> str:
         import xmltodict
+
         if isinstance(content, str):
             # Already XML string
             return content

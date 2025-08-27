@@ -15,6 +15,7 @@ class JsonFile(StructuredContentFile):
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> JsonContent:  # type: ignore[name-defined]
         import json
+
         try:
             return json.loads(text)
         except Exception as e:
@@ -24,4 +25,5 @@ class JsonFile(StructuredContentFile):
 
     def dumps(self, content: StructuredData | None) -> str:
         import json
+
         return json.dumps(content or {}, ensure_ascii=False, indent=2)

@@ -66,7 +66,7 @@ class StructuredContentFile(ItemTargetFile):
         self._parsed_cache = content
         self._content_cache_config = None
 
-    def write_config(self, value: "NestedConfigValue" | None = None) -> None:
+    def write_config(self, value: NestedConfigValue | None = None) -> None:
         """Write from a NestedConfigValue by converting to raw primitives, then persisting.
 
         If value is None, uses the cached config. Keeps the config cache aligned after write.
@@ -92,7 +92,7 @@ class StructuredContentFile(ItemTargetFile):
         text = self.dumps(content)
         return text
 
-    def preview_write_config(self, value: "NestedConfigValue" | None = None) -> str:
+    def preview_write_config(self, value: NestedConfigValue | None = None) -> str:
         """Preview write from a NestedConfigValue without I/O, by dumping its raw representation."""
         cfg = value if value is not None else self._content_cache_config
         if cfg is None:

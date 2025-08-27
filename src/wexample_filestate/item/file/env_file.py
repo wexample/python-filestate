@@ -21,6 +21,7 @@ class EnvFile(StructuredContentFile):
     def loads(self, text: str, strict: bool = False) -> StructuredData:
         # Use python-dotenv parser directly on text input
         from io import StringIO
+
         from dotenv import dotenv_values
         try:
             return dict(dotenv_values(stream=StringIO(text)))
