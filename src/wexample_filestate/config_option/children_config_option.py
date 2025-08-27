@@ -68,6 +68,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     def create_child_item(
             self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
+        from wexample_config.config_option.name_config_option import NameConfigOption
         from wexample_filestate.config_option.class_config_option import (
             ClassConfigOption,
         )
@@ -75,7 +76,6 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         from wexample_filestate.helpers.config_helper import config_is_item_type
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
-        from wexample_config.config_option.name_config_option import NameConfigOption
 
         option_name = ClassConfigOption.get_snake_short_class_name()
         if option_name in child_config:

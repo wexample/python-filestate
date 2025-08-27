@@ -9,7 +9,6 @@ from wexample_filestate.config_option.should_contain_lines_config_option import 
 from wexample_filestate.config_option.should_not_contain_lines_config_option import (
     ShouldNotContainLinesConfigOption,
 )
-from wexample_filestate.item.file.toml_file import TomlFile
 from wexample_filestate.operation.abstract_existing_file_operation import (
     AbstractExistingFileOperation,
 )
@@ -25,7 +24,9 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
-        from wexample_filestate.config_value.content_config_value import ContentConfigValue
+        from wexample_filestate.config_value.content_config_value import (
+            ContentConfigValue,
+        )
         """Compute the prospective new content for the target file.
 
         Returns the updated content string if a change is needed, otherwise None.

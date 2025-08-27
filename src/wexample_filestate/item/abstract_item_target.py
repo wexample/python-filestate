@@ -141,8 +141,7 @@ class AbstractItemTarget(
     ) -> None:
         self.io.indentation_up()
         self.io.log(
-            message=f"Inspecting: {self.get_path()}",
-            verbosity=VerbosityLevel.MAXIMUM
+            message=f"Inspecting: {self.get_path()}", verbosity=VerbosityLevel.MAXIMUM
         )
 
         for operation_class in self.get_operations():
@@ -152,7 +151,7 @@ class AbstractItemTarget(
                 scopes is None or operation.get_scope() in scopes
             ):
                 self.io.task(
-                    f"Applicable operation \"{operation_class.get_snake_short_class_name()}\" on: {self.get_path()}"
+                    f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
                 )
                 result.operations.append(operation)
 
