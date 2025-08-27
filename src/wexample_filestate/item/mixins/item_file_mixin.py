@@ -36,7 +36,7 @@ class ItemFileMixin(ItemMixin):
         return self._content_cache
 
     def write(self, content: Any = None) -> Any:
-        return super().write(
+        return self.get_local_file().write(
             content=self.writable(self.override(content=content or self.read()))
         )
 
