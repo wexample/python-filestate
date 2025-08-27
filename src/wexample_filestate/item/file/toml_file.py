@@ -27,16 +27,12 @@ class TomlFile(StructuredContentFile):
             # On parse error, return an empty TOMLDocument instead of a dict
             return document()
 
-    def make_writable_content(self, content: TOMLDocument | dict | None) -> str:
+    def writable(self, content: TOMLDocument | dict | None) -> str:
         """Serialize a TOMLDocument (preferred) or a plain dict to TOML.
         Using tomlkit.dumps preserves comments/formatting when content is a TOMLDocument.
         """
-        from tomlkit import document, dumps
+        from tomlkit import dumps
 
-        try:
-            if content is None:
-                return dumps(document())
-            return dumps(content)
-        except Exception:
-            # As a safe fallback, write an empty TOML document
-            return dumps(document())
+        content['project']['name'] = 'YEAH'
+
+        return dumps(content)

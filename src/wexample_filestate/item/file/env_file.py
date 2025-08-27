@@ -23,7 +23,7 @@ class EnvFile(StructuredContentFile):
 
         return dict(dotenv_values(self.get_path()))
 
-    def make_writable_content(self, content: StructuredData) -> str:
+    def writable(self, content: StructuredData) -> str:
         # Unused now that write() is overridden. Keep a no-op textual fallback.
         if not isinstance(content, dict):
             return ""

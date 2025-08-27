@@ -20,7 +20,7 @@ class JsonFile(StructuredContentFile):
         except Exception:
             return {}
 
-    def make_writable_content(self, content: StructuredData) -> str:
+    def writable(self, content: StructuredData) -> str:
         import json
 
         # Pretty print while keeping unicode characters intact

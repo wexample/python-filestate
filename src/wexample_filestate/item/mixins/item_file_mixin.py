@@ -38,7 +38,7 @@ class ItemFileMixin(ItemMixin):
 
     def write(self, content: Any = None) -> Any:
         return super().write(
-            content=self.make_writable_content(
+            content=self.writable(
                 self.override(
                     content=content or self.read()
                 )
@@ -49,7 +49,7 @@ class ItemFileMixin(ItemMixin):
         """Let class apply transformations to content, at least before saving."""
         return str(content or self.read())
 
-    def make_writable_content(self, content: Any = None) -> str:
+    def writable(self, content: Any = None) -> str:
         """If needed, transform source content (like dict or class) to a writable format (basically str),
         when using, for instance, default write method. Might be useless if write is overridden.
         """

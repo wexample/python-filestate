@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.const.types import DictConfig
@@ -23,15 +22,6 @@ class StructuredContentFile(ItemTargetFile):
 
     def _parse_file_content(self, content: str) -> Any:
         return content
-
-    def write(self, content: Any) -> Any:
-        return super().write(content=self.make_writable_content(content))
-
-    @abstractmethod
-    def make_writable_content(self, content: Any) -> str:
-        """If needed, transform source content (like dict or class) to a writable format (basically str),
-        when using, for instance, default write method. Might be useless if write is overridden.
-        """
 
     def _expected_file_name_extension(self) -> str | None:
         return None

@@ -33,12 +33,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         updated_content: str | None = None
 
-        # 1) Exact content override
+        # Exact content override
         content_option = target.get_option(ContentConfigOption)
         if content_option is not None:
             updated_content = target.get_option_value(ContentConfigOption).get_str()
 
-        # 2) Ensure required lines are present
+        # Ensure required lines are present
         should_contain_lines_option = target.get_option(ShouldContainLinesConfigOption)
         if should_contain_lines_option is not None:
             from wexample_helpers.helpers.string import string_append_missing_lines
@@ -49,7 +49,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
                 content=base,
             )
 
-        # 3) Remove forbidden lines if present
+        # Remove forbidden lines if present
         should_not_contain_lines_option = target.get_option(
             ShouldNotContainLinesConfigOption
         )
@@ -61,6 +61,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
             lines = base.splitlines()
             kept_lines = [l for l in lines if l not in forbidden]
             updated_content = cls._join_with_original_newline(kept_lines, base)
+
+        # Compare the original file content to the overridden version,
+        # if target class is producing some content changes.
+        class_level_changed_content = target.writable()
+        if target.read() != class_level_changed_content:
+            return class_level_changed_content
 
         # If nothing produced, no change.
         if updated_content is None:
@@ -76,7 +82,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @staticmethod
     def _get_current_lines_from_target(
-        target: TargetFileOrDirectoryType,
+            target: TargetFileOrDirectoryType,
     ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 
@@ -92,12 +98,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         # Delegate to the parent logic which computes and caches preview via source_need_change.
         if isinstance(
-            option,
-            (
-                ContentConfigOption,
-                ShouldContainLinesConfigOption,
-                ShouldNotContainLinesConfigOption,
-            ),
+                option,
+                (
+                        ContentConfigOption,
+                        ShouldContainLinesConfigOption,
+                        ShouldNotContainLinesConfigOption,
+                ),
         ):
             return self.source_need_change(self.target)
 
