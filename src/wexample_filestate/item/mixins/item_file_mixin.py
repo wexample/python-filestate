@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from pydantic import PrivateAttr
+
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
 if TYPE_CHECKING:
@@ -10,11 +11,9 @@ if TYPE_CHECKING:
 
 
 class ItemFileMixin(ItemMixin):
-    _content_cache: Any = PrivateAttr(default=None)
-
-    @property
-    def content(self) -> Any:
-        return self._content_cache
+    # Separate caches for clarity and reliability.
+    _bytes_cache: bytes | None = PrivateAttr(default=None)
+    _text_cache: str | None = PrivateAttr(default=None)
 
     def get_item_title(self) -> str:
         return "File"
@@ -30,22 +29,68 @@ class ItemFileMixin(ItemMixin):
 
         return LocalFile(path=self.get_path())
 
-    def read(self, reload: bool = True) -> Any:
-        if reload == True or self._content_cache is None:
-            self._content_cache = self.get_local_file().read()
-        return self._content_cache
+    def default_encoding(self) -> str:
+        return "utf-8"
 
-    def write(self, content: Any = None) -> Any:
-        return self.get_local_file().write(
-            content=self.writable(self.override(content=content or self.read()))
-        )
+    def decode_bytes(self, raw: bytes, encoding: str | None = None) -> str:
+        enc = encoding or self.default_encoding()
+        return raw.decode(enc)
 
-    def override(self, content: Any = None) -> Any:
-        """Let class apply transformations to content, at least before saving."""
-        return content or self.read()
+    def encode_text(self, text: str, encoding: str | None = None) -> bytes:
+        enc = encoding or self.default_encoding()
+        return text.encode(enc)
 
-    def writable(self, content: Any = None) -> str:
-        """If needed, transform source content (like dict or class) to a writable format (basically str),
-        when using, for instance, default write method. Might be useless if write is overridden.
-        """
-        return str(content or self.read())
+    def read_bytes(self, reload: bool = False) -> bytes:
+        if reload or self._bytes_cache is None:
+            data = self.get_local_file().read()
+            # LocalFile.read() is assumed to return str or bytes. Normalize to bytes.
+            if isinstance(data, str):
+                # If LocalFile returns text, re-encode using default encoding.
+                data = self.encode_text(data)
+            self._bytes_cache = data
+            # Invalidate text cache if we reloaded from disk.
+            if reload:
+                self._text_cache = None
+        return self._bytes_cache  # type: ignore[return-value]
+
+    def read_text(self, reload: bool = False, encoding: str | None = None) -> str:
+        if reload or self._text_cache is None:
+            raw = self.read_bytes(reload=reload)
+            self._text_cache = self.decode_bytes(raw, encoding=encoding)
+        return self._text_cache
+
+    def before_write_text(self, text: str) -> str:
+        return text
+
+    def before_write_bytes(self, data: bytes) -> bytes:
+        return data
+
+    def write_bytes(self, content: bytes | None = None) -> None:
+        data = content if content is not None else self._bytes_cache
+        if data is None:
+            raise ValueError("No bytes content to write")
+        data = self.before_write_bytes(data)
+        # Persist to disk
+        self.get_local_file().write_text(content=data)
+        # Update caches: bytes is now source of truth; text becomes stale
+        self._bytes_cache = data
+        self._text_cache = None
+
+    def write_text(self, content: str | None = None, encoding: str | None = None) -> None:
+        text = content if content is not None else self._text_cache
+        if text is None:
+            raise ValueError("No text content to write")
+        text = self.before_write_text(text)
+        data = self.encode_text(text, encoding=encoding)
+        # Persist to disk
+        self.get_local_file().write_text(content=data)
+        # Update caches: keep text, recompute/refresh bytes from text
+        self._text_cache = text
+        self._bytes_cache = data
+
+    def clear(self):
+        self.clear_caches()
+
+    def clear_caches(self) -> None:
+        self._bytes_cache = None
+        self._text_cache = None

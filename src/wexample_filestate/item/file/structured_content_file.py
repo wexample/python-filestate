@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from pydantic import PrivateAttr
+
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_file import ItemTargetFile
 
@@ -10,18 +12,25 @@ if TYPE_CHECKING:
 
 
 class StructuredContentFile(ItemTargetFile):
-    def read(self, reload: bool = True) -> Any:
-        if reload == True or self._content_cache is None:
-            self._content_cache = self._parse_file_content(super().read(reload=reload))
-        return self._content_cache
+    # Caches for structured layers
+    _parsed_cache: Any | None = PrivateAttr(default=None)
+    _content_cache_config: NestedConfigValue | None = PrivateAttr(default=None)
 
-    def read_as_config(self) -> NestedConfigValue:
-        from wexample_config.config_value.nested_config_value import NestedConfigValue
+    def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
+        if reload or self._parsed_cache is None:
+            text = super().read(reload=reload)
+            self._parsed_cache = self.loads(text, strict=strict)
+            # Invalidate config cache when parsed is reloaded
+            if reload:
+                self._content_cache_config = None
+        return self._parsed_cache
 
-        return NestedConfigValue(raw=self.read())
+    def read_config(self) -> NestedConfigValue:
+        if self._content_cache_config is None:
+            from wexample_config.config_value.nested_config_value import NestedConfigValue
+            self._content_cache_config = NestedConfigValue(raw=self.read_parsed())
 
-    def _parse_file_content(self, content: str) -> Any:
-        return content
+        return self._content_cache_config
 
     def _expected_file_name_extension(self) -> str | None:
         return None
@@ -40,3 +49,29 @@ class StructuredContentFile(ItemTargetFile):
             )
 
         return raw_value
+
+    def write_parsed(self, value: Any | None = None) -> None:
+        # If nothing provided, use cache
+        if value is None:
+            if self._parsed_cache is None:
+                raise ValueError("No parsed content to write")
+            value = self._parsed_cache
+        text = self.dumps(value)
+        super().write(content=text)
+        # Update caches consistently
+        self._parsed_cache = value
+        self._content_cache_config = None
+
+    def clear(self):
+        super().clear()
+
+        self._parsed_cache = None
+        self._content_cache_config = None
+
+    def loads(self, text: str, strict: bool = False) -> Any:
+        # Default fallback: return as-is (no parsing). Subclasses should override.
+        return text
+
+    def dumps(self, value: Any) -> str:
+        # Default fallback: stringify. Subclasses should override for structured formats.
+        return str(value)
