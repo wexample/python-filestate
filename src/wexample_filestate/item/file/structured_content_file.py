@@ -57,18 +57,22 @@ class StructuredContentFile(ItemTargetFile):
                 raise ValueError("No parsed content to write")
             value = self._parsed_cache
         text = self.dumps(value)
-        super().write(content=text)
+        # Persist via text writer from base mixin
+        self.write_text(content=text)
         # Update caches consistently
         self._parsed_cache = value
         self._content_cache_config = None
 
     def preview_write(self, value: Any | None = None) -> str:
-        """Return the exact text that would be written for parsed content, without performing I/O."""
+        """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
         if value is None:
             # Use current parsed cache or read from disk without reload
             value = self._parsed_cache if self._parsed_cache is not None else self.read_parsed(reload=False)
+        # If a raw textual payload is provided, parse it first to apply subclass rules/defaults
+        if isinstance(value, str):
+            value = self.loads(value, strict=False)
         text = self.dumps(value)
-        return self.before_write_text(text)
+        return text
 
     def clear(self):
         super().clear()

@@ -59,17 +59,10 @@ class ItemFileMixin(ItemMixin):
             self._text_cache = self.decode_bytes(raw, encoding=encoding)
         return self._text_cache
 
-    def before_write_text(self, text: str) -> str:
-        return text
-
-    def before_write_bytes(self, data: bytes) -> bytes:
-        return data
-
     def write_bytes(self, content: bytes | None = None) -> None:
         data = content if content is not None else self._bytes_cache
         if data is None:
             raise ValueError("No bytes content to write")
-        data = self.before_write_bytes(data)
         # Persist to disk
         self.get_local_file().write_text(content=data)
         # Update caches: bytes is now source of truth; text becomes stale
@@ -80,7 +73,6 @@ class ItemFileMixin(ItemMixin):
         text = content if content is not None else self._text_cache
         if text is None:
             raise ValueError("No text content to write")
-        text = self.before_write_text(text)
         data = self.encode_text(text, encoding=encoding)
         # Persist to disk
         self.get_local_file().write_text(content=data)
@@ -96,10 +88,10 @@ class ItemFileMixin(ItemMixin):
         self._text_cache = None
 
     def preview_write_text(self, content: str | None = None) -> str:
-        """Return the exact text that would be written, applying hooks, without performing I/O."""
+        """Return the exact text that would be written, without performing I/O."""
         # Choose source text: explicit content, cached text, or current file text
         source = content if content is not None else (self._text_cache if self._text_cache is not None else self.read_text(reload=False))
-        return self.before_write_text(source)
+        return source
 
     def preview_write(self, content: Any | None = None) -> str:
         """Generic preview; in base class treats content as text (cast to str if needed)."""
