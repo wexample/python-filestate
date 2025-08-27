@@ -14,15 +14,42 @@ class TomlFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_TOML
 
-    def _parse_file_content(self, content: str) -> TOMLDocument:
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> TOMLDocument:  # type: ignore[name-defined]
         # Use tomlkit to preserve comments and formatting during round-trip
         from tomlkit import document, parse
 
         try:
-            if content is None or content == "":
+            if text is None or text == "":
                 # Return an empty TOMLDocument to keep types consistent
                 return document()
-            return parse(content)
-        except Exception:
+            return parse(text)
+        except Exception as e:
+            if strict:
+                raise e
             # On parse error, return an empty TOMLDocument instead of a dict
             return document()
+
+    def dumps(self, value: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
+        from tomlkit import dumps as toml_dumps, document
+
+        if value is None:
+            return toml_dumps(document())
+
+        # If it's already a TOMLDocument, dump as-is to preserve formatting
+        try:
+            from tomlkit import TOMLDocument as _TOMLDocument
+            if isinstance(value, _TOMLDocument):
+                return toml_dumps(value)
+        except Exception:
+            pass
+
+        # Otherwise, attempt to create a TOMLDocument from a dict-like value
+        if isinstance(value, dict):
+            doc = document()
+            for k, v in value.items():
+                doc[k] = v
+            return toml_dumps(doc)
+
+        # Fallback: stringify
+        return str(value)

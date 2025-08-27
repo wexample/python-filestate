@@ -17,19 +17,20 @@ class EnvFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_ENV
 
-    def read(self, reload: bool = True) -> StructuredData:
-        # Delegate parsing to python-dotenv without touching os.environ
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> StructuredData:
+        # Use python-dotenv parser directly on text input
+        from io import StringIO
         from dotenv import dotenv_values
+        try:
+            return dict(dotenv_values(stream=StringIO(text)))
+        except Exception as e:
+            if strict:
+                raise e
+            return {}
 
-        return dict(dotenv_values(self.get_path()))
-
-    def writable(self, content: StructuredData | None = None) -> str:
-        content = content or self.read()
-
-        # Unused now that write() is overridden. Keep a no-op textual fallback.
-        if not isinstance(content, dict):
+    def dumps(self, value: StructuredData | None) -> str:
+        # Produce .env textual content from a dict-like mapping
+        if not isinstance(value, dict):
             return ""
-        return (
-            "\n".join(f"{k}={v if v is not None else ''}" for k, v in content.items())
-            + "\n"
-        )
+        return "\n".join(f"{k}={'' if v is None else v}" for k, v in value.items()) + "\n"

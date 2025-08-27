@@ -13,13 +13,14 @@ class HtmlFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_HTML
 
-    def _parse_file_content(self, content: str) -> str:
-        # We keep HTML as raw string by default. If callers need a parsed tree,
-        # they can pass a BeautifulSoup object to write(), which will be cast to str.
-        return content
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> str:
+        # Keep HTML as raw string. If callers need a parsed tree, they can
+        # operate on the returned text externally.
+        return text
 
-    def writable(self, content: StructuredData | None = None) -> str:
-        content = content or self.read()
-
+    def dumps(self, value: StructuredData | None) -> str:
         # Accept string content or any object convertible to string (e.g., BeautifulSoup)
-        return content if isinstance(content, str) else str(content)
+        if isinstance(value, str):
+            return value
+        return str(value or "")

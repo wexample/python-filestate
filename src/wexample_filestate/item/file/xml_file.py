@@ -12,27 +12,23 @@ class XmlFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_XML
 
-    def _parse_file_content(self, content: str) -> StructuredData:
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> StructuredData:
         import xmltodict
-
         try:
-            parsed = xmltodict.parse(content)
+            parsed = xmltodict.parse(text)
             return parsed or {}
-        except Exception:
+        except Exception as e:
+            if strict:
+                raise e
             return {}
 
-    def writable(self, content: StructuredData | None = None) -> str:
+    def dumps(self, value: StructuredData | None) -> str:
         import xmltodict
-
-        content = content or self.read()
-
-        if isinstance(content, str):
+        if isinstance(value, str):
             # Already XML string
-            return content
-
+            return value
         try:
-            # xmltodict expects a mapping-like object
-            return xmltodict.unparse(content, pretty=True)
+            return xmltodict.unparse(value or {}, pretty=True)
         except Exception:
-            # Fallback to string representation if content is not mappable
-            return str(content)
+            return str(value)

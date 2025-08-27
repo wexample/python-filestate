@@ -12,16 +12,16 @@ class JsonFile(StructuredContentFile):
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_JSON
 
-    def _parse_file_content(self, content: str) -> JsonContent:  # type: ignore[name-defined]
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> JsonContent:  # type: ignore[name-defined]
         import json
-
         try:
-            return json.loads(content)
-        except Exception:
+            return json.loads(text)
+        except Exception as e:
+            if strict:
+                raise e
             return {}
 
-    def writable(self, content: StructuredData | None = None) -> str:
+    def dumps(self, value: StructuredData | None) -> str:
         import json
-
-        # Pretty print while keeping unicode characters intact
-        return json.dumps(content or self.read(), ensure_ascii=False, indent=2)
+        return json.dumps(value or {}, ensure_ascii=False, indent=2)
