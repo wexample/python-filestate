@@ -32,6 +32,7 @@ class StructuredContentFile(ItemTargetFile):
             from wexample_config.config_value.nested_config_value import (
                 NestedConfigValue,
             )
+
             self._content_cache_config = NestedConfigValue(raw=self.read_parsed())
 
         return self._content_cache_config
@@ -86,7 +87,11 @@ class StructuredContentFile(ItemTargetFile):
         """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
         if content is None:
             # Use current parsed cache or read from disk without reload
-            content = self._parsed_cache if self._parsed_cache is not None else self.read_parsed(reload=False)
+            content = (
+                self._parsed_cache
+                if self._parsed_cache is not None
+                else self.read_parsed(reload=False)
+            )
         # If a raw textual payload is provided, parse it first to apply subclass rules/defaults
         if isinstance(content, str):
             content = self.loads(content, strict=False)
