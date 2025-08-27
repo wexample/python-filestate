@@ -17,6 +17,7 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
     AbstractOperationsProvider,
 )
 from wexample_helpers.const.types import PathOrString
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
@@ -139,7 +140,10 @@ class AbstractItemTarget(
         scopes: set[Scope] | None = None,
     ) -> None:
         self.io.indentation_up()
-        self.io.log(f"Building operations for: {self.get_path()}")
+        self.io.log(
+            message=f"Inspecting: {self.get_path()}",
+            verbosity=VerbosityLevel.MAXIMUM
+        )
 
         for operation_class in self.get_operations():
             # Instantiate first; we'll test applicability on the instance.
