@@ -42,7 +42,7 @@ class ItemFileMixin(ItemMixin):
 
     def override(self, content: Any = None) -> Any:
         """Let class apply transformations to content, at least before saving."""
-        return str(content or self.read())
+        return content or self.read()
 
     def writable(self, content: Any = None) -> str:
         """If needed, transform source content (like dict or class) to a writable format (basically str),
