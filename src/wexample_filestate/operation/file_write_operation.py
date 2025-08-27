@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from wexample_filestate.config_option.content_config_option import ContentConfigOption
@@ -10,12 +9,9 @@ from wexample_filestate.config_option.should_contain_lines_config_option import 
 from wexample_filestate.config_option.should_not_contain_lines_config_option import (
     ShouldNotContainLinesConfigOption,
 )
-from wexample_filestate.enum.scopes import Scope
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
+from wexample_filestate.operation.abstract_existing_file_operation import (
+    AbstractExistingFileOperation,
 )
-from wexample_helpers.helpers.file import file_read
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
@@ -24,16 +20,59 @@ if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
+class FileWriteOperation(AbstractExistingFileOperation):
 
     @classmethod
-    def get_scope(cls) -> Scope:
-        return Scope.CONTENT
+    def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
+        """Compute the prospective new content for the target file.
+
+        Returns the updated content string if a change is needed, otherwise None.
+        """
+        # Start from current content ("" if file does not exist)
+        current = cls._read_current_src(target) or ""
+
+        updated_content: str | None = None
+
+        # 1) Exact content override
+        content_option = target.get_option(ContentConfigOption)
+        if content_option is not None:
+            updated_content = target.get_option_value(ContentConfigOption).get_str()
+
+        # 2) Ensure required lines are present
+        should_contain_lines_option = target.get_option(ShouldContainLinesConfigOption)
+        if should_contain_lines_option is not None:
+            from wexample_helpers.helpers.string import string_append_missing_lines
+
+            base = current if updated_content is None else updated_content
+            updated_content = string_append_missing_lines(
+                lines=target.get_option_value(ShouldContainLinesConfigOption).get_list(),
+                content=base,
+            )
+
+        # 3) Remove forbidden lines if present
+        should_not_contain_lines_option = target.get_option(
+            ShouldNotContainLinesConfigOption
+        )
+        if should_not_contain_lines_option is not None:
+            base = current if updated_content is None else updated_content
+            forbidden = set(
+                target.get_option_value(ShouldNotContainLinesConfigOption).get_list()
+            )
+            lines = base.splitlines()
+            kept_lines = [l for l in lines if l not in forbidden]
+            updated_content = cls._join_with_original_newline(kept_lines, base)
+
+        # If nothing produced, no change.
+        if updated_content is None:
+            return None
+
+        # If produced content equals current content, no change.
+        return updated_content if updated_content != current else None
 
     @staticmethod
     def _get_current_content_from_target(target: TargetFileOrDirectoryType) -> str:
-        local_file = target.get_local_file()
-        return local_file.read() if local_file.path.exists() else ""
+        src = AbstractExistingFileOperation._read_current_src(target)
+        return src if isinstance(src, str) else ""
 
     @staticmethod
     def _get_current_lines_from_target(
@@ -132,60 +171,3 @@ class FileWriteOperation(FileManipulationOperationMixin, AbstractOperation):
             "Write or update file content to comply with configured content, enforce required lines, "
             "and remove forbidden lines."
         )
-
-    def apply(self) -> None:
-        content_option = self.target.get_option(ContentConfigOption)
-        should_contain_lines_option = self.target.get_option(
-            ShouldContainLinesConfigOption
-        )
-        should_not_contain_lines_option = self.target.get_option(
-            ShouldNotContainLinesConfigOption
-        )
-        updated_content = None
-
-        if content_option is not None:
-            updated_content = self.target.get_option_value(
-                ContentConfigOption
-            ).get_str()
-
-        if should_contain_lines_option is not None:
-            from wexample_helpers.helpers.string import string_append_missing_lines
-
-            # Initialize content from existing file or empty string if file doesn't exist
-            if updated_content is None:
-                updated_content = (
-                    file_read(self.target.get_resolved())
-                    if os.path.exists(self.target.get_resolved())
-                    else ""
-                )
-
-            updated_content = string_append_missing_lines(
-                lines=self.target.get_option_value(
-                    ShouldContainLinesConfigOption
-                ).get_list(),
-                content=updated_content,
-            )
-
-        if should_not_contain_lines_option is not None:
-            # Initialize content if not set yet
-            if updated_content is None:
-                updated_content = self._get_current_content_from_target(self.target)
-
-            # Remove any line that exactly matches one of the forbidden lines
-            forbidden = set(
-                self.target.get_option_value(
-                    ShouldNotContainLinesConfigOption
-                ).get_list()
-            )
-            original = updated_content
-            lines = original.splitlines()
-            kept_lines = [l for l in lines if l not in forbidden]
-
-            # Preserve trailing newline if present in original content
-            updated_content = self._join_with_original_newline(kept_lines, original)
-
-        if updated_content is not None:
-            self._target_file_write(content=updated_content)
-
-    def undo(self) -> None:
-        self._restore_target_file()
