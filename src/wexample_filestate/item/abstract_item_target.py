@@ -50,22 +50,18 @@ class AbstractItemTarget(
     last_result: AbstractResult | None = None
 
     def __init__(
-            self,
-            io: IoManager | None = None,
-            parent_io_handler: WithIoManager | None = None,
-            **kwargs
+        self,
+        io: IoManager | None = None,
+        parent_io_handler: WithIoManager | None = None,
+        **kwargs,
     ) -> None:
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
-        WithIoManager.__init__(
-            self,
-            io=io,
-            parent_io_handler=parent_io_handler
-        )
+        WithIoManager.__init__(self, io=io, parent_io_handler=parent_io_handler)
 
     @classmethod
     def create_from_path(
-            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -144,9 +140,9 @@ class AbstractItemTarget(
         ]
 
     def build_operations(
-            self: TargetFileOrDirectoryType,
-            result: AbstractResult,
-            scopes: set[Scope] | None = None,
+        self: TargetFileOrDirectoryType,
+        result: AbstractResult,
+        scopes: set[Scope] | None = None,
     ) -> None:
         self.io.indentation_up()
         self.io.log(
@@ -157,7 +153,7 @@ class AbstractItemTarget(
             # Instantiate first; we'll test applicability on the instance.
             operation = operation_class(io=self.io, target=self)
             if operation.applicable() and (
-                    scopes is None or operation.get_scope() in scopes
+                scopes is None or operation.get_scope() in scopes
             ):
                 self.io.task(
                     f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
@@ -227,9 +223,9 @@ class AbstractItemTarget(
         return result
 
     def apply(
-            self,
-            interactive: bool = False,
-            scopes: set[Scope] | None = None,
+        self,
+        interactive: bool = False,
+        scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
 
@@ -249,7 +245,7 @@ class AbstractItemTarget(
         return result
 
     def find_closest(
-            self, class_type: type[AbstractItemTarget]
+        self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 
