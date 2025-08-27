@@ -62,6 +62,14 @@ class StructuredContentFile(ItemTargetFile):
         self._parsed_cache = value
         self._content_cache_config = None
 
+    def preview_write(self, value: Any | None = None) -> str:
+        """Return the exact text that would be written for parsed content, without performing I/O."""
+        if value is None:
+            # Use current parsed cache or read from disk without reload
+            value = self._parsed_cache if self._parsed_cache is not None else self.read_parsed(reload=False)
+        text = self.dumps(value)
+        return self.before_write_text(text)
+
     def clear(self):
         super().clear()
 

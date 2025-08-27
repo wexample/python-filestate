@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pydantic import PrivateAttr
 
@@ -94,3 +94,18 @@ class ItemFileMixin(ItemMixin):
     def clear_caches(self) -> None:
         self._bytes_cache = None
         self._text_cache = None
+
+    def preview_write_text(self, content: str | None = None) -> str:
+        """Return the exact text that would be written, applying hooks, without performing I/O."""
+        # Choose source text: explicit content, cached text, or current file text
+        source = content if content is not None else (self._text_cache if self._text_cache is not None else self.read_text(reload=False))
+        return self.before_write_text(source)
+
+    def preview_write(self, content: Any | None = None) -> str:
+        """Generic preview; in base class treats content as text (cast to str if needed)."""
+        if content is None:
+            return self.preview_write_text()
+        if isinstance(content, str):
+            return self.preview_write_text(content)
+        # Fallback: stringify then apply hooks
+        return self.preview_write_text(str(content))
