@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pydantic import PrivateAttr
+
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
 if TYPE_CHECKING:
@@ -35,12 +36,21 @@ class ItemFileMixin(ItemMixin):
             self._content_cache = self.get_local_file().read()
         return self._content_cache
 
-    def write(self, content: str) -> Any:
-        return self.get_local_file().write(content)
+    def write(self, content: Any = None) -> Any:
+        return super().write(
+            content=self.make_writable_content(
+                self.override(
+                    content=content or self.read()
+                )
+            )
+        )
 
-    def save(self) -> None:
-        # Persist cached document with tomlkit round-trip
-        if self._content_cache is None:
-            # Nothing was changed through this API; no-op
-            return
-        self.write(self._content_cache)
+    def override(self, content: Any = None) -> Any:
+        """Let class apply transformations to content, at least before saving."""
+        return str(content or self.read())
+
+    def make_writable_content(self, content: Any = None) -> str:
+        """If needed, transform source content (like dict or class) to a writable format (basically str),
+        when using, for instance, default write method. Might be useless if write is overridden.
+        """
+        return str(content or self.read())
