@@ -23,6 +23,7 @@ class EnvFile(StructuredContentFile):
         from io import StringIO
 
         from dotenv import dotenv_values
+
         try:
             return dict(dotenv_values(stream=StringIO(text)))
         except Exception as e:
@@ -34,4 +35,7 @@ class EnvFile(StructuredContentFile):
         # Produce .env textual content from a dict-like mapping
         if not isinstance(content, dict):
             return ""
-        return "\n".join(f"{k}={'' if v is None else v}" for k, v in content.items()) + "\n"
+        return (
+            "\n".join(f"{k}={'' if v is None else v}" for k, v in content.items())
+            + "\n"
+        )

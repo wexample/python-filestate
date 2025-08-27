@@ -40,6 +40,7 @@ class TomlFile(StructuredContentFile):
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
             from tomlkit import TOMLDocument as _TOMLDocument
+
             if isinstance(content, _TOMLDocument):
                 return toml_dumps(content)
         except Exception:

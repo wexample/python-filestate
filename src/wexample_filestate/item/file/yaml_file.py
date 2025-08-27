@@ -17,6 +17,7 @@ class YamlFile(StructuredContentFile):
 
     def loads(self, text: str, strict: bool = False) -> YamlContent:
         import yaml
+
         try:
             value = yaml.safe_load(text)
             # Normalize None to empty dict for convenience

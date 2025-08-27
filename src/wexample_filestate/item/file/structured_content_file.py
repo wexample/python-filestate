@@ -108,7 +108,7 @@ class StructuredContentFile(ItemTargetFile):
         cfg.get_config_item(key).set_str(str(value))
         self.write_config(cfg)
 
-    def clear(self):
+    def clear(self) -> None:
         super().clear()
 
         self._parsed_cache = None
