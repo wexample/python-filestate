@@ -59,26 +59,26 @@ class ItemFileMixin(ItemMixin):
             self._text_cache = self.decode_bytes(raw, encoding=encoding)
         return self._text_cache
 
-    def write_bytes(self, content: bytes | None = None) -> None:
+    def write_bytes(self, content: bytes | None = None, encoding: str | None = None) -> None:
         data = content if content is not None else self._bytes_cache
         if data is None:
             raise ValueError("No bytes content to write")
-        # Persist to disk
-        self.get_local_file().write_text(content=data)
-        # Update caches: bytes is now source of truth; text becomes stale
+        # LocalFile exposes a text write API; decode bytes to text first
+        text = self.decode_bytes(data, encoding=encoding)
+        self.get_local_file().write(content=text, encoding=encoding or self.default_encoding())
+        # Update caches: keep bytes as source and refresh text from decoded value
         self._bytes_cache = data
-        self._text_cache = None
+        self._text_cache = text
 
     def write_text(self, content: str | None = None, encoding: str | None = None) -> None:
         text = content if content is not None else self._text_cache
         if text is None:
             raise ValueError("No text content to write")
-        data = self.encode_text(text, encoding=encoding)
-        # Persist to disk
-        self.get_local_file().write_text(content=data)
-        # Update caches: keep text, recompute/refresh bytes from text
+        # Persist to disk using LocalFile text API
+        self.get_local_file().write(content=text, encoding=encoding or self.default_encoding())
+        # Update caches: keep text, refresh bytes from text
         self._text_cache = text
-        self._bytes_cache = data
+        self._bytes_cache = self.encode_text(text, encoding=encoding)
 
     def clear(self):
         self.clear_caches()
