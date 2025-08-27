@@ -37,14 +37,18 @@ text = "MIT"
 homepage = "https://github.com/wexample/python-filestate"
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = [
+    "pytest",
+]
 [tool.setuptools.packages.find]
 include = [
     "*",
 ]
 
 [tool.pdm.build]
-includes = ["src/wexample_filestate/py.typed"]
+includes = [
+    "src/wexample_filestate/py.typed",
+]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]
