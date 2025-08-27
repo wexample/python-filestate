@@ -66,7 +66,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return children
 
     def create_child_item(
-        self, child_config: DictConfig, item_name: str | None = None
+            self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
         from wexample_filestate.config_option.class_config_option import (
             ClassConfigOption,
@@ -75,12 +75,14 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         from wexample_filestate.helpers.config_helper import config_is_item_type
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_config.config_option.name_config_option import NameConfigOption
 
-        if ClassConfigOption.get_snake_short_class_name() in child_config:
-            class_definition = child_config.get("class")
+        option_name = ClassConfigOption.get_snake_short_class_name()
+        if option_name in child_config:
+            class_definition = child_config.get(option_name)
 
             if not issubclass(class_definition, ItemTargetDirectory) and not issubclass(
-                child_config.get("class"), ItemTargetFile
+                    child_config.get(option_name), ItemTargetFile
             ):
                 from wexample_filestate.exception.bad_configuration_class_type_exception import (
                     BadConfigurationClassTypeException,
@@ -105,16 +107,16 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             is_file_type = config_is_item_type(child_config, DiskItemType.FILE)
             has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
 
-            name = item_name or child_config.get("name", None)
+            name = item_name or child_config.get(NameConfigOption.get_snake_short_class_name(), None)
             path = None
             if isinstance(name, str) and name:
                 path = self.get_parent_item().get_path() / name
 
             # If explicit type is provided and we can resolve a path, verify when it exists
             if (
-                (is_file_type or has_explicit_dir)
-                and path is not None
-                and path.exists()
+                    (is_file_type or has_explicit_dir)
+                    and path is not None
+                    and path.exists()
             ):
                 if is_file_type and not path.is_file():
                     raise ValueError(
