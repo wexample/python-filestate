@@ -34,6 +34,7 @@ class StructuredContentFile(ItemTargetFile):
             from wexample_config.config_value.nested_config_value import (
                 NestedConfigValue,
             )
+
             parsed = self.read_parsed()
             # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
             self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))
