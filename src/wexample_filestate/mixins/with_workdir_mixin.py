@@ -40,7 +40,6 @@ class WithWorkdirMixin:
                 Scope.NAME,
                 Scope.OWNERSHIP,
                 Scope.PERMISSIONS,
-                Scope.SYMLINK_TARGET,
                 Scope.TIMESTAMPS,
             },
         )

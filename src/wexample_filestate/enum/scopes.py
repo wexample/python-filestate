@@ -9,5 +9,5 @@ class Scope(Enum):
     NAME = auto()
     OWNERSHIP = auto()
     PERMISSIONS = auto()
-    SYMLINK_TARGET = auto()
+    REMOTE = auto()
     TIMESTAMPS = auto()
