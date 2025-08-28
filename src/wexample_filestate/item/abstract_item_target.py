@@ -147,7 +147,8 @@ class AbstractItemTarget(
     ) -> None:
         self.io.indentation_up()
         self.io.log(
-            message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}", verbosity=VerbosityLevel.MAXIMUM
+            message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}",
+            verbosity=VerbosityLevel.MAXIMUM,
         )
 
         for operation_class in self.get_operations():
