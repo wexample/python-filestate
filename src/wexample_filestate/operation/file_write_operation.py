@@ -21,6 +21,9 @@ if TYPE_CHECKING:
 
 
 class FileWriteOperation(AbstractExistingFileOperation):
+    @classmethod
+    def _apply_on_empty_content(cls) -> bool:
+        return True
 
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
