@@ -41,7 +41,9 @@ class FileWriteOperation(AbstractExistingFileOperation):
         content_option = target.get_option_value(ContentConfigOption)
         if content_option and not content_option.is_none():
             assert isinstance(content_option, ContentConfigValue)
-            updated_content = content_option.build_content()
+            built_content = content_option.build_content()
+            if built_content is not None:
+                updated_content = built_content
 
         # Compare the original file content to the overridden version,
         # if target class is producing some content changes.
@@ -67,8 +69,8 @@ class FileWriteOperation(AbstractExistingFileOperation):
             ShouldNotContainLinesConfigOption
         )
         if (
-            should_not_contain_lines_option
-            and not should_not_contain_lines_option.is_none()
+                should_not_contain_lines_option
+                and not should_not_contain_lines_option.is_none()
         ):
             base = current if updated_content is None else updated_content
             forbidden = set(should_not_contain_lines_option.get_list())
@@ -89,7 +91,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @staticmethod
     def _get_current_lines_from_target(
-        target: TargetFileOrDirectoryType,
+            target: TargetFileOrDirectoryType,
     ) -> list[str]:
         return FileWriteOperation._get_current_content_from_target(target).splitlines()
 

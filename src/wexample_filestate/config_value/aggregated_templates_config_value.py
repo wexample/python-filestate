@@ -20,10 +20,13 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
     def get_templates(self) -> list[str] | None:
         return self.templates
 
-    def build_content(self) -> str:
+    def build_content(self) -> str | None:
         output = []
+        templates = self.get_templates()
 
-        for template_content in self.get_templates():
+        if len(templates) == 0:
+            return None
+        for template_content in templates:
             output.append(string_replace_params(template_content, self.parameters))
 
         output_str = os.linesep.join(output)

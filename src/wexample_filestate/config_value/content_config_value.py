@@ -9,5 +9,5 @@ class ContentConfigValue(ConfigValue):
     def _create_default_raw(self, raw: Any) -> str:
         return ""
 
-    def build_content(self) -> str:
-        return self.get_str()
+    def build_content(self) -> str | None:
+        return self.get_str_or_none()
