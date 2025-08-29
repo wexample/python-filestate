@@ -2,7 +2,7 @@
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
-Version: 0.0.47
+Version: 0.0.49
 
 ## Features
 
@@ -23,7 +23,7 @@ Version: 0.0.47
 - wexample-config==0.0.49
 - wexample-file==0.0.4
 - wexample-helpers-yaml==0.0.65
-- wexample-prompt==0.0.44
+- wexample-prompt==0.0.47
 - xmltodict
 
 ## Installation
