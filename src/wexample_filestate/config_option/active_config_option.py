@@ -14,7 +14,8 @@ class ActiveConfigOption(AbstractConfigOption):
     @staticmethod
     def is_active(value: bool | Callable[..., Any]) -> bool:
         """Probably not the best way to resolve a value __after__ configuration resolution,
-        but it is important to allow "active" option to have callback that are not automatically resolved."""
+        but it is important to allow "active" option to have callback that are not automatically resolved.
+        """
         if callable(value):
             return bool(value())
 
