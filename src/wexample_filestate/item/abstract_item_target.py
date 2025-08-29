@@ -4,10 +4,6 @@ from abc import ABC
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.mixins.with_io_manager import WithIoManager
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
-
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
@@ -21,6 +17,9 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
     AbstractOperationsProvider,
 )
 from wexample_helpers.const.types import PathOrString
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -148,7 +147,9 @@ class AbstractItemTarget(
     ) -> None:
         self.io.indentation_up()
 
-        from wexample_filestate.config_option.active_config_option import ActiveConfigOption
+        from wexample_filestate.config_option.active_config_option import (
+            ActiveConfigOption,
+        )
         active_option = self.get_option(ActiveConfigOption)
 
         # Allow to set active to false

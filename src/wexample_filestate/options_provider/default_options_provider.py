@@ -15,8 +15,10 @@ if TYPE_CHECKING:
 class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
     def get_options(cls) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.config_option.active_config_option import ActiveConfigOption
         from wexample_config.config_option.name_config_option import NameConfigOption
+        from wexample_filestate.config_option.active_config_option import (
+            ActiveConfigOption,
+        )
         from wexample_filestate.config_option.children_config_option import (
             ChildrenConfigOption,
         )
