@@ -4,6 +4,10 @@ from abc import ABC
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
+
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
@@ -17,9 +21,6 @@ from wexample_filestate.operations_provider.abstract_operations_provider import 
     AbstractOperationsProvider,
 )
 from wexample_helpers.const.types import PathOrString
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.mixins.with_io_manager import WithIoManager
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -51,10 +52,10 @@ class AbstractItemTarget(
     last_result: AbstractResult | None = None
 
     def __init__(
-        self,
-        io: IoManager | None = None,
-        parent_io_handler: WithIoManager | None = None,
-        **kwargs,
+            self,
+            io: IoManager | None = None,
+            parent_io_handler: WithIoManager | None = None,
+            **kwargs,
     ) -> None:
         ItemMixin.__init__(self, **kwargs)
         AbstractNestedConfigOption.__init__(self, **kwargs)
@@ -62,7 +63,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -141,26 +142,37 @@ class AbstractItemTarget(
         ]
 
     def build_operations(
-        self: TargetFileOrDirectoryType,
-        result: AbstractResult,
-        scopes: set[Scope] | None = None,
+            self: TargetFileOrDirectoryType,
+            result: AbstractResult,
+            scopes: set[Scope] | None = None,
     ) -> None:
         self.io.indentation_up()
-        self.io.log(
-            message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}",
-            verbosity=VerbosityLevel.MAXIMUM,
-        )
 
-        for operation_class in self.get_operations():
-            # Instantiate first; we'll test applicability on the instance.
-            operation = operation_class(io=self.io, target=self)
-            if operation.applicable() and (
-                scopes is None or operation.get_scope() in scopes
-            ):
-                self.io.task(
-                    f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
-                )
-                result.operations.append(operation)
+        from wexample_filestate.config_option.active_config_option import ActiveConfigOption
+        active_option = self.get_option(ActiveConfigOption)
+
+        # Allow to set active to false
+        if not active_option or ActiveConfigOption.is_active(active_option.get_value().raw):
+            self.io.log(
+                message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}",
+                verbosity=VerbosityLevel.MAXIMUM,
+            )
+
+            for operation_class in self.get_operations():
+                # Instantiate first; we'll test applicability on the instance.
+                operation = operation_class(io=self.io, target=self)
+                if operation.applicable() and (
+                        scopes is None or operation.get_scope() in scopes
+                ):
+                    self.io.task(
+                        f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
+                    )
+                    result.operations.append(operation)
+        else:
+            self.io.log(
+                message=f"[{self.get_snake_short_class_name()}] not active option",
+                verbosity=VerbosityLevel.MAXIMUM,
+            )
 
         self.io.indentation_down()
 
@@ -225,9 +237,9 @@ class AbstractItemTarget(
         return result
 
     def apply(
-        self,
-        interactive: bool = False,
-        scopes: set[Scope] | None = None,
+            self,
+            interactive: bool = False,
+            scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
 
@@ -247,7 +259,7 @@ class AbstractItemTarget(
         return result
 
     def find_closest(
-        self, class_type: type[AbstractItemTarget]
+            self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 
