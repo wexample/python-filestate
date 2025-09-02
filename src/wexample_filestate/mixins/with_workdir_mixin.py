@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pydantic import PrivateAttr
+
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.file_state_manager import FileStateManager
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -12,9 +14,25 @@ if TYPE_CHECKING:
 
 
 class WithWorkdirMixin:
-    # Use Any to avoid Pydantic eager resolution of deep filestate models
-    workdir: FileStateManager = None
-    host_workdir: FileStateManager = None
+    # Private attributes to avoid Pydantic field processing while keeping strong typing
+    _workdir: FileStateManager | None = PrivateAttr(default=None)
+    _host_workdir: FileStateManager | None = PrivateAttr(default=None)
+
+    @property
+    def workdir(self) -> FileStateManager | None:
+        return self._workdir
+
+    @workdir.setter
+    def workdir(self, value: FileStateManager | None) -> None:
+        self._workdir = value
+
+    @property
+    def host_workdir(self) -> FileStateManager | None:
+        return self._host_workdir
+
+    @host_workdir.setter
+    def host_workdir(self, value: FileStateManager | None) -> None:
+        self._host_workdir = value
 
     def _init_workdir(
             self,
