@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.file_state_manager import FileStateManager
@@ -13,21 +13,16 @@ if TYPE_CHECKING:
 
 class WithWorkdirMixin:
     # Use Any to avoid Pydantic eager resolution of deep filestate models
-    workdir: Any = None
-    host_workdir: Any = None
-    # workdir: FileStateManager = None
-    # host_workdir: FileStateManager = None
+    workdir: FileStateManager = None
+    host_workdir: FileStateManager = None
 
     def _init_workdir(
-        self,
-        entrypoint_path: str,
-        io: IoManager,
-        config: DictConfig | None = None,
+            self,
+            entrypoint_path: str,
+            io: IoManager,
+            config: DictConfig | None = None,
     ) -> None:
         import os
-
-        # Ensure all filestate models and operations are loaded and rebuilt
-        FileStateManager.load_imports()
 
         self.workdir = self._get_workdir_state_manager_class(
             entrypoint_path=entrypoint_path,
@@ -64,10 +59,10 @@ class WithWorkdirMixin:
         )
 
     def _get_workdir_state_manager_class(
-        self,
-        entrypoint_path: str,
-        io: IoManager,
-        config: DictConfig | None = None,
+            self,
+            entrypoint_path: str,
+            io: IoManager,
+            config: DictConfig | None = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io

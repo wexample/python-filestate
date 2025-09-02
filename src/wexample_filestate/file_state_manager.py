@@ -6,8 +6,6 @@ import sys
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_filestate.item.item_target_file import ItemTargetFile
-from wexample_helpers.helpers.polyfill import polyfill_import, polyfill_register_global
 from pydantic import BaseModel
 
 
@@ -35,11 +33,6 @@ class FileStateManager(ItemTargetDirectory):
             "wexample_filestate.const",
             "wexample_filestate.result",
             "wexample_filestate.operation",
-            # # other packages that may define BaseModel types referenced by Kernel
-            # "wexample_app",
-            # "wexample_config",
-            # # helpers may also define aliases used in annotations
-            # "wexample_helpers",
         )
         for pkg_name in loaded_packages:
             try:
