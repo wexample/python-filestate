@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pydantic import PrivateAttr
-
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.file_state_manager import FileStateManager
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -52,7 +51,6 @@ class WithWorkdirMixin:
         original_verbosity = io.default_response_verbosity
         io.default_response_verbosity = VerbosityLevel.MAXIMUM
 
-        print('starting...')
         # Ensure files state, but not content at this point.
         self.workdir.apply(
             scopes={

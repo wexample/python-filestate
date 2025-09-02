@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from typing import ClassVar
 from wexample_helpers.classes.mixin.import_packages_mixin import ImportPackagesMixin
 
 
