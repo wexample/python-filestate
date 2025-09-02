@@ -23,4 +23,10 @@ class FileStateManager(ImportPackagesMixin, ItemTargetDirectory):
         # As root
         self.build_item_tree()
 
+    # Lazy bootstrap: ensure imports are loaded once before creating from path
+    @classmethod
+    def create_from_path(cls, *args, **kwargs):  # type: ignore[override]
+        cls.load_imports()
+        return super().create_from_path(*args, **kwargs)
+
 
