@@ -34,10 +34,10 @@ class WithWorkdirMixin:
         self._host_workdir = value
 
     def _init_workdir(
-            self,
-            entrypoint_path: str,
-            io: IoManager,
-            config: DictConfig | None = None,
+        self,
+        entrypoint_path: str,
+        io: IoManager,
+        config: DictConfig | None = None,
     ) -> None:
         import os
 
@@ -75,10 +75,10 @@ class WithWorkdirMixin:
         )
 
     def _get_workdir_state_manager_class(
-            self,
-            entrypoint_path: str,
-            io: IoManager,
-            config: DictConfig | None = None,
+        self,
+        entrypoint_path: str,
+        io: IoManager,
+        config: DictConfig | None = None,
     ) -> FileStateManager:
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io

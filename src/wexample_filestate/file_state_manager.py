@@ -29,5 +29,3 @@ class FileStateManager(ImportPackagesMixin, ItemTargetDirectory):
     def create_from_path(cls, *args, **kwargs):  # type: ignore[override]
         cls.load_imports()
         return super().create_from_path(*args, **kwargs)
-
-
