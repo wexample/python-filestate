@@ -2,7 +2,7 @@
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
-Version: 0.0.49
+Version: 0.0.50
 
 ## Features
 
@@ -20,10 +20,10 @@ Version: 0.0.49
 - pydantic>=2,<3
 - python-dotenv
 - toml
-- wexample-config==0.0.49
-- wexample-file==0.0.4
-- wexample-helpers-yaml==0.0.65
-- wexample-prompt==0.0.47
+- wexample-config==0.0.50
+- wexample-file==0.0.5
+- wexample-helpers-yaml==0.0.66
+- wexample-prompt==0.0.48
 - xmltodict
 
 ## Installation
