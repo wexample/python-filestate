@@ -157,9 +157,8 @@ class AbstractItemTarget(
         if not active_option or ActiveConfigOption.is_active(
             active_option.get_value().raw
         ):
-            self.io.log(
+            loading_log = self.io.log(
                 message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}",
-                verbosity=VerbosityLevel.MAXIMUM,
             )
 
             for operation_class in self.get_operations():
@@ -173,6 +172,10 @@ class AbstractItemTarget(
                         f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
                     )
                     result.operations.append(operation)
+
+            if self.io.default_context_verbosity != VerbosityLevel.MAXIMUM:
+                self.io.erase_response(loading_log)
+
         else:
             self.io.log(
                 message=f"[{self.get_snake_short_class_name()}] not active option",
