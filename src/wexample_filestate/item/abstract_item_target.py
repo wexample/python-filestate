@@ -177,12 +177,6 @@ class AbstractItemTarget(
             if self.io.default_context_verbosity != VerbosityLevel.MAXIMUM:
                 self.io.erase_response(loading_log)
 
-        else:
-            self.io.log(
-                message=f"[{self.get_snake_short_class_name()}] not active option",
-                verbosity=VerbosityLevel.MAXIMUM,
-            )
-
         self.io.indentation_down()
 
     def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
