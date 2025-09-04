@@ -165,9 +165,10 @@ class AbstractItemTarget(
             for operation_class in self.get_operations():
                 # Instantiate first; we'll test applicability on the instance.
                 operation = operation_class(io=self.io, target=self)
-                if operation.applicable() and (
+
+                if (
                     scopes is None or operation.get_scope() in scopes
-                ):
+                ) and operation.applicable():
                     self.io.task(
                         f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
                     )
