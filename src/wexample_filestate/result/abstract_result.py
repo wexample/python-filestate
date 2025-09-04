@@ -26,7 +26,7 @@ class AbstractResult(PrintableMixin, BaseModel):
         rollback: bool = False,
         interactive: bool = False,
     ) -> None:
-        from wexample_helpers.helpers.cli import cli_make_clickable_path
+        pass
 
         # Retrieve dependencies based on rollback mode
         dependencies = operation.dependencies()
@@ -58,16 +58,16 @@ class AbstractResult(PrintableMixin, BaseModel):
                 self._executed_operations.append(operation)
 
                 self.state_manager.io.task(
-                    message=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                    message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
                     f"    → {operation.description()}\n"
                     f"    ⋮ Before : {operation.describe_before()}\n"
                     f"    ⋮ After  : {operation.describe_after()}",
                 )
             else:
                 self.state_manager.io.log(
-                    message=f"⚡ {operation.target.get_item_title()}:\n"
+                    message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
                     f"    → {operation.description()}\n"
-                    f"    ⋮  Operation aborted"
+                    f"    ⋮ Operation aborted"
                 )
 
     def apply_operations(self, interactive: bool = False) -> None:

@@ -118,6 +118,23 @@ class AbstractItemTarget(
 
         return Path(f"{base_path}{self.get_item_name()}")
 
+    def get_relative_path(self) -> Path | None:
+        root = self.get_root()
+        if root:
+            return self.get_path().relative_to(root.get_path())
+        return None
+
+    def get_display_path(self) -> Path:
+        return self.get_relative_path() or self.get_path()
+
+    def render_display_path(self) -> str:
+        from wexample_helpers.helpers.cli import cli_make_clickable_path
+
+        return cli_make_clickable_path(
+            path=self.get_path(),
+            short_title=self.get_display_path(),
+        )
+
     def get_operations(self) -> list[type[AbstractOperation]]:
         providers = self.get_operations_providers()
         operations = []
@@ -159,7 +176,7 @@ class AbstractItemTarget(
             active_option.get_value().raw
         ):
             loading_log = self.io.log(
-                message=f"{SpinnerPool.next()} {self.get_path()}",
+                message=f"{SpinnerPool.next()} {self.get_display_path()}",
             )
 
             for operation_class in self.get_operations():
@@ -170,7 +187,7 @@ class AbstractItemTarget(
                     scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     self.io.task(
-                        f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_path()}'
+                        f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_display_path()}'
                     )
                     result.operations.append(operation)
 

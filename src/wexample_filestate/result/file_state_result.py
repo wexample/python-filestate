@@ -24,10 +24,8 @@ class FileStateResult(AbstractResult):
         self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         if interactive:
-            from wexample_helpers.helpers.cli import cli_make_clickable_path
-
             if self.state_manager.io.confirm(
-                question=f"{operation.target.get_item_title()}: {cli_make_clickable_path(operation.target.get_resolved())}\n"
+                question=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
                 f"{operation.describe_before()}\n"
                 f"Do you want to apply this operation: {operation.description()}",
                 choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
