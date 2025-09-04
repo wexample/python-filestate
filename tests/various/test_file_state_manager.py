@@ -75,7 +75,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.allow_undefined_keys = False
 
     def test_configure_from_callback_class(self) -> str:
-        def _name(option: ItemTreeConfigOptionMixin):
+        def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yow"
 
         self.state_manager.configure(
