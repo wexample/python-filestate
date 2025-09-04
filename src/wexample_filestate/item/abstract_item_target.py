@@ -147,6 +147,7 @@ class AbstractItemTarget(
     ) -> None:
         self.io.indentation_up()
 
+        from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
         )
@@ -158,7 +159,7 @@ class AbstractItemTarget(
             active_option.get_value().raw
         ):
             loading_log = self.io.log(
-                message=f"[{self.get_snake_short_class_name()}] Inspecting: {self.get_path()}",
+                message=f"{SpinnerPool.next()} {self.get_path()}",
             )
 
             for operation_class in self.get_operations():
