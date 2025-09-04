@@ -147,10 +147,10 @@ class AbstractItemTarget(
     ) -> None:
         self.io.indentation_up()
 
-        from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
         )
+        from wexample_prompt.common.spinner_pool import SpinnerPool
 
         active_option = self.get_option(ActiveConfigOption)
 
