@@ -26,7 +26,9 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
         return Scope.CONTENT
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.content_options_config_option import ContentOptionsConfigOption
+        from wexample_filestate.config_option.content_options_config_option import (
+            ContentOptionsConfigOption,
+        )
         if not isinstance(option, ContentOptionsConfigOption):
             return False
 

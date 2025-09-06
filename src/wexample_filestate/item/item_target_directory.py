@@ -12,8 +12,6 @@ if TYPE_CHECKING:
     from wexample_filestate.result.abstract_result import AbstractResult
     from collections.abc import Callable
     from wexample_helpers.const.types import FileStringOrPath, PathOrString
-    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
-    from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):

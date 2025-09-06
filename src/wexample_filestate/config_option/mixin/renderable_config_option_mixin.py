@@ -4,7 +4,6 @@ from typing import cast
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     pass
-    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
 class RenderableConfigOptionMixin:

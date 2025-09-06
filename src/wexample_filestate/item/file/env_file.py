@@ -22,6 +22,7 @@ class EnvFile(StructuredContentFile):
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> StructuredData:
         from io import StringIO
+
         from dotenv import dotenv_values
 
         try:

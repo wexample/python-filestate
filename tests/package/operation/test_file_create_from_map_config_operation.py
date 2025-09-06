@@ -13,10 +13,8 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
+        from wexample_filestate.config_option.children_filter_config_option import ChildrenFilterConfigOption
         from wexample_config.const.types import DictConfig
-        from wexample_filestate.config_option.children_filter_config_option import (
-            ChildrenFilterConfigOption,
-        )
         from wexample_filestate.const.disk import DiskItemType
 
         class TestClass(ItemTargetFile):

@@ -13,9 +13,13 @@ class WithReadmeWorkdirMixin:
     README_FILENAME: ClassVar[str] = "README.md"
 
     def append_readme(self, config: DictConfig | None = None) -> DictConfig:
+        from wexample_filestate.config_option.text_filter_config_option import (
+            TextFilterConfigOption,
+        )
+        from wexample_filestate.config_value.readme_content_config_value import (
+            ReadmeContentConfigValue,
+        )
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.config_value.readme_content_config_value import ReadmeContentConfigValue
-        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
 
         config.get("children").append(
             {
@@ -33,6 +37,8 @@ class WithReadmeWorkdirMixin:
         return config
 
     def _get_readme_content(self) -> ReadmeContentConfigValue | None:
-        from wexample_filestate.config_value.readme_content_config_value import ReadmeContentConfigValue
+        from wexample_filestate.config_value.readme_content_config_value import (
+            ReadmeContentConfigValue,
+        )
 
         return ReadmeContentConfigValue()

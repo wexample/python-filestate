@@ -10,7 +10,6 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import AbstractConfigOption
     from wexample_filestate.enum.scopes import Scope
-    from wexample_filestate.config_option.default_content_config_option import DefaultContentConfigOption
 
 
 class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):

@@ -8,7 +8,6 @@ if TYPE_CHECKING:
         AbstractConfigOption,
     )
     from wexample_filestate.enum.scopes import Scope
-    from wexample_filestate.config_option.mode_config_option import ModeConfigOption
 
 
 class ItemChangeModeOperation(AbstractOperation):

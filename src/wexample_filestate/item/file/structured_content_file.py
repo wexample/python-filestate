@@ -26,8 +26,9 @@ class StructuredContentFile(ItemTargetFile):
         return self._parsed_cache
 
     def read_config(self, reload: bool = False) -> NestedConfigValue:
-        from wexample_config.config_value.nested_config_value import NestedConfigValue
         from copy import deepcopy
+
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
         if reload:
             self._content_cache_config = None
         if self._content_cache_config is None:
@@ -42,7 +43,9 @@ class StructuredContentFile(ItemTargetFile):
         return None
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
-        from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
         expected_extension = self._expected_file_name_extension()
 
         if expected_extension:

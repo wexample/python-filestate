@@ -70,7 +70,10 @@ class AbstractItemTarget(
     def create_from_path(
             cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
-        from wexample_helpers.helpers.directory import directory_get_base_name, directory_get_parent_path
+        from wexample_helpers.helpers.directory import (
+            directory_get_base_name,
+            directory_get_parent_path,
+        )
 
         config = config or {}
 
@@ -146,7 +149,9 @@ class AbstractItemTarget(
         return operations
 
     def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
-        from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
+        )
         providers = super().get_options_providers()
         if len(providers) > 0:
             return providers
@@ -160,7 +165,9 @@ class AbstractItemTarget(
             result: AbstractResult,
             scopes: set[Scope] | None = None,
     ) -> None:
-        from wexample_filestate.config_option.active_config_option import ActiveConfigOption
+        from wexample_filestate.config_option.active_config_option import (
+            ActiveConfigOption,
+        )
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
         self.io.indentation_up()
@@ -198,7 +205,9 @@ class AbstractItemTarget(
         self.io.indentation_down()
 
     def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
-        from wexample_filestate.operations_provider.default_operations_provider import DefaultOperationsProvider
+        from wexample_filestate.operations_provider.default_operations_provider import (
+            DefaultOperationsProvider,
+        )
         if self.parent:
             return cast(
                 AbstractItemTarget, self.get_parent_item()
@@ -243,7 +252,9 @@ class AbstractItemTarget(
         return result
 
     def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
-        from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
+        from wexample_filestate.result.file_state_dry_run_result import (
+            FileStateDryRunResult,
+        )
 
         result = FileStateDryRunResult(state_manager=self)
         self.last_result = result

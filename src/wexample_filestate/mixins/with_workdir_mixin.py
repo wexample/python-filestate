@@ -38,9 +38,10 @@ class WithWorkdirMixin:
         io: IoManager,
         config: DictConfig | None = None,
     ) -> None:
-        from wexample_filestate.file_state_manager import FileStateManager
-        from wexample_filestate.enum.scopes import Scope
         import os
+
+        from wexample_filestate.enum.scopes import Scope
+        from wexample_filestate.file_state_manager import FileStateManager
 
         self.workdir = self._get_workdir_state_manager_class(
             entrypoint_path=entrypoint_path,

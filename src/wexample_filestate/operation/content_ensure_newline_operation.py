@@ -21,12 +21,16 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
         return Scope.NAME
 
     def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
+        from wexample_filestate.config_option.text_filter_config_option import (
+            TextFilterConfigOption,
+        )
         if (
             self.target.is_file()
             and self.target.get_local_file().path.exists()

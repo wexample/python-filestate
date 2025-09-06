@@ -24,8 +24,9 @@ class FileManipulationOperationMixin(AbstractOperation):
         )
 
     def _restore_target_file(self) -> None:
-        from wexample_helpers.helpers.file import file_write
         import os
+
+        from wexample_helpers.helpers.file import file_write
 
         if self.target.is_file():
             file_write(self._original_path, self._original_file_content)
@@ -36,9 +37,13 @@ class FileManipulationOperationMixin(AbstractOperation):
     def _backup_file_content(
         self, target: TargetFileOrDirectoryType, file_path: PathOrString
     ) -> bool:
-        from wexample_filestate.config_option.remove_backup_max_file_size_config_option import REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT, RemoveBackupMaxFileSizeConfigOption
-        from wexample_helpers.helpers.file import file_read
         import os
+
+        from wexample_filestate.config_option.remove_backup_max_file_size_config_option import (
+            REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
+            RemoveBackupMaxFileSizeConfigOption,
+        )
+        from wexample_helpers.helpers.file import file_read
 
         size = os.path.getsize(file_path)
 
@@ -60,6 +65,8 @@ class FileManipulationOperationMixin(AbstractOperation):
 
     @staticmethod
     def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
-        from wexample_filestate.config_option.should_exist_config_option import ShouldExistConfigOption
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
+        )
 
         return target.get_option_value(ShouldExistConfigOption, default=True).is_true()

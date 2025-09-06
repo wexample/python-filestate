@@ -23,16 +23,12 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return Scope.CONTENT
 
     def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import (
-            FileCreateOperation,
-        )
+        from wexample_filestate.operation.file_create_operation import FileCreateOperation
 
         return [FileCreateOperation]
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import (
-            TextFilterConfigOption,
-        )
+        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
 
         if (
             self.target.is_file()
@@ -54,9 +50,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return False
 
     def _get_trimmed_char(self) -> str:
-        from wexample_filestate.config_option.text_filter_config_option import (
-            TextFilterConfigOption,
-        )
+        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
         return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
 
     def describe_before(self) -> str:
