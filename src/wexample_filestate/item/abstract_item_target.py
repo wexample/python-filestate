@@ -179,6 +179,7 @@ class AbstractItemTarget(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
             )
 
+            has_task:bool = False
             for operation_class in self.get_operations():
                 # Instantiate first; we'll test applicability on the instance.
                 operation = operation_class(io=self.io, target=self)
@@ -186,12 +187,13 @@ class AbstractItemTarget(
                 if (
                     scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
+                    has_task = True
                     self.io.task(
                         f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_display_path()}'
                     )
                     result.operations.append(operation)
 
-            if self.io.default_context_verbosity != VerbosityLevel.MAXIMUM:
+            if not has_task and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM:
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
