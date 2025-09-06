@@ -27,6 +27,3 @@ class ItemMixin(WithPathMixin, BaseModel):
         from wexample_helpers.helpers.file import file_path_get_octal_mode
 
         return file_path_get_octal_mode(self.get_path())
-
-    def get_resolved(self) -> str:
-        return str(self.get_path().resolve())

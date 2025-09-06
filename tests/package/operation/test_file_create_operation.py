@@ -37,20 +37,13 @@ class TestFileCreateOperation(TestAbstractOperation):
         target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
 
-        assert not os.path.exists(
-            target_dir.get_resolved()
-        ), "The directory should not exist"
-        assert not os.path.exists(
-            target_file.get_resolved()
-        ), "The file should not exist"
+        assert not target_dir.get_path().exists(), "The directory should not exist"
+        assert not target_file.get_path().exists(), "The file should not exist"
+
 
     def _operation_test_assert_applied(self) -> None:
         target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
 
-        assert os.path.exists(
-            target_dir.get_resolved()
-        ), "The target directory should have been created"
-        assert os.path.exists(
-            target_file.get_resolved()
-        ), "The target file should have been created"
+        assert target_dir.get_path().exists(), "The target directory should have been created"
+        assert target_file.get_path().exists(), "The target file should have been created"

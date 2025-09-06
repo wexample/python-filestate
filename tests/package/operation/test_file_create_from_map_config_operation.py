@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.children_filter_config_option import (
     ChildrenFilterConfigOption,
@@ -72,13 +70,15 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
             "test-collection-one-one.txt"
         )
 
-        assert os.path.exists(target_file.get_resolved()), "The file should exist"
+        assert target_file is not None, "Target file not found"
+        assert target_file.get_path().exists(), "The file should exist"
 
     def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_recursive(
             "test-collection-one-one.txt"
         )
 
-        assert not os.path.exists(
-            target_file.get_resolved()
-        ), "The target file have been removed because it matches the name pattern"
+        assert target_file is not None, "Target file not found"
+        assert not target_file.get_path().exists(), (
+            "The target file has been removed because it matches the name pattern"
+        )

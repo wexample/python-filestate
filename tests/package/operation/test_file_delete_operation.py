@@ -19,18 +19,11 @@ class TestFileDeleteOperation(TestAbstractOperation):
         }
 
     def _operation_test_assert_initial(self) -> None:
-        assert os.path.exists(
-            self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT).get_resolved()
-        )
-        "The file should exist"
+        target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
+        assert target is not None, "Target file not found"
+        assert target.get_path().exists(), "The file should exist"
 
     def _operation_test_assert_applied(self) -> None:
-        assert (
-            os.path.exists(
-                self.state_manager.find_by_name(
-                    TEST_FILE_NAME_SIMPLE_TEXT
-                ).get_resolved()
-            )
-            is False
-        )
-        "The file should not exist"
+        target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
+        assert target is not None, "Target file not found"
+        assert not target.get_path().exists(), "The file should not exist"
