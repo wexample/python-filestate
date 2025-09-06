@@ -37,8 +37,3 @@ class ItemMixin(BaseModel):
 
     def get_resolved(self) -> str:
         return str(self.get_path().resolve())
-
-    def get_resolved_target(self, file_path: str) -> str:
-        from wexample_helpers.helpers.path import path_resolve_from
-
-        return path_resolve_from(file_path, self.get_resolved())
