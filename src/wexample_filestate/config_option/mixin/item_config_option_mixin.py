@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from typing import cast
-
-from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ItemTreeConfigOptionMixin:
@@ -18,6 +19,7 @@ class ItemTreeConfigOptionMixin:
 
     def get_parent_item(self) -> TargetFileOrDirectoryType:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
         # In all case, when asking for parent item,
         # every config option should be an item tree item.

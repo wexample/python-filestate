@@ -5,22 +5,20 @@ from typing import TYPE_CHECKING, Any, Union, cast
 from wexample_config.config_option.children_config_option import (
     ChildrenConfigOption as BaseChildrenConfigOption,
 )
-from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
-from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_config.const.types import DictConfig
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
-            AbstractChildrenManipulationConfigOption,
-        )
+        from wexample_filestate.config_option.abstract_children_manipulator_config_option import AbstractChildrenManipulationConfigOption
 
         return list[Union[dict[str, Any], AbstractChildrenManipulationConfigOption]]
 
@@ -29,9 +27,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return self.parent
 
     def set_value(self, raw_value: Any) -> None:
-        from wexample_config.config_option.abstract_config_option import (
-            AbstractConfigOption,
-        )
+        from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
         # Ignore default children class set_value
         AbstractConfigOption.set_value(self, raw_value)
@@ -45,9 +41,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             child.build_item_tree()
 
     def create_children_items(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
-            AbstractChildrenManipulationConfigOption,
-        )
+        from wexample_filestate.config_option.abstract_children_manipulator_config_option import AbstractChildrenManipulationConfigOption
 
         children = []
         # Parent item should be a file or directory target.
@@ -68,14 +62,13 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
-        from wexample_config.config_option.name_config_option import NameConfigOption
-        from wexample_filestate.config_option.class_config_option import (
-            ClassConfigOption,
-        )
+        from wexample_filestate.exception.bad_configuration_class_type_exception import BadConfigurationClassTypeException
+        from wexample_filestate.config_option.class_config_option import ClassConfigOption
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.helpers.config_helper import config_is_item_type
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_config.config_option.name_config_option import NameConfigOption
+        from wexample_filestate.helpers.config_helper import config_is_item_type
 
         option_name = ClassConfigOption.get_snake_short_class_name()
         if option_name in child_config:
@@ -84,9 +77,6 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             if not issubclass(class_definition, ItemTargetDirectory) and not issubclass(
                 child_config.get(option_name), ItemTargetFile
             ):
-                from wexample_filestate.exception.bad_configuration_class_type_exception import (
-                    BadConfigurationClassTypeException,
-                )
 
                 raise BadConfigurationClassTypeException(
                     class_definition=class_definition
@@ -162,6 +152,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return child
 
     def get_children(self) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
         return cast(list[TargetFileOrDirectoryType], self.children)
 
     def get_io(self) -> IoManager:

@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 
 
 class ShortcutConfigOption(AbstractConfigOption):
@@ -12,6 +11,7 @@ class ShortcutConfigOption(AbstractConfigOption):
         return str
 
     def __init__(self, **data) -> None:
+        from wexample_filestate.item.abstract_item_target import AbstractItemTarget
         super().__init__(**data)
 
         # The parent should always be a path item.

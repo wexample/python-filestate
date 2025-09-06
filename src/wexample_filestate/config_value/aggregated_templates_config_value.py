@@ -5,7 +5,6 @@ from typing import Any
 
 from wexample_filestate.config_value.content_config_value import ContentConfigValue
 from wexample_helpers.const.types import BasicValue
-from wexample_helpers.helpers.string import string_replace_params
 
 
 class AggregatedTemplatesConfigValue(ContentConfigValue):
@@ -21,6 +20,7 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
         return self.templates
 
     def build_content(self) -> str | None:
+        from wexample_helpers.helpers.string import string_replace_params
         output = []
         templates = self.get_templates()
 

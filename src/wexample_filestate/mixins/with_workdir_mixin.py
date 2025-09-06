@@ -3,13 +3,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pydantic import PrivateAttr
-from wexample_filestate.enum.scopes import Scope
-from wexample_filestate.file_state_manager import FileStateManager
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_filestate.file_state_manager import FileStateManager
 
 
 class WithWorkdirMixin:
@@ -39,6 +38,8 @@ class WithWorkdirMixin:
         io: IoManager,
         config: DictConfig | None = None,
     ) -> None:
+        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.enum.scopes import Scope
         import os
 
         self.workdir = self._get_workdir_state_manager_class(
@@ -68,6 +69,7 @@ class WithWorkdirMixin:
         self.host_workdir = FileStateManager.create_from_path(path=os.getcwd(), io=io)
 
     def _rebuild_workdir_content(self) -> None:
+        from wexample_filestate.enum.scopes import Scope
         self.workdir.apply(
             scopes={
                 Scope.CONTENT,
@@ -80,6 +82,7 @@ class WithWorkdirMixin:
         io: IoManager,
         config: DictConfig | None = None,
     ) -> FileStateManager:
+        from wexample_filestate.file_state_manager import FileStateManager
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io
         )
