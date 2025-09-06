@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from typing import ClassVar
-
-from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 from wexample_helpers.const.types import StructuredData
-from wexample_helpers_yaml.const.types import YamlContent
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_helpers_yaml.const.types import YamlContent
 
 
 class YamlFile(StructuredContentFile):
@@ -32,6 +32,7 @@ class YamlFile(StructuredContentFile):
 
         # Avoid dumping ConfigValue directly; convert to primitive via str by default
         def _normalize(v):
+            from wexample_config.config_value.config_value import ConfigValue
             if isinstance(v, ConfigValue):
                 return str(v)
             if isinstance(v, dict):

@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import ClassVar
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
-from wexample_helpers.const.types import StructuredData
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_helpers.const.types import StructuredData
 
 
 class EnvFile(StructuredContentFile):
@@ -19,9 +21,7 @@ class EnvFile(StructuredContentFile):
 
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> StructuredData:
-        # Use python-dotenv parser directly on text input
         from io import StringIO
-
         from dotenv import dotenv_values
 
         try:

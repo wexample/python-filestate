@@ -3,17 +3,12 @@ from __future__ import annotations
 import os
 
 import pytest
-from wexample_config.config_value.callback_render_config_value import (
-    CallbackRenderConfigValue,
-)
-from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
-from wexample_filestate.config_option.mixin.item_config_option_mixin import (
-    ItemTreeConfigOptionMixin,
-)
-from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
 
 
 class TestFileStateManager(AbstractStateManagerTest):
@@ -24,17 +19,13 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.configure({"name": "yes"})
 
     def test_configure_unexpected(self) -> None:
-        from wexample_config.exception.invalid_option_exception import (
-            InvalidOptionException,
-        )
+        from wexample_config.exception.invalid_option_exception import InvalidOptionException
 
         with pytest.raises(InvalidOptionException):
             self.state_manager.configure(config={"unexpected_option": "yes"})
 
     def test_configure_class_unexpected(self) -> None:
-        from wexample_filestate.exception.bad_configuration_class_type_exception import (
-            BadConfigurationClassTypeException,
-        )
+        from wexample_filestate.exception.bad_configuration_class_type_exception import BadConfigurationClassTypeException
 
         class BadClass:
             pass
@@ -52,6 +43,8 @@ class TestFileStateManager(AbstractStateManagerTest):
         assert self.state_manager.get_item_name() == "yes"
 
     def test_configure_define_child(self) -> None:
+        from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
         self.state_manager.allow_undefined_keys = True
         self.state_manager.configure(
             config={
@@ -75,6 +68,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         self.state_manager.allow_undefined_keys = False
 
     def test_configure_from_callback_class(self) -> str:
+        from wexample_config.config_value.callback_render_config_value import CallbackRenderConfigValue
         def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yow"
 
@@ -92,6 +86,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         )
 
     def test_dump(self) -> None:
+        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
         self.state_manager.configure(
             config={
                 "children": [

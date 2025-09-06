@@ -3,12 +3,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pydantic import PrivateAttr
-from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_file import ItemTargetFile
-from wexample_helpers.const.types import Scalar
 
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
+    from wexample_config.const.types import DictConfig
+    from wexample_helpers.const.types import Scalar
 
 
 class StructuredContentFile(ItemTargetFile):
@@ -26,14 +26,11 @@ class StructuredContentFile(ItemTargetFile):
         return self._parsed_cache
 
     def read_config(self, reload: bool = False) -> NestedConfigValue:
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
+        from copy import deepcopy
         if reload:
             self._content_cache_config = None
         if self._content_cache_config is None:
-            from copy import deepcopy
-
-            from wexample_config.config_value.nested_config_value import (
-                NestedConfigValue,
-            )
 
             parsed = self.read_parsed()
             # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
@@ -45,13 +42,11 @@ class StructuredContentFile(ItemTargetFile):
         return None
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
+        from wexample_filestate.config_option.should_have_extension_config_option import ShouldHaveExtensionConfigOption
         expected_extension = self._expected_file_name_extension()
 
         if expected_extension:
             raw_value = super().prepare_value(raw_value=raw_value)
-            from wexample_filestate.config_option.should_have_extension_config_option import (
-                ShouldHaveExtensionConfigOption,
-            )
 
             raw_value[ShouldHaveExtensionConfigOption.get_snake_short_class_name()] = (
                 expected_extension

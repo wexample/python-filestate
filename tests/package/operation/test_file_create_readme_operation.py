@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_value.readme_content_config_value import (
-    ReadmeContentConfigValue,
-)
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
 
 
@@ -12,6 +9,7 @@ class TestFileCreateReadmeOperation(TestAbstractOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType
+        from wexample_filestate.config_value.readme_content_config_value import ReadmeContentConfigValue
 
         return {
             "children": [

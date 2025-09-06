@@ -16,7 +16,6 @@ class TomlFile(StructuredContentFile):
 
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> TOMLDocument:  # type: ignore[name-defined]
-        # Use tomlkit to preserve comments and formatting during round-trip
         from tomlkit import document, parse
 
         try:
@@ -31,7 +30,7 @@ class TomlFile(StructuredContentFile):
             return document()
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
-        from tomlkit import document
+        from tomlkit import TOMLDocument, _TOMLDocument, document, toml_dumps
         from tomlkit import dumps as toml_dumps
 
         if content is None:
@@ -39,7 +38,6 @@ class TomlFile(StructuredContentFile):
 
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
-            from tomlkit import TOMLDocument as _TOMLDocument
 
             if isinstance(content, _TOMLDocument):
                 return toml_dumps(content)
