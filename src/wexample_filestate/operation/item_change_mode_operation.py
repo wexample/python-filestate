@@ -72,15 +72,15 @@ class ItemChangeModeOperation(AbstractOperation):
             mode_recursive_option
             and mode_recursive_option.get_value().get_bool() is True
         ):
-            file_change_mode(self.target.get_source().get_path_str(), mode_int)
+            file_change_mode(self.target.get_source().get_path(), mode_int)
         else:
             file_change_mode_recursive(
-                self.target.get_source().get_path_str(), mode_int
+                self.target.get_source().get_path(), mode_int
             )
 
     def undo(self) -> None:
         file_change_mode_recursive(
-            self.target.get_source().get_path_str(),
+            self.target.get_source().get_path(),
             file_mode_octal_to_num(self._get_original_octal_mode()),
         )
 

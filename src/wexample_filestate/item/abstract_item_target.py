@@ -112,11 +112,11 @@ class AbstractItemTarget(
     def get_path(self) -> Path:
         # Base path is specified, for instance for the tree root.
         if self.base_path is not None:
-            base_path = self.base_path
+            base_path = Path(self.base_path)
         else:
-            base_path = self.get_parent_item().get_resolved()
+            base_path = self.get_parent_item().get_path()
 
-        return Path(f"{base_path}{self.get_item_name()}")
+        return base_path / self.get_item_name()
 
     def get_relative_path(self) -> Path | None:
         root = self.get_root()

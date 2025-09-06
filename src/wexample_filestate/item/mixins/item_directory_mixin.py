@@ -15,7 +15,7 @@ class ItemDirectoryMixin(ItemMixin):
     def get_resolved(self) -> str:
         import os
 
-        return f"{super().get_resolved()}{os.sep}"
+        return f"{super().get_path()}{os.sep}"
 
     def is_file(self) -> bool:
         return False

@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from pathlib import Path
 
 from pydantic import BaseModel
+
+from wexample_file.mixin.with_path_mixin import WithPathMixin
 from wexample_helpers.const.types import FileStringOrPath
 
 
-class ItemMixin(BaseModel):
+class ItemMixin(WithPathMixin, BaseModel):
     base_path: FileStringOrPath | None = None
-    path: Path | None = None
 
     @abstractmethod
     def get_item_title(self) -> str:
@@ -27,13 +27,6 @@ class ItemMixin(BaseModel):
         from wexample_helpers.helpers.file import file_path_get_octal_mode
 
         return file_path_get_octal_mode(self.get_path())
-
-    def get_path(self) -> Path:
-        assert self.path is not None
-        return self.path
-
-    def get_path_str(self) -> str:
-        return str(self.get_path())
 
     def get_resolved(self) -> str:
         return str(self.get_path().resolve())
