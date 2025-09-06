@@ -10,11 +10,9 @@ from wexample_helpers.const.types import StringKeysDict
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
-    from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.mixins.with_io_manager import WithIoManager
     from collections.abc import Callable
-    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
     from wexample_helpers.const.types import FileStringOrPath, PathOrString
+    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
     from wexample_filestate.const.state_items import TargetFileOrDirectory
 
 

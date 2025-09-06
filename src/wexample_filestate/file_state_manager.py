@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
+
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 

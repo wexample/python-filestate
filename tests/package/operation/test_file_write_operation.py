@@ -27,6 +27,7 @@ class TestFileWriteOperation(TestAbstractOperation):
 
     def _operation_test_setup(self) -> None:
         from wexample_helpers.helpers.file import file_write
+
         super()._operation_test_setup()
 
         # Create file with initial content
@@ -35,6 +36,7 @@ class TestFileWriteOperation(TestAbstractOperation):
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
+
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
@@ -49,6 +51,7 @@ class TestFileWriteOperation(TestAbstractOperation):
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
+
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
         lines = content.splitlines()

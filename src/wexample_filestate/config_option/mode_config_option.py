@@ -9,6 +9,7 @@ class ModeConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.const.files import FileSystemPermission
+
         return Union[str, int, FileSystemPermission]
 
     def get_octal(self) -> str:
@@ -27,4 +28,5 @@ class ModeConfigOption(AbstractConfigOption):
 
     def get_int(self) -> int:
         from wexample_helpers.helpers.file import file_mode_octal_to_num
+
         return file_mode_octal_to_num(self.get_octal())

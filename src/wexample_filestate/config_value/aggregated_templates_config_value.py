@@ -21,6 +21,7 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
 
     def build_content(self) -> str | None:
         from wexample_helpers.helpers.string import string_replace_params
+
         output = []
         templates = self.get_templates()
 

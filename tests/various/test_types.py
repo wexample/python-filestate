@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Union
+
 from wexample_helpers.testing.abstract_test_helpers import AbstractTestHelpers
 
 

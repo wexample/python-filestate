@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
@@ -8,6 +9,7 @@ class ActiveConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from collections.abc import Callable
+
         return Union[bool, Callable[..., Any]]
 
     @staticmethod

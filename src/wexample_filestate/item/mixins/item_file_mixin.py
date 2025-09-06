@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import PrivateAttr
 from wexample_file.mixin.with_local_file_mixin import WithLocalFileMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 

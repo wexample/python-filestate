@@ -1,6 +1,9 @@
 from __future__ import annotations
-from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+
 from typing import TYPE_CHECKING
+
+from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 
@@ -10,12 +13,12 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
-        pass
         from wexample_filestate.file_state_manager import FileStateManager
 
         class TestClassForTestFileCreateFromClassOperation(FileStateManager):
             def prepare_value(self, config: DictConfig | None = None) -> DictConfig:
                 from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
+
                 config.update(
                     {
                         "children": [

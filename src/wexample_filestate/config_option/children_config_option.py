@@ -10,9 +10,9 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.io_manager import IoManager
     from wexample_config.const.types import DictConfig
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):

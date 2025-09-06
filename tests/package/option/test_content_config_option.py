@@ -30,6 +30,7 @@ class TestContentConfigOption(TestAbstractOperation):
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
+
         self._assert_file_content_equals(
             file_path=self._get_absolute_path_from_state_manager(
                 TEST_FILE_NAME_SIMPLE_TEXT
@@ -40,6 +41,7 @@ class TestContentConfigOption(TestAbstractOperation):
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
+
         self._assert_file_content_equals(
             file_path=self._get_absolute_path_from_state_manager(
                 TEST_FILE_NAME_SIMPLE_TEXT

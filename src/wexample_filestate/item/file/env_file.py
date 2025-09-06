@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_helpers.const.types import StructuredData
 

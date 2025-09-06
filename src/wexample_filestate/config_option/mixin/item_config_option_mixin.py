@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import cast
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
+
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 

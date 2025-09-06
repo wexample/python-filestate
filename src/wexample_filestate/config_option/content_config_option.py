@@ -9,4 +9,5 @@ class ContentConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_config.config_value.config_value import ConfigValue
+
         return Union[str, ConfigValue]

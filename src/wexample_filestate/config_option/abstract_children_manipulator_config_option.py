@@ -16,9 +16,9 @@ if TYPE_CHECKING:
         AbstractOptionsProvider,
     )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
     from pathlib import Path
     from wexample_helpers.const.types import PathOrString
+    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
 
 
 class AbstractChildrenManipulationConfigOption(

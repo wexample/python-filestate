@@ -12,6 +12,7 @@ class ShortcutConfigOption(AbstractConfigOption):
 
     def __init__(self, **data) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
+
         super().__init__(**data)
 
         # The parent should always be a path item.

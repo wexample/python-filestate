@@ -9,4 +9,5 @@ class ModeRecursiveConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.const.files import FileSystemPermission
+
         return Union[bool, FileSystemPermission]

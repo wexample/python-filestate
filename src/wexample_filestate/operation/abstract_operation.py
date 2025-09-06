@@ -61,7 +61,6 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         return []
 
     def _build_value(self, value: Any) -> Any:
-
         """
         First version, might be tested / replaced / abstracted to every callable option.
         Always return the built (resolved) value, never a callable:
@@ -74,6 +73,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         Legacy dict {'pattern': ...} is intentionally unsupported.
         """
         from wexample_config.config_value.config_value import ConfigValue
+
         # ConfigValue case
         if isinstance(value, ConfigValue):
             if value.is_callable():

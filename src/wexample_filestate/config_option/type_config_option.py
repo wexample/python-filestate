@@ -9,4 +9,5 @@ class TypeConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.const.disk import DiskItemType
+
         return Union[str, DiskItemType]

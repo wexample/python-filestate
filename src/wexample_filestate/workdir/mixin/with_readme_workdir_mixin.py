@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 if TYPE_CHECKING:
+    from wexample_config.const.types import DictConfig
     from wexample_filestate.config_value.readme_content_config_value import (
         ReadmeContentConfigValue,
     )
-    from wexample_config.const.types import DictConfig
 
 
 class WithReadmeWorkdirMixin:

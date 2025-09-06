@@ -9,5 +9,6 @@ class YamlFilterConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_helpers.const.types import StringKeysDict
+
         # Accept both list form ["sort_recursive"] and dict form if extended later
         return Union[list[str], StringKeysDict]

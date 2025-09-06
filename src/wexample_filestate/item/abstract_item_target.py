@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, cast, ClassVar
-
-from wexample_prompt.mixins.with_io_manager import WithIoManager
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
+from typing import TYPE_CHECKING, Any, ClassVar, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
@@ -13,8 +10,13 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
+from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from wexample_config.const.types import DictConfig
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
@@ -24,16 +26,16 @@ if TYPE_CHECKING:
         TargetFileOrDirectoryType,
     )
     from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.operations_provider.abstract_operations_provider import (
+        AbstractOperationsProvider,
+    )
     from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_filestate.result.file_state_dry_run_result import (
         FileStateDryRunResult,
     )
     from wexample_filestate.result.file_state_result import FileStateResult
-    from wexample_prompt.common.io_manager import IoManager
-    from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
-    from wexample_config.const.types import DictConfig
-    from pathlib import Path
     from wexample_helpers.const.types import PathOrString
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class AbstractItemTarget(
@@ -108,6 +110,7 @@ class AbstractItemTarget(
 
     def get_path(self) -> Path:
         from pathlib import Path
+
         # Base path is specified, for instance for the tree root.
         if self.base_path is not None:
             base_path = Path(self.base_path)

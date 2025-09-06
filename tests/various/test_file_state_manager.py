@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import os
+from typing import TYPE_CHECKING
 
 import pytest
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+    from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+        ItemTreeConfigOptionMixin,
+    )
 
 
 class TestFileStateManager(AbstractStateManagerTest):

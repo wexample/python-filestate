@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, ClassVar, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
 
@@ -15,10 +15,12 @@ class TextFilterConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_helpers.const.types import StringKeysDict
+
         return Union[list[str], StringKeysDict]
 
     def get_value_class_type(self) -> type[NestedConfigValue]:
         from wexample_config.config_value.nested_config_value import NestedConfigValue
+
         # Use NestedConfigValue to ease nested access like search('trim.char')
         return NestedConfigValue
 

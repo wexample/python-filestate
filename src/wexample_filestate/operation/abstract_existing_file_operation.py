@@ -27,6 +27,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.CONTENT
 
     @classmethod

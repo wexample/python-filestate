@@ -2,13 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_filestate.config_option.content_config_option import ContentConfigOption
-from wexample_filestate.config_option.should_contain_lines_config_option import (
-    ShouldContainLinesConfigOption,
-)
-from wexample_filestate.config_option.should_not_contain_lines_config_option import (
-    ShouldNotContainLinesConfigOption,
-)
 from wexample_filestate.operation.abstract_existing_file_operation import (
     AbstractExistingFileOperation,
 )
@@ -32,11 +25,20 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         Returns the updated content string if a change is needed, otherwise None.
         """
-        from wexample_filestate.config_option.content_config_option import ContentConfigOption
-        from wexample_filestate.config_value.content_config_value import ContentConfigValue
-        from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import ShouldNotContainLinesConfigOption
+        from wexample_filestate.config_option.content_config_option import (
+            ContentConfigOption,
+        )
+        from wexample_filestate.config_option.should_contain_lines_config_option import (
+            ShouldContainLinesConfigOption,
+        )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
+        )
+        from wexample_filestate.config_value.content_config_value import (
+            ContentConfigValue,
+        )
         from wexample_helpers.helpers.string import string_append_missing_lines
+
         # Start from current content ("" if file does not exist)
         current = cls._read_current_src(target) or ""
 
@@ -112,9 +114,15 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return self.source_need_change(self.target)
 
     def describe_before(self) -> str:
-        from wexample_filestate.config_option.content_config_option import ContentConfigOption
-        from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import ShouldNotContainLinesConfigOption
+        from wexample_filestate.config_option.content_config_option import (
+            ContentConfigOption,
+        )
+        from wexample_filestate.config_option.should_contain_lines_config_option import (
+            ShouldContainLinesConfigOption,
+        )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
+        )
         content_option = self.target.get_option(ContentConfigOption)
         should_contain_lines_option = self.target.get_option(
             ShouldContainLinesConfigOption
@@ -149,9 +157,15 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return "The file content may need to be regenerated based on configuration."
 
     def describe_after(self) -> str:
-        from wexample_filestate.config_option.content_config_option import ContentConfigOption
-        from wexample_filestate.config_option.should_contain_lines_config_option import ShouldContainLinesConfigOption
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import ShouldNotContainLinesConfigOption
+        from wexample_filestate.config_option.content_config_option import (
+            ContentConfigOption,
+        )
+        from wexample_filestate.config_option.should_contain_lines_config_option import (
+            ShouldContainLinesConfigOption,
+        )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
+        )
         if self.target.get_option(ContentConfigOption) is not None:
             return "The file content has been rewritten to exactly match the configured content."
 
