@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from abc import ABC
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, cast, ClassVar
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
@@ -16,6 +15,7 @@ from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.operations_provider.abstract_operations_provider import (
     AbstractOperationsProvider,
 )
+from wexample_helpers.classes.mixin.import_packages_mixin import ImportPackagesMixin
 from wexample_helpers.const.types import PathOrString
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_manager import WithIoManager
@@ -40,12 +40,17 @@ if TYPE_CHECKING:
 
 
 class AbstractItemTarget(
+    ImportPackagesMixin,
     WithIoMethods,
     ItemMixin,
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
-    ABC,
 ):
+    import_packages: ClassVar[tuple[str, ...]] = (
+        "wexample_config.options_provider.abstract_options_provider",
+        "wexample_config.config_value.config_value",
+    )
+
     source: SourceFileOrDirectory | None = None
     operations_providers: list[type[AbstractOperationsProvider]] | None = None
     last_result: AbstractResult | None = None

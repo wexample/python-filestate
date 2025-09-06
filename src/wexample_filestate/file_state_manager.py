@@ -4,10 +4,9 @@ from typing import ClassVar
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_helpers.classes.mixin.import_packages_mixin import ImportPackagesMixin
 
 
-class FileStateManager(ImportPackagesMixin, ItemTargetDirectory):
+class FileStateManager(ItemTargetDirectory):
     # Minimal declaration; other mixins/classes can contribute via ImportPackagesMixin
     import_packages: ClassVar[tuple[str, ...]] = (
         "wexample_filestate.const",
