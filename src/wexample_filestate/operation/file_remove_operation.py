@@ -41,9 +41,9 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
         self._backup_target_file()
 
         if self.target.is_file():
-            os.remove(self._original_path_str)
+            os.remove(self._original_path)
         elif self.target.is_directory():
-            shutil.rmtree(self._original_path_str)
+            shutil.rmtree(self._original_path)
 
     def undo(self) -> None:
         self._restore_target_file()

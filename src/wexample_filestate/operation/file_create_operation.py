@@ -18,8 +18,6 @@ if TYPE_CHECKING:
 
 
 class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
-    _original_path_str: str
-
     @classmethod
     def get_scope(cls) -> Scope:
         return Scope.LOCATION
@@ -40,7 +38,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         return "Create missing file"
 
     def apply(self) -> None:
-        self._original_path_str = self.target.get_resolved()
+        self._original_path = self.target.get_path()
 
         if self.target.is_file():
             local_file = self.target.get_local_file()
@@ -63,11 +61,11 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
                 local_file.touch()
 
         elif self.target.is_directory():
-            os.mkdir(self._original_path_str)
+            os.mkdir(self._original_path)
 
     def undo(self) -> None:
         if self.target.is_file():
-            os.remove(self._original_path_str)
+            os.remove(self._original_path)
         elif self.target.is_directory():
             # Do not remove recursively, as for now it only can be created empty with mkdir.
-            os.rmdir(self._original_path_str)
+            os.rmdir(self._original_path)
