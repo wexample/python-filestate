@@ -43,7 +43,7 @@ class TestFileWriteOperation(TestAbstractOperation):
         # Check required lines are not present yet
         for line in self.required_lines:
             assert (
-                    line not in content.splitlines()
+                line not in content.splitlines()
             ), f"Required line '{line}' should not be present yet"
 
     def _operation_test_assert_applied(self) -> None:
@@ -58,5 +58,5 @@ class TestFileWriteOperation(TestAbstractOperation):
         # Check required lines were added
         for required_line in self.required_lines:
             assert (
-                    required_line in lines
+                required_line in lines
             ), f"Required line '{required_line}' should have been added"

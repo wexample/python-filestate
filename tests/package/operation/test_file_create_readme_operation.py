@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_value.readme_content_config_value import (
     ReadmeContentConfigValue,
@@ -35,7 +33,8 @@ class TestFileCreateReadmeOperation(TestAbstractOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
         assert not target_file.get_path().exists(), "The file should not exist"
 
-
     def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
-        assert target_file.get_path().exists(), "The target file should have been created"
+        assert (
+            target_file.get_path().exists()
+        ), "The target file should have been created"

@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import abstractmethod
 
 from pydantic import BaseModel
-
 from wexample_file.mixin.with_path_mixin import WithPathMixin
 from wexample_helpers.const.types import FileStringOrPath
 

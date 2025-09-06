@@ -69,11 +69,13 @@ class AbstractStateManagerTest(ABC):
     def _assert_dir_exists(self, dir_path: PathOrString, positive: bool = True) -> None:
         assert (os.path.isdir(dir_path)) == positive
 
-    def _assert_file_exists(self, file_path: PathOrString, positive: bool = True) -> None:
+    def _assert_file_exists(
+        self, file_path: PathOrString, positive: bool = True
+    ) -> None:
         assert (os.path.isfile(file_path)) == positive
 
     def _assert_state_manager_target_directory_exists(
-            self, item_name: str, positive: bool = True
+        self, item_name: str, positive: bool = True
     ) -> None:
         target = self.state_manager.find_by_name_or_fail(item_name)
 

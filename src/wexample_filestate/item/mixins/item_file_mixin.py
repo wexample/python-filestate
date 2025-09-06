@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from pydantic import PrivateAttr
-
 from wexample_file.mixin.with_local_file_mixin import WithLocalFileMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
@@ -53,7 +52,7 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
         return self._text_cache
 
     def write_bytes(
-            self, content: bytes | None = None, encoding: str | None = None
+        self, content: bytes | None = None, encoding: str | None = None
     ) -> None:
         data = content if content is not None else self._bytes_cache
         if data is None:
@@ -68,7 +67,7 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
         self._text_cache = text
 
     def write_text(
-            self, content: str | None = None, encoding: str | None = None
+        self, content: str | None = None, encoding: str | None = None
     ) -> None:
         text = content if content is not None else self._text_cache
         if text is None:

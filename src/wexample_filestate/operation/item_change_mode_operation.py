@@ -74,9 +74,7 @@ class ItemChangeModeOperation(AbstractOperation):
         ):
             file_change_mode(self.target.get_source().get_path(), mode_int)
         else:
-            file_change_mode_recursive(
-                self.target.get_source().get_path(), mode_int
-            )
+            file_change_mode_recursive(self.target.get_source().get_path(), mode_int)
 
     def undo(self) -> None:
         file_change_mode_recursive(

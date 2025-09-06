@@ -53,4 +53,6 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
 
     def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
-        assert target_file.get_path().exists(), "The target file should have been created"
+        assert (
+            target_file.get_path().exists()
+        ), "The target file should have been created"

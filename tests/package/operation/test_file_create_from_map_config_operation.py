@@ -79,6 +79,6 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
         )
 
         assert target_file is not None, "Target file not found"
-        assert not target_file.get_path().exists(), (
-            "The target file has been removed because it matches the name pattern"
-        )
+        assert (
+            not target_file.get_path().exists()
+        ), "The target file has been removed because it matches the name pattern"
