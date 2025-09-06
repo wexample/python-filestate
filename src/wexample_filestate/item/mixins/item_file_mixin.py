@@ -9,8 +9,8 @@ from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
 class ItemFileMixin(WithLocalFileMixin, ItemMixin):
     # Separate caches for clarity and reliability.
-    _bytes_cache: bytes | None = PrivateAttr(default=None)
-    _text_cache: str | None = PrivateAttr(default=None)
+    _bytes_cache: bytes | None = None
+    _text_cache: str | None = None
 
     def get_item_title(self) -> str:
         return "File"

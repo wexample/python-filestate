@@ -1,25 +1,18 @@
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast, ClassVar
+
+from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
-from wexample_filestate.operations_provider.abstract_operations_provider import (
-    AbstractOperationsProvider,
-)
-from wexample_helpers.classes.mixin.import_packages_mixin import ImportPackagesMixin
-from wexample_helpers.const.types import PathOrString
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.mixins.with_io_manager import WithIoManager
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
@@ -37,10 +30,13 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_filestate.operations_provider.abstract_operations_provider import AbstractOperationsProvider
+    from wexample_config.const.types import DictConfig
+    from pathlib import Path
+    from wexample_helpers.const.types import PathOrString
 
 
 class AbstractItemTarget(
-    ImportPackagesMixin,
     WithIoMethods,
     ItemMixin,
     ItemTreeConfigOptionMixin,
@@ -48,6 +44,7 @@ class AbstractItemTarget(
 ):
     import_packages: ClassVar[tuple[str, ...]] = (
         "wexample_config.options_provider.abstract_options_provider",
+        "wexample_filestate.operations_provider.abstract_operations_provider",
         "wexample_config.config_value.config_value",
     )
 
@@ -61,18 +58,17 @@ class AbstractItemTarget(
         parent_io_handler: WithIoManager | None = None,
         **kwargs,
     ) -> None:
-        ItemMixin.__init__(self, **kwargs)
+        # To Pydantic BaseModel.
         AbstractNestedConfigOption.__init__(self, **kwargs)
+        # Then other mixins.
+        ItemMixin.__init__(self)
         WithIoMethods.__init__(self, io=io, parent_io_handler=parent_io_handler)
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
-        from wexample_helpers.helpers.directory import (
-            directory_get_base_name,
-            directory_get_parent_path,
-        )
+        from wexample_helpers.helpers.directory import directory_get_base_name, directory_get_parent_path
 
         config = config or {}
 
@@ -97,17 +93,13 @@ class AbstractItemTarget(
         self.locate_source(self.get_path())
 
     def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
+        from wexample_filestate.item.item_source_directory import ItemSourceDirectory
+        from wexample_filestate.item.item_source_file import ItemSourceFile
         if path.is_file():
-            from wexample_filestate.item.item_source_file import ItemSourceFile
-
             self.source = ItemSourceFile(
                 path=path,
             )
         elif path.is_dir():
-            from wexample_filestate.item.item_source_directory import (
-                ItemSourceDirectory,
-            )
-
             self.source = ItemSourceDirectory(
                 path=path,
             )
@@ -115,6 +107,7 @@ class AbstractItemTarget(
         return self.source
 
     def get_path(self) -> Path:
+        from pathlib import Path
         # Base path is specified, for instance for the tree root.
         if self.base_path is not None:
             base_path = Path(self.base_path)
@@ -150,35 +143,30 @@ class AbstractItemTarget(
         return operations
 
     def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
+        from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
         providers = super().get_options_providers()
         if len(providers) > 0:
             return providers
-
-        from wexample_filestate.options_provider.default_options_provider import (
-            DefaultOptionsProvider,
-        )
 
         return [
             DefaultOptionsProvider,
         ]
 
     def build_operations(
-        self: TargetFileOrDirectoryType,
-        result: AbstractResult,
-        scopes: set[Scope] | None = None,
+            self: TargetFileOrDirectoryType,
+            result: AbstractResult,
+            scopes: set[Scope] | None = None,
     ) -> None:
-        self.io.indentation_up()
-
-        from wexample_filestate.config_option.active_config_option import (
-            ActiveConfigOption,
-        )
+        from wexample_filestate.config_option.active_config_option import ActiveConfigOption
         from wexample_prompt.common.spinner_pool import SpinnerPool
+        from wexample_prompt.enums.verbosity_level import VerbosityLevel
+        self.io.indentation_up()
 
         active_option = self.get_option(ActiveConfigOption)
 
         # Allow to set active to false
         if not active_option or ActiveConfigOption.is_active(
-            active_option.get_value().raw
+                active_option.get_value().raw
         ):
             loading_log = self.io.log(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
@@ -190,7 +178,7 @@ class AbstractItemTarget(
                 operation = operation_class(io=self.io, target=self)
 
                 if (
-                    scopes is None or operation.get_scope() in scopes
+                        scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
@@ -199,14 +187,15 @@ class AbstractItemTarget(
                     result.operations.append(operation)
 
             if (
-                not has_task
-                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+                    not has_task
+                    and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
             ):
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
 
     def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
+        from wexample_filestate.operations_provider.default_operations_provider import DefaultOperationsProvider
         if self.parent:
             return cast(
                 AbstractItemTarget, self.get_parent_item()
@@ -214,10 +203,6 @@ class AbstractItemTarget(
 
         if self.operations_providers:
             return self.operations_providers
-
-        from wexample_filestate.operations_provider.default_operations_provider import (
-            DefaultOperationsProvider,
-        )
 
         return [
             DefaultOperationsProvider,
@@ -255,9 +240,7 @@ class AbstractItemTarget(
         return result
 
     def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
-        from wexample_filestate.result.file_state_dry_run_result import (
-            FileStateDryRunResult,
-        )
+        from wexample_filestate.result.file_state_dry_run_result import FileStateDryRunResult
 
         result = FileStateDryRunResult(state_manager=self)
         self.last_result = result
@@ -267,11 +250,12 @@ class AbstractItemTarget(
         return result
 
     def apply(
-        self,
-        interactive: bool = False,
-        scopes: set[Scope] | None = None,
+            self,
+            interactive: bool = False,
+            scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
+        from wexample_helpers.helpers.cli import cli_make_clickable_path
 
         result = FileStateResult(state_manager=self)
         self.last_result = result
@@ -280,7 +264,6 @@ class AbstractItemTarget(
         if len(result.operations) > 0:
             result.apply_operations(interactive=interactive)
         else:
-            from wexample_helpers.helpers.cli import cli_make_clickable_path
 
             self.io.info(
                 message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
@@ -289,7 +272,7 @@ class AbstractItemTarget(
         return result
 
     def find_closest(
-        self, class_type: type[AbstractItemTarget]
+            self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 

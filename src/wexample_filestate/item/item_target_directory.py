@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from pydantic import Field
+
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
@@ -16,18 +17,21 @@ from wexample_helpers.const.types import FileStringOrPath, PathOrString, StringK
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     shortcuts: StringKeysDict = Field(default_factory=dict)
 
     def __init__(self, **kwargs) -> None:
-        # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
-        # attributes during AbstractItemTarget initialization.
-        # The order matters here because Pydantic's model initialization
-        # can override attributes set by previous parent classes.
-        ItemDirectoryMixin.__init__(self, **kwargs)
-        AbstractItemTarget.__init__(self, **kwargs)
+        # Pydantic first.
+        AbstractItemTarget.__init__(
+            self,
+            **kwargs
+        )
+
+        ItemDirectoryMixin.__init__(self)
 
     def build_item_tree(self) -> None:
         super().build_item_tree()
@@ -54,7 +58,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return []
 
     def build_operations(
-        self, result: AbstractResult, scopes: set[Scope] | None = None
+            self, result: AbstractResult, scopes: set[Scope] | None = None
     ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -66,7 +70,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             )
 
     def find_by_path_recursive(
-        self, path: FileStringOrPath
+            self, path: FileStringOrPath
     ) -> TargetFileOrDirectoryType | None:
         path = Path(path)
         found = self.find_by_path(path)
@@ -106,7 +110,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
 
     def for_each_child_of_type_recursive(
-        self, class_type: type[AbstractItemTarget], callback: Callable
+            self, class_type: type[AbstractItemTarget], callback: Callable
     ) -> None:
         def _only_type(item: AbstractItemTarget) -> None:
             if isinstance(item, class_type):
@@ -115,16 +119,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         self.for_each_child_recursive(_only_type)
 
     def for_each_child_of_type(
-        self,
-        class_type: type[AbstractItemTarget],
-        callback: Callable[[AbstractItemTarget], None],
+            self,
+            class_type: type[AbstractItemTarget],
+            callback: Callable[[AbstractItemTarget], None],
     ) -> None:
         for child in self.get_children_list():
             if isinstance(child, class_type):
                 callback(child)
 
     def find_by_name_recursive(
-        self, item_name: str
+            self, item_name: str
     ) -> TargetFileOrDirectoryType | None:
         found = self.find_by_name(item_name)
         if found:

@@ -9,5 +9,5 @@ class ItemTargetFile(ItemFileMixin, AbstractItemTarget):
     config: DictConfig | None = None
 
     def __init__(self, **data) -> None:
-        ItemFileMixin.__init__(self, **data)
         AbstractItemTarget.__init__(self, **data)
+        ItemFileMixin.__init__(self)
