@@ -23,6 +23,7 @@ class FileStateResult(AbstractResult):
     def _apply_single_operation(
         self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
+        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
         if interactive:
             if self.state_manager.io.confirm(
                 question=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"

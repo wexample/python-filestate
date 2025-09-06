@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
@@ -11,13 +10,15 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
-from wexample_helpers.const.types import PathOrString
 
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+    from pathlib import Path
+    from wexample_helpers.const.types import PathOrString
 
 
 class AbstractChildrenManipulationConfigOption(
@@ -26,9 +27,7 @@ class AbstractChildrenManipulationConfigOption(
     pattern: DictConfig
 
     def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
-        from wexample_filestate.options_provider.default_options_provider import (
-            DefaultOptionsProvider,
-        )
+        from wexample_filestate.options_provider.default_options_provider import DefaultOptionsProvider
 
         return [
             DefaultOptionsProvider,
@@ -43,11 +42,9 @@ class AbstractChildrenManipulationConfigOption(
         pass
 
     def _path_match_patterns(self, path: str) -> bool:
+        from wexample_filestate.config_option.name_pattern_config_option import NamePatternConfigOption
+        from pathlib import Path
         import re
-
-        from wexample_filestate.config_option.name_pattern_config_option import (
-            NamePatternConfigOption,
-        )
 
         config = self.pattern
         option_name = NamePatternConfigOption.get_name()
@@ -69,11 +66,8 @@ class AbstractChildrenManipulationConfigOption(
     def _create_children_from_config(
         self, path: Path, config: dict
     ) -> TargetFileOrDirectoryType:
+        from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
         import copy
-
-        from wexample_filestate.config_option.children_config_option import (
-            ChildrenConfigOption,
-        )
 
         item_config_copy = copy.deepcopy(config)
 

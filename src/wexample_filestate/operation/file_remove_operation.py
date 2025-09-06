@@ -3,8 +3,6 @@ from __future__ import annotations
 import os
 import shutil
 from typing import TYPE_CHECKING
-
-from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
@@ -14,12 +12,14 @@ if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
+    from wexample_filestate.enum.scopes import Scope
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @classmethod
     def get_scope(cls) -> Scope:
+        from wexample_filestate.enum.scopes import Scope
         return Scope.LOCATION
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:

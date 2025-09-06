@@ -1,6 +1,4 @@
 from __future__ import annotations
-
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pydantic import Field
@@ -8,10 +6,10 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
-from wexample_filestate.const.disk import DiskItemType
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from pathlib import Path
 
 
 class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
@@ -27,6 +25,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         self,
         path: Path,
     ) -> DictConfig:
+        from wexample_filestate.const.disk import DiskItemType
         dir_config = {
             "name": path.name,
             "type": DiskItemType.DIRECTORY,
@@ -55,6 +54,7 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
+        from pathlib import Path
         self.pattern
         children = []
         path = self.get_parent_item().get_path()

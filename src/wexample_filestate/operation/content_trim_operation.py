@@ -1,12 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.config_option.text_filter_config_option import (
-    TextFilterConfigOption,
-)
-from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
@@ -14,6 +8,8 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 
 if TYPE_CHECKING:
     pass
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+    from wexample_filestate.enum.scopes import Scope
 
 
 class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
@@ -21,19 +17,16 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
     @classmethod
     def get_scope(cls) -> Scope:
+        from wexample_filestate.enum.scopes import Scope
         return Scope.CONTENT
 
     def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import (
-            FileCreateOperation,
-        )
+        from wexample_filestate.operation.file_create_operation import FileCreateOperation
 
         return [FileCreateOperation]
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import (
-            TextFilterConfigOption,
-        )
+        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
 
         if (
             self.target.is_file()
@@ -55,6 +48,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return False
 
     def _get_trimmed_char(self) -> str:
+        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
         return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
 
     def describe_before(self) -> str:

@@ -4,8 +4,6 @@ import os
 from abc import ABC
 from typing import TYPE_CHECKING, cast
 
-from wexample_helpers.const.types import PathOrString
-
 if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
@@ -14,6 +12,7 @@ if TYPE_CHECKING:
     from wexample_filestate.operations_provider.abstract_operations_provider import (
         AbstractOperationsProvider,
     )
+    from wexample_helpers.const.types import PathOrString
 
 
 class AbstractStateManagerTest(ABC):
@@ -31,8 +30,8 @@ class AbstractStateManagerTest(ABC):
         return os.path.join(self._get_test_state_manager_path(), relative)
 
     def setup_method(self) -> None:
-        from wexample_filestate.file_state_manager import FileStateManager
         from wexample_prompt.common.io_manager import IoManager
+        from wexample_filestate.file_state_manager import FileStateManager
 
         self.state_manager = cast(
             FileStateManager,

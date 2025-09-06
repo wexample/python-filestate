@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
 from wexample_filestate.const.state_items import TargetFileOrDirectory
-from wexample_filestate.enum.scopes import Scope
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
@@ -14,6 +13,7 @@ if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
+    from wexample_filestate.enum.scopes import Scope
 
 
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
@@ -61,7 +61,6 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         return []
 
     def _build_value(self, value: Any) -> Any:
-        from wexample_config.config_value.config_value import ConfigValue
 
         """
         First version, might be tested / replaced / abstracted to every callable option.
@@ -74,6 +73,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         - Other -> return as-is
         Legacy dict {'pattern': ...} is intentionally unsupported.
         """
+        from wexample_config.config_value.config_value import ConfigValue
         # ConfigValue case
         if isinstance(value, ConfigValue):
             if value.is_callable():

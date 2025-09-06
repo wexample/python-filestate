@@ -2,12 +2,6 @@ from __future__ import annotations
 
 import os
 from typing import TYPE_CHECKING, cast
-
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.config_option.default_content_config_option import (
-    DefaultContentConfigOption,
-)
-from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
@@ -15,11 +9,15 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 
 if TYPE_CHECKING:
     pass
+    from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+    from wexample_filestate.config_option.default_content_config_option import DefaultContentConfigOption
+    from wexample_filestate.enum.scopes import Scope
 
 
 class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def get_scope(cls) -> Scope:
+        from wexample_filestate.enum.scopes import Scope
         return Scope.LOCATION
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
@@ -38,6 +36,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         return "Create missing file"
 
     def apply(self) -> None:
+        from wexample_filestate.config_option.default_content_config_option import DefaultContentConfigOption
         self._original_path = self.target.get_path()
 
         if self.target.is_file():
