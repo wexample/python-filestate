@@ -48,7 +48,9 @@ class AbstractResult(PrintableMixin, BaseModel):
 
         # Execute the main operation after dependencies if not rollback
         if not rollback and operation not in self._executed_operations:
-            self.state_manager.io.title(f"OPERATION: {operation.get_snake_short_class_name().upper()}")
+            self.state_manager.io.title(
+                f"OPERATION: {operation.get_snake_short_class_name().upper()}"
+            )
             applied = self._apply_single_operation(
                 operation=operation, interactive=interactive
             )
