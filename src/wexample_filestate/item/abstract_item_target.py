@@ -179,7 +179,7 @@ class AbstractItemTarget(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
             )
 
-            has_task:bool = False
+            has_task: bool = False
             for operation_class in self.get_operations():
                 # Instantiate first; we'll test applicability on the instance.
                 operation = operation_class(io=self.io, target=self)
@@ -193,7 +193,10 @@ class AbstractItemTarget(
                     )
                     result.operations.append(operation)
 
-            if not has_task and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM:
+            if (
+                not has_task
+                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+            ):
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
