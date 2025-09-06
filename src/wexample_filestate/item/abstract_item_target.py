@@ -189,7 +189,7 @@ class AbstractItemTarget(
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
-                        f'Applicable operation "{operation_class.get_snake_short_class_name()}" on: {self.get_display_path()}'
+                        f'Applicable operation: "{operation_class.get_snake_short_class_name()}"'
                     )
                     result.operations.append(operation)
 
