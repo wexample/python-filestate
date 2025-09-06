@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from pydantic import PrivateAttr
+
+from wexample_file.mixin.with_local_file_mixin import WithLocalFileMixin
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 
-if TYPE_CHECKING:
-    from wexample_file.common.local_file import LocalFile
 
-
-class ItemFileMixin(ItemMixin):
+class ItemFileMixin(WithLocalFileMixin, ItemMixin):
     # Separate caches for clarity and reliability.
     _bytes_cache: bytes | None = PrivateAttr(default=None)
     _text_cache: str | None = PrivateAttr(default=None)
@@ -22,11 +21,6 @@ class ItemFileMixin(ItemMixin):
 
     def is_directory(self) -> bool:
         return False
-
-    def get_local_file(self) -> LocalFile:
-        from wexample_file.common.local_file import LocalFile
-
-        return LocalFile(path=self.get_path())
 
     def default_encoding(self) -> str:
         return "utf-8"
@@ -59,7 +53,7 @@ class ItemFileMixin(ItemMixin):
         return self._text_cache
 
     def write_bytes(
-        self, content: bytes | None = None, encoding: str | None = None
+            self, content: bytes | None = None, encoding: str | None = None
     ) -> None:
         data = content if content is not None else self._bytes_cache
         if data is None:
@@ -74,7 +68,7 @@ class ItemFileMixin(ItemMixin):
         self._text_cache = text
 
     def write_text(
-        self, content: str | None = None, encoding: str | None = None
+            self, content: str | None = None, encoding: str | None = None
     ) -> None:
         text = content if content is not None else self._text_cache
         if text is None:
