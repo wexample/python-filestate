@@ -18,8 +18,8 @@ FILESTATE_TAG: str = "filestate:"
 
 # Known actions
 # filestate: python-constant-sort
-FILESTATE_KEEP: str = "keep"
 FILESTATE_IGNORE: str = "ignore"
+FILESTATE_KEEP: str = "keep"
 
 # Convenience collection of recognized actions
 FILESTATE_ACTIONS: tuple[str, ...] = (FILESTATE_KEEP, FILESTATE_IGNORE)
