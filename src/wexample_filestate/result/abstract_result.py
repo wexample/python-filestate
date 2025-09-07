@@ -9,9 +9,9 @@ from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
 
 
 class AbstractResult(PrintableMixin, BaseModel):
-    state_manager: AbstractItemTarget
     operations: list[AbstractOperation] = []
     rollback: bool = False
+    state_manager: AbstractItemTarget
 
     @abstractmethod
     def _apply_single_operation(

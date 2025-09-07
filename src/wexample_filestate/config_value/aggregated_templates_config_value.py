@@ -8,9 +8,9 @@ from wexample_helpers.const.types import BasicValue
 
 
 class AggregatedTemplatesConfigValue(ContentConfigValue):
+    parameters: dict[str, BasicValue] | None = {}
     raw: Any = None
     templates: list[str] | None = []
-    parameters: dict[str, BasicValue] | None = {}
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

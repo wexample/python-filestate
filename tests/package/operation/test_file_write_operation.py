@@ -5,9 +5,9 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestFileWriteOperation(TestAbstractOperation):
-    test_file_name: str = "test-should-contain-lines.txt"
     initial_content: str = "Initial line 1\nInitial line 2"
     required_lines: list = ["Required line 1", "Required line 2"]
+    test_file_name: str = "test-should-contain-lines.txt"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType

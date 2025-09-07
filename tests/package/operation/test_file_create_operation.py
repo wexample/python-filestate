@@ -5,8 +5,8 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestFileCreateOperation(TestAbstractOperation):
-    missing_file_name: str = "simple-text-missing.txt"
     missing_dir_name: str = "simple-directory-missing"
+    missing_file_name: str = "simple-text-missing.txt"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType

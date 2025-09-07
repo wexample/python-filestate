@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 
 class WithWorkdirMixin:
+    _host_workdir: FileStateManager | None = PrivateAttr(default=None)
     # Private attributes to avoid Pydantic field processing while keeping strong typing
     _workdir: FileStateManager | None = PrivateAttr(default=None)
-    _host_workdir: FileStateManager | None = PrivateAttr(default=None)
 
     @property
     def workdir(self) -> FileStateManager | None:

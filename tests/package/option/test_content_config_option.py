@@ -5,8 +5,8 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestContentConfigOption(TestAbstractOperation):
-    missing_file_name: str = "simple-text-missing.txt"
     missing_dir_name: str = "simple-directory-missing"
+    missing_file_name: str = "simple-text-missing.txt"
     test_content: str = "CHANGED_CONTENT"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:

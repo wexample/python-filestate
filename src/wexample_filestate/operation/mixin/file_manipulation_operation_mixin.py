@@ -10,9 +10,9 @@ if TYPE_CHECKING:
 
 
 class FileManipulationOperationMixin(AbstractOperation):
-    _original_path: PathOrString
-    _original_file_mode: int
     _original_file_content: str = ""
+    _original_file_mode: int
+    _original_path: PathOrString
 
     def _backup_target_file(self) -> None:
         self._original_path = self.target.get_path()

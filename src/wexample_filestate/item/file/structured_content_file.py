@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 
 class StructuredContentFile(ItemTargetFile):
+    _content_cache_config: NestedConfigValue | None = PrivateAttr(default=None)
     # Caches for structured layers
     _parsed_cache: Any | None = PrivateAttr(default=None)
-    _content_cache_config: NestedConfigValue | None = PrivateAttr(default=None)
 
     def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
         if reload or self._parsed_cache is None:

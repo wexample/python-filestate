@@ -49,10 +49,10 @@ class AbstractItemTarget(
         "wexample_filestate.operations_provider.abstract_operations_provider",
         "wexample_config.config_value.config_value",
     )
+    last_result: AbstractResult | None = None
+    operations_providers: list[type[AbstractOperationsProvider]] | None = None
 
     source: SourceFileOrDirectory | None = None
-    operations_providers: list[type[AbstractOperationsProvider]] | None = None
-    last_result: AbstractResult | None = None
 
     def __init__(
         self,
