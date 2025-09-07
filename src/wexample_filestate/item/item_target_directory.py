@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, cast
 
 from pydantic import Field
@@ -8,9 +9,10 @@ from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMix
 from wexample_helpers.const.types import StringKeysDict
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.result.abstract_result import AbstractResult
-    from collections.abc import Callable
     from wexample_helpers.const.types import FileStringOrPath, PathOrString
 
 
@@ -27,7 +29,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         ItemDirectoryMixin.__init__(self)
 
     def build_item_tree(self) -> None:
-        from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
+        from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+            ItemTreeConfigOptionMixin,
+        )
         super().build_item_tree()
 
         for option in self.options.values():
@@ -41,7 +45,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             self.set_value(raw_value=yaml_read(str(path)))
 
     def get_children_list(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.children_config_option import ChildrenConfigOption
+        from wexample_filestate.config_option.children_config_option import (
+            ChildrenConfigOption,
+        )
 
         option = cast(ChildrenConfigOption, self.get_option(ChildrenConfigOption))
         if option is not None:
@@ -146,7 +152,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return None
 
     def find_by_name_or_fail(self, item_name: str) -> TargetFileOrDirectoryType:
-        from wexample_filestate.exception.child_not_found_exception import ChildNotFoundException
+        from wexample_filestate.exception.child_not_found_exception import (
+            ChildNotFoundException,
+        )
         child = self.find_by_name(item_name)
         if child is None:
 
@@ -158,7 +166,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return self.shortcuts[name] if name in self.shortcuts else None
 
     def get_shortcut_or_fail(self, name: str) -> AbstractItemTarget | None:
-        from wexample_filestate.exception.undefined_shortcut_exception import UndefinedShortcutException
+        from wexample_filestate.exception.undefined_shortcut_exception import (
+            UndefinedShortcutException,
+        )
         shortcut = self.get_shortcut(name=name)
 
         if shortcut is None:
@@ -166,7 +176,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             raise UndefinedShortcutException(shortcut=name, root_item=self)
 
     def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
-        from wexample_filestate.exception.existing_shortcut_exception import ExistingShortcutException
+        from wexample_filestate.exception.existing_shortcut_exception import (
+            ExistingShortcutException,
+        )
         if name in self.shortcuts:
 
             raise ExistingShortcutException(
@@ -181,6 +193,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     @classmethod
     def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
         from pathlib import Path
+
         # If path is a file, ignore file name a keep parent directory.
         path = Path(path)
         if path.is_file():

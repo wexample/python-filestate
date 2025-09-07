@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
+
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 if TYPE_CHECKING:
@@ -20,7 +21,10 @@ class ItemChangeModeOperation(AbstractOperation):
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-        from wexample_helpers.helpers.file import file_path_get_mode_num, file_validate_mode_octal_or_fail
+        from wexample_helpers.helpers.file import (
+            file_path_get_mode_num,
+            file_validate_mode_octal_or_fail,
+        )
         if not self.target.source:
             return False
 
@@ -53,8 +57,13 @@ class ItemChangeModeOperation(AbstractOperation):
 
     def apply(self) -> None:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-        from wexample_filestate.config_option.mode_recursive_config_option import ModeRecursiveConfigOption
-        from wexample_helpers.helpers.file import file_change_mode, file_change_mode_recursive
+        from wexample_filestate.config_option.mode_recursive_config_option import (
+            ModeRecursiveConfigOption,
+        )
+        from wexample_helpers.helpers.file import (
+            file_change_mode,
+            file_change_mode_recursive,
+        )
 
         self._original_octal_mode = self.target.get_source().get_octal_mode()
         mode_int = cast(
@@ -71,7 +80,10 @@ class ItemChangeModeOperation(AbstractOperation):
             file_change_mode_recursive(self.target.get_source().get_path(), mode_int)
 
     def undo(self) -> None:
-        from wexample_helpers.helpers.file import file_change_mode_recursive, file_mode_octal_to_num
+        from wexample_helpers.helpers.file import (
+            file_change_mode_recursive,
+            file_mode_octal_to_num,
+        )
         file_change_mode_recursive(
             self.target.get_source().get_path(),
             file_mode_octal_to_num(self._get_original_octal_mode()),

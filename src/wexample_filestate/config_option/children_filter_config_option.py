@@ -33,7 +33,9 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         entry_filter: Callable[[Path], bool] | None,
     ) -> bool:
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.helpers.config_helper import config_has_same_type_as_path
+        from wexample_filestate.helpers.config_helper import (
+            config_has_same_type_as_path,
+        )
 
         requested_type = config.get("type")
         if requested_type == DiskItemType.DIRECTORY and not entry_path.is_dir():
@@ -112,8 +114,10 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.config_option.name_pattern_config_option import (
+            NamePatternConfigOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.config_option.name_pattern_config_option import NamePatternConfigOption
 
         config = self.pattern
         children = []

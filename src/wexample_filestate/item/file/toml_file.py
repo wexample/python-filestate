@@ -30,8 +30,9 @@ class TomlFile(StructuredContentFile):
             return document()
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
-        from tomlkit import _TOMLDocument, document, toml_dumps
+        from tomlkit import _TOMLDocument, document
         from tomlkit import dumps as toml_dumps
+        from tomlkit import toml_dumps
 
         if content is None:
             return toml_dumps(document())

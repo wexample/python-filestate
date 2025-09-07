@@ -21,12 +21,16 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         return Scope.CONTENT
 
     def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         return [FileCreateOperation]
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.yaml_filter_config_option import YamlFilterConfigOption
+        from wexample_filestate.config_option.yaml_filter_config_option import (
+            YamlFilterConfigOption,
+        )
 
         if (
             self.target.is_file()

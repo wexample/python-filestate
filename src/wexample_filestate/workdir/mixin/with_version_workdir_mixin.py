@@ -8,8 +8,10 @@ if TYPE_CHECKING:
 
 class WithVersionWorkdirMixin:
     def append_version(self, config: DictConfig | None = None) -> DictConfig:
+        from wexample_filestate.config_option.text_filter_config_option import (
+            TextFilterConfigOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.config_option.text_filter_config_option import TextFilterConfigOption
         config.get("children").append(
             {
                 "name": "version.txt",
