@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import Any, Union, Callable
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
