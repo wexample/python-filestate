@@ -40,6 +40,7 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
         )
 
         return [
+            # filestate: python-iterable-sort
             ContentLinesSortOperation,
             ContentLinesUniqueOperation,
             ContentTrimOperation,
