@@ -51,9 +51,6 @@ include = [
 distribution = true
 
 [tool.pdm.build]
-includes = [
-    'src/wexample_filestate/*',
-]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]
