@@ -54,6 +54,7 @@ class TestFileStateManager(AbstractStateManagerTest):
             ChildrenConfigOption,
         )
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
+
         self.state_manager.allow_undefined_keys = True
         self.state_manager.configure(
             config={
@@ -80,6 +81,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         from wexample_config.config_value.callback_render_config_value import (
             CallbackRenderConfigValue,
         )
+
         def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yow"
 
@@ -98,6 +100,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
     def test_dump(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
+
         self.state_manager.configure(
             config={
                 "children": [

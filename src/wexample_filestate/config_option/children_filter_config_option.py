@@ -69,6 +69,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     ) -> dict | None:
         """Build a nested DictConfig preserving the directory structure; returns None if empty when filtering files only."""
         from wexample_filestate.const.disk import DiskItemType
+
         dir_config: dict = {
             "name": base_dir.name,
             "type": DiskItemType.DIRECTORY,

@@ -68,7 +68,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -100,6 +100,7 @@ class AbstractItemTarget(
     def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
         from wexample_filestate.item.item_source_directory import ItemSourceDirectory
         from wexample_filestate.item.item_source_file import ItemSourceFile
+
         if path.is_file():
             self.source = ItemSourceFile(
                 path=path,
@@ -152,6 +153,7 @@ class AbstractItemTarget(
         from wexample_filestate.options_provider.default_options_provider import (
             DefaultOptionsProvider,
         )
+
         providers = super().get_options_providers()
         if len(providers) > 0:
             return providers
@@ -161,22 +163,23 @@ class AbstractItemTarget(
         ]
 
     def build_operations(
-            self: TargetFileOrDirectoryType,
-            result: AbstractResult,
-            scopes: set[Scope] | None = None,
+        self: TargetFileOrDirectoryType,
+        result: AbstractResult,
+        scopes: set[Scope] | None = None,
     ) -> None:
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
         )
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
         self.io.indentation_up()
 
         active_option = self.get_option(ActiveConfigOption)
 
         # Allow to set active to false
         if not active_option or ActiveConfigOption.is_active(
-                active_option.get_value().raw
+            active_option.get_value().raw
         ):
             loading_log = self.io.log(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
@@ -188,7 +191,7 @@ class AbstractItemTarget(
                 operation = operation_class(io=self.io, target=self)
 
                 if (
-                        scopes is None or operation.get_scope() in scopes
+                    scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
@@ -197,8 +200,8 @@ class AbstractItemTarget(
                     result.operations.append(operation)
 
             if (
-                    not has_task
-                    and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+                not has_task
+                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
             ):
                 self.io.erase_response(loading_log)
 
@@ -208,6 +211,7 @@ class AbstractItemTarget(
         from wexample_filestate.operations_provider.default_operations_provider import (
             DefaultOperationsProvider,
         )
+
         if self.parent:
             return cast(
                 AbstractItemTarget, self.get_parent_item()
@@ -264,9 +268,9 @@ class AbstractItemTarget(
         return result
 
     def apply(
-            self,
-            interactive: bool = False,
-            scopes: set[Scope] | None = None,
+        self,
+        interactive: bool = False,
+        scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
@@ -286,7 +290,7 @@ class AbstractItemTarget(
         return result
 
     def find_closest(
-            self, class_type: type[AbstractItemTarget]
+        self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 

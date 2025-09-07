@@ -29,6 +29,7 @@ class StructuredContentFile(ItemTargetFile):
         from copy import deepcopy
 
         from wexample_config.config_value.nested_config_value import NestedConfigValue
+
         if reload:
             self._content_cache_config = None
         if self._content_cache_config is None:
@@ -46,6 +47,7 @@ class StructuredContentFile(ItemTargetFile):
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
         )
+
         expected_extension = self._expected_file_name_extension()
 
         if expected_extension:

@@ -163,6 +163,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def get_children(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+
         return cast(list[TargetFileOrDirectoryType], self.children)
 
     def get_io(self) -> IoManager:

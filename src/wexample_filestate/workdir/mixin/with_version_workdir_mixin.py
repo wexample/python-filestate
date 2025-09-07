@@ -12,6 +12,7 @@ class WithVersionWorkdirMixin:
             TextFilterConfigOption,
         )
         from wexample_filestate.const.disk import DiskItemType
+
         config.get("children").append(
             {
                 "name": "version.txt",
@@ -27,4 +28,5 @@ class WithVersionWorkdirMixin:
     def _get_version_default_content(self) -> Any:
         from wexample_helpers.const.version import DEFAULT_VERSION_NUMBER
         from wexample_helpers.helpers.string import string_ensure_end_with_new_line
+
         return string_ensure_end_with_new_line(DEFAULT_VERSION_NUMBER)

@@ -71,6 +71,7 @@ class WithWorkdirMixin:
 
     def _rebuild_workdir_content(self) -> None:
         from wexample_filestate.enum.scopes import Scope
+
         self.workdir.apply(
             scopes={
                 Scope.CONTENT,
@@ -84,6 +85,7 @@ class WithWorkdirMixin:
         config: DictConfig | None = None,
     ) -> FileStateManager:
         from wexample_filestate.file_state_manager import FileStateManager
+
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io
         )

@@ -18,6 +18,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.NAME
 
     def dependencies(self) -> list[type[AbstractOperation]]:
@@ -31,6 +32,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
         )
+
         if (
             self.target.is_file()
             and self.target.get_local_file().path.exists()

@@ -20,6 +20,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.NAME
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:

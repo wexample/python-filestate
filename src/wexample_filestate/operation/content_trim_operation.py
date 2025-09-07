@@ -20,6 +20,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.CONTENT
 
     def dependencies(self) -> list[type[AbstractOperation]]:
@@ -57,6 +58,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
         )
+
         return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
 
     def describe_before(self) -> str:

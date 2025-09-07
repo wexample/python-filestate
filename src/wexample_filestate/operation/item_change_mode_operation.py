@@ -17,6 +17,7 @@ class ItemChangeModeOperation(AbstractOperation):
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.PERMISSIONS
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
@@ -25,6 +26,7 @@ class ItemChangeModeOperation(AbstractOperation):
             file_path_get_mode_num,
             file_validate_mode_octal_or_fail,
         )
+
         if not self.target.source:
             return False
 
@@ -84,6 +86,7 @@ class ItemChangeModeOperation(AbstractOperation):
             file_change_mode_recursive,
             file_mode_octal_to_num,
         )
+
         file_change_mode_recursive(
             self.target.get_source().get_path(),
             file_mode_octal_to_num(self._get_original_octal_mode()),

@@ -20,7 +20,6 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
-
         """Compute the prospective new content for the target file.
 
         Returns the updated content string if a change is needed, otherwise None.
@@ -123,6 +122,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         from wexample_filestate.config_option.should_not_contain_lines_config_option import (
             ShouldNotContainLinesConfigOption,
         )
+
         content_option = self.target.get_option(ContentConfigOption)
         should_contain_lines_option = self.target.get_option(
             ShouldContainLinesConfigOption
@@ -166,6 +166,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         from wexample_filestate.config_option.should_not_contain_lines_config_option import (
             ShouldNotContainLinesConfigOption,
         )
+
         if self.target.get_option(ContentConfigOption) is not None:
             return "The file content has been rewritten to exactly match the configured content."
 

@@ -19,6 +19,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
+
         return Scope.LOCATION
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
@@ -40,6 +41,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         from wexample_filestate.config_option.default_content_config_option import (
             DefaultContentConfigOption,
         )
+
         self._original_path = self.target.get_path()
 
         if self.target.is_file():

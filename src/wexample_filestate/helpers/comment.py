@@ -13,6 +13,7 @@ def comment_indicates_protected(comment: str | None) -> bool:
         FILESTATE_ACTIONS,
         FILESTATE_TAG,
     )
+
     if not comment:
         return False
     c = str(comment).strip().lower()
