@@ -17,6 +17,7 @@ from __future__ import annotations
 FILESTATE_TAG: str = "filestate:"
 
 # Known actions
+# filestate: python-constant-sort
 FILESTATE_KEEP: str = "keep"
 FILESTATE_IGNORE: str = "ignore"
 
