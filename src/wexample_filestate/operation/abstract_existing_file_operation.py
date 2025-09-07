@@ -15,14 +15,13 @@ if TYPE_CHECKING:
 
 
 class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
-    _changed_source: [str | None] = PrivateAttr(default=None)
-    _source_need_change: [bool | None] = PrivateAttr(default=None)
-
     """Base class for operations that require the target to be an existing file on disk.
 
     This class only abstracts the existence check (no extension or name check).
     Subclasses remain responsible for option typing/semantics and any extra filters.
     """
+    _changed_source: [str | None] = PrivateAttr(default=None)
+    _source_need_change: [bool | None] = PrivateAttr(default=None)
 
     @classmethod
     def get_scope(cls) -> Scope:
