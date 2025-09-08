@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
+import attrs
+from wexample_helpers.classes.base_class import BaseClass
 
 
-class AbstractItemSource(BaseModel):
+@attrs.define(kw_only=True)
+class AbstractItemSource(BaseClass):
     pass

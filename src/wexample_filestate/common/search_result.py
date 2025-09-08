@@ -1,15 +1,16 @@
 from __future__ import annotations
 
-from pydantic import Field
+import attrs
 from wexample_filestate.item.item_target_file import ItemTargetFile
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.extended_base_class import ExtendedBaseClass
 
 
-class SearchResult(ExtendedBaseModel):
-    column: int = Field(description="1-based column number where the match starts.")
-    item: ItemTargetFile = Field(description="The target file that was searched.")
-    line: int = Field(description="1-based line number where the match starts.")
-    searched: str = Field(description="The search string used to find matches.")
+@attrs.define(kw_only=True)
+class SearchResult(ExtendedBaseClass):
+    column: int = attrs.field(metadata={"description": "1-based column number where the match starts."})
+    item: ItemTargetFile = attrs.field(metadata={"description": "The target file that was searched."})
+    line: int = attrs.field(metadata={"description": "1-based line number where the match starts."})
+    searched: str = attrs.field(metadata={"description": "The search string used to find matches."})
 
     @classmethod
     def create_for_all_matches(

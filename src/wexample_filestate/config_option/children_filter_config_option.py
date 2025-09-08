@@ -4,7 +4,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import Field
+import attrs
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
@@ -13,17 +13,18 @@ if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
+@attrs.define(kw_only=True)
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
-    filter: Callable[[Path], bool] | None = Field(
+    filter: Callable[[Path], bool] | None = attrs.field(
         default=None,
-        description="Use this callback to filter out the files to preserve.",
+        metadata={"description": "Use this callback to filter out the files to preserve."},
     )
     # When true, search recursively under the base path (all subdirectories)
-    recursive: bool = Field(
+    recursive: bool = attrs.field(
         default=False,
-        description="Search recursively under the base path; apply filters/name_pattern to all descendants.",
+        metadata={"description": "Search recursively under the base path; apply filters/name_pattern to all descendants."},
     )
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:

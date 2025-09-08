@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from pydantic import PrivateAttr
+import attrs
 from wexample_filestate.item.item_target_file import ItemTargetFile
 
 if TYPE_CHECKING:
@@ -11,10 +11,11 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import Scalar
 
 
+@attrs.define(kw_only=True)
 class StructuredContentFile(ItemTargetFile):
-    _content_cache_config: NestedConfigValue | None = PrivateAttr(default=None)
+    _content_cache_config: NestedConfigValue | None = attrs.field(default=None, init=False)
     # Caches for structured layers
-    _parsed_cache: Any | None = PrivateAttr(default=None)
+    _parsed_cache: Any | None = attrs.field(default=None, init=False)
 
     def clear(self) -> None:
         super().clear()

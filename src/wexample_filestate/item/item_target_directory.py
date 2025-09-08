@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
-from pydantic import Field
+import attrs
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
@@ -16,13 +16,11 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import FileStringOrPath, PathOrString
 
 
+@attrs.define(kw_only=True)
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    shortcuts: StringKeysDict = Field(default_factory=dict)
+    shortcuts: StringKeysDict = attrs.field(factory=dict)
 
-    def __init__(self, **kwargs) -> None:
-        # Pydantic first.
-        AbstractItemTarget.__init__(self, **kwargs)
-
+    def __attrs_post_init__(self) -> None:
         ItemDirectoryMixin.__init__(self)
 
     @classmethod

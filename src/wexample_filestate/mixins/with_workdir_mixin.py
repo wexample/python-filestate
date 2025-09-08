@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import PrivateAttr
+import attrs
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
@@ -11,10 +11,11 @@ if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
 
 
+@attrs.define(kw_only=True)
 class WithWorkdirMixin:
-    _host_workdir: FileStateManager | None = PrivateAttr(default=None)
+    _host_workdir: FileStateManager | None = attrs.field(default=None, init=False)
     # Private attributes to avoid Pydantic field processing while keeping strong typing
-    _workdir: FileStateManager | None = PrivateAttr(default=None)
+    _workdir: FileStateManager | None = attrs.field(default=None, init=False)
 
     @property
     def host_workdir(self) -> FileStateManager | None:

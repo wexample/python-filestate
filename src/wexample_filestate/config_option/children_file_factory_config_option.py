@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
+import attrs
 from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
@@ -14,13 +14,14 @@ if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
+@attrs.define(kw_only=True)
 class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
     # Pattern is a template used to create generated child configs (e.g., name/type for files to add under each matched directory)
     pattern: DictConfig
     # Whether to recurse into subdirectories when generating children from the base path
-    recursive: bool = Field(
+    recursive: bool = attrs.field(
         default=False,
-        description="Recurse into subdirectories when generating children from matched directories.",
+        metadata={"description": "Recurse into subdirectories when generating children from matched directories."},
     )
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:

@@ -2,15 +2,17 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from pydantic import BaseModel
+import attrs
+from wexample_helpers.classes.base_class import BaseClass
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
 
 
-class AbstractResult(PrintableMixin, BaseModel):
-    operations: list[AbstractOperation] = []
-    rollback: bool = False
+@attrs.define(kw_only=True)
+class AbstractResult(PrintableMixin, BaseClass):
+    operations: list[AbstractOperation] = attrs.field(factory=list)
+    rollback: bool = attrs.field(default=False)
     state_manager: AbstractItemTarget
 
     def apply_operations(self, interactive: bool = False) -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from pydantic import PrivateAttr
+import attrs
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
 
+@attrs.define(kw_only=True)
 class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
     """Base class for operations that require the target to be an existing file on disk.
 
@@ -21,8 +22,8 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     Subclasses remain responsible for option typing/semantics and any extra filters.
     """
 
-    _changed_source: [str | None] = PrivateAttr(default=None)
-    _source_need_change: [bool | None] = PrivateAttr(default=None)
+    _changed_source: str | None = attrs.field(default=None, init=False)
+    _source_need_change: bool | None = attrs.field(default=None, init=False)
 
     @classmethod
     def get_scope(cls) -> Scope:
