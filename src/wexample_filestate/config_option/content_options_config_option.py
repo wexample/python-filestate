@@ -11,7 +11,6 @@ class ContentOptionsConfigOption(AbstractConfigOption):
     Example config:
         { "content_options": ["lines_sort", "lines_unique"] }
     """
-
     OPTION_NAME_LINES_SORT: ClassVar[str] = "lines_sort"
     OPTION_NAME_LINES_UNIQUE: ClassVar[str] = "lines_unique"
 
