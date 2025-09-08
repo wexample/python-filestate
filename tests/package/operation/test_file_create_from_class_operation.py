@@ -11,6 +11,19 @@ if TYPE_CHECKING:
 class TestFileCreateFromClassOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
+    def _operation_get_count(self) -> int:
+        return 2
+
+    def _operation_test_assert_applied(self) -> None:
+        target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
+        assert (
+            target_file.get_path().exists()
+        ), "The target file should have been created"
+
+    def _operation_test_assert_initial(self) -> None:
+        target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
+        assert not target_file.get_path().exists(), "The file should not exist"
+
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
         from wexample_filestate.file_state_manager import FileStateManager
@@ -46,16 +59,3 @@ class TestFileCreateFromClassOperation(TestAbstractOperation):
                 }
             ]
         }
-
-    def _operation_get_count(self) -> int:
-        return 2
-
-    def _operation_test_assert_initial(self) -> None:
-        target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
-        assert not target_file.get_path().exists(), "The file should not exist"
-
-    def _operation_test_assert_applied(self) -> None:
-        target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
-        assert (
-            target_file.get_path().exists()
-        ), "The target file should have been created"

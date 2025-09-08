@@ -12,10 +12,8 @@ class ItemTreeConfigOptionMixin:
     like any file or directory descriptor, and also children option a children factories.
     """
 
-    def get_parent_item_or_none(self) -> TargetFileOrDirectoryType | None:
-        if self.parent:
-            return self.get_parent_item()
-        return None
+    def build_item_tree(self) -> None:
+        pass
 
     def get_parent_item(self) -> TargetFileOrDirectoryType:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
@@ -31,5 +29,7 @@ class ItemTreeConfigOptionMixin:
         # give a try to parent.
         return cast(TargetFileOrDirectoryType, self.parent).get_parent_item()
 
-    def build_item_tree(self) -> None:
-        pass
+    def get_parent_item_or_none(self) -> TargetFileOrDirectoryType | None:
+        if self.parent:
+            return self.get_parent_item()
+        return None

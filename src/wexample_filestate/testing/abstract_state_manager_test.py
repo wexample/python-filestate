@@ -18,17 +18,6 @@ if TYPE_CHECKING:
 class AbstractStateManagerTest(ABC):
     state_manager: FileStateManager
 
-    def _get_package_root_path(self) -> str:
-        return f"{os.path.abspath(os.curdir)}{os.sep}"
-
-    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> str:
-        return os.path.join(
-            package_root_path or self._get_package_root_path(), "tests", "resources", ""
-        )
-
-    def _get_absolute_path_from_state_manager(self, relative: str) -> str:
-        return os.path.join(self._get_test_state_manager_path(), relative)
-
     def setup_method(self) -> None:
         from wexample_filestate.file_state_manager import FileStateManager
         from wexample_prompt.common.io_manager import IoManager
@@ -42,6 +31,36 @@ class AbstractStateManagerTest(ABC):
                 operations_providers=self._get_test_operations_providers(),
             ),
         )
+
+    def _assert_dir_exists(self, dir_path: PathOrString, positive: bool = True) -> None:
+        assert (os.path.isdir(dir_path)) == positive
+
+    def _assert_file_content_equals(
+        self, file_path: str, expected_value: str, positive: bool = True
+    ) -> None:
+        from wexample_helpers.helpers.file import file_read
+
+        assert (file_read(file_path) == expected_value) == positive
+
+    def _assert_file_exists(
+        self, file_path: PathOrString, positive: bool = True
+    ) -> None:
+        assert (os.path.isfile(file_path)) == positive
+
+    def _assert_state_manager_target_directory_exists(
+        self, item_name: str, positive: bool = True
+    ) -> None:
+        target = self.state_manager.find_by_name_or_fail(item_name)
+
+        # Target should always exist
+        assert target is not None
+        self._assert_dir_exists(target.get_path(), positive=positive)
+
+    def _get_absolute_path_from_state_manager(self, relative: str) -> str:
+        return os.path.join(self._get_test_state_manager_path(), relative)
+
+    def _get_package_root_path(self) -> str:
+        return f"{os.path.abspath(os.curdir)}{os.sep}"
 
     def _get_test_manager_class(self):
         from wexample_filestate.file_state_manager import FileStateManager
@@ -58,26 +77,7 @@ class AbstractStateManagerTest(ABC):
     ) -> list[type[AbstractOptionsProvider]] | None:
         return None
 
-    def _assert_file_content_equals(
-        self, file_path: str, expected_value: str, positive: bool = True
-    ) -> None:
-        from wexample_helpers.helpers.file import file_read
-
-        assert (file_read(file_path) == expected_value) == positive
-
-    def _assert_dir_exists(self, dir_path: PathOrString, positive: bool = True) -> None:
-        assert (os.path.isdir(dir_path)) == positive
-
-    def _assert_file_exists(
-        self, file_path: PathOrString, positive: bool = True
-    ) -> None:
-        assert (os.path.isfile(file_path)) == positive
-
-    def _assert_state_manager_target_directory_exists(
-        self, item_name: str, positive: bool = True
-    ) -> None:
-        target = self.state_manager.find_by_name_or_fail(item_name)
-
-        # Target should always exist
-        assert target is not None
-        self._assert_dir_exists(target.get_path(), positive=positive)
+    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> str:
+        return os.path.join(
+            package_root_path or self._get_package_root_path(), "tests", "resources", ""
+        )

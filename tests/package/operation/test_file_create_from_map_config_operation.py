@@ -12,6 +12,27 @@ if TYPE_CHECKING:
 class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
     missing_file_name: str = "simple-readme.md"
 
+    def _operation_get_count(self) -> int:
+        return 3
+
+    def _operation_test_assert_applied(self) -> None:
+        target_file = self.state_manager.find_by_name_recursive(
+            "test-collection-one-one.txt"
+        )
+
+        assert target_file is not None, "Target file not found"
+        assert (
+            not target_file.get_path().exists()
+        ), "The target file has been removed because it matches the name pattern"
+
+    def _operation_test_assert_initial(self) -> None:
+        target_file = self.state_manager.find_by_name_recursive(
+            "test-collection-one-one.txt"
+        )
+
+        assert target_file is not None, "Target file not found"
+        assert target_file.get_path().exists(), "The file should exist"
+
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
         from wexample_filestate.config_option.children_filter_config_option import (
@@ -63,24 +84,3 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
                 }
             ]
         }
-
-    def _operation_get_count(self) -> int:
-        return 3
-
-    def _operation_test_assert_initial(self) -> None:
-        target_file = self.state_manager.find_by_name_recursive(
-            "test-collection-one-one.txt"
-        )
-
-        assert target_file is not None, "Target file not found"
-        assert target_file.get_path().exists(), "The file should exist"
-
-    def _operation_test_assert_applied(self) -> None:
-        target_file = self.state_manager.find_by_name_recursive(
-            "test-collection-one-one.txt"
-        )
-
-        assert target_file is not None, "Target file not found"
-        assert (
-            not target_file.get_path().exists()
-        ), "The target file has been removed because it matches the name pattern"

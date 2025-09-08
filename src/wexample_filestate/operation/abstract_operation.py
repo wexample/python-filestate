@@ -41,12 +41,11 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
     def apply(self) -> None:
         pass
 
-    @abstractmethod
-    def undo(self) -> None:
-        pass
+    def dependencies(self) -> list[type[AbstractOperation]]:
+        return []
 
     @abstractmethod
-    def description(self) -> str:
+    def describe_after(self) -> str:
         pass
 
     @abstractmethod
@@ -54,11 +53,20 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
         pass
 
     @abstractmethod
-    def describe_after(self) -> str:
+    def description(self) -> str:
         pass
 
-    def dependencies(self) -> list[type[AbstractOperation]]:
-        return []
+    @abstractmethod
+    def undo(self) -> None:
+        pass
+
+    def _build_str_value(self, value: Any) -> str:
+        built = self._build_value(value)
+        if not isinstance(built, str):
+            raise TypeError(
+                f"Expected string value, got {type(built).__name__}: {built}"
+            )
+        return built
 
     def _build_value(self, value: Any) -> Any:
         """
@@ -89,11 +97,3 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseModel):
             value = value(self.target)
 
         return value
-
-    def _build_str_value(self, value: Any) -> str:
-        built = self._build_value(value)
-        if not isinstance(built, str):
-            raise TypeError(
-                f"Expected string value, got {type(built).__name__}: {built}"
-            )
-        return built

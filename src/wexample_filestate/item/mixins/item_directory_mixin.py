@@ -13,8 +13,8 @@ class ItemDirectoryMixin(WithLocalDirectoryMixin, ItemMixin):
     def get_item_title(self) -> str:
         return "Directory"
 
-    def is_file(self) -> bool:
-        return False
-
     def is_directory(self) -> bool:
         return True
+
+    def is_file(self) -> bool:
+        return False

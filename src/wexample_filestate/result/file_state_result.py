@@ -11,12 +11,6 @@ if TYPE_CHECKING:
 class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
-    def _find_dependency(self, dependency_class) -> AbstractOperation | None:
-        for operation in self.operations:
-            if isinstance(operation, dependency_class):
-                return operation
-        return None
-
     def _apply_single_operation(
         self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
@@ -40,3 +34,9 @@ class FileStateResult(AbstractResult):
         # Non interactive.
         operation.apply()
         return True
+
+    def _find_dependency(self, dependency_class) -> AbstractOperation | None:
+        for operation in self.operations:
+            if isinstance(operation, dependency_class):
+                return operation
+        return None

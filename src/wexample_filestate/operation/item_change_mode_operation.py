@@ -39,24 +39,6 @@ class ItemChangeModeOperation(AbstractOperation):
 
         return False
 
-    def describe_before(self) -> str:
-        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-
-        current_octal = self.target.get_source().get_octal_mode()
-        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
-        path = self.target.get_path().as_posix()
-        return f"The item '{path}' has permissions {current_octal} but should be {target_octal}. Permissions will be updated."
-
-    def describe_after(self) -> str:
-        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-
-        path = self.target.get_path().as_posix()
-        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
-        return f"Permissions for '{path}' are now set to {target_octal}."
-
-    def description(self) -> str:
-        return "Ensure file or directory permissions match the configured mode."
-
     def apply(self) -> None:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
         from wexample_filestate.config_option.mode_recursive_config_option import (
@@ -80,6 +62,24 @@ class ItemChangeModeOperation(AbstractOperation):
             file_change_mode(self.target.get_source().get_path(), mode_int)
         else:
             file_change_mode_recursive(self.target.get_source().get_path(), mode_int)
+
+    def describe_after(self) -> str:
+        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+
+        path = self.target.get_path().as_posix()
+        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
+        return f"Permissions for '{path}' are now set to {target_octal}."
+
+    def describe_before(self) -> str:
+        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
+
+        current_octal = self.target.get_source().get_octal_mode()
+        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
+        path = self.target.get_path().as_posix()
+        return f"The item '{path}' has permissions {current_octal} but should be {target_octal}. Permissions will be updated."
+
+    def description(self) -> str:
+        return "Ensure file or directory permissions match the configured mode."
 
     def undo(self) -> None:
         from wexample_helpers.helpers.file import (

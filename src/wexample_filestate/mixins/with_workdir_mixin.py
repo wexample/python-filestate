@@ -17,6 +17,14 @@ class WithWorkdirMixin:
     _workdir: FileStateManager | None = PrivateAttr(default=None)
 
     @property
+    def host_workdir(self) -> FileStateManager | None:
+        return self._host_workdir
+
+    @host_workdir.setter
+    def host_workdir(self, value: FileStateManager | None) -> None:
+        self._host_workdir = value
+
+    @property
     def workdir(self) -> FileStateManager | None:
         return self._workdir
 
@@ -24,13 +32,17 @@ class WithWorkdirMixin:
     def workdir(self, value: FileStateManager | None) -> None:
         self._workdir = value
 
-    @property
-    def host_workdir(self) -> FileStateManager | None:
-        return self._host_workdir
+    def _get_workdir_state_manager_class(
+        self,
+        entrypoint_path: str,
+        io: IoManager,
+        config: DictConfig | None = None,
+    ) -> FileStateManager:
+        from wexample_filestate.file_state_manager import FileStateManager
 
-    @host_workdir.setter
-    def host_workdir(self, value: FileStateManager | None) -> None:
-        self._host_workdir = value
+        return FileStateManager.create_from_path(
+            path=entrypoint_path, config=config or {}, io=io
+        )
 
     def _init_workdir(
         self,
@@ -76,16 +88,4 @@ class WithWorkdirMixin:
             scopes={
                 Scope.CONTENT,
             }
-        )
-
-    def _get_workdir_state_manager_class(
-        self,
-        entrypoint_path: str,
-        io: IoManager,
-        config: DictConfig | None = None,
-    ) -> FileStateManager:
-        from wexample_filestate.file_state_manager import FileStateManager
-
-        return FileStateManager.create_from_path(
-            path=entrypoint_path, config=config or {}, io=io
         )

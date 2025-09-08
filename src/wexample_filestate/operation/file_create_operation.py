@@ -28,15 +28,6 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
             and FileManipulationOperationMixin.option_should_exist_is_true(self.target)
         )
 
-    def describe_before(self) -> str:
-        return f"The file or directory does not exists on the system."
-
-    def describe_after(self) -> str:
-        return f"The file or directory has been created."
-
-    def description(self) -> str:
-        return "Create missing file"
-
     def apply(self) -> None:
         from wexample_filestate.config_option.default_content_config_option import (
             DefaultContentConfigOption,
@@ -66,6 +57,15 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
         elif self.target.is_directory():
             os.mkdir(self._original_path)
+
+    def describe_after(self) -> str:
+        return f"The file or directory has been created."
+
+    def describe_before(self) -> str:
+        return f"The file or directory does not exists on the system."
+
+    def description(self) -> str:
+        return "Create missing file"
 
     def undo(self) -> None:
         if self.target.is_file():

@@ -14,9 +14,6 @@ if TYPE_CHECKING:
 
 
 class FileWriteOperation(AbstractExistingFileOperation):
-    @classmethod
-    def _apply_on_empty_content(cls) -> bool:
-        return True
 
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
@@ -88,6 +85,9 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         # If produced content equals current content, no change.
         return updated_content if updated_content != current else None
+    @classmethod
+    def _apply_on_empty_content(cls) -> bool:
+        return True
 
     @staticmethod
     def _get_current_content_from_target(target: TargetFileOrDirectoryType) -> str:
@@ -111,6 +111,28 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         return self.source_need_change(self.target)
+
+    def describe_after(self) -> str:
+        from wexample_filestate.config_option.content_config_option import (
+            ContentConfigOption,
+        )
+        from wexample_filestate.config_option.should_contain_lines_config_option import (
+            ShouldContainLinesConfigOption,
+        )
+        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
+            ShouldNotContainLinesConfigOption,
+        )
+
+        if self.target.get_option(ContentConfigOption) is not None:
+            return "The file content has been rewritten to exactly match the configured content."
+
+        if self.target.get_option(ShouldContainLinesConfigOption) is not None:
+            return "All required lines are now present in the file."
+
+        if self.target.get_option(ShouldNotContainLinesConfigOption) is not None:
+            return "All forbidden lines have been removed from the file."
+
+        return "The file content has been updated according to configuration."
 
     def describe_before(self) -> str:
         from wexample_filestate.config_option.content_config_option import (
@@ -155,28 +177,6 @@ class FileWriteOperation(AbstractExistingFileOperation):
             return "The file does not contain any forbidden lines."
 
         return "The file content may need to be regenerated based on configuration."
-
-    def describe_after(self) -> str:
-        from wexample_filestate.config_option.content_config_option import (
-            ContentConfigOption,
-        )
-        from wexample_filestate.config_option.should_contain_lines_config_option import (
-            ShouldContainLinesConfigOption,
-        )
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
-            ShouldNotContainLinesConfigOption,
-        )
-
-        if self.target.get_option(ContentConfigOption) is not None:
-            return "The file content has been rewritten to exactly match the configured content."
-
-        if self.target.get_option(ShouldContainLinesConfigOption) is not None:
-            return "All required lines are now present in the file."
-
-        if self.target.get_option(ShouldNotContainLinesConfigOption) is not None:
-            return "All forbidden lines have been removed from the file."
-
-        return "The file content has been updated according to configuration."
 
     def description(self) -> str:
         return (

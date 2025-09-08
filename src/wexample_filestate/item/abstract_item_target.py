@@ -67,6 +67,14 @@ class AbstractItemTarget(
         WithIoMethods.__init__(self, io=io, parent_io_handler=parent_io_handler)
 
     @classmethod
+    def create_from_config(cls, **kwargs) -> AbstractItemTarget:
+        config = kwargs.get("config")
+        instance = cls(**kwargs)
+        instance.configure(config)
+
+        return instance
+
+    @classmethod
     def create_from_path(
         cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
@@ -85,82 +93,27 @@ class AbstractItemTarget(
         manager.configure(config=config)
         return manager
 
-    @classmethod
-    def create_from_config(cls, **kwargs) -> AbstractItemTarget:
-        config = kwargs.get("config")
-        instance = cls(**kwargs)
-        instance.configure(config)
-
-        return instance
-
-    def configure(self, config: DictConfig) -> None:
-        self.set_value(raw_value=config)
-        self.locate_source(self.get_path())
-
-    def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
-        from wexample_filestate.item.item_source_directory import ItemSourceDirectory
-        from wexample_filestate.item.item_source_file import ItemSourceFile
-
-        if path.is_file():
-            self.source = ItemSourceFile(
-                path=path,
-            )
-        elif path.is_dir():
-            self.source = ItemSourceDirectory(
-                path=path,
-            )
-
-        return self.source
-
-    def get_path(self) -> Path:
-        from pathlib import Path
-
-        # Base path is specified, for instance for the tree root.
-        if self.base_path is not None:
-            base_path = Path(self.base_path)
-        else:
-            base_path = self.get_parent_item().get_path()
-
-        return base_path / self.get_item_name()
-
-    def get_relative_path(self) -> Path | None:
-        root = self.get_root()
-        if root:
-            return self.get_path().relative_to(root.get_path())
-        return None
-
-    def get_display_path(self) -> Path:
-        return self.get_relative_path() or self.get_path()
-
-    def render_display_path(self) -> str:
+    def apply(
+        self,
+        interactive: bool = False,
+        scopes: set[Scope] | None = None,
+    ) -> FileStateResult:
+        from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
 
-        return cli_make_clickable_path(
-            path=self.get_path(),
-            short_title=self.get_display_path(),
-        )
+        result = FileStateResult(state_manager=self)
+        self.last_result = result
+        self.build_operations(result=result, scopes=scopes)
 
-    def get_operations(self) -> list[type[AbstractOperation]]:
-        providers = self.get_operations_providers()
-        operations = []
+        if len(result.operations) > 0:
+            result.apply_operations(interactive=interactive)
+        else:
 
-        for provider in providers:
-            operations.extend(provider.get_operations())
+            self.io.info(
+                message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
+            )
 
-        return operations
-
-    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
-        from wexample_filestate.options_provider.default_options_provider import (
-            DefaultOptionsProvider,
-        )
-
-        providers = super().get_options_providers()
-        if len(providers) > 0:
-            return providers
-
-        return [
-            DefaultOptionsProvider,
-        ]
+        return result
 
     def build_operations(
         self: TargetFileOrDirectoryType,
@@ -207,6 +160,72 @@ class AbstractItemTarget(
 
         self.io.indentation_down()
 
+    def configure(self, config: DictConfig) -> None:
+        self.set_value(raw_value=config)
+        self.locate_source(self.get_path())
+
+    def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
+        from wexample_filestate.result.file_state_dry_run_result import (
+            FileStateDryRunResult,
+        )
+
+        result = FileStateDryRunResult(state_manager=self)
+        self.last_result = result
+        self.build_operations(result=result, scopes=scopes)
+        result.apply_operations()
+
+        return result
+
+    def dump(self) -> Any:
+        output = super().dump()
+        output["name"] = self.get_item_name()
+
+        return output
+
+    def find_closest(
+        self, class_type: type[AbstractItemTarget]
+    ) -> AbstractItemTarget | None:
+        """Return the nearest parent item that is an instance of class_type.
+
+        Traverses parents via self.get_parent_item_or_none() until a match is found
+        or the root is reached.
+        """
+        current = self.get_parent_item_or_none()
+        while current is not None:
+            if isinstance(current, class_type):
+                return current  # type: ignore[return-value]
+            current = current.get_parent_item_or_none()
+        return None
+
+    def get_display_path(self) -> Path:
+        return self.get_relative_path() or self.get_path()
+
+    def get_env_parameter(self, key: str, default: str | None = None) -> str | None:
+        """If no environment parameter defined by current item, ask its parent.
+        The default behavior is to return default value but should be replaced by,
+        for instance, .env loading in specific contexts"""
+        parent_item = self.get_parent_item_or_none()
+        if parent_item:
+            return parent_item.get_env_parameter(
+                key=key,
+                default=default,
+            )
+        return default
+
+    def get_item_name(self) -> str:
+        from wexample_config.config_option.name_config_option import NameConfigOption
+
+        return self.get_option(NameConfigOption).get_value().get_str()
+
+    def get_operations(self) -> list[type[AbstractOperation]]:
+        providers = self.get_operations_providers()
+        operations = []
+
+        for provider in providers:
+            operations.extend(provider.get_operations())
+
+        return operations
+
     def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
         from wexample_filestate.operations_provider.default_operations_provider import (
             DefaultOperationsProvider,
@@ -224,20 +243,62 @@ class AbstractItemTarget(
             DefaultOperationsProvider,
         ]
 
-    def get_item_name(self) -> str:
-        from wexample_config.config_option.name_config_option import NameConfigOption
+    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
+        )
 
-        return self.get_option(NameConfigOption).get_value().get_str()
+        providers = super().get_options_providers()
+        if len(providers) > 0:
+            return providers
+
+        return [
+            DefaultOptionsProvider,
+        ]
+
+    def get_path(self) -> Path:
+        from pathlib import Path
+
+        # Base path is specified, for instance for the tree root.
+        if self.base_path is not None:
+            base_path = Path(self.base_path)
+        else:
+            base_path = self.get_parent_item().get_path()
+
+        return base_path / self.get_item_name()
+
+    def get_relative_path(self) -> Path | None:
+        root = self.get_root()
+        if root:
+            return self.get_path().relative_to(root.get_path())
+        return None
 
     def get_source(self) -> SourceFileOrDirectory:
         assert self.source is not None
         return self.source
 
-    def dump(self) -> Any:
-        output = super().dump()
-        output["name"] = self.get_item_name()
+    def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
+        from wexample_filestate.item.item_source_directory import ItemSourceDirectory
+        from wexample_filestate.item.item_source_file import ItemSourceFile
 
-        return output
+        if path.is_file():
+            self.source = ItemSourceFile(
+                path=path,
+            )
+        elif path.is_dir():
+            self.source = ItemSourceDirectory(
+                path=path,
+            )
+
+        return self.source
+
+    def render_display_path(self) -> str:
+        from wexample_helpers.helpers.cli import cli_make_clickable_path
+
+        return cli_make_clickable_path(
+            path=self.get_path(),
+            short_title=self.get_display_path(),
+        )
 
     def rollback(self) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
@@ -254,64 +315,3 @@ class AbstractItemTarget(
         self.last_result = result
 
         return result
-
-    def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
-        from wexample_filestate.result.file_state_dry_run_result import (
-            FileStateDryRunResult,
-        )
-
-        result = FileStateDryRunResult(state_manager=self)
-        self.last_result = result
-        self.build_operations(result=result, scopes=scopes)
-        result.apply_operations()
-
-        return result
-
-    def apply(
-        self,
-        interactive: bool = False,
-        scopes: set[Scope] | None = None,
-    ) -> FileStateResult:
-        from wexample_filestate.result.file_state_result import FileStateResult
-        from wexample_helpers.helpers.cli import cli_make_clickable_path
-
-        result = FileStateResult(state_manager=self)
-        self.last_result = result
-        self.build_operations(result=result, scopes=scopes)
-
-        if len(result.operations) > 0:
-            result.apply_operations(interactive=interactive)
-        else:
-
-            self.io.info(
-                message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
-            )
-
-        return result
-
-    def find_closest(
-        self, class_type: type[AbstractItemTarget]
-    ) -> AbstractItemTarget | None:
-        """Return the nearest parent item that is an instance of class_type.
-
-        Traverses parents via self.get_parent_item_or_none() until a match is found
-        or the root is reached.
-        """
-        current = self.get_parent_item_or_none()
-        while current is not None:
-            if isinstance(current, class_type):
-                return current  # type: ignore[return-value]
-            current = current.get_parent_item_or_none()
-        return None
-
-    def get_env_parameter(self, key: str, default: str | None = None) -> str | None:
-        """If no environment parameter defined by current item, ask its parent.
-        The default behavior is to return default value but should be replaced by,
-        for instance, .env loading in specific contexts"""
-        parent_item = self.get_parent_item_or_none()
-        if parent_item:
-            return parent_item.get_env_parameter(
-                key=key,
-                default=default,
-            )
-        return default

@@ -23,13 +23,6 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
         return Scope.CONTENT
 
-    def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import (
-            FileCreateOperation,
-        )
-
-        return [FileCreateOperation]
-
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
@@ -54,26 +47,33 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
                 return content.startswith(char) or content.endswith(char)
         return False
 
+    def apply(self) -> None:
+        self._target_file_write(
+            content=self.target.get_local_file().read().strip(self._get_trimmed_char())
+        )
+
+    def dependencies(self) -> list[type[AbstractOperation]]:
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
+
+        return [FileCreateOperation]
+
+    def describe_after(self) -> str:
+        return f"The file content has been trimmed to remove the character {repr(self._get_trimmed_char())}."
+
+    def describe_before(self) -> str:
+        return f"The file contains a leading or trailing character {repr(self._get_trimmed_char())} that should be trimmed."
+
+    def description(self) -> str:
+        return "Trim the file content according to the given character."
+
+    def undo(self) -> None:
+        self._restore_target_file()
+
     def _get_trimmed_char(self) -> str:
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
         )
 
         return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
-
-    def describe_before(self) -> str:
-        return f"The file contains a leading or trailing character {repr(self._get_trimmed_char())} that should be trimmed."
-
-    def describe_after(self) -> str:
-        return f"The file content has been trimmed to remove the character {repr(self._get_trimmed_char())}."
-
-    def description(self) -> str:
-        return "Trim the file content according to the given character."
-
-    def apply(self) -> None:
-        self._target_file_write(
-            content=self.target.get_local_file().read().strip(self._get_trimmed_char())
-        )
-
-    def undo(self) -> None:
-        self._restore_target_file()

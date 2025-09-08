@@ -16,9 +16,6 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
     def get_raw_value_allowed_type() -> Any:
         return Any
 
-    def get_templates(self) -> list[str] | None:
-        return self.templates
-
     def build_content(self) -> str | None:
         from wexample_helpers.helpers.string import string_replace_params
 
@@ -33,3 +30,6 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
         output_str = os.linesep.join(output)
 
         return output_str
+
+    def get_templates(self) -> list[str] | None:
+        return self.templates

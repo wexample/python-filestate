@@ -16,32 +16,19 @@ class StructuredContentFile(ItemTargetFile):
     # Caches for structured layers
     _parsed_cache: Any | None = PrivateAttr(default=None)
 
-    def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
-        if reload or self._parsed_cache is None:
-            text = super().read_text(reload=reload)
-            self._parsed_cache = self.loads(text, strict=strict)
-            # Invalidate config cache when parsed is reloaded
-            if reload:
-                self._content_cache_config = None
-        return self._parsed_cache
+    def clear(self) -> None:
+        super().clear()
 
-    def read_config(self, reload: bool = False) -> NestedConfigValue:
-        from copy import deepcopy
+        self._parsed_cache = None
+        self._content_cache_config = None
 
-        from wexample_config.config_value.nested_config_value import NestedConfigValue
+    def dumps(self, content: Any) -> str:
+        # Default fallback: stringify. Subclasses should override for structured formats.
+        return str(content)
 
-        if reload:
-            self._content_cache_config = None
-        if self._content_cache_config is None:
-
-            parsed = self.read_parsed()
-            # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
-            self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))
-
-        return self._content_cache_config
-
-    def _expected_file_name_extension(self) -> str | None:
-        return None
+    def loads(self, text: str, strict: bool = False) -> Any:
+        # Default fallback: return as-is (no parsing). Subclasses should override.
+        return text
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
         from wexample_filestate.config_option.should_have_extension_config_option import (
@@ -58,34 +45,6 @@ class StructuredContentFile(ItemTargetFile):
             )
 
         return raw_value
-
-    def write_parsed(self, content: Any | None = None) -> None:
-        # If nothing provided, use cache
-        if content is None:
-            if self._parsed_cache is None:
-                raise ValueError("No parsed content to write")
-            content = self._parsed_cache
-        text = self.dumps(content)
-        # Persist via text writer from base mixin
-        self.write_text(content=text)
-        # Update caches consistently
-        self._parsed_cache = content
-        self._content_cache_config = None
-
-    def write_config(self, value: NestedConfigValue | None = None) -> None:
-        """Write from a NestedConfigValue by converting to raw primitives, then persisting.
-
-        If value is None, uses the cached config. Keeps the config cache aligned after write.
-        """
-        cfg = value if value is not None else self._content_cache_config
-        if cfg is None:
-            raise ValueError("No config to write")
-        # Delegate normalization to NestedConfigValue
-        raw = cfg.to_dict()
-        # Write using the parsed pipeline to ensure consistent cache updates
-        self.write_parsed(raw)
-        # Keep the config cache aligned with what we just wrote
-        self._content_cache_config = cfg
 
     def preview_write(self, content: Any | None = None) -> str:
         """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
@@ -112,22 +71,63 @@ class StructuredContentFile(ItemTargetFile):
         raw = cfg.to_dict()
         return self.dumps(raw)
 
+    def read_config(self, reload: bool = False) -> NestedConfigValue:
+        from copy import deepcopy
+
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
+
+        if reload:
+            self._content_cache_config = None
+        if self._content_cache_config is None:
+
+            parsed = self.read_parsed()
+            # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
+            self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))
+
+        return self._content_cache_config
+
+    def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
+        if reload or self._parsed_cache is None:
+            text = super().read_text(reload=reload)
+            self._parsed_cache = self.loads(text, strict=strict)
+            # Invalidate config cache when parsed is reloaded
+            if reload:
+                self._content_cache_config = None
+        return self._parsed_cache
+
+    def write_config(self, value: NestedConfigValue | None = None) -> None:
+        """Write from a NestedConfigValue by converting to raw primitives, then persisting.
+
+        If value is None, uses the cached config. Keeps the config cache aligned after write.
+        """
+        cfg = value if value is not None else self._content_cache_config
+        if cfg is None:
+            raise ValueError("No config to write")
+        # Delegate normalization to NestedConfigValue
+        raw = cfg.to_dict()
+        # Write using the parsed pipeline to ensure consistent cache updates
+        self.write_parsed(raw)
+        # Keep the config cache aligned with what we just wrote
+        self._content_cache_config = cfg
+
     def write_config_value(self, key: str, value: Scalar) -> None:
         """Set a string value at key in the config and persist in one call."""
         cfg = self.read_config()
         cfg.search(key).set_str(str(value))
         self.write_config(cfg)
 
-    def clear(self) -> None:
-        super().clear()
-
-        self._parsed_cache = None
+    def write_parsed(self, content: Any | None = None) -> None:
+        # If nothing provided, use cache
+        if content is None:
+            if self._parsed_cache is None:
+                raise ValueError("No parsed content to write")
+            content = self._parsed_cache
+        text = self.dumps(content)
+        # Persist via text writer from base mixin
+        self.write_text(content=text)
+        # Update caches consistently
+        self._parsed_cache = content
         self._content_cache_config = None
 
-    def loads(self, text: str, strict: bool = False) -> Any:
-        # Default fallback: return as-is (no parsing). Subclasses should override.
-        return text
-
-    def dumps(self, content: Any) -> str:
-        # Default fallback: stringify. Subclasses should override for structured formats.
-        return str(content)
+    def _expected_file_name_extension(self) -> str | None:
+        return None

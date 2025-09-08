@@ -11,25 +11,55 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
     _bytes_cache: bytes | None = None
     _text_cache: str | None = None
 
-    def get_item_title(self) -> str:
-        return "File"
+    def clear(self) -> None:
+        self.clear_caches()
 
-    def is_file(self) -> bool:
-        return True
-
-    def is_directory(self) -> bool:
-        return False
-
-    def default_encoding(self) -> str:
-        return "utf-8"
+    def clear_caches(self) -> None:
+        self._bytes_cache = None
+        self._text_cache = None
 
     def decode_bytes(self, raw: bytes, encoding: str | None = None) -> str:
         enc = encoding or self.default_encoding()
         return raw.decode(enc)
 
+    def default_encoding(self) -> str:
+        return "utf-8"
+
     def encode_text(self, text: str, encoding: str | None = None) -> bytes:
         enc = encoding or self.default_encoding()
         return text.encode(enc)
+
+    def get_item_title(self) -> str:
+        return "File"
+
+    def is_directory(self) -> bool:
+        return False
+
+    def is_file(self) -> bool:
+        return True
+
+    def preview_write(self, content: Any | None = None) -> str:
+        """Generic preview; in base class treats content as text (cast to str if needed)."""
+        if content is None:
+            return self.preview_write_text()
+        if isinstance(content, str):
+            return self.preview_write_text(content)
+        # Fallback: stringify then apply hooks
+        return self.preview_write_text(str(content))
+
+    def preview_write_text(self, content: str | None = None) -> str:
+        """Return the exact text that would be written, without performing I/O."""
+        # Choose source text: explicit content, cached text, or current file text
+        source = (
+            content
+            if content is not None
+            else (
+                self._text_cache
+                if self._text_cache is not None
+                else self.read_text(reload=False)
+            )
+        )
+        return source
 
     def read_bytes(self, reload: bool = False) -> bytes:
         if reload or self._bytes_cache is None:
@@ -78,33 +108,3 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
         # Update caches: keep text, refresh bytes from text
         self._text_cache = text
         self._bytes_cache = self.encode_text(text, encoding=encoding)
-
-    def clear(self) -> None:
-        self.clear_caches()
-
-    def clear_caches(self) -> None:
-        self._bytes_cache = None
-        self._text_cache = None
-
-    def preview_write_text(self, content: str | None = None) -> str:
-        """Return the exact text that would be written, without performing I/O."""
-        # Choose source text: explicit content, cached text, or current file text
-        source = (
-            content
-            if content is not None
-            else (
-                self._text_cache
-                if self._text_cache is not None
-                else self.read_text(reload=False)
-            )
-        )
-        return source
-
-    def preview_write(self, content: Any | None = None) -> str:
-        """Generic preview; in base class treats content as text (cast to str if needed)."""
-        if content is None:
-            return self.preview_write_text()
-        if isinstance(content, str):
-            return self.preview_write_text(content)
-        # Fallback: stringify then apply hooks
-        return self.preview_write_text(str(content))

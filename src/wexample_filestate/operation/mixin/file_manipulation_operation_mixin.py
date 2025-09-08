@@ -14,25 +14,13 @@ class FileManipulationOperationMixin(AbstractOperation):
     _original_file_mode: int
     _original_path: PathOrString
 
-    def _backup_target_file(self) -> None:
-        self._original_path = self.target.get_path()
-        self._original_file_mode = self.target.get_path().stat().st_mode
-
-        self._backup_file_content(
-            target=self.target,
-            file_path=self._original_path,
+    @staticmethod
+    def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
+        from wexample_filestate.config_option.should_exist_config_option import (
+            ShouldExistConfigOption,
         )
 
-    def _restore_target_file(self) -> None:
-        import os
-
-        from wexample_helpers.helpers.file import file_write
-
-        if self.target.is_file():
-            file_write(self._original_path, self._original_file_content)
-            os.chmod(self._original_path, self._original_file_mode)
-        elif self.target.is_directory():
-            os.mkdir(self._original_path)
+        return target.get_option_value(ShouldExistConfigOption, default=True).is_true()
 
     def _backup_file_content(
         self, target: TargetFileOrDirectoryType, file_path: PathOrString
@@ -59,14 +47,26 @@ class FileManipulationOperationMixin(AbstractOperation):
             return True
         return False
 
+    def _backup_target_file(self) -> None:
+        self._original_path = self.target.get_path()
+        self._original_file_mode = self.target.get_path().stat().st_mode
+
+        self._backup_file_content(
+            target=self.target,
+            file_path=self._original_path,
+        )
+
+    def _restore_target_file(self) -> None:
+        import os
+
+        from wexample_helpers.helpers.file import file_write
+
+        if self.target.is_file():
+            file_write(self._original_path, self._original_file_content)
+            os.chmod(self._original_path, self._original_file_mode)
+        elif self.target.is_directory():
+            os.mkdir(self._original_path)
+
     def _target_file_write(self, content: str) -> None:
         self._backup_target_file()
         self.target.get_local_file().write(content=content)
-
-    @staticmethod
-    def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
-        from wexample_filestate.config_option.should_exist_config_option import (
-            ShouldExistConfigOption,
-        )
-
-        return target.get_option_value(ShouldExistConfigOption, default=True).is_true()

@@ -12,8 +12,10 @@ if TYPE_CHECKING:
 class JsonFile(StructuredContentFile):
     EXTENSION_JSON: ClassVar[str] = "json"
 
-    def _expected_file_name_extension(self) -> str:
-        return self.EXTENSION_JSON
+    def dumps(self, content: StructuredData | None) -> str:
+        import json
+
+        return json.dumps(content or {}, ensure_ascii=False, indent=2)
 
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> JsonContent:  # type: ignore[name-defined]
@@ -26,7 +28,5 @@ class JsonFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, content: StructuredData | None) -> str:
-        import json
-
-        return json.dumps(content or {}, ensure_ascii=False, indent=2)
+    def _expected_file_name_extension(self) -> str:
+        return self.EXTENSION_JSON

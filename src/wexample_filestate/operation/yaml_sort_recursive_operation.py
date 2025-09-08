@@ -21,12 +21,31 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
         return Scope.CONTENT
 
-    def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import (
-            FileCreateOperation,
-        )
+    @staticmethod
+    def _is_sorted(data: Any) -> bool:
+        """Return True if the current YAML content is already recursively key-sorted."""
+        import yaml
 
-        return [FileCreateOperation]
+        if not isinstance(data, str):
+            return True
+
+        try:
+            data = yaml.safe_load(data)
+        except Exception:
+            # Unparseable, consider it not applicable for sorting
+            return True
+
+        def sort_rec(obj):
+            if isinstance(obj, dict):
+                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
+            if isinstance(obj, list):
+                return [sort_rec(v) for v in obj]
+            return obj
+
+        sorted_data = sort_rec(data)
+        current_dump = yaml.safe_dump(data, sort_keys=False)
+        sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
+        return current_dump == sorted_dump
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.yaml_filter_config_option import (
@@ -57,41 +76,6 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
         return False
 
-    @staticmethod
-    def _is_sorted(data: Any) -> bool:
-        """Return True if the current YAML content is already recursively key-sorted."""
-        import yaml
-
-        if not isinstance(data, str):
-            return True
-
-        try:
-            data = yaml.safe_load(data)
-        except Exception:
-            # Unparseable, consider it not applicable for sorting
-            return True
-
-        def sort_rec(obj):
-            if isinstance(obj, dict):
-                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
-            if isinstance(obj, list):
-                return [sort_rec(v) for v in obj]
-            return obj
-
-        sorted_data = sort_rec(data)
-        current_dump = yaml.safe_dump(data, sort_keys=False)
-        sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
-        return current_dump == sorted_dump
-
-    def description(self) -> str:
-        return "Sort YAML keys recursively in alphabetical order."
-
-    def describe_before(self) -> str:
-        return "The YAML file may have unsorted keys; applying recursive alphabetical sort."
-
-    def describe_after(self) -> str:
-        return "The YAML file keys have been recursively sorted alphabetically."
-
     def apply(self) -> None:
         import yaml
 
@@ -111,6 +95,22 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         dumped = yaml.safe_dump(sorted_data, sort_keys=False)
 
         self._target_file_write(content=dumped)
+
+    def dependencies(self) -> list[type[AbstractOperation]]:
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
+
+        return [FileCreateOperation]
+
+    def describe_after(self) -> str:
+        return "The YAML file keys have been recursively sorted alphabetically."
+
+    def describe_before(self) -> str:
+        return "The YAML file may have unsorted keys; applying recursive alphabetical sort."
+
+    def description(self) -> str:
+        return "Sort YAML keys recursively in alphabetical order."
 
     def undo(self) -> None:
         self._restore_target_file()

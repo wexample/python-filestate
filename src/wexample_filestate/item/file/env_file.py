@@ -16,8 +16,14 @@ class EnvFile(StructuredContentFile):
     EXTENSION_ENV: ClassVar[str] = "env"
     EXTENSION_DOT_ENV: ClassVar[str] = f".{EXTENSION_ENV}"
 
-    def _expected_file_name_extension(self) -> str:
-        return self.EXTENSION_ENV
+    def dumps(self, content: StructuredData | None) -> str:
+        # Produce .env textual content from a dict-like mapping
+        if not isinstance(content, dict):
+            return ""
+        return (
+            "\n".join(f"{k}={'' if v is None else v}" for k, v in content.items())
+            + "\n"
+        )
 
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> StructuredData:
@@ -32,11 +38,5 @@ class EnvFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, content: StructuredData | None) -> str:
-        # Produce .env textual content from a dict-like mapping
-        if not isinstance(content, dict):
-            return ""
-        return (
-            "\n".join(f"{k}={'' if v is None else v}" for k, v in content.items())
-            + "\n"
-        )
+    def _expected_file_name_extension(self) -> str:
+        return self.EXTENSION_ENV

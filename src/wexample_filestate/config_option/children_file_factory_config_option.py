@@ -23,6 +23,32 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         description="Recurse into subdirectories when generating children from matched directories.",
     )
 
+    def generate_children(self) -> list[TargetFileOrDirectoryType]:
+        from pathlib import Path
+
+        self.pattern
+        children = []
+        path = self.get_parent_item().get_path()
+
+        if path.exists():
+            directories = self._get_directories_filtered(base_path=path)
+
+            for directory in directories:
+                directory_path = Path(directory)
+
+                dir_config = self._generate_children_recursive(
+                    path=directory_path,
+                )
+
+                children.append(
+                    self._create_children_from_config(
+                        path=directory_path,
+                        config=dir_config,
+                    )
+                )
+
+        return children
+
     def _generate_children_recursive(
         self,
         path: Path,
@@ -55,29 +81,3 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
                         )
                     )
         return dir_config
-
-    def generate_children(self) -> list[TargetFileOrDirectoryType]:
-        from pathlib import Path
-
-        self.pattern
-        children = []
-        path = self.get_parent_item().get_path()
-
-        if path.exists():
-            directories = self._get_directories_filtered(base_path=path)
-
-            for directory in directories:
-                directory_path = Path(directory)
-
-                dir_config = self._generate_children_recursive(
-                    path=directory_path,
-                )
-
-                children.append(
-                    self._create_children_from_config(
-                        path=directory_path,
-                        config=dir_config,
-                    )
-                )
-
-        return children

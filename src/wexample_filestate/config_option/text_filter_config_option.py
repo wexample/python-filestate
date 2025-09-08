@@ -18,12 +18,6 @@ class TextFilterConfigOption(AbstractConfigOption):
 
         return Union[list[str], StringKeysDict]
 
-    def get_value_class_type(self) -> type[NestedConfigValue]:
-        from wexample_config.config_value.nested_config_value import NestedConfigValue
-
-        # Use NestedConfigValue to ease nested access like search('trim.char')
-        return NestedConfigValue
-
     def get_trimmed_char(self) -> str:
         # Default behavior remains trimming newlines
         default_char = "\n"
@@ -40,3 +34,9 @@ class TextFilterConfigOption(AbstractConfigOption):
 
         # Fallback (e.g., list form ["trim"]) uses default newline
         return default_char
+
+    def get_value_class_type(self) -> type[NestedConfigValue]:
+        from wexample_config.config_value.nested_config_value import NestedConfigValue
+
+        # Use NestedConfigValue to ease nested access like search('trim.char')
+        return NestedConfigValue

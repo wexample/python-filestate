@@ -33,6 +33,26 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
     def _operation_get_count(self) -> int:
         return 1
 
+    def _operation_test_apply(self) -> None:
+        self.state_manager.apply()
+
+    @abstractmethod
+    def _operation_test_assert_applied(self) -> None:
+        pass
+
+    def _operation_test_assert_initial(self) -> None:
+        pass
+
+    def _operation_test_assert_rollback(self) -> None:
+        # Rerun initial checkup
+        self._operation_test_assert_initial()
+
+    def _operation_test_dry_run(self) -> None:
+        self._dry_run_and_count_operations()
+
+    def _operation_test_rollback(self) -> None:
+        self.state_manager.rollback()
+
     def _operation_test_setup(self) -> None:
         config = self._operation_test_setup_configuration()
 
@@ -41,23 +61,3 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         return None
-
-    def _operation_test_assert_initial(self) -> None:
-        pass
-
-    def _operation_test_dry_run(self) -> None:
-        self._dry_run_and_count_operations()
-
-    def _operation_test_apply(self) -> None:
-        self.state_manager.apply()
-
-    @abstractmethod
-    def _operation_test_assert_applied(self) -> None:
-        pass
-
-    def _operation_test_rollback(self) -> None:
-        self.state_manager.rollback()
-
-    def _operation_test_assert_rollback(self) -> None:
-        # Rerun initial checkup
-        self._operation_test_assert_initial()

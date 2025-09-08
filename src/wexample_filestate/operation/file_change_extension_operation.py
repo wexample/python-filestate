@@ -42,6 +42,28 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
                 return True
         return False
 
+    def apply(self) -> None:
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
+
+        self._original_extension = self.target.get_path().with_suffix("").name
+
+        self.target.get_local_file().change_extension(
+            self.target.get_option_value(ShouldHaveExtensionConfigOption).get_str()
+        )
+
+    def describe_after(self) -> str:
+        from wexample_filestate.config_option.should_have_extension_config_option import (
+            ShouldHaveExtensionConfigOption,
+        )
+
+        expected_ext = self.target.get_option_value(
+            ShouldHaveExtensionConfigOption
+        ).get_str()
+        path = self.target.get_path().with_suffix("").name
+        return f"The file '{path}' now has the expected extension '.{expected_ext}'."
+
     def describe_before(self) -> str:
         from wexample_filestate.config_option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
@@ -60,30 +82,8 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
             return f"The file '{path}' has no detectable extension but should have '.{expected_ext}'."
         return f"The file '{path}' has extension '.{current_ext}' but should be '.{expected_ext}'. Its extension will be corrected."
 
-    def describe_after(self) -> str:
-        from wexample_filestate.config_option.should_have_extension_config_option import (
-            ShouldHaveExtensionConfigOption,
-        )
-
-        expected_ext = self.target.get_option_value(
-            ShouldHaveExtensionConfigOption
-        ).get_str()
-        path = self.target.get_path().with_suffix("").name
-        return f"The file '{path}' now has the expected extension '.{expected_ext}'."
-
     def description(self) -> str:
         return "Ensure the file extension matches the configured requirement, correcting it when necessary."
-
-    def apply(self) -> None:
-        from wexample_filestate.config_option.should_have_extension_config_option import (
-            ShouldHaveExtensionConfigOption,
-        )
-
-        self._original_extension = self.target.get_path().with_suffix("").name
-
-        self.target.get_local_file().change_extension(
-            self.target.get_option_value(ShouldHaveExtensionConfigOption).get_str()
-        )
 
     def undo(self) -> None:
         self.target.get_local_file().change_extension(self._original_extension)

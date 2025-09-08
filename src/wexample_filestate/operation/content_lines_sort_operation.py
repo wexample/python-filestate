@@ -26,6 +26,17 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
 
         return Scope.CONTENT
 
+    @staticmethod
+    def _sorted_lines_content(src: str) -> str:
+        # Preserve a trailing newline if it exists
+        had_trailing_newline = src.endswith("\n")
+        lines = src.splitlines()
+        lines.sort()  # default lexicographic sort, case-sensitive
+        out = "\n".join(lines)
+        if had_trailing_newline:
+            out += "\n"
+        return out
+
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.content_options_config_option import (
             ContentOptionsConfigOption,
@@ -49,31 +60,20 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
         sorted_src = self._sorted_lines_content(src)
         return sorted_src != src
 
-    @staticmethod
-    def _sorted_lines_content(src: str) -> str:
-        # Preserve a trailing newline if it exists
-        had_trailing_newline = src.endswith("\n")
-        lines = src.splitlines()
-        lines.sort()  # default lexicographic sort, case-sensitive
-        out = "\n".join(lines)
-        if had_trailing_newline:
-            out += "\n"
-        return out
-
-    def describe_before(self) -> str:
-        return "The file lines are not sorted alphabetically."
-
-    def describe_after(self) -> str:
-        return "The file lines have been sorted alphabetically."
-
-    def description(self) -> str:
-        return "Sort the file content lines alphabetically (lexicographic order)."
-
     def apply(self) -> None:
         src = self.target.get_local_file().read()
         updated = self._sorted_lines_content(src)
         if updated != src:
             self._target_file_write(content=updated)
+
+    def describe_after(self) -> str:
+        return "The file lines have been sorted alphabetically."
+
+    def describe_before(self) -> str:
+        return "The file lines are not sorted alphabetically."
+
+    def description(self) -> str:
+        return "Sort the file content lines alphabetically (lexicographic order)."
 
     def undo(self) -> None:
         self._restore_target_file()

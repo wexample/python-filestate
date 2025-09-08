@@ -26,6 +26,22 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
 
         return Scope.CONTENT
 
+    @staticmethod
+    def _unique_lines_content(src: str) -> str:
+        # Preserve a trailing newline if it exists
+        had_trailing_newline = src.endswith("\n")
+        lines = src.splitlines()
+        seen: set[str] = set()
+        unique_lines: list[str] = []
+        for line in lines:
+            if line not in seen:
+                seen.add(line)
+                unique_lines.append(line)
+        out = "\n".join(unique_lines)
+        if had_trailing_newline:
+            out += "\n"
+        return out
+
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.config_option.content_options_config_option import (
             ContentOptionsConfigOption,
@@ -49,36 +65,20 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
         unique_src = self._unique_lines_content(src)
         return unique_src != src
 
-    @staticmethod
-    def _unique_lines_content(src: str) -> str:
-        # Preserve a trailing newline if it exists
-        had_trailing_newline = src.endswith("\n")
-        lines = src.splitlines()
-        seen: set[str] = set()
-        unique_lines: list[str] = []
-        for line in lines:
-            if line not in seen:
-                seen.add(line)
-                unique_lines.append(line)
-        out = "\n".join(unique_lines)
-        if had_trailing_newline:
-            out += "\n"
-        return out
-
-    def describe_before(self) -> str:
-        return "The file contains duplicate lines."
-
-    def describe_after(self) -> str:
-        return "All duplicate lines have been removed, preserving original order."
-
-    def description(self) -> str:
-        return "Ensure content lines are unique by removing duplicates and preserving order."
-
     def apply(self) -> None:
         src = self.target.get_local_file().read()
         updated = self._unique_lines_content(src)
         if updated != src:
             self._target_file_write(content=updated)
+
+    def describe_after(self) -> str:
+        return "All duplicate lines have been removed, preserving original order."
+
+    def describe_before(self) -> str:
+        return "The file contains duplicate lines."
+
+    def description(self) -> str:
+        return "Ensure content lines are unique by removing duplicates and preserving order."
 
     def undo(self) -> None:
         self._restore_target_file()

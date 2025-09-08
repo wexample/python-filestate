@@ -26,15 +26,6 @@ class AbstractChildrenManipulationConfigOption(
 ):
     pattern: DictConfig
 
-    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
-        from wexample_filestate.options_provider.default_options_provider import (
-            DefaultOptionsProvider,
-        )
-
-        return [
-            DefaultOptionsProvider,
-        ]
-
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return DictConfig
@@ -43,30 +34,14 @@ class AbstractChildrenManipulationConfigOption(
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
         pass
 
-    def _path_match_patterns(self, path: str) -> bool:
-        import re
-        from pathlib import Path
-
-        from wexample_filestate.config_option.name_pattern_config_option import (
-            NamePatternConfigOption,
+    def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
+        from wexample_filestate.options_provider.default_options_provider import (
+            DefaultOptionsProvider,
         )
 
-        config = self.pattern
-        option_name = NamePatternConfigOption.get_name()
-        if config.get(option_name) is None:
-            return True
-
-        patterns = config[option_name]
-
-        if isinstance(patterns, str):
-            patterns = [patterns]
-
-        for pattern_str in patterns:
-            pattern = re.compile(pattern_str)
-            if not pattern.match(Path(path).name):
-                return False
-
-        return True
+        return [
+            DefaultOptionsProvider,
+        ]
 
     def _create_children_from_config(
         self, path: Path, config: dict
@@ -108,3 +83,28 @@ class AbstractChildrenManipulationConfigOption(
                     )
 
         return output
+
+    def _path_match_patterns(self, path: str) -> bool:
+        import re
+        from pathlib import Path
+
+        from wexample_filestate.config_option.name_pattern_config_option import (
+            NamePatternConfigOption,
+        )
+
+        config = self.pattern
+        option_name = NamePatternConfigOption.get_name()
+        if config.get(option_name) is None:
+            return True
+
+        patterns = config[option_name]
+
+        if isinstance(patterns, str):
+            patterns = [patterns]
+
+        for pattern_str in patterns:
+            pattern = re.compile(pattern_str)
+            if not pattern.match(Path(path).name):
+                return False
+
+        return True

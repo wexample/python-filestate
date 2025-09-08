@@ -13,15 +13,15 @@ class ItemMixin(WithPathMixin):
     def get_item_title(self) -> str:
         pass
 
-    @abstractmethod
-    def is_file(self) -> bool:
-        pass
+    def get_octal_mode(self: ItemMixin) -> str:
+        from wexample_helpers.helpers.file import file_path_get_octal_mode
+
+        return file_path_get_octal_mode(self.get_path())
 
     @abstractmethod
     def is_directory(self) -> bool:
         pass
 
-    def get_octal_mode(self: ItemMixin) -> str:
-        from wexample_helpers.helpers.file import file_path_get_octal_mode
-
-        return file_path_get_octal_mode(self.get_path())
+    @abstractmethod
+    def is_file(self) -> bool:
+        pass

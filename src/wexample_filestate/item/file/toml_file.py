@@ -11,24 +11,6 @@ if TYPE_CHECKING:
 class TomlFile(StructuredContentFile):
     EXTENSION_TOML: ClassVar[str] = "toml"
 
-    def _expected_file_name_extension(self) -> str:
-        return self.EXTENSION_TOML
-
-    # ---------- Parsing / Serialization ----------
-    def loads(self, text: str, strict: bool = False) -> TOMLDocument:  # type: ignore[name-defined]
-        from tomlkit import document, parse
-
-        try:
-            if text is None or text == "":
-                # Return an empty TOMLDocument to keep types consistent
-                return document()
-            return parse(text)
-        except Exception as e:
-            if strict:
-                raise e
-            # On parse error, return an empty TOMLDocument instead of a dict
-            return document()
-
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
         from tomlkit import _TOMLDocument, document
         from tomlkit import dumps as toml_dumps
@@ -54,3 +36,21 @@ class TomlFile(StructuredContentFile):
 
         # Fallback: stringify
         return str(content)
+
+    # ---------- Parsing / Serialization ----------
+    def loads(self, text: str, strict: bool = False) -> TOMLDocument:  # type: ignore[name-defined]
+        from tomlkit import document, parse
+
+        try:
+            if text is None or text == "":
+                # Return an empty TOMLDocument to keep types consistent
+                return document()
+            return parse(text)
+        except Exception as e:
+            if strict:
+                raise e
+            # On parse error, return an empty TOMLDocument instead of a dict
+            return document()
+
+    def _expected_file_name_extension(self) -> str:
+        return self.EXTENSION_TOML

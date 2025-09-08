@@ -24,18 +24,6 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
         return list[Union[dict[str, Any], AbstractChildrenManipulationConfigOption]]
 
-    def get_parent(self) -> TargetFileOrDirectoryType:
-        assert self.parent is not None
-        return self.parent
-
-    def set_value(self, raw_value: Any) -> None:
-        from wexample_config.config_option.abstract_config_option import (
-            AbstractConfigOption,
-        )
-
-        # Ignore default children class set_value
-        AbstractConfigOption.set_value(self, raw_value)
-
     def build_item_tree(self) -> None:
         super().build_item_tree()
         children = self.create_children_items()
@@ -43,27 +31,6 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         # Continue item tree.
         for child in children:
             child.build_item_tree()
-
-    def create_children_items(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
-            AbstractChildrenManipulationConfigOption,
-        )
-
-        children = []
-        # Parent item should be a file or directory target.
-        for child_config in self.get_value().get_list():
-            if isinstance(child_config, AbstractChildrenManipulationConfigOption):
-                child = child_config
-                # Parent has not been assigned before now.
-                child.parent = self
-
-                children.extend(child.generate_children())
-
-            else:
-                children.append(self.create_child_item(child_config=child_config))
-
-        self.children = children
-        return children
 
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None
@@ -161,6 +128,27 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             child.configure(child_config)
         return child
 
+    def create_children_items(self) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
+            AbstractChildrenManipulationConfigOption,
+        )
+
+        children = []
+        # Parent item should be a file or directory target.
+        for child_config in self.get_value().get_list():
+            if isinstance(child_config, AbstractChildrenManipulationConfigOption):
+                child = child_config
+                # Parent has not been assigned before now.
+                child.parent = self
+
+                children.extend(child.generate_children())
+
+            else:
+                children.append(self.create_child_item(child_config=child_config))
+
+        self.children = children
+        return children
+
     def get_children(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
@@ -168,3 +156,15 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def get_io(self) -> IoManager:
         return self.get_parent_item().io
+
+    def get_parent(self) -> TargetFileOrDirectoryType:
+        assert self.parent is not None
+        return self.parent
+
+    def set_value(self, raw_value: Any) -> None:
+        from wexample_config.config_option.abstract_config_option import (
+            AbstractConfigOption,
+        )
+
+        # Ignore default children class set_value
+        AbstractConfigOption.set_value(self, raw_value)

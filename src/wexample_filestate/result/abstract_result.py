@@ -13,11 +13,20 @@ class AbstractResult(PrintableMixin, BaseModel):
     rollback: bool = False
     state_manager: AbstractItemTarget
 
-    @abstractmethod
-    def _apply_single_operation(
-        self, operation: AbstractOperation, interactive: bool = False
-    ) -> bool:
-        pass
+    def apply_operations(self, interactive: bool = False) -> None:
+        self._executed_operations = []
+
+        # Define order of operations based on rollback mode
+        operations = reversed(self.operations) if self.rollback else self.operations
+
+        # Apply each operation with its dependencies in the correct order
+        for operation in operations:
+            self.apply_with_dependencies(
+                interactive=interactive,
+                operation=operation,
+                dry_run=True,
+                rollback=self.rollback,
+            )
 
     def apply_with_dependencies(
         self,
@@ -72,17 +81,8 @@ class AbstractResult(PrintableMixin, BaseModel):
                     f"    ⋮ Operation aborted"
                 )
 
-    def apply_operations(self, interactive: bool = False) -> None:
-        self._executed_operations = []
-
-        # Define order of operations based on rollback mode
-        operations = reversed(self.operations) if self.rollback else self.operations
-
-        # Apply each operation with its dependencies in the correct order
-        for operation in operations:
-            self.apply_with_dependencies(
-                interactive=interactive,
-                operation=operation,
-                dry_run=True,
-                rollback=self.rollback,
-            )
+    @abstractmethod
+    def _apply_single_operation(
+        self, operation: AbstractOperation, interactive: bool = False
+    ) -> bool:
+        pass

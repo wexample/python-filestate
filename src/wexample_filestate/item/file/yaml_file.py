@@ -13,21 +13,6 @@ class YamlFile(StructuredContentFile):
     EXTENSION_YAML: ClassVar[str] = "yaml"
     EXTENSION_YML: ClassVar[str] = "yml"
 
-    def _expected_file_name_extension(self) -> str:
-        return self.EXTENSION_YML
-
-    def loads(self, text: str, strict: bool = False) -> YamlContent:
-        import yaml
-
-        try:
-            value = yaml.safe_load(text)
-            # Normalize None to empty dict for convenience
-            return value if value is not None else {}
-        except Exception as e:
-            if strict:
-                raise e
-            return {}
-
     def dumps(self, content: StructuredData | None) -> str:
         import yaml
 
@@ -45,3 +30,18 @@ class YamlFile(StructuredContentFile):
 
         normalized = _normalize(content or {})
         return yaml.safe_dump(normalized)
+
+    def loads(self, text: str, strict: bool = False) -> YamlContent:
+        import yaml
+
+        try:
+            value = yaml.safe_load(text)
+            # Normalize None to empty dict for convenience
+            return value if value is not None else {}
+        except Exception as e:
+            if strict:
+                raise e
+            return {}
+
+    def _expected_file_name_extension(self) -> str:
+        return self.EXTENSION_YML

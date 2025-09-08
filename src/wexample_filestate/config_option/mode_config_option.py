@@ -12,6 +12,11 @@ class ModeConfigOption(AbstractConfigOption):
 
         return Union[str, int, FileSystemPermission]
 
+    def get_int(self) -> int:
+        from wexample_helpers.helpers.file import file_mode_octal_to_num
+
+        return file_mode_octal_to_num(self.get_octal())
+
     def get_octal(self) -> str:
         value = self.get_value()
 
@@ -25,8 +30,3 @@ class ModeConfigOption(AbstractConfigOption):
                 return str(value["mode"])
 
         raise ValueError(f"Unexpected value in get_octal: {value}")
-
-    def get_int(self) -> int:
-        from wexample_helpers.helpers.file import file_mode_octal_to_num
-
-        return file_mode_octal_to_num(self.get_octal())

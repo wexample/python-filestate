@@ -6,9 +6,6 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 
 
 class ShortcutConfigOption(AbstractConfigOption):
-    @staticmethod
-    def get_raw_value_allowed_type() -> Any:
-        return str
 
     def __init__(self, **data) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
@@ -25,3 +22,6 @@ class ShortcutConfigOption(AbstractConfigOption):
         # Register shortcuts only in root directories.
         if root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
+    @staticmethod
+    def get_raw_value_allowed_type() -> Any:
+        return str

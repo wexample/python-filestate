@@ -11,8 +11,16 @@ if TYPE_CHECKING:
 class XmlFile(StructuredContentFile):
     EXTENSION_XML: ClassVar[str] = "xml"
 
-    def _expected_file_name_extension(self) -> str:
-        return self.EXTENSION_XML
+    def dumps(self, content: StructuredData | None) -> str:
+        import xmltodict
+
+        if isinstance(content, str):
+            # Already XML string
+            return content
+        try:
+            return xmltodict.unparse(content or {}, pretty=True)
+        except Exception:
+            return str(content)
 
     # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> StructuredData:
@@ -26,13 +34,5 @@ class XmlFile(StructuredContentFile):
                 raise e
             return {}
 
-    def dumps(self, content: StructuredData | None) -> str:
-        import xmltodict
-
-        if isinstance(content, str):
-            # Already XML string
-            return content
-        try:
-            return xmltodict.unparse(content or {}, pretty=True)
-        except Exception:
-            return str(content)
+    def _expected_file_name_extension(self) -> str:
+        return self.EXTENSION_XML
