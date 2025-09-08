@@ -44,8 +44,6 @@ class AbstractItemTarget(
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
-
-
     import_packages: ClassVar[tuple[str, ...]] = (
         "wexample_config.options_provider.abstract_options_provider",
         "wexample_filestate.operations_provider.abstract_operations_provider",
