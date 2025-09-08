@@ -117,5 +117,6 @@ class TestFileStateManager(AbstractStateManagerTest):
             "children": [{"name": "simple-text.txt", "type": "file"}],
         }
         assert isinstance(dump, dict)
+
     def test_setup(self) -> None:
         assert self.state_manager is not None

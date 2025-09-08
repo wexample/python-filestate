@@ -13,6 +13,7 @@ class TestItemChangeModeOperation(TestAbstractOperation):
 
         target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
         return target.get_option_value(ModeConfigOption).get_str()
+
     def _get_target(self) -> TargetFileOrDirectoryType | None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 

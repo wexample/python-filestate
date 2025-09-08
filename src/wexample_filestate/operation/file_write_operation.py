@@ -85,6 +85,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         # If produced content equals current content, no change.
         return updated_content if updated_content != current else None
+
     @classmethod
     def _apply_on_empty_content(cls) -> bool:
         return True

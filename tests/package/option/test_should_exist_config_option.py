@@ -9,6 +9,7 @@ class TestShouldExistConfigOption(TestAbstractOperation):
 
     def _operation_get_count(self) -> int:
         return 0
+
     def _operation_test_setup_configuration(self) -> Any | None:
         from wexample_filestate.config_option.should_exist_config_option import (
             ShouldExistConfigOption,
