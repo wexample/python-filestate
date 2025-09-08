@@ -124,7 +124,7 @@ class AbstractItemTarget(
         )
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
-        
+
         # if not 'python_workdir' in str(self.get_path()):
         #     return
         self.io.indentation_up()
