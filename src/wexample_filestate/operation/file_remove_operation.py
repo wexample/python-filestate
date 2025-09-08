@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
-
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope

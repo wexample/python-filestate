@@ -6,7 +6,6 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestItemChangeModeOperation(TestAbstractOperation):
-
     def _get_expected_mode(self) -> str:
         from wexample_filestate.config_option.mode_config_option import ModeConfigOption
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT

@@ -6,7 +6,6 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 
 
 class ShortcutConfigOption(AbstractConfigOption):
-
     def __init__(self, **data) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 

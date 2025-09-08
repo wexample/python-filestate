@@ -6,7 +6,6 @@ from wexample_config.config_value.config_value import ConfigValue
 
 
 class ContentConfigValue(ConfigValue):
-
     def build_content(self) -> str | None:
         return self.get_str_or_none()
 

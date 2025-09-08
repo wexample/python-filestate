@@ -6,7 +6,6 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestShouldExistConfigOption(TestAbstractOperation):
-
     def _operation_get_count(self) -> int:
         return 0
 

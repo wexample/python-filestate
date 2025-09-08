@@ -5,7 +5,6 @@ from wexample_filestate.testing.test_abstract_operation import TestAbstractOpera
 
 
 class TestFileDeleteOperation(TestAbstractOperation):
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class FileWriteOperation(AbstractExistingFileOperation):
-
     @classmethod
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         """Compute the prospective new content for the target file.

@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class TestFileStateManager(AbstractStateManagerTest):
-
     def test_configure_class_unexpected(self) -> None:
         from wexample_filestate.exception.bad_configuration_class_type_exception import (
             BadConfigurationClassTypeException,
