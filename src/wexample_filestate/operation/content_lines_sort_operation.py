@@ -19,6 +19,7 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
 
     Triggered by: { "content_options": ["lines_sort"] }
     """
+
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
