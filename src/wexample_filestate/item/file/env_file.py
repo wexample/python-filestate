@@ -12,6 +12,7 @@ class EnvFile(StructuredContentFile):
     """
     Simple .env reader/writer using python-dotenv.
     """
+
     EXTENSION_ENV: ClassVar[str] = "env"
     EXTENSION_DOT_ENV: ClassVar[str] = f".{EXTENSION_ENV}"
 

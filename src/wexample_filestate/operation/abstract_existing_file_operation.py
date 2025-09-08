@@ -20,6 +20,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     This class only abstracts the existence check (no extension or name check).
     Subclasses remain responsible for option typing/semantics and any extra filters.
     """
+
     _changed_source: [str | None] = PrivateAttr(default=None)
     _source_need_change: [bool | None] = PrivateAttr(default=None)
 

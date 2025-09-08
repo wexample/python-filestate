@@ -11,6 +11,7 @@ class ItemTreeConfigOptionMixin:
     Give properties to every option that can be a part of the file system configuration tree,
     like any file or directory descriptor, and also children option a children factories.
     """
+
     def build_item_tree(self) -> None:
         pass
 

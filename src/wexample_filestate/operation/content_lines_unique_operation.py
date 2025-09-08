@@ -19,6 +19,7 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
 
     Triggered by: { "content_options": ["lines_unique"] }
     """
+
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
