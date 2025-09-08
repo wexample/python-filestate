@@ -51,7 +51,6 @@ class AbstractItemTarget(
     )
     last_result: AbstractResult | None = None
     operations_providers: list[type[AbstractOperationsProvider]] | None = None
-
     source: SourceFileOrDirectory | None = None
 
     def __init__(
