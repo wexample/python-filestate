@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
+from wexample_helpers.classes.field import public_field
 
 import attrs
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
@@ -17,14 +18,14 @@ if TYPE_CHECKING:
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
-    filter: Callable[[Path], bool] | None = attrs.field(
+    filter: Callable[[Path], bool] | None = public_field(
         default=None,
-        metadata={"description": "Use this callback to filter out the files to preserve."},
+        description="Use this callback to filter out the files to preserve.",
     )
     # When true, search recursively under the base path (all subdirectories)
-    recursive: bool = attrs.field(
+    recursive: bool = public_field(
         default=False,
-        metadata={"description": "Search recursively under the base path; apply filters/name_pattern to all descendants."},
+        description="Search recursively under the base path; apply filters/name_pattern to all descendants.",
     )
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:

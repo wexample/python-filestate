@@ -8,6 +8,7 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
+from wexample_helpers.classes.private_field import private_field
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -22,8 +23,15 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     Subclasses remain responsible for option typing/semantics and any extra filters.
     """
 
-    _changed_source: str | None = attrs.field(default=None, init=False)
-    _source_need_change: bool | None = attrs.field(default=None, init=False)
+    _changed_source: str | None = private_field(
+        default=None,
+        description="Internal storage for a modified source string, if any",
+    )
+
+    _source_need_change: bool | None = private_field(
+        default=None,
+        description="Flag indicating whether the source requires modification",
+    )
 
     @classmethod
     def get_scope(cls) -> Scope:

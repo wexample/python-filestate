@@ -6,14 +6,24 @@ import attrs
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
+from wexample_helpers.decorator.base_class import base_class
 
 
-@attrs.define(kw_only=True)
+@base_class
 class AbstractResult(PrintableMixin, BaseClass):
-    operations: list[AbstractOperation] = attrs.field(factory=list)
-    rollback: bool = attrs.field(default=False)
-    state_manager: AbstractItemTarget
+    operations: list[AbstractOperation] = public_field(
+        factory=list,
+        description="List of operations performed in this result",
+    )
+    rollback: bool = public_field(
+        default=False,
+        description="Indicates whether a rollback should be performed",
+    )
+    state_manager: AbstractItemTarget = public_field(
+        description="Item target state manager associated with this result",
+    )
 
     def apply_operations(self, interactive: bool = False) -> None:
         self._executed_operations = []
