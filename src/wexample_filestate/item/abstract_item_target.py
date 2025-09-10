@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
@@ -10,7 +10,8 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
-from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
@@ -35,39 +36,32 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_helpers.const.types import PathOrString
-    from wexample_prompt.common.io_manager import IoManager
 
 
+@base_class
 class AbstractItemTarget(
     WithIoMethods,
     ItemMixin,
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
-    import_packages: ClassVar[tuple[str, ...]] = (
-        "wexample_config.options_provider.abstract_options_provider",
-        "wexample_filestate.operations_provider.abstract_operations_provider",
-        "wexample_config.config_value.config_value",
+    last_result: AbstractResult | None = public_field(
+        default=None,
+        description="The last applied result of state operation"
     )
-    last_result: AbstractResult | None = None
-    operations_providers: list[type[AbstractOperationsProvider]] | None = None
-    source: SourceFileOrDirectory | None = None
-
-    def __init__(
-        self,
-        io: IoManager | None = None,
-        parent_io_handler: WithIoManager | None = None,
-        **kwargs,
-    ) -> None:
-        # To Pydantic BaseModel.
-        AbstractNestedConfigOption.__init__(self, **kwargs)
-        # Then other mixins.
-        ItemMixin.__init__(self)
-        WithIoMethods.__init__(self, io=io, parent_io_handler=parent_io_handler)
+    operations_providers: list[type[AbstractOperationsProvider]] | None = public_field(
+        default=None,
+        description="List of operations providers"
+    )
+    source: SourceFileOrDirectory | None = public_field(
+        default=None,
+        description="The original existing file or directory"
+    )
 
     @classmethod
     def create_from_config(cls, **kwargs) -> AbstractItemTarget:
         config = kwargs.get("config")
+        kwargs.pop("config", None)
         instance = cls(**kwargs)
         instance.configure(config)
 
@@ -75,7 +69,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -93,9 +87,9 @@ class AbstractItemTarget(
         return manager
 
     def apply(
-        self,
-        interactive: bool = False,
-        scopes: set[Scope] | None = None,
+            self,
+            interactive: bool = False,
+            scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
@@ -115,9 +109,9 @@ class AbstractItemTarget(
         return result
 
     def build_operations(
-        self: TargetFileOrDirectoryType,
-        result: AbstractResult,
-        scopes: set[Scope] | None = None,
+            self: TargetFileOrDirectoryType,
+            result: AbstractResult,
+            scopes: set[Scope] | None = None,
     ) -> None:
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
@@ -131,7 +125,7 @@ class AbstractItemTarget(
 
         # Allow to set active to false
         if not active_option or ActiveConfigOption.is_active(
-            active_option.get_value().raw
+                active_option.get_value().raw
         ):
             loading_log = self.io.log(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
@@ -140,10 +134,10 @@ class AbstractItemTarget(
             has_task: bool = False
             for operation_class in self.get_operations():
                 # Instantiate first; we'll test applicability on the instance.
-                operation = operation_class(io=self.io, target=self)
+                operation = operation_class(target=self)
 
                 if (
-                    scopes is None or operation.get_scope() in scopes
+                        scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
@@ -152,8 +146,8 @@ class AbstractItemTarget(
                     result.operations.append(operation)
 
             if (
-                not has_task
-                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+                    not has_task
+                    and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
             ):
                 self.io.erase_response(loading_log)
 
@@ -182,7 +176,7 @@ class AbstractItemTarget(
         return output
 
     def find_closest(
-        self, class_type: type[AbstractItemTarget]
+            self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 

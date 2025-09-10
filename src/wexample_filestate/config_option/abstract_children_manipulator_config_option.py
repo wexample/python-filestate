@@ -10,6 +10,8 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -21,10 +23,14 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import PathOrString
 
 
+@base_class
 class AbstractChildrenManipulationConfigOption(
-    ItemTreeConfigOptionMixin, AbstractNestedConfigOption
+    ItemTreeConfigOptionMixin,
+    AbstractNestedConfigOption,
 ):
-    pattern: DictConfig
+    pattern: DictConfig = public_field(
+        description="Pattern configuration used for children manipulation",
+    )
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
@@ -44,7 +50,7 @@ class AbstractChildrenManipulationConfigOption(
         ]
 
     def _create_children_from_config(
-        self, path: Path, config: dict
+            self, path: Path, config: dict
     ) -> TargetFileOrDirectoryType:
         import copy
 
@@ -64,7 +70,7 @@ class AbstractChildrenManipulationConfigOption(
         )
 
     def _get_directories_filtered(
-        self, base_path: PathOrString, recursive: bool = False
+            self, base_path: PathOrString, recursive: bool = False
     ) -> list[str]:
         from wexample_helpers.helpers.file import file_get_directories
 

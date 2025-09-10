@@ -2,11 +2,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.decorator.base_class import base_class
+
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class ItemTreeConfigOptionMixin:
+@base_class
+class ItemTreeConfigOptionMixin(BaseClass):
     """
     Give properties to every option that can be a part of the file system configuration tree,
     like any file or directory descriptor, and also children option a children factories.

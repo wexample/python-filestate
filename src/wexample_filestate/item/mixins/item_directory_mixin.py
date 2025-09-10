@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     pass
 
 
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class ItemDirectoryMixin(WithLocalDirectoryMixin, ItemMixin):
     def get_item_title(self) -> str:
         return "Directory"

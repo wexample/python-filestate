@@ -11,6 +11,7 @@ if TYPE_CHECKING:
         AbstractConfigOption,
     )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.config_value.content_config_value import ContentConfigValue
 
 
 class FileWriteOperation(AbstractExistingFileOperation):
@@ -42,10 +43,12 @@ class FileWriteOperation(AbstractExistingFileOperation):
         # Exact content override
         content_option = target.get_option_value(ContentConfigOption)
         if content_option and not content_option.is_none():
-            assert isinstance(content_option, ContentConfigValue)
-            built_content = content_option.build_content()
-            if built_content is not None:
-                updated_content = built_content
+            if content_option.is_str():
+                updated_content = content_option.get_str()
+            if isinstance(content_option, ContentConfigValue):
+                built_content = content_option.build_content()
+                if built_content is not None:
+                    updated_content = built_content
 
         # Compare the original file content to the overridden version,
         # if target class is producing some content changes.

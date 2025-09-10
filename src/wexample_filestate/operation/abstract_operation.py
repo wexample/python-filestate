@@ -3,12 +3,14 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
-import attrs
-from wexample_helpers.classes.base_class import BaseClass
 from wexample_filestate.const.state_items import TargetFileOrDirectory
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
+from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
@@ -17,11 +19,19 @@ if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
 
-@attrs.define(kw_only=True)
+@base_class
 class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
-    applied: bool = attrs.field(default=False)
-    target: TargetFileOrDirectory
-    _tty_width: int = attrs.field(default=80, init=False)
+    applied: bool = public_field(
+        description="Flag indicating whether the operation has already been applied",
+        default=False,
+    )
+    target: TargetFileOrDirectory = public_field(
+        description="The target file or directory on which this operation is executed",
+    )
+    _tty_width: int = private_field(
+        description="The terminal width in characters used for display formatting",
+        default=80,
+    )
 
     @classmethod
     @abstractmethod

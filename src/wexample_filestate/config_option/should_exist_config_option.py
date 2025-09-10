@@ -3,15 +3,22 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 
+@base_class
 class ShouldExistConfigOption(AbstractConfigOption):
-    def __init__(self, value: Any = None, **data) -> None:
-        super().__init__(
-            # Default is true when class is passed to a set of config.
-            value=value if value is not None else True,
-            **data,
-        )
+    value: Any = public_field(
+        default=None,
+        description="Boolean flag indicating whether the option must exist",
+    )
+
+    def __attrs_post_init__(self) -> None:
+        super().__attrs_post_init__()
+        # Replace None with True (preserves existing values)
+        if self.value is None:
+            self.value = True
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

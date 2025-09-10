@@ -54,7 +54,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         self.state_manager.allow_undefined_keys = False
 
-    def test_configure_from_callback(self) -> str:
+    def test_configure_from_callback(self) -> None:
         def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yes"
 
@@ -63,7 +63,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         assert self.state_manager.get_key() == "file_state_manager"
         assert self.state_manager.get_item_name() == "yes"
 
-    def test_configure_from_callback_class(self) -> str:
+    def test_configure_from_callback_class(self) -> None:
         from wexample_config.config_value.callback_render_config_value import (
             CallbackRenderConfigValue,
         )

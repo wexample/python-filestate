@@ -2,20 +2,27 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import attrs
 from wexample_filestate.item.item_target_file import ItemTargetFile
+from wexample_helpers.classes.private_field import private_field
 
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
     from wexample_config.const.types import DictConfig
     from wexample_helpers.const.types import Scalar
 
+from wexample_helpers.decorator.base_class import base_class
 
-@attrs.define(kw_only=True)
+
+@base_class
 class StructuredContentFile(ItemTargetFile):
-    _content_cache_config: NestedConfigValue | None = attrs.field(default=None, init=False)
-    # Caches for structured layers
-    _parsed_cache: Any | None = attrs.field(default=None, init=False)
+    _content_cache_config: NestedConfigValue | None = private_field(
+        default=None,
+        description="Cached configuration content for structured file access",
+    )
+    _parsed_cache: Any | None = private_field(
+        default=None,
+        description="Cached parsed representation of structured layers",
+    )
 
     def clear(self) -> None:
         super().clear()
@@ -80,7 +87,6 @@ class StructuredContentFile(ItemTargetFile):
         if reload:
             self._content_cache_config = None
         if self._content_cache_config is None:
-
             parsed = self.read_parsed()
             # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
             self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))

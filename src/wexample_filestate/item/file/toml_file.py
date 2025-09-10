@@ -7,13 +7,15 @@ from wexample_filestate.item.file.structured_content_file import StructuredConte
 if TYPE_CHECKING:
     from tomlkit import TOMLDocument
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class TomlFile(StructuredContentFile):
     EXTENSION_TOML: ClassVar[str] = "toml"
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
         from tomlkit import _TOMLDocument, document
-        from tomlkit import dumps as toml_dumps
         from tomlkit import toml_dumps
 
         if content is None:

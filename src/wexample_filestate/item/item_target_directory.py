@@ -6,7 +6,9 @@ import attrs
 from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
+from wexample_helpers.classes.field import public_field
 from wexample_helpers.const.types import StringKeysDict
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -16,12 +18,15 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import FileStringOrPath, PathOrString
 
 
-@attrs.define(kw_only=True)
-class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    shortcuts: StringKeysDict = attrs.field(factory=dict)
-
-    def __attrs_post_init__(self) -> None:
-        ItemDirectoryMixin.__init__(self)
+@base_class
+class ItemTargetDirectory(
+    ItemDirectoryMixin,
+    AbstractItemTarget
+):
+    shortcuts: StringKeysDict = public_field(
+        factory=dict,
+        description="The list of referenced shortcuts pointing to items anywhere in the tree"
+    )
 
     @classmethod
     def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
@@ -46,7 +51,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                 option.build_item_tree()
 
     def build_operations(
-        self, result: AbstractResult, scopes: set[Scope] | None = None
+            self, result: AbstractResult, scopes: set[Scope] | None = None
     ) -> None:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -77,13 +82,12 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         child = self.find_by_name(item_name)
         if child is None:
-
             raise ChildNotFoundException(child=item_name, root_item=self)
 
         return child
 
     def find_by_name_recursive(
-        self, item_name: str
+            self, item_name: str
     ) -> TargetFileOrDirectoryType | None:
         found = self.find_by_name(item_name)
         if found:
@@ -111,7 +115,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return None
 
     def find_by_path_recursive(
-        self, path: FileStringOrPath
+            self, path: FileStringOrPath
     ) -> TargetFileOrDirectoryType | None:
         from pathlib import Path
 
@@ -137,16 +141,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
 
     def for_each_child_of_type(
-        self,
-        class_type: type[AbstractItemTarget],
-        callback: Callable[[AbstractItemTarget], None],
+            self,
+            class_type: type[AbstractItemTarget],
+            callback: Callable[[AbstractItemTarget], None],
     ) -> None:
         for child in self.get_children_list():
             if isinstance(child, class_type):
                 callback(child)
 
     def for_each_child_of_type_recursive(
-        self, class_type: type[AbstractItemTarget], callback: Callable
+            self, class_type: type[AbstractItemTarget], callback: Callable
     ) -> None:
         def _only_type(item: AbstractItemTarget) -> None:
             if isinstance(item, class_type):
@@ -183,7 +187,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         shortcut = self.get_shortcut(name=name)
 
         if shortcut is None:
-
             raise UndefinedShortcutException(shortcut=name, root_item=self)
 
     def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
@@ -192,7 +195,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
 
         if name in self.shortcuts:
-
             raise ExistingShortcutException(
                 shortcut=name,
                 new_item=children,

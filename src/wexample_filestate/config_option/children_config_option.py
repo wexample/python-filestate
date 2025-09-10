@@ -8,6 +8,7 @@ from wexample_config.config_option.children_config_option import (
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
 
 
+@base_class
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
@@ -33,7 +35,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             child.build_item_tree()
 
     def create_child_item(
-        self, child_config: DictConfig, item_name: str | None = None
+            self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
         from wexample_config.config_option.name_config_option import NameConfigOption
         from wexample_filestate.config_option.class_config_option import (
@@ -52,9 +54,8 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
             class_definition = child_config.get(option_name)
 
             if not issubclass(class_definition, ItemTargetDirectory) and not issubclass(
-                child_config.get(option_name), ItemTargetFile
+                    child_config.get(option_name), ItemTargetFile
             ):
-
                 raise BadConfigurationClassTypeException(
                     class_definition=class_definition
                 )
@@ -83,9 +84,9 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
             # If explicit type is provided and we can resolve a path, verify when it exists
             if (
-                (is_file_type or has_explicit_dir)
-                and path is not None
-                and path.exists()
+                    (is_file_type or has_explicit_dir)
+                    and path is not None
+                    and path.exists()
             ):
                 if is_file_type and not path.is_file():
                     raise ValueError(
