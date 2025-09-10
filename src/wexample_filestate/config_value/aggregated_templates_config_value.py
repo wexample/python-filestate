@@ -11,10 +11,15 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class AggregatedTemplatesConfigValue(ContentConfigValue):
-    parameters: dict[str, BasicValue] | None = public_field(factory=dict,
-                                                            description="The parameters to replace into the template")
-    raw: Any = public_field(default=None, description="Disabled raw value for this field.")
-    templates: list[str] | None = public_field(description="List of templates contents to aggregate")
+    parameters: dict[str, BasicValue] | None = public_field(
+        factory=dict, description="The parameters to replace into the template"
+    )
+    raw: Any = public_field(
+        default=None, description="Disabled raw value for this field."
+    )
+    templates: list[str] | None = public_field(
+        description="List of templates contents to aggregate"
+    )
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

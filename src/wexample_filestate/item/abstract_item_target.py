@@ -46,16 +46,13 @@ class AbstractItemTarget(
     AbstractNestedConfigOption,
 ):
     last_result: AbstractResult | None = public_field(
-        default=None,
-        description="The last applied result of state operation"
+        default=None, description="The last applied result of state operation"
     )
     operations_providers: list[type[AbstractOperationsProvider]] | None = public_field(
-        default=None,
-        description="List of operations providers"
+        default=None, description="List of operations providers"
     )
     source: SourceFileOrDirectory | None = public_field(
-        default=None,
-        description="The original existing file or directory"
+        default=None, description="The original existing file or directory"
     )
 
     @classmethod
@@ -69,7 +66,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -87,9 +84,9 @@ class AbstractItemTarget(
         return manager
 
     def apply(
-            self,
-            interactive: bool = False,
-            scopes: set[Scope] | None = None,
+        self,
+        interactive: bool = False,
+        scopes: set[Scope] | None = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
@@ -109,9 +106,9 @@ class AbstractItemTarget(
         return result
 
     def build_operations(
-            self: TargetFileOrDirectoryType,
-            result: AbstractResult,
-            scopes: set[Scope] | None = None,
+        self: TargetFileOrDirectoryType,
+        result: AbstractResult,
+        scopes: set[Scope] | None = None,
     ) -> None:
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
@@ -125,7 +122,7 @@ class AbstractItemTarget(
 
         # Allow to set active to false
         if not active_option or ActiveConfigOption.is_active(
-                active_option.get_value().raw
+            active_option.get_value().raw
         ):
             loading_log = self.io.log(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
@@ -137,7 +134,7 @@ class AbstractItemTarget(
                 operation = operation_class(target=self)
 
                 if (
-                        scopes is None or operation.get_scope() in scopes
+                    scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
@@ -146,8 +143,8 @@ class AbstractItemTarget(
                     result.operations.append(operation)
 
             if (
-                    not has_task
-                    and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+                not has_task
+                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
             ):
                 self.io.erase_response(loading_log)
 
@@ -176,7 +173,7 @@ class AbstractItemTarget(
         return output
 
     def find_closest(
-            self, class_type: type[AbstractItemTarget]
+        self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 

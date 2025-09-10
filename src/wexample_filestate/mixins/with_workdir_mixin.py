@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import attrs
-
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class

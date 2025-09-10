@@ -10,9 +10,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class FileStateManager(
-    ItemTargetDirectory
-):
+class FileStateManager(ItemTargetDirectory):
     # Lazy bootstrap: ensure imports are loaded once before creating from path
     @classmethod
     def create_from_path(cls, *args, **kwargs):  # type: ignore[override]

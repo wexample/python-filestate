@@ -11,8 +11,7 @@ from wexample_helpers.decorator.base_class import base_class
 @base_class
 class ItemMixin(WithPathMixin):
     base_path: FileStringOrPath | None = public_field(
-        description="The original path that will be converted to path",
-        default=None
+        description="The original path that will be converted to path", default=None
     )
 
     @abstractmethod

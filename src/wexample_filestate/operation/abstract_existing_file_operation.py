@@ -27,7 +27,6 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         default=None,
         description="Internal storage for a modified source string, if any",
     )
-
     _source_need_change: bool | None = private_field(
         default=None,
         description="Flag indicating whether the source requires modification",

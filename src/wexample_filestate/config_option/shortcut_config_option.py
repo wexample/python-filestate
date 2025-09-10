@@ -10,6 +10,7 @@ from wexample_helpers.decorator.base_class import base_class
 class ShortcutConfigOption(AbstractConfigOption):
     def __attrs_post_init__(self) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
+
         super().__attrs_post_init__()
 
         # The parent should always be a path item.

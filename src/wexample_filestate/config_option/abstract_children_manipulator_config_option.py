@@ -50,7 +50,7 @@ class AbstractChildrenManipulationConfigOption(
         ]
 
     def _create_children_from_config(
-            self, path: Path, config: dict
+        self, path: Path, config: dict
     ) -> TargetFileOrDirectoryType:
         import copy
 
@@ -70,7 +70,7 @@ class AbstractChildrenManipulationConfigOption(
         )
 
     def _get_directories_filtered(
-            self, base_path: PathOrString, recursive: bool = False
+        self, base_path: PathOrString, recursive: bool = False
     ) -> list[str]:
         from wexample_helpers.helpers.file import file_get_directories
 

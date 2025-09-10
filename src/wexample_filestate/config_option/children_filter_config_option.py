@@ -3,12 +3,12 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
-from wexample_helpers.classes.field import public_field
 
 import attrs
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
+from wexample_helpers.classes.field import public_field
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType

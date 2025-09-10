@@ -8,8 +8,12 @@ from wexample_helpers.classes.field import public_field
 
 @attrs.define(kw_only=True)
 class SearchResult(BaseClass):
-    column: int = public_field(description="1-based column number where the match starts.")
-    item: ItemTargetFile = public_field(description="The target file that was searched.")
+    column: int = public_field(
+        description="1-based column number where the match starts."
+    )
+    item: ItemTargetFile = public_field(
+        description="The target file that was searched."
+    )
     line: int = public_field(description="1-based line number where the match starts.")
     searched: str = public_field(description="The search string used to find matches.")
 

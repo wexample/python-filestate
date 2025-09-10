@@ -3,12 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import attrs
-
 from wexample_config.const.types import DictConfig
-from wexample_helpers.classes.field import public_field
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
+from wexample_helpers.classes.field import public_field
 
 if TYPE_CHECKING:
     from pathlib import Path
