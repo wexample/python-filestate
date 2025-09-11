@@ -24,7 +24,7 @@ class WithWorkdirMixin(BaseClass):
         description="Internal file state manager for the current working directory",
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         # Forward all arguments to parent class
         super().__init__(*args, **kwargs)
 
