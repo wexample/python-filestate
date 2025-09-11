@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.private_field import private_field
-
 from wexample_helpers.decorator.base_class import base_class
+
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
     from wexample_config.const.types import DictConfig

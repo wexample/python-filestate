@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-import attrs
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.classes.base_class import BaseClass

@@ -52,8 +52,8 @@ class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
         return children
 
     def _generate_children_recursive(
-            self,
-            path: Path,
+        self,
+        path: Path,
     ) -> DictConfig:
         from wexample_filestate.const.disk import DiskItemType
 

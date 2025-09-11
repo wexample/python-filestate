@@ -19,12 +19,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_for_all_matches(
-            cls,
-            search: str,
-            item: ItemTargetFile,
-            *,
-            regex: bool = False,
-            flags: int = 0,
+        cls,
+        search: str,
+        item: ItemTargetFile,
+        *,
+        regex: bool = False,
+        flags: int = 0,
     ) -> list[SearchResult]:
         """Return all matches as a list of SearchResult.
 
@@ -69,12 +69,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_one_if_match(
-            cls,
-            search: str,
-            item: ItemTargetFile,
-            *,
-            regex: bool = False,
-            flags: int = 0,
+        cls,
+        search: str,
+        item: ItemTargetFile,
+        *,
+        regex: bool = False,
+        flags: int = 0,
     ) -> SearchResult | None:
         """Return the first match as a SearchResult or None.
 
