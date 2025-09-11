@@ -4,17 +4,17 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import attrs
 from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
 from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-@attrs.define(kw_only=True)
+@base_class
 class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
@@ -65,7 +65,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
                                     )
                                 )
                         elif entry.is_file() and self._include_entry(
-                            entry, config, entry_filter
+                                entry, config, entry_filter
                         ):
                             file_cfg = dict(config)
                             file_cfg["name"] = entry.name
@@ -90,10 +90,10 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         return children
 
     def _build_dir_tree(
-        self,
-        base_dir: Path,
-        config: dict,
-        entry_filter: Callable[[Path], bool] | None,
+            self,
+            base_dir: Path,
+            config: dict,
+            entry_filter: Callable[[Path], bool] | None,
     ) -> dict | None:
         """Build a nested DictConfig preserving the directory structure; returns None if empty when filtering files only."""
         from wexample_filestate.const.disk import DiskItemType
@@ -119,11 +119,11 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
             if entry.is_dir():
                 sub = self._build_dir_tree(entry, config, entry_filter)
                 if sub is not None and (
-                    sub.get("children") or config.get("type") == DiskItemType.DIRECTORY
+                        sub.get("children") or config.get("type") == DiskItemType.DIRECTORY
                 ):
                     # If filtering directories, also include dirs that match themselves
                     if config.get(
-                        "type"
+                            "type"
                     ) == DiskItemType.DIRECTORY and self._include_entry(
                         entry, config, entry_filter
                     ):
@@ -143,10 +143,10 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
         return dir_config
 
     def _include_entry(
-        self,
-        entry_path: Path,
-        config: dict,
-        entry_filter: Callable[[Path], bool] | None,
+            self,
+            entry_path: Path,
+            config: dict,
+            entry_filter: Callable[[Path], bool] | None,
     ) -> bool:
         from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.helpers.config_helper import (

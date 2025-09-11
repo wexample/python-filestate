@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import attrs
 from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.decorator.base_class import base_class
 
 
-@attrs.define(kw_only=True)
+@base_class
 class AbstractItemSource(BaseClass):
     pass

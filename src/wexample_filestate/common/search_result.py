@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import attrs
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 
-@attrs.define(kw_only=True)
+@base_class
 class SearchResult(BaseClass):
     column: int = public_field(
         description="1-based column number where the match starts."
@@ -19,12 +19,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_for_all_matches(
-        cls,
-        search: str,
-        item: ItemTargetFile,
-        *,
-        regex: bool = False,
-        flags: int = 0,
+            cls,
+            search: str,
+            item: ItemTargetFile,
+            *,
+            regex: bool = False,
+            flags: int = 0,
     ) -> list[SearchResult]:
         """Return all matches as a list of SearchResult.
 
@@ -69,12 +69,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_one_if_match(
-        cls,
-        search: str,
-        item: ItemTargetFile,
-        *,
-        regex: bool = False,
-        flags: int = 0,
+            cls,
+            search: str,
+            item: ItemTargetFile,
+            *,
+            regex: bool = False,
+            flags: int = 0,
     ) -> SearchResult | None:
         """Return the first match as a SearchResult or None.
 

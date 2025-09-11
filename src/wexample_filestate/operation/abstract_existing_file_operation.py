@@ -3,19 +3,19 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-import attrs
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
 from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.enum.scopes import Scope
 
 
-@attrs.define(kw_only=True)
+@base_class
 class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
     """Base class for operations that require the target to be an existing file on disk.
 
