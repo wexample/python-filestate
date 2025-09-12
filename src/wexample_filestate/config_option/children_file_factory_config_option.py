@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_config.const.types import DictConfig
 
 
 @base_class

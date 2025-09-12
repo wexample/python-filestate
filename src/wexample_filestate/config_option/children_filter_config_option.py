@@ -12,6 +12,8 @@ from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from collections.abc import Callable
+    from pathlib import Path
 
 
 @base_class

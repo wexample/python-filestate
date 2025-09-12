@@ -7,6 +7,7 @@ from wexample_helpers.const.types import PathOrString
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_helpers.const.types import PathOrString
 
 
 class FileManipulationOperationMixin(AbstractOperation):

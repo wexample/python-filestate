@@ -36,6 +36,7 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_helpers.const.types import PathOrString
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class

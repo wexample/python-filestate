@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from wexample_filestate.result.file_state_dry_run_result import (
         FileStateDryRunResult,
     )
+    from wexample_config.const.types import DictConfig
 
 
 class TestAbstractOperation(AbstractStateManagerTest, ABC):

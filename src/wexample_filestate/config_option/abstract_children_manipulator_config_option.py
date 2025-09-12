@@ -9,9 +9,9 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
     from pathlib import Path

@@ -7,6 +7,7 @@ from wexample_helpers.const.types import StructuredData
 
 if TYPE_CHECKING:
     from wexample_helpers_yaml.const.types import YamlContent
+    from wexample_helpers.const.types import StructuredData
 
 
 class YamlFile(StructuredContentFile):
