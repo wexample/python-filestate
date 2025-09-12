@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import TYPE_CHECKING
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
+from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
     from wexample_filestate.result.file_state_dry_run_result import (
@@ -36,7 +37,7 @@ class TestAbstractOperation(AbstractStateManagerTest, ABC):
     def _operation_test_apply(self) -> None:
         self.state_manager.apply()
 
-    @abstractmethod
+    @abstract_method
     def _operation_test_assert_applied(self) -> None:
         pass
 

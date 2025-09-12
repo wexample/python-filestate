@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_config.config_value.config_value import ConfigValue
-from wexample_helpers.classes.base_class import base_class
+from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

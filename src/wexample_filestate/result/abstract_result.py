@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.printable_mixin import PrintableMixin
@@ -92,7 +91,7 @@ class AbstractResult(PrintableMixin, BaseClass):
                     f"    ⋮ Operation aborted"
                 )
 
-    @abstractmethod
+    @abstract_method
     def _apply_single_operation(
         self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:

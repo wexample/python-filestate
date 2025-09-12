@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
     FileManipulationOperationMixin,
 )
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
@@ -39,7 +39,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         return Scope.CONTENT
 
     @classmethod
-    @abstractmethod
+    @abstract_method
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         pass
 

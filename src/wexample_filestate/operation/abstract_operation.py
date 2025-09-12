@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
 from wexample_filestate.const.state_items import TargetFileOrDirectory
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
@@ -34,7 +34,7 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     )
 
     @classmethod
-    @abstractmethod
+    @abstract_method
     def get_scope(cls) -> Scope:
         pass
 
@@ -45,30 +45,30 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
 
         return False
 
-    @abstractmethod
+    @abstract_method
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         pass
 
-    @abstractmethod
+    @abstract_method
     def apply(self) -> None:
         pass
 
     def dependencies(self) -> list[type[AbstractOperation]]:
         return []
 
-    @abstractmethod
+    @abstract_method
     def describe_after(self) -> str:
         pass
 
-    @abstractmethod
+    @abstract_method
     def describe_before(self) -> str:
         pass
 
-    @abstractmethod
+    @abstract_method
     def description(self) -> str:
         pass
 
-    @abstractmethod
+    @abstract_method
     def undo(self) -> None:
         pass
 

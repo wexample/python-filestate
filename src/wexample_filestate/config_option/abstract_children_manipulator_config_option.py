@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, cast
 
 from wexample_config.config_option.abstract_nested_config_option import (
@@ -12,6 +11,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -36,7 +36,7 @@ class AbstractChildrenManipulationConfigOption(
     def get_raw_value_allowed_type() -> Any:
         return DictConfig
 
-    @abstractmethod
+    @abstract_method
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
         pass
 

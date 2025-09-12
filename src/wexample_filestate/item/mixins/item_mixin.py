@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-
 from wexample_file.mixin.with_path_mixin import WithPathMixin
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.decorator.base_class import base_class
@@ -14,7 +13,7 @@ class ItemMixin(WithPathMixin):
         description="The original path that will be converted to path", default=None
     )
 
-    @abstractmethod
+    @abstract_method
     def get_item_title(self) -> str:
         pass
 
@@ -23,10 +22,10 @@ class ItemMixin(WithPathMixin):
 
         return file_path_get_octal_mode(self.get_path())
 
-    @abstractmethod
+    @abstract_method
     def is_directory(self) -> bool:
         pass
 
-    @abstractmethod
+    @abstract_method
     def is_file(self) -> bool:
         pass
