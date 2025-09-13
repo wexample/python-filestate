@@ -20,3 +20,30 @@ The system operates through a provider-based architecture:
 When an item already meets the required standards, the source and target remain identical - no operation is needed. However, when an option defines a property that is not currently effective, the corresponding operation is executed to transform the source item into the target state.
 
 This approach ensures that your codebase maintains consistency and adheres to your defined standards automatically, reducing manual maintenance overhead and improving code quality.
+
+## Configuration Examples
+
+### File Removal
+Specify that a file should not exist - if found, it will be removed by the FileRemoveOperation:
+
+```json
+{
+    "name": "requirements.in",
+    "type": "DiskItemType.FILE",
+    "should_exist": false
+}
+```
+
+### Content Requirements
+Ensure a file contains specific lines - missing content will be added automatically:
+
+```json
+{
+    "name": ".gitignore",
+    "type": "DiskItemType.FILE", 
+    "should_exist": true,
+    "should_contain_lines": ["ignore-this.txt"]
+}
+```
+
+These examples demonstrate how filestate configurations define both structural requirements (file existence) and content requirements (specific lines or patterns).
