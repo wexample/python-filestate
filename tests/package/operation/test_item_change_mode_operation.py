@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from wexample_config.const.types import DictConfig
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType

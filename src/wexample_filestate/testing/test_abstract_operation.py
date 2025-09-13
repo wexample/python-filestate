@@ -10,10 +10,10 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
+    from wexample_config.const.types import DictConfig
     from wexample_filestate.result.file_state_dry_run_result import (
         FileStateDryRunResult,
     )
-    from wexample_config.const.types import DictConfig
 
 
 class TestAbstractOperation(AbstractStateManagerTest, ABC):

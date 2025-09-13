@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from wexample_config.config_option.abstract_config_option import (
         AbstractConfigOption,
     )
-    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.const.state_items import TargetFileOrDirectory
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class

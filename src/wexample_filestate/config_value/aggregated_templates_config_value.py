@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from wexample_filestate.config_value.content_config_value import ContentConfigValue
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.const.types import BasicValue
 from wexample_helpers.decorator.base_class import base_class
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_helpers.const.types import BasicValue
 

@@ -11,10 +11,13 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.result.abstract_result import AbstractResult
-    from wexample_helpers.const.types import FileStringOrPath, PathOrString
-    from wexample_helpers.const.types import StringKeysDict
     from wexample_filestate.enum.scopes import Scope
+    from wexample_filestate.result.abstract_result import AbstractResult
+    from wexample_helpers.const.types import (
+        FileStringOrPath,
+        PathOrString,
+        StringKeysDict,
+    )
 
 
 @base_class

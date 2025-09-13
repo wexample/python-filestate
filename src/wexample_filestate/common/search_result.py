@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_filestate.item.item_target_file import ItemTargetFile
 

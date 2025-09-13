@@ -6,8 +6,7 @@ from wexample_filestate.item.file.structured_content_file import StructuredConte
 from wexample_helpers.const.types import StructuredData
 
 if TYPE_CHECKING:
-    from wexample_helpers.const.types import JsonContent
-    from wexample_helpers.const.types import StructuredData
+    from wexample_helpers.const.types import JsonContent, StructuredData
 
 
 class JsonFile(StructuredContentFile):

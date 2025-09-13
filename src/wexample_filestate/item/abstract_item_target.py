@@ -25,6 +25,7 @@ if TYPE_CHECKING:
         SourceFileOrDirectoryType,
         TargetFileOrDirectoryType,
     )
+    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.operations_provider.abstract_operations_provider import (
         AbstractOperationsProvider,
@@ -35,7 +36,6 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.result.file_state_result import FileStateResult
     from wexample_helpers.const.types import PathOrString
-    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class

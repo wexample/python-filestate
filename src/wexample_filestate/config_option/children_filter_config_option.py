@@ -11,9 +11,10 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from collections.abc import Callable
     from pathlib import Path
+
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 @base_class
