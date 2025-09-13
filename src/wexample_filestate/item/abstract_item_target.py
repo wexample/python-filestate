@@ -88,14 +88,16 @@ class AbstractItemTarget(
             interactive: bool = False,
             scopes: set[Scope] | None = None,
             filter_path: str | None = None,
-            filter_operation: str | None = None
+            filter_operation: str | None = None,
+            max: int = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
 
         result = FileStateResult(state_manager=self)
         self.last_result = result
-        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation)
+        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation,
+                              max=max)
 
         if len(result.operations) > 0:
             result.apply_operations(interactive=interactive)
@@ -107,7 +109,7 @@ class AbstractItemTarget(
 
         return result
 
-    def _path_matches(self, filter_path:str)->bool:
+    def _path_matches(self, filter_path: str) -> bool:
         import fnmatch
         return fnmatch.fnmatch(str(self.get_path()), filter_path)
 
@@ -116,8 +118,9 @@ class AbstractItemTarget(
             result: AbstractResult,
             scopes: set[Scope] | None = None,
             filter_path: str | None = None,
-            filter_operation: str | None = None
-    ) -> None:
+            filter_operation: str | None = None,
+            max: int = None,
+    ) -> bool:
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
         )
@@ -145,7 +148,7 @@ class AbstractItemTarget(
                     # Instantiate first; we'll test applicability on the instance.
                     operation = operation_class(target=self)
 
-                    if  (
+                    if (
                             scopes is None or operation.get_scope() in scopes
                     ) and operation.applicable():
                         has_task = True
@@ -161,6 +164,7 @@ class AbstractItemTarget(
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
+        return has_task
 
     def configure(self, config: DictConfig) -> None:
         self.set_value(raw_value=config)
@@ -170,7 +174,8 @@ class AbstractItemTarget(
             self,
             scopes: set[Scope] | None = None,
             filter_path: str | None = None,
-            filter_operation: str | None = None
+            filter_operation: str | None = None,
+            max: int = None,
     ) -> FileStateDryRunResult:
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
@@ -178,7 +183,7 @@ class AbstractItemTarget(
 
         result = FileStateDryRunResult(state_manager=self)
         self.last_result = result
-        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation)
+        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation, max=max)
         result.apply_operations()
 
         return result

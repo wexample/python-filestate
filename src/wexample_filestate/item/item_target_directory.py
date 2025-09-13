@@ -51,17 +51,31 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             result: AbstractResult,
             scopes: set[Scope] | None = None,
             filter_path: str | None = None,
-            filter_operation: str | None = None
-    ) -> None:
+            filter_operation: str | None = None,
+            max: int = None,
+    ) -> bool:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
-        super().build_operations(result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation)
+        has_task = super().build_operations(result, scopes=scopes, filter_path=filter_path,
+                                            filter_operation=filter_operation,
+                                            max=max)
+        count = 1 if has_task is True else 0
 
         for item in self.get_children_list():
-            cast(TargetFileOrDirectory, item).build_operations(
+            has_task_child = cast(TargetFileOrDirectory, item).build_operations(
                 result=result, scopes=scopes,
-                filter_path=filter_path, filter_operation=filter_operation
+                filter_path=filter_path, filter_operation=filter_operation,
+                max=((max - count) if (max is not None) else None)
             )
+
+            if has_task_child:
+                count += 1
+                has_task = True
+
+            if max is not None and count == max:
+                return has_task
+
+        return has_task
 
     def configure_from_file(self, path: FileStringOrPath) -> None:
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
