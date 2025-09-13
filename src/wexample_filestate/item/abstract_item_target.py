@@ -107,6 +107,10 @@ class AbstractItemTarget(
 
         return result
 
+    def _path_matches(self, filter_path:str)->bool:
+        import fnmatch
+        return fnmatch.fnmatch(str(self.get_path()), filter_path)
+
     def build_operations(
             self: TargetFileOrDirectoryType,
             result: AbstractResult,
@@ -119,6 +123,9 @@ class AbstractItemTarget(
         )
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
+        if filter_path is not None and not self._path_matches(filter_path=filter_path):
+            return None
 
         self.io.indentation_up()
 
@@ -134,17 +141,18 @@ class AbstractItemTarget(
 
             has_task: bool = False
             for operation_class in self.get_operations():
-                # Instantiate first; we'll test applicability on the instance.
-                operation = operation_class(target=self)
+                if not filter_operation or operation_class.matches_filter(filter_operation):
+                    # Instantiate first; we'll test applicability on the instance.
+                    operation = operation_class(target=self)
 
-                if (
-                        scopes is None or operation.get_scope() in scopes
-                ) and operation.applicable():
-                    has_task = True
-                    self.io.task(
-                        f'Applicable operation: "{operation_class.get_snake_short_class_name()}"'
-                    )
-                    result.operations.append(operation)
+                    if  (
+                            scopes is None or operation.get_scope() in scopes
+                    ) and operation.applicable():
+                        has_task = True
+                        self.io.task(
+                            f'Applicable operation: "{operation_class.get_snake_short_class_name()}"'
+                        )
+                        result.operations.append(operation)
 
             if (
                     not has_task

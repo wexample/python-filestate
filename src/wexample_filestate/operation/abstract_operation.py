@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from wexample_filestate.const.state_items import TargetFileOrDirectory
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
@@ -110,3 +109,8 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
             value = value(self.target)
 
         return value
+
+    @classmethod
+    def matches_filter(cls, filter_name: str) -> bool:
+        import fnmatch
+        return fnmatch.fnmatch(str(cls.get_name()), filter_name)
