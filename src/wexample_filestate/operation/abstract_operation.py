@@ -113,4 +113,4 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     @classmethod
     def matches_filter(cls, filter_name: str) -> bool:
         import fnmatch
-        return fnmatch.fnmatch(str(cls.get_name()), filter_name)
+        return fnmatch.fnmatch(cls.get_name(), filter_name)

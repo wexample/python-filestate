@@ -141,7 +141,7 @@ class AbstractItemTarget(
 
             has_task: bool = False
             for operation_class in self.get_operations():
-                if not filter_operation or operation_class.matches_filter(filter_operation):
+                if filter_operation is None or operation_class.matches_filter(filter_operation):
                     # Instantiate first; we'll test applicability on the instance.
                     operation = operation_class(target=self)
 
