@@ -8,7 +8,6 @@ from wexample_config.config_option.abstract_nested_config_option import (
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
-from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
@@ -67,7 +66,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+            cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
         from wexample_helpers.helpers.directory import (
             directory_get_base_name,
@@ -85,16 +84,18 @@ class AbstractItemTarget(
         return manager
 
     def apply(
-        self,
-        interactive: bool = False,
-        scopes: set[Scope] | None = None,
+            self,
+            interactive: bool = False,
+            scopes: set[Scope] | None = None,
+            filter_path: str | None = None,
+            filter_operation: str | None = None
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
         from wexample_helpers.helpers.cli import cli_make_clickable_path
 
         result = FileStateResult(state_manager=self)
         self.last_result = result
-        self.build_operations(result=result, scopes=scopes)
+        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation)
 
         if len(result.operations) > 0:
             result.apply_operations(interactive=interactive)
@@ -107,9 +108,11 @@ class AbstractItemTarget(
         return result
 
     def build_operations(
-        self: TargetFileOrDirectoryType,
-        result: AbstractResult,
-        scopes: set[Scope] | None = None,
+            self: TargetFileOrDirectoryType,
+            result: AbstractResult,
+            scopes: set[Scope] | None = None,
+            filter_path: str | None = None,
+            filter_operation: str | None = None
     ) -> None:
         from wexample_filestate.config_option.active_config_option import (
             ActiveConfigOption,
@@ -123,7 +126,7 @@ class AbstractItemTarget(
 
         # Allow to set active to false
         if not active_option or ActiveConfigOption.is_active(
-            active_option.get_value().raw
+                active_option.get_value().raw
         ):
             loading_log = self.io.log(
                 message=f"{SpinnerPool.next()} {self.get_display_path()}",
@@ -135,7 +138,7 @@ class AbstractItemTarget(
                 operation = operation_class(target=self)
 
                 if (
-                    scopes is None or operation.get_scope() in scopes
+                        scopes is None or operation.get_scope() in scopes
                 ) and operation.applicable():
                     has_task = True
                     self.io.task(
@@ -144,8 +147,8 @@ class AbstractItemTarget(
                     result.operations.append(operation)
 
             if (
-                not has_task
-                and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
+                    not has_task
+                    and self.io.default_context_verbosity != VerbosityLevel.MAXIMUM
             ):
                 self.io.erase_response(loading_log)
 
@@ -155,14 +158,19 @@ class AbstractItemTarget(
         self.set_value(raw_value=config)
         self.locate_source(self.get_path())
 
-    def dry_run(self, scopes: set[Scope] | None = None) -> FileStateDryRunResult:
+    def dry_run(
+            self,
+            scopes: set[Scope] | None = None,
+            filter_path: str | None = None,
+            filter_operation: str | None = None
+    ) -> FileStateDryRunResult:
         from wexample_filestate.result.file_state_dry_run_result import (
             FileStateDryRunResult,
         )
 
         result = FileStateDryRunResult(state_manager=self)
         self.last_result = result
-        self.build_operations(result=result, scopes=scopes)
+        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation)
         result.apply_operations()
 
         return result
@@ -174,7 +182,7 @@ class AbstractItemTarget(
         return output
 
     def find_closest(
-        self, class_type: type[AbstractItemTarget]
+            self, class_type: type[AbstractItemTarget]
     ) -> AbstractItemTarget | None:
         """Return the nearest parent item that is an instance of class_type.
 
