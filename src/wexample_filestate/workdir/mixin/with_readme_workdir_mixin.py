@@ -20,6 +20,9 @@ class WithReadmeWorkdirMixin(BaseClass):
         from wexample_filestate.config_option.text_filter_config_option import (
             TextFilterConfigOption,
         )
+        from wexample_filestate.config_value.readme_content_config_value import (
+            ReadmeContentConfigValue,
+        )
         from wexample_filestate.const.disk import DiskItemType
 
         config.get("children").append(
@@ -28,6 +31,9 @@ class WithReadmeWorkdirMixin(BaseClass):
                 "type": DiskItemType.FILE,
                 "should_exist": True,
                 "content": self._get_readme_content(),
+                "default_content": ReadmeContentConfigValue(
+                    templates=[], parameters={}
+                ),
                 "text_filter": [TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE],
             }
         )
