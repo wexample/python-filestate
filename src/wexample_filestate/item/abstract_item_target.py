@@ -113,6 +113,75 @@ class AbstractItemTarget(
 
         return result
 
+    def _find_first_required_operation(
+        self: TargetFileOrDirectoryType,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> AbstractOperation | None:
+        """Find the first option that requires an operation and return it.
+        
+        Returns None if no operation is required.
+        """
+        for option in self.options.values():
+            operation = self._try_create_operation_from_option(option, scopes, filter_operation)
+            if operation is not None:
+                return operation
+        return None
+
+    def _try_create_operation_from_option(
+        self: TargetFileOrDirectoryType,
+        option,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> AbstractOperation | None:
+        """Try to create an operation from an option if it's not satisfied.
+        
+        Returns None if no operation is needed or if the option doesn't support the new interface.
+        """
+        try:
+            # Skip if option doesn't have the new methods (backward compatibility)
+            if not self._option_supports_new_interface(option):
+                return None
+                
+            # Check if this option is satisfied
+            if option.is_satisfied(self):
+                return None
+                
+            # Create the required operation
+            operation = option.create_required_operation(self)
+            if operation is None:
+                return None
+                
+            # Apply filters
+            if not self._operation_passes_filters(operation, scopes, filter_operation):
+                return None
+                
+            return operation
+            
+        except Exception as e:
+            # Log error but continue with other options for robustness
+            self.io.error(f"Error processing option {option.__class__.__name__}: {e}")
+            return None
+
+    def _option_supports_new_interface(self, option) -> bool:
+        """Check if option supports the new is_satisfied/create_required_operation interface."""
+        return hasattr(option, 'is_satisfied') and hasattr(option, 'create_required_operation')
+
+    def _operation_passes_filters(
+        self,
+        operation: AbstractOperation,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> bool:
+        """Check if operation passes the provided filters."""
+        if filter_operation is not None and not operation.__class__.matches_filter(filter_operation):
+            return False
+            
+        if scopes is not None and operation.get_scope() not in scopes:
+            return False
+            
+        return True
+
     def _path_matches(self, filter_path: str) -> bool:
         import fnmatch
         return fnmatch.fnmatch(str(self.get_path()), filter_path)
@@ -149,38 +218,13 @@ class AbstractItemTarget(
             has_task: bool = False
             
             # NEW APPROACH: Iterate through options instead of operations
-            for option in self.options.values():
-                try:
-                    # Skip if option doesn't have the new methods (backward compatibility)
-                    if not hasattr(option, 'is_satisfied') or not hasattr(option, 'create_required_operation'):
-                        continue
-                        
-                    # Check if this option is satisfied
-                    if not option.is_satisfied(self):
-                        # Create the required operation
-                        operation = option.create_required_operation(self)
-                        
-                        if operation is not None:
-                            # Apply filters
-                            if filter_operation is not None and not operation.__class__.matches_filter(filter_operation):
-                                continue
-                                
-                            if scopes is not None and operation.get_scope() not in scopes:
-                                continue
-                                
-                            has_task = True
-                            self.io.task(
-                                f'Required operation from option "{option.__class__.get_snake_short_class_name()}": "{operation.__class__.get_snake_short_class_name()}"'
-                            )
-                            result.operations.append(operation)
-                            
-                            # CRITICAL: Execute only ONE operation per run
-                            break
-                            
-                except Exception as e:
-                    # Log error but continue with other options for robustness
-                    self.io.error(f"Error processing option {option.__class__.__name__}: {e}")
-                    continue
+            operation = self._find_first_required_operation(scopes, filter_operation)
+            if operation is not None:
+                has_task = True
+                self.io.task(
+                    f'Required operation from option: "{operation.__class__.get_snake_short_class_name()}"'
+                )
+                result.operations.append(operation)
 
             if (
                     not has_task
