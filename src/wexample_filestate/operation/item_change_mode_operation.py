@@ -21,7 +21,7 @@ class ItemChangeModeOperation(AbstractOperation):
         return Scope.PERMISSIONS
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.option.mode_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeOption
         from wexample_helpers.helpers.file import (
             file_path_get_mode_num,
             file_validate_mode_octal_or_fail,
@@ -30,7 +30,7 @@ class ItemChangeModeOperation(AbstractOperation):
         if not self.target.source:
             return False
 
-        if isinstance(option, ModeConfigOption):
+        if isinstance(option, ModeOption):
             file_validate_mode_octal_or_fail(option.get_octal())
             return (
                 file_path_get_mode_num(self.target.get_source().get_path())
@@ -40,9 +40,9 @@ class ItemChangeModeOperation(AbstractOperation):
         return False
 
     def apply(self) -> None:
-        from wexample_filestate.option.mode_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeOption
         from wexample_filestate.option.mode_recursive_option import (
-            ModeRecursiveConfigOption,
+            ModeRecursiveOption,
         )
         from wexample_helpers.helpers.file import (
             file_change_mode,
@@ -51,9 +51,9 @@ class ItemChangeModeOperation(AbstractOperation):
 
         self._original_octal_mode = self.target.get_source().get_octal_mode()
         mode_int = cast(
-            ModeConfigOption, self.target.get_option(ModeConfigOption)
+            ModeOption, self.target.get_option(ModeOption)
         ).get_int()
-        mode_recursive_option = self.target.get_option(ModeRecursiveConfigOption)
+        mode_recursive_option = self.target.get_option(ModeRecursiveOption)
 
         if (
             mode_recursive_option
@@ -64,17 +64,17 @@ class ItemChangeModeOperation(AbstractOperation):
             file_change_mode_recursive(self.target.get_source().get_path(), mode_int)
 
     def describe_after(self) -> str:
-        from wexample_filestate.option.mode_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeOption
 
         path = self.target.get_path().as_posix()
-        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
+        target_octal = self.target.get_option_value(ModeOption).get_str()
         return f"Permissions for '{path}' are now set to {target_octal}."
 
     def describe_before(self) -> str:
-        from wexample_filestate.option.mode_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeOption
 
         current_octal = self.target.get_source().get_octal_mode()
-        target_octal = self.target.get_option_value(ModeConfigOption).get_str()
+        target_octal = self.target.get_option_value(ModeOption).get_str()
         path = self.target.get_path().as_posix()
         return f"The item '{path}' has permissions {current_octal} but should be {target_octal}. Permissions will be updated."
 

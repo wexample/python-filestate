@@ -49,13 +49,13 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.option.yaml_filter_option import (
-            YamlFilterConfigOption,
+            YamlFilterOption,
         )
 
         if (
             self.target.is_file()
             and self.target.get_local_file().path.exists()
-            and isinstance(option, YamlFilterConfigOption)
+            and isinstance(option, YamlFilterOption)
         ):
             value = option.get_value()
             if value is None:

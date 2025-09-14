@@ -25,14 +25,14 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
         from wexample_filestate.item.item_source_file import ItemSourceFile
 
         if (
             self.target.source
             and self.target.is_file()
-            and isinstance(option, ShouldHaveExtensionConfigOption)
+            and isinstance(option, ShouldHaveExtensionOption)
         ):
             assert isinstance(self.target.source, ItemSourceFile)
             if (
@@ -44,29 +44,29 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
 
     def apply(self) -> None:
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
 
         self._original_extension = self.target.get_path().with_suffix("").name
 
         self.target.get_local_file().change_extension(
-            self.target.get_option_value(ShouldHaveExtensionConfigOption).get_str()
+            self.target.get_option_value(ShouldHaveExtensionOption).get_str()
         )
 
     def describe_after(self) -> str:
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
 
         expected_ext = self.target.get_option_value(
-            ShouldHaveExtensionConfigOption
+            ShouldHaveExtensionOption
         ).get_str()
         path = self.target.get_path().with_suffix("").name
         return f"The file '{path}' now has the expected extension '.{expected_ext}'."
 
     def describe_before(self) -> str:
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
 
         current_ext = (
@@ -75,7 +75,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
             else None
         )
         expected_ext = self.target.get_option_value(
-            ShouldHaveExtensionConfigOption
+            ShouldHaveExtensionOption
         ).get_str()
         path = self.target.get_path().name
         if current_ext is None:

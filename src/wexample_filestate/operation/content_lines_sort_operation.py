@@ -39,15 +39,15 @@ class ContentLinesSortOperation(FileManipulationOperationMixin, AbstractOperatio
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.option.content_options_option import (
-            ContentOptionsConfigOption,
+            ContentOptionsOption,
         )
 
-        if not isinstance(option, ContentOptionsConfigOption):
+        if not isinstance(option, ContentOptionsOption):
             return False
 
         value = option.get_value()
         if value is None or not value.has_item_in_list(
-            ContentOptionsConfigOption.OPTION_NAME_LINES_SORT
+            ContentOptionsOption.OPTION_NAME_LINES_SORT
         ):
             return False
 

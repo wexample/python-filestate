@@ -11,10 +11,10 @@ class TestShouldExistConfigOption(TestAbstractOperation):
 
     def _operation_test_setup_configuration(self) -> Any | None:
         from wexample_filestate.option.should_exist_option import (
-            ShouldExistConfigOption,
+            ShouldExistOption,
         )
 
         return {
             # Simply test this configuration format.
-            ShouldExistConfigOption
+            ShouldExistOption
         }

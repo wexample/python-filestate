@@ -39,7 +39,7 @@ class StructuredContentFile(ItemTargetFile):
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
 
         expected_extension = self._expected_file_name_extension()
@@ -47,7 +47,7 @@ class StructuredContentFile(ItemTargetFile):
         if expected_extension:
             raw_value = super().prepare_value(raw_value=raw_value)
 
-            raw_value[ShouldHaveExtensionConfigOption.get_snake_short_class_name()] = (
+            raw_value[ShouldHaveExtensionOption.get_snake_short_class_name()] = (
                 expected_extension
             )
 

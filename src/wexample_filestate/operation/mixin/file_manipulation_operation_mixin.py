@@ -18,10 +18,10 @@ class FileManipulationOperationMixin(AbstractOperation):
     @staticmethod
     def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
         from wexample_filestate.option.should_exist_option import (
-            ShouldExistConfigOption,
+            ShouldExistOption,
         )
 
-        return target.get_option_value(ShouldExistConfigOption, default=True).is_true()
+        return target.get_option_value(ShouldExistOption, default=True).is_true()
 
     def _backup_file_content(
         self, target: TargetFileOrDirectoryType, file_path: PathOrString
@@ -30,7 +30,7 @@ class FileManipulationOperationMixin(AbstractOperation):
 
         from wexample_filestate.option.remove_backup_max_file_size_option import (
             REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
-            RemoveBackupMaxFileSizeConfigOption,
+            RemoveBackupMaxFileSizeOption,
         )
         from wexample_helpers.helpers.file import file_read
 
@@ -39,7 +39,7 @@ class FileManipulationOperationMixin(AbstractOperation):
         # Save content if not too large.
         if size < int(
             target.get_option_value(
-                RemoveBackupMaxFileSizeConfigOption,
+                RemoveBackupMaxFileSizeOption,
                 default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
             ).get_int()
         ):

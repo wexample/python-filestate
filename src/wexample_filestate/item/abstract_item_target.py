@@ -122,7 +122,7 @@ class AbstractItemTarget(
             max: int = None,
     ) -> bool:
         from wexample_filestate.option.active_option import (
-            ActiveConfigOption,
+            ActiveOption,
         )
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -132,10 +132,10 @@ class AbstractItemTarget(
 
         self.io.indentation_up()
 
-        active_option = self.get_option(ActiveConfigOption)
+        active_option = self.get_option(ActiveOption)
 
         # Allow to set active to false
-        if not active_option or ActiveConfigOption.is_active(
+        if not active_option or ActiveOption.is_active(
                 active_option.get_value().raw
         ):
             loading_log = self.io.log(

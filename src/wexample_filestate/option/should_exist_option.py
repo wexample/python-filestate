@@ -8,7 +8,7 @@ from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
-class ShouldExistConfigOption(AbstractConfigOption):
+class ShouldExistOption(AbstractConfigOption):
     value: Any = public_field(
         default=None,
         description="Boolean flag indicating whether the option must exist",

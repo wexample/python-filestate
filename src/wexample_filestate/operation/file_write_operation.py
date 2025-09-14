@@ -21,13 +21,13 @@ class FileWriteOperation(AbstractExistingFileOperation):
         Returns the updated content string if a change is needed, otherwise None.
         """
         from wexample_filestate.option.content_option import (
-            ContentConfigOption,
+            ContentOption,
         )
         from wexample_filestate.option.should_contain_lines_option import (
-            ShouldContainLinesConfigOption,
+            ShouldContainLinesOption,
         )
         from wexample_filestate.option.should_not_contain_lines_option import (
-            ShouldNotContainLinesConfigOption,
+            ShouldNotContainLinesOption,
         )
         from wexample_filestate.config_value.content_config_value import (
             ContentConfigValue,
@@ -40,7 +40,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         updated_content: str | None = None
 
         # Exact content override
-        content_option = target.get_option_value(ContentConfigOption)
+        content_option = target.get_option_value(ContentOption)
         if content_option and not content_option.is_none():
             if content_option.is_str():
                 updated_content = content_option.get_str()
@@ -57,7 +57,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         # Ensure required lines are present
         should_contain_lines_option = target.get_option_value(
-            ShouldContainLinesConfigOption
+            ShouldContainLinesOption
         )
         if should_contain_lines_option and not should_contain_lines_option.is_none():
 
@@ -69,7 +69,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         # Remove forbidden lines if present
         should_not_contain_lines_option = target.get_option_value(
-            ShouldNotContainLinesConfigOption
+            ShouldNotContainLinesOption
         )
         if (
             should_not_contain_lines_option
@@ -116,43 +116,43 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     def describe_after(self) -> str:
         from wexample_filestate.option.content_option import (
-            ContentConfigOption,
+            ContentOption,
         )
         from wexample_filestate.option.should_contain_lines_option import (
-            ShouldContainLinesConfigOption,
+            ShouldContainLinesOption,
         )
         from wexample_filestate.option.should_not_contain_lines_option import (
-            ShouldNotContainLinesConfigOption,
+            ShouldNotContainLinesOption,
         )
 
-        if self.target.get_option(ContentConfigOption) is not None:
+        if self.target.get_option(ContentOption) is not None:
             return "The file content has been rewritten to exactly match the configured content."
 
-        if self.target.get_option(ShouldContainLinesConfigOption) is not None:
+        if self.target.get_option(ShouldContainLinesOption) is not None:
             return "All required lines are now present in the file."
 
-        if self.target.get_option(ShouldNotContainLinesConfigOption) is not None:
+        if self.target.get_option(ShouldNotContainLinesOption) is not None:
             return "All forbidden lines have been removed from the file."
 
         return "The file content has been updated according to configuration."
 
     def describe_before(self) -> str:
         from wexample_filestate.option.content_option import (
-            ContentConfigOption,
+            ContentOption,
         )
         from wexample_filestate.option.should_contain_lines_option import (
-            ShouldContainLinesConfigOption,
+            ShouldContainLinesOption,
         )
         from wexample_filestate.option.should_not_contain_lines_option import (
-            ShouldNotContainLinesConfigOption,
+            ShouldNotContainLinesOption,
         )
 
-        content_option = self.target.get_option(ContentConfigOption)
+        content_option = self.target.get_option(ContentOption)
         should_contain_lines_option = self.target.get_option(
-            ShouldContainLinesConfigOption
+            ShouldContainLinesOption
         )
         should_not_contain_lines_option = self.target.get_option(
-            ShouldNotContainLinesConfigOption
+            ShouldNotContainLinesOption
         )
 
         if content_option is not None:
@@ -161,7 +161,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         if should_contain_lines_option is not None:
             current_lines = self._get_current_lines_from_target(self.target)
             required_lines = self.target.get_option_value(
-                ShouldContainLinesConfigOption
+                ShouldContainLinesOption
             ).get_list()
             missing = [l for l in required_lines if l not in current_lines]
             if missing:
@@ -171,7 +171,7 @@ class FileWriteOperation(AbstractExistingFileOperation):
         if should_not_contain_lines_option is not None:
             current_lines = self._get_current_lines_from_target(self.target)
             forbidden_lines = self.target.get_option_value(
-                ShouldNotContainLinesConfigOption
+                ShouldNotContainLinesOption
             ).get_list()
             present = [l for l in forbidden_lines if l in current_lines]
             if present:

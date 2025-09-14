@@ -18,7 +18,7 @@ class WithReadmeWorkdirMixin(BaseClass):
 
     def append_readme(self, config: DictConfig | None = None) -> DictConfig:
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
         from wexample_filestate.config_value.readme_content_config_value import (
             ReadmeContentConfigValue,
@@ -34,7 +34,7 @@ class WithReadmeWorkdirMixin(BaseClass):
                 "default_content": ReadmeContentConfigValue(
                     templates=[], parameters={}
                 ),
-                "text_filter": [TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE],
+                "text_filter": [TextFilterOption.OPTION_NAME_ENSURE_NEWLINE],
             }
         )
 

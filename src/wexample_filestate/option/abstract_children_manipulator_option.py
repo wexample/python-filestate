@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class AbstractChildrenManipulationConfigOption(
+class AbstractChildrenManipulationOption(
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
@@ -95,11 +95,11 @@ class AbstractChildrenManipulationConfigOption(
         from pathlib import Path
 
         from wexample_filestate.option.name_pattern_option import (
-            NamePatternConfigOption,
+            NamePatternOption,
         )
 
         config = self.pattern
-        option_name = NamePatternConfigOption.get_name()
+        option_name = NamePatternOption.get_name()
         if config.get(option_name) is None:
             return True
 

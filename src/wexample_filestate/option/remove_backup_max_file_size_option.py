@@ -7,7 +7,7 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT: int = 1000
 
 
-class RemoveBackupMaxFileSizeConfigOption(AbstractConfigOption):
+class RemoveBackupMaxFileSizeOption(AbstractConfigOption):
     value: int = REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 
     @staticmethod

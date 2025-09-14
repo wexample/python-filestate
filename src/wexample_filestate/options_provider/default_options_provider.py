@@ -17,7 +17,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
     def get_options(cls) -> list[type[AbstractConfigOption]]:
         from wexample_config.config_option.name_config_option import NameConfigOption
         from wexample_filestate.option.active_option import (
-            ActiveConfigOption,
+            ActiveOption,
         )
         from wexample_filestate.option.children_option import (
             ChildrenConfigOption,
@@ -26,69 +26,69 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ChildrenFileFactoryConfigOption,
         )
         from wexample_filestate.option.class_option import (
-            ClassConfigOption,
+            ClassOption,
         )
         from wexample_filestate.option.content_option import (
-            ContentConfigOption,
+            ContentOption,
         )
         from wexample_filestate.option.content_options_option import (
-            ContentOptionsConfigOption,
+            ContentOptionsOption,
         )
         from wexample_filestate.option.default_content_option import (
-            DefaultContentConfigOption,
+            DefaultContentOption,
         )
-        from wexample_filestate.option.mode_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeOption
         from wexample_filestate.option.mode_recursive_option import (
-            ModeRecursiveConfigOption,
+            ModeRecursiveOption,
         )
         from wexample_filestate.option.name_pattern_option import (
-            NamePatternConfigOption,
+            NamePatternOption,
         )
         from wexample_filestate.option.remove_backup_max_file_size_option import (
-            RemoveBackupMaxFileSizeConfigOption,
+            RemoveBackupMaxFileSizeOption,
         )
         from wexample_filestate.option.shortcut_option import (
-            ShortcutConfigOption,
+            ShortcutOption,
         )
         from wexample_filestate.option.should_contain_lines_option import (
-            ShouldContainLinesConfigOption,
+            ShouldContainLinesOption,
         )
         from wexample_filestate.option.should_exist_option import (
-            ShouldExistConfigOption,
+            ShouldExistOption,
         )
         from wexample_filestate.option.should_have_extension_option import (
-            ShouldHaveExtensionConfigOption,
+            ShouldHaveExtensionOption,
         )
         from wexample_filestate.option.should_not_contain_lines_option import (
-            ShouldNotContainLinesConfigOption,
+            ShouldNotContainLinesOption,
         )
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
-        from wexample_filestate.option.type_option import TypeConfigOption
+        from wexample_filestate.option.type_option import TypeOption
         from wexample_filestate.option.yaml_filter_option import (
-            YamlFilterConfigOption,
+            YamlFilterOption,
         )
 
         return [
-            ActiveConfigOption,
+            ActiveOption,
             ChildrenConfigOption,
             ChildrenFileFactoryConfigOption,
-            ClassConfigOption,
-            ContentConfigOption,
-            ContentOptionsConfigOption,
-            DefaultContentConfigOption,
-            ModeConfigOption,
-            ModeRecursiveConfigOption,
+            ClassOption,
+            ContentOption,
+            ContentOptionsOption,
+            DefaultContentOption,
+            ModeOption,
+            ModeRecursiveOption,
             NameConfigOption,
-            NamePatternConfigOption,
-            RemoveBackupMaxFileSizeConfigOption,
-            ShortcutConfigOption,
-            ShouldContainLinesConfigOption,
-            ShouldNotContainLinesConfigOption,
-            ShouldExistConfigOption,
-            ShouldHaveExtensionConfigOption,
-            TextFilterConfigOption,
-            TypeConfigOption,
-            YamlFilterConfigOption,
+            NamePatternOption,
+            RemoveBackupMaxFileSizeOption,
+            ShortcutOption,
+            ShouldContainLinesOption,
+            ShouldNotContainLinesOption,
+            ShouldExistOption,
+            ShouldHaveExtensionOption,
+            TextFilterOption,
+            TypeOption,
+            YamlFilterOption,
         ]

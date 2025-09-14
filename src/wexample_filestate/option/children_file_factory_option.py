@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from wexample_config.const.types import DictConfig
 from wexample_filestate.option.abstract_children_manipulator_option import (
-    AbstractChildrenManipulationConfigOption,
+    AbstractChildrenManipulationOption,
 )
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationConfigOption):
+class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationOption):
     pattern: DictConfig = public_field(
         description="Pattern is a template used to create generated child configs (e.g., name/type for files to add under each matched directory)",
     )

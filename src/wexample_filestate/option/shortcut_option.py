@@ -7,7 +7,7 @@ from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
-class ShortcutConfigOption(AbstractConfigOption):
+class ShortcutOption(AbstractConfigOption):
     def __attrs_post_init__(self) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 

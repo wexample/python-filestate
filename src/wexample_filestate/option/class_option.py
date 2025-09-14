@@ -5,7 +5,7 @@ from typing import Any
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
-class ClassConfigOption(AbstractConfigOption):
+class ClassOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory

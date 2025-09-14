@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from wexample_filestate.option.abstract_children_manipulator_option import (
-    AbstractChildrenManipulationConfigOption,
+    AbstractChildrenManipulationOption,
 )
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
+class ChildrenFilterConfigOption(AbstractChildrenManipulationOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
     filter: Callable[[Path], bool] | None = public_field(
@@ -33,14 +33,14 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.option.name_pattern_option import (
-            NamePatternConfigOption,
+            NamePatternOption,
         )
         from wexample_filestate.const.disk import DiskItemType
 
         config = self.pattern
         children = []
 
-        name_pattern_option_name = NamePatternConfigOption.get_name()
+        name_pattern_option_name = NamePatternOption.get_name()
         parent_item = self.get_parent_item()
         has_callable_filter = (
             callable(self.filter) if self.filter is not None else False

@@ -30,7 +30,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def apply(self) -> None:
         from wexample_filestate.option.default_content_option import (
-            DefaultContentConfigOption,
+            DefaultContentOption,
         )
 
         self._original_path = self.target.get_path()
@@ -39,13 +39,13 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
             local_file = self.target.get_local_file()
 
             default_content = cast(
-                DefaultContentConfigOption,
-                self.target.get_option(DefaultContentConfigOption),
+                DefaultContentOption,
+                self.target.get_option(DefaultContentOption),
             )
 
             if default_content:
                 default_content_option = self.target.get_option_value(
-                    DefaultContentConfigOption
+                    DefaultContentOption
                 )
 
                 if default_content_option:

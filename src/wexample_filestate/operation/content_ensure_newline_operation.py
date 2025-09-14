@@ -23,13 +23,13 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
 
         if (
             self.target.is_file()
             and self.target.get_local_file().path.exists()
-            and isinstance(option, TextFilterConfigOption)
+            and isinstance(option, TextFilterOption)
         ):
             value = option.get_value()
             if value is None:
@@ -37,9 +37,9 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
 
             # Support both list form ["ensure_newline"] and dict form {"ensure_newline": true}
             has_flag = value.has_item_in_list(
-                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE
+                TextFilterOption.OPTION_NAME_ENSURE_NEWLINE
             ) or value.has_key_in_dict(
-                TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE
+                TextFilterOption.OPTION_NAME_ENSURE_NEWLINE
             )
             if not has_flag:
                 return False

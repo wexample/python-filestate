@@ -25,13 +25,13 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
 
         if (
             self.target.is_file()
             and self.target.get_local_file().path.exists()
-            and isinstance(option, TextFilterConfigOption)
+            and isinstance(option, TextFilterOption)
         ):
             value = option.get_value()
             if value is None:
@@ -39,8 +39,8 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
             # Accept both list form ["trim"] and dict form {"trim": {...}}
             has_trim = value.has_item_in_list(
-                TextFilterConfigOption.OPTION_NAME_TRIM
-            ) or value.has_key_in_dict(TextFilterConfigOption.OPTION_NAME_TRIM)
+                TextFilterOption.OPTION_NAME_TRIM
+            ) or value.has_key_in_dict(TextFilterOption.OPTION_NAME_TRIM)
             if has_trim:
                 content = self.target.get_local_file().read()
                 char = option.get_trimmed_char()
@@ -73,7 +73,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def _get_trimmed_char(self) -> str:
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
 
-        return self.target.get_option(TextFilterConfigOption).get_trimmed_char()
+        return self.target.get_option(TextFilterOption).get_trimmed_char()

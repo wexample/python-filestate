@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class WithVersionWorkdirMixin(BaseClass):
     def append_version(self, config: DictConfig | None = None) -> DictConfig:
         from wexample_filestate.option.text_filter_option import (
-            TextFilterConfigOption,
+            TextFilterOption,
         )
         from wexample_filestate.const.disk import DiskItemType
 
@@ -23,7 +23,7 @@ class WithVersionWorkdirMixin(BaseClass):
                 "type": DiskItemType.FILE,
                 "should_exist": True,
                 "content": self._get_version_default_content(),
-                "text_filter": [TextFilterConfigOption.OPTION_NAME_ENSURE_NEWLINE],
+                "text_filter": [TextFilterOption.OPTION_NAME_ENSURE_NEWLINE],
             }
         )
 

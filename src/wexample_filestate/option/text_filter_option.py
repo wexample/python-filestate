@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
 
 
-class TextFilterConfigOption(AbstractConfigOption):
+class TextFilterOption(AbstractConfigOption):
     OPTION_NAME_TRIM: ClassVar[str] = "trim"
     OPTION_NAME_ENSURE_NEWLINE: ClassVar[str] = "ensure_newline"
 

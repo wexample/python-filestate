@@ -5,7 +5,7 @@ from typing import Any, ClassVar
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
 
-class ContentOptionsConfigOption(AbstractConfigOption):
+class ContentOptionsOption(AbstractConfigOption):
     """Holds a list of content-level operations to apply to a file's textual content.
 
     Example config:

@@ -21,10 +21,10 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.option.abstract_children_manipulator_option import (
-            AbstractChildrenManipulationConfigOption,
+            AbstractChildrenManipulationOption,
         )
 
-        return list[Union[dict[str, Any], AbstractChildrenManipulationConfigOption]]
+        return list[Union[dict[str, Any], AbstractChildrenManipulationOption]]
 
     def build_item_tree(self) -> None:
         super().build_item_tree()
@@ -39,7 +39,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     ) -> TargetFileOrDirectoryType:
         from wexample_config.config_option.name_config_option import NameConfigOption
         from wexample_filestate.option.class_option import (
-            ClassConfigOption,
+            ClassOption,
         )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.exception.bad_configuration_class_type_exception import (
@@ -49,7 +49,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
-        option_name = ClassConfigOption.get_snake_short_class_name()
+        option_name = ClassOption.get_snake_short_class_name()
         if option_name in child_config:
             class_definition = child_config.get(option_name)
 
@@ -131,13 +131,13 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
 
     def create_children_items(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.option.abstract_children_manipulator_option import (
-            AbstractChildrenManipulationConfigOption,
+            AbstractChildrenManipulationOption,
         )
 
         children = []
         # Parent item should be a file or directory target.
         for child_config in self.get_value().get_list():
-            if isinstance(child_config, AbstractChildrenManipulationConfigOption):
+            if isinstance(child_config, AbstractChildrenManipulationOption):
                 child = child_config
                 # Parent has not been assigned before now.
                 child.parent = self
