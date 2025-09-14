@@ -20,13 +20,13 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
         Returns the updated content string if a change is needed, otherwise None.
         """
-        from wexample_filestate.option.content_config_option import (
+        from wexample_filestate.option.content_option import (
             ContentConfigOption,
         )
-        from wexample_filestate.option.should_contain_lines_config_option import (
+        from wexample_filestate.option.should_contain_lines_option import (
             ShouldContainLinesConfigOption,
         )
-        from wexample_filestate.option.should_not_contain_lines_config_option import (
+        from wexample_filestate.option.should_not_contain_lines_option import (
             ShouldNotContainLinesConfigOption,
         )
         from wexample_filestate.config_value.content_config_value import (
@@ -115,13 +115,13 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return self.source_need_change(self.target)
 
     def describe_after(self) -> str:
-        from wexample_filestate.option.content_config_option import (
+        from wexample_filestate.option.content_option import (
             ContentConfigOption,
         )
-        from wexample_filestate.option.should_contain_lines_config_option import (
+        from wexample_filestate.option.should_contain_lines_option import (
             ShouldContainLinesConfigOption,
         )
-        from wexample_filestate.option.should_not_contain_lines_config_option import (
+        from wexample_filestate.option.should_not_contain_lines_option import (
             ShouldNotContainLinesConfigOption,
         )
 
@@ -137,13 +137,13 @@ class FileWriteOperation(AbstractExistingFileOperation):
         return "The file content has been updated according to configuration."
 
     def describe_before(self) -> str:
-        from wexample_filestate.option.content_config_option import (
+        from wexample_filestate.option.content_option import (
             ContentConfigOption,
         )
-        from wexample_filestate.option.should_contain_lines_config_option import (
+        from wexample_filestate.option.should_contain_lines_option import (
             ShouldContainLinesConfigOption,
         )
-        from wexample_filestate.option.should_not_contain_lines_config_option import (
+        from wexample_filestate.option.should_not_contain_lines_option import (
             ShouldNotContainLinesConfigOption,
         )
 

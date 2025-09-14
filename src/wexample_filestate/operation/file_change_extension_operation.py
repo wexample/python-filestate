@@ -24,7 +24,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return Scope.NAME
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.option.should_have_extension_config_option import (
+        from wexample_filestate.option.should_have_extension_option import (
             ShouldHaveExtensionConfigOption,
         )
         from wexample_filestate.item.item_source_file import ItemSourceFile
@@ -43,7 +43,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return False
 
     def apply(self) -> None:
-        from wexample_filestate.option.should_have_extension_config_option import (
+        from wexample_filestate.option.should_have_extension_option import (
             ShouldHaveExtensionConfigOption,
         )
 
@@ -54,7 +54,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         )
 
     def describe_after(self) -> str:
-        from wexample_filestate.option.should_have_extension_config_option import (
+        from wexample_filestate.option.should_have_extension_option import (
             ShouldHaveExtensionConfigOption,
         )
 
@@ -65,7 +65,7 @@ class FileChangeExtensionOperation(FileManipulationOperationMixin, AbstractOpera
         return f"The file '{path}' now has the expected extension '.{expected_ext}'."
 
     def describe_before(self) -> str:
-        from wexample_filestate.option.should_have_extension_config_option import (
+        from wexample_filestate.option.should_have_extension_option import (
             ShouldHaveExtensionConfigOption,
         )
 

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class TestItemChangeModeOperation(TestAbstractOperation):
     def _get_expected_mode(self) -> str:
-        from wexample_filestate.option.mode_config_option import ModeConfigOption
+        from wexample_filestate.option.mode_option import ModeConfigOption
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 
         target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)

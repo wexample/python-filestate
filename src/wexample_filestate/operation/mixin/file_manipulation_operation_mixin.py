@@ -17,7 +17,7 @@ class FileManipulationOperationMixin(AbstractOperation):
 
     @staticmethod
     def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
-        from wexample_filestate.option.should_exist_config_option import (
+        from wexample_filestate.option.should_exist_option import (
             ShouldExistConfigOption,
         )
 
@@ -28,7 +28,7 @@ class FileManipulationOperationMixin(AbstractOperation):
     ) -> bool:
         import os
 
-        from wexample_filestate.option.remove_backup_max_file_size_config_option import (
+        from wexample_filestate.option.remove_backup_max_file_size_option import (
             REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
             RemoveBackupMaxFileSizeConfigOption,
         )

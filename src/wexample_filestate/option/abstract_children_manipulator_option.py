@@ -54,7 +54,7 @@ class AbstractChildrenManipulationConfigOption(
     ) -> TargetFileOrDirectoryType:
         import copy
 
-        from wexample_filestate.option.children_config_option import (
+        from wexample_filestate.option.children_option import (
             ChildrenConfigOption,
         )
 
@@ -94,7 +94,7 @@ class AbstractChildrenManipulationConfigOption(
         import re
         from pathlib import Path
 
-        from wexample_filestate.option.name_pattern_config_option import (
+        from wexample_filestate.option.name_pattern_option import (
             NamePatternConfigOption,
         )
 

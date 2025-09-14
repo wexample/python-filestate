@@ -29,7 +29,7 @@ class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
         )
 
     def apply(self) -> None:
-        from wexample_filestate.option.default_content_config_option import (
+        from wexample_filestate.option.default_content_option import (
             DefaultContentConfigOption,
         )
 

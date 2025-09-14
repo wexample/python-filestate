@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_filestate.option.abstract_children_manipulator_config_option import (
+        from wexample_filestate.option.abstract_children_manipulator_option import (
             AbstractChildrenManipulationConfigOption,
         )
 
@@ -38,7 +38,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
         from wexample_config.config_option.name_config_option import NameConfigOption
-        from wexample_filestate.option.class_config_option import (
+        from wexample_filestate.option.class_option import (
             ClassConfigOption,
         )
         from wexample_filestate.const.disk import DiskItemType
@@ -130,7 +130,7 @@ class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
         return child
 
     def create_children_items(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.option.abstract_children_manipulator_config_option import (
+        from wexample_filestate.option.abstract_children_manipulator_option import (
             AbstractChildrenManipulationConfigOption,
         )
 
