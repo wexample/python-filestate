@@ -185,10 +185,10 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
     def get_children_list(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.option.children_option import (
-            ChildrenConfigOption,
+            ChildrenOption,
         )
 
-        option = cast(ChildrenConfigOption, self.get_option(ChildrenConfigOption))
+        option = cast(ChildrenOption, self.get_option(ChildrenOption))
         if option is not None:
             return option.get_children()
 

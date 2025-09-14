@@ -4,8 +4,12 @@ from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.decorator.base_class import base_class
 
-class ShouldNotContainLinesOption(AbstractConfigOption):
+
+@base_class
+class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         # Expect a list of exact line strings to forbid in the file

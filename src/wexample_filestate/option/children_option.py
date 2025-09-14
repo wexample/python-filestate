@@ -3,11 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union, cast
 
 from wexample_config.config_option.children_config_option import (
-    ChildrenConfigOption as BaseChildrenConfigOption,
+    ChildrenConfigOption
 )
-from wexample_filestate.config_option.mixin.item_config_option_mixin import (
-    ItemTreeConfigOptionMixin,
-)
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
@@ -17,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ChildrenConfigOption(ItemTreeConfigOptionMixin, BaseChildrenConfigOption):
+class ChildrenOption(OptionMixin, ChildrenConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.option.abstract_children_manipulator_option import (

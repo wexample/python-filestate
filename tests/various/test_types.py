@@ -8,7 +8,7 @@ from wexample_helpers.testing.abstract_test_helpers import AbstractTestHelpers
 class TestFileStateManager(AbstractTestHelpers):
     def test_types(self) -> None:
         from wexample_filestate.option.children_filter_option import (
-            ChildrenFilterConfigOption,
+            ChildrenFilterOption,
         )
         from wexample_filestate.file_state_manager import FileStateManager
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
@@ -24,12 +24,12 @@ class TestFileStateManager(AbstractTestHelpers):
             success_cases=[
                 (TestClass, type[ItemTargetDirectory]),
                 (
-                    [ChildrenFilterConfigOption(pattern={})],
-                    list[ChildrenFilterConfigOption],
+                    [ChildrenFilterOption(pattern={})],
+                    list[ChildrenFilterOption],
                 ),
                 (
-                    [ChildrenFilterConfigOption(pattern={})],
-                    list[Union[dict[str, Any], ChildrenFilterConfigOption]],
+                    [ChildrenFilterOption(pattern={})],
+                    list[Union[dict[str, Any], ChildrenFilterOption]],
                 ),
             ]
         )

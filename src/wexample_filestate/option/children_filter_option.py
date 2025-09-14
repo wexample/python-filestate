@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ChildrenFilterConfigOption(AbstractChildrenManipulationOption):
+class ChildrenFilterOption(AbstractChildrenManipulationOption):
     # Optional callable used to decide whether to include an entry.
     # If provided, it takes precedence over name_pattern.
     filter: Callable[[Path], bool] | None = public_field(

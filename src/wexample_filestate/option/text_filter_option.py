@@ -7,8 +7,12 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.decorator.base_class import base_class
 
-class TextFilterOption(AbstractConfigOption):
+
+@base_class
+class TextFilterOption(OptionMixin, AbstractConfigOption):
     OPTION_NAME_TRIM: ClassVar[str] = "trim"
     OPTION_NAME_ENSURE_NEWLINE: ClassVar[str] = "ensure_newline"
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
@@ -25,6 +26,7 @@ if TYPE_CHECKING:
 
 @base_class
 class AbstractChildrenManipulationOption(
+    OptionMixin,
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
@@ -55,7 +57,7 @@ class AbstractChildrenManipulationOption(
         import copy
 
         from wexample_filestate.option.children_option import (
-            ChildrenConfigOption,
+            ChildrenOption,
         )
 
         item_config_copy = copy.deepcopy(config)
@@ -63,7 +65,7 @@ class AbstractChildrenManipulationOption(
         if item_config_copy.get("name", None) is None:
             item_config_copy["name"] = path.name
 
-        parent_children_config = cast(ChildrenConfigOption, self.get_parent())
+        parent_children_config = cast(ChildrenOption, self.get_parent())
 
         return parent_children_config.create_child_item(
             child_config=item_config_copy,

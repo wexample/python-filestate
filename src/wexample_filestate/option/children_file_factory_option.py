@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ChildrenFileFactoryConfigOption(AbstractChildrenManipulationOption):
+class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
     pattern: DictConfig = public_field(
         description="Pattern is a template used to create generated child configs (e.g., name/type for files to add under each matched directory)",
     )

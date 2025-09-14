@@ -36,7 +36,7 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
         from wexample_filestate.option.children_filter_option import (
-            ChildrenFilterConfigOption,
+            ChildrenFilterOption,
         )
         from wexample_filestate.const.disk import DiskItemType
 
@@ -56,7 +56,7 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
                             "name": "one",
                             "type": DiskItemType.DIRECTORY,
                             "children": [
-                                ChildrenFilterConfigOption(
+                                ChildrenFilterOption(
                                     pattern={
                                         "class": TestClass,
                                         "name_pattern": r"^test-collection-[a-z]+-[a-z]+\.txt$",
@@ -64,7 +64,7 @@ class TestFileCreateFromMapConfigOperation(TestAbstractOperation):
                                         "should_exist": False,
                                     }
                                 ),
-                                ChildrenFilterConfigOption(
+                                ChildrenFilterOption(
                                     pattern={
                                         "class": TestClass,
                                         "name_pattern": r"^test-directory-[a-z]$",

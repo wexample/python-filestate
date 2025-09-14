@@ -23,10 +23,10 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             NameOption,
         )
         from wexample_filestate.option.children_option import (
-            ChildrenConfigOption,
+            ChildrenOption,
         )
         from wexample_filestate.option.children_file_factory_option import (
-            ChildrenFileFactoryConfigOption,
+            ChildrenFileFactoryOption,
         )
         from wexample_filestate.option.class_option import (
             ClassOption,
@@ -76,8 +76,8 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         return [
             # filestate: python-iterable-sort
             ActiveOption,
-            ChildrenConfigOption,
-            ChildrenFileFactoryConfigOption,
+            ChildrenOption,
+            ChildrenFileFactoryOption,
             ClassOption,
             ContentOption,
             ContentOptionsOption,
