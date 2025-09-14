@@ -12,9 +12,6 @@ from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import (
-        AbstractConfigOption,
-    )
     from wexample_filestate.const.state_items import TargetFileOrDirectory
     from wexample_filestate.enum.scopes import Scope
 
@@ -38,23 +35,11 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     def get_scope(cls) -> Scope:
         pass
 
-    def applicable(self) -> bool:
-        for option in self.target.options.values():
-            if self.applicable_for_option(option=option) is True:
-                return True
-
-        return False
-
-    @abstract_method
-    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        pass
 
     @abstract_method
     def apply(self) -> None:
         pass
 
-    def dependencies(self) -> list[type[AbstractOperation]]:
-        return []
 
     @abstract_method
     def describe_after(self) -> str:

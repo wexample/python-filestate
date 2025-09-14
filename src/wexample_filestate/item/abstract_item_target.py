@@ -100,9 +100,13 @@ class AbstractItemTarget(
                               max=max)
 
         if len(result.operations) > 0:
+            # Execute only the first operation (single operation per run)
+            if len(result.operations) > 1:
+                self.io.info(f"Found {len(result.operations)} operations, executing only the first one")
+                result.operations = result.operations[:1]
+            
             result.apply_operations(interactive=interactive)
         else:
-
             self.io.info(
                 message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
             )
@@ -143,19 +147,40 @@ class AbstractItemTarget(
             )
 
             has_task: bool = False
-            for operation_class in self.get_operations():
-                if filter_operation is None or operation_class.matches_filter(filter_operation):
-                    # Instantiate first; we'll test applicability on the instance.
-                    operation = operation_class(target=self)
-
-                    if (
-                            scopes is None or operation.get_scope() in scopes
-                    ) and operation.applicable():
-                        has_task = True
-                        self.io.task(
-                            f'Applicable operation: "{operation_class.get_snake_short_class_name()}"'
-                        )
-                        result.operations.append(operation)
+            
+            # NEW APPROACH: Iterate through options instead of operations
+            for option in self.options.values():
+                try:
+                    # Skip if option doesn't have the new methods (backward compatibility)
+                    if not hasattr(option, 'is_satisfied') or not hasattr(option, 'create_required_operation'):
+                        continue
+                        
+                    # Check if this option is satisfied
+                    if not option.is_satisfied(self):
+                        # Create the required operation
+                        operation = option.create_required_operation(self)
+                        
+                        if operation is not None:
+                            # Apply filters
+                            if filter_operation is not None and not operation.__class__.matches_filter(filter_operation):
+                                continue
+                                
+                            if scopes is not None and operation.get_scope() not in scopes:
+                                continue
+                                
+                            has_task = True
+                            self.io.task(
+                                f'Required operation from option "{option.__class__.get_snake_short_class_name()}": "{operation.__class__.get_snake_short_class_name()}"'
+                            )
+                            result.operations.append(operation)
+                            
+                            # CRITICAL: Execute only ONE operation per run
+                            break
+                            
+                except Exception as e:
+                    # Log error but continue with other options for robustness
+                    self.io.error(f"Error processing option {option.__class__.__name__}: {e}")
+                    continue
 
             if (
                     not has_task
