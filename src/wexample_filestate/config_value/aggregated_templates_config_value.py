@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_filestate.config_value.content_config_value import ContentConfigValue
 from wexample_helpers.classes.field import public_field
-from wexample_helpers.const.types import BasicValue
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
@@ -21,6 +20,7 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
         default=None, description="Disabled raw value for this field."
     )
     templates: list[str] | None = public_field(
+        factory=list,
         description="List of templates contents to aggregate"
     )
 
