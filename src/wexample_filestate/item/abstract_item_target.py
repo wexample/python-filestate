@@ -121,7 +121,7 @@ class AbstractItemTarget(
             filter_operation: str | None = None,
             max: int = None,
     ) -> bool:
-        from wexample_filestate.config_option.active_config_option import (
+        from wexample_filestate.option.active_config_option import (
             ActiveConfigOption,
         )
         from wexample_prompt.common.spinner_pool import SpinnerPool

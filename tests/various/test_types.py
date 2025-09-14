@@ -7,7 +7,7 @@ from wexample_helpers.testing.abstract_test_helpers import AbstractTestHelpers
 
 class TestFileStateManager(AbstractTestHelpers):
     def test_types(self) -> None:
-        from wexample_filestate.config_option.children_filter_config_option import (
+        from wexample_filestate.option.children_filter_config_option import (
             ChildrenFilterConfigOption,
         )
         from wexample_filestate.file_state_manager import FileStateManager

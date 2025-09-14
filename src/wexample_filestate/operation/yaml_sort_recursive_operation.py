@@ -48,7 +48,7 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         return current_dump == sorted_dump
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.yaml_filter_config_option import (
+        from wexample_filestate.option.yaml_filter_config_option import (
             YamlFilterConfigOption,
         )
 

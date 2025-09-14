@@ -184,7 +184,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             callback(child)
 
     def get_children_list(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.children_config_option import (
+        from wexample_filestate.option.children_config_option import (
             ChildrenConfigOption,
         )
 

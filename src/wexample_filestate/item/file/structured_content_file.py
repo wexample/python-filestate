@@ -38,7 +38,7 @@ class StructuredContentFile(ItemTargetFile):
         return text
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
-        from wexample_filestate.config_option.should_have_extension_config_option import (
+        from wexample_filestate.option.should_have_extension_config_option import (
             ShouldHaveExtensionConfigOption,
         )
 

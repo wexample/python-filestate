@@ -4,7 +4,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from wexample_filestate.config_option.abstract_children_manipulator_config_option import (
+from wexample_filestate.option.abstract_children_manipulator_config_option import (
     AbstractChildrenManipulationConfigOption,
 )
 from wexample_helpers.classes.field import public_field
@@ -32,7 +32,7 @@ class ChildrenFilterConfigOption(AbstractChildrenManipulationConfigOption):
     )
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.name_pattern_config_option import (
+        from wexample_filestate.option.name_pattern_config_option import (
             NamePatternConfigOption,
         )
         from wexample_filestate.const.disk import DiskItemType

@@ -24,7 +24,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         return Scope.CONTENT
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import (
+        from wexample_filestate.option.text_filter_config_option import (
             TextFilterConfigOption,
         )
 
@@ -72,7 +72,7 @@ class ContentTrimOperation(FileManipulationOperationMixin, AbstractOperation):
         self._restore_target_file()
 
     def _get_trimmed_char(self) -> str:
-        from wexample_filestate.config_option.text_filter_config_option import (
+        from wexample_filestate.option.text_filter_config_option import (
             TextFilterConfigOption,
         )
 

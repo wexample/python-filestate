@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 @base_class
 class WithVersionWorkdirMixin(BaseClass):
     def append_version(self, config: DictConfig | None = None) -> DictConfig:
-        from wexample_filestate.config_option.text_filter_config_option import (
+        from wexample_filestate.option.text_filter_config_option import (
             TextFilterConfigOption,
         )
         from wexample_filestate.const.disk import DiskItemType

@@ -43,7 +43,7 @@ class ContentLinesUniqueOperation(FileManipulationOperationMixin, AbstractOperat
         return out
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.content_options_config_option import (
+        from wexample_filestate.option.content_options_config_option import (
             ContentOptionsConfigOption,
         )
 

@@ -22,7 +22,7 @@ class ContentEnsureNewlineOperation(FileManipulationOperationMixin, AbstractOper
         return Scope.NAME
 
     def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.config_option.text_filter_config_option import (
+        from wexample_filestate.option.text_filter_config_option import (
             TextFilterConfigOption,
         )
 
