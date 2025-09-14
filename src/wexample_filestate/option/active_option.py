@@ -4,9 +4,11 @@ from collections.abc import Callable
 from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_filestate.option.mixin.option_mixin import \
+    OptionMixin
 
 
-class ActiveOption(AbstractConfigOption):
+class ActiveOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from collections.abc import Callable

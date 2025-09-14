@@ -19,6 +19,9 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.active_option import (
             ActiveOption,
         )
+        from wexample_filestate.option.name_option import (
+            NameOption,
+        )
         from wexample_filestate.option.children_option import (
             ChildrenConfigOption,
         )
@@ -71,6 +74,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         )
 
         return [
+            # filestate: python-iterable-sort
             ActiveOption,
             ChildrenConfigOption,
             ChildrenFileFactoryConfigOption,
@@ -80,7 +84,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             DefaultContentOption,
             ModeOption,
             ModeRecursiveOption,
-            NameConfigOption,
+            NameOption,
             NamePatternOption,
             RemoveBackupMaxFileSizeOption,
             ShortcutOption,
