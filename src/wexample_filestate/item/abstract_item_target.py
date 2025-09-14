@@ -134,20 +134,16 @@ class AbstractItemTarget(
         scopes: set[Scope] | None = None,
         filter_operation: str | None = None,
     ) -> AbstractOperation | None:
-        """Try to create an operation from an option if it's not satisfied.
+        """Try to create an operation from an option.
         
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
         try:
-            # Skip if option doesn't have the new methods (backward compatibility)
+            # Skip if option doesn't have the new method (backward compatibility)
             if not self._option_supports_new_interface(option):
                 return None
                 
-            # Check if this option is satisfied
-            if option.is_satisfied(self):
-                return None
-                
-            # Create the required operation
+            # Create the required operation (returns None if satisfied/not applicable)
             operation = option.create_required_operation(self)
             if operation is None:
                 return None
@@ -164,8 +160,8 @@ class AbstractItemTarget(
             return None
 
     def _option_supports_new_interface(self, option) -> bool:
-        """Check if option supports the new is_satisfied/create_required_operation interface."""
-        return hasattr(option, 'is_satisfied') and hasattr(option, 'create_required_operation')
+        """Check if option supports the new create_required_operation interface."""
+        return hasattr(option, 'create_required_operation')
 
     def _operation_passes_filters(
         self,

@@ -17,26 +17,17 @@ class OptionMixin(ItemTreeConfigOptionMixin):
     def get_class_name_suffix(cls) -> str | None:
         return "Option"
 
-    @abstract_method
-    def is_satisfied(self, target: TargetFileOrDirectoryType) -> bool:
-        """Check if the current state satisfies this option's requirements.
-        
-        Returns:
-            True if the option requirements are met, False otherwise
-        """
-        pass
-
-    @abstract_method
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
-        """Create and configure an operation instance when this option is not satisfied.
+        """Create and configure an operation instance if this option requires action.
         
         Returns:
-            None if no operation is needed (option is satisfied)
+            None if no operation is needed (option is satisfied or not applicable)
             AbstractOperation instance configured with necessary data if action is required
             
         The option is responsible for:
+        - Determining if action is needed
         - Instantiating the appropriate operation class
         - Configuring the operation with necessary data
         - Passing any computed values (e.g., new content for FileWriteOperation)
         """
-        pass
+        return None
