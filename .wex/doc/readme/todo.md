@@ -1,6 +1,6 @@
 # TODO: Filestate Architecture Improvements
 
-## 1. ✅ Invert Operation-Option Relationship
+## 1. Invert Operation-Option Relationship
 
 **Current Issue**: Operations currently check for the presence of options that could trigger them. This creates tight coupling and makes the system harder to maintain.
 
@@ -8,18 +8,17 @@
 
 **Proposed Solution**: 
 - Move the logic from operations to options
-- Options should define which operations to execute
+- Options should create and configure operation instances when not satisfied
 - This inverts the dependency: options → operations (instead of operations → options)
 - Each option becomes responsible for determining when its associated operation should run
+- Options provide the necessary data/configuration to the operation instances they create
 
 **Benefits**:
 - Cleaner separation of concerns
 - Options become the single source of truth for when operations should execute
 - Easier to maintain and extend
 
-**Status**: ✅ **COMPLETED** - Options now define required operations via `get_required_operations()`
-
-## 2. ✅ Remove Operation Dependencies System
+## 2. Remove Operation Dependencies System
 
 **Current Issue**: Operations have dependencies on each other (e.g., GitCreateBranchOperation depends on GitInitOperation), creating complex dependency resolution.
 
