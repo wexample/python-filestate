@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-filestate"
-version = "0.0.52"
+version = "0.0.53"
 description = "Package that allows you to manage the state of files and directories using YAML configuration files."
 authors = [
     { name = "weeger", email = "contact@wexample.com" },
@@ -20,10 +20,10 @@ dependencies = [
     "cattrs>=23.1.0",
     "python-dotenv",
     "toml",
-    "wexample-config==0.0.52",
-    "wexample-file==0.0.7",
-    "wexample-helpers-yaml==0.0.68",
-    "wexample-prompt==0.0.50",
+    "wexample-config==0.0.53",
+    "wexample-file==0.0.8",
+    "wexample-helpers-yaml==0.0.69",
+    "wexample-prompt==0.0.51",
     "xmltodict",
 ]
 
