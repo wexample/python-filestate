@@ -60,7 +60,7 @@ class ModeOption(OptionMixin, AbstractConfigOption):
             
             # If modes are different, create the operation
             if current_mode != target_mode:
-                return self._create_mode_operation(target=target)
+                return self._create_mode_operation(target=target, target_mode=target_mode)
                 
         except Exception:
             # If validation fails or any error occurs, don't create operation

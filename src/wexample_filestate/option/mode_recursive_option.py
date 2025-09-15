@@ -16,4 +16,4 @@ class ModeRecursiveOption(ModeOption):
 
     def _create_mode_operation(self, **kwargs):
         kwargs['recursive'] = True
-        super()._create_mode_operation(**kwargs)
+        return super()._create_mode_operation(**kwargs)
