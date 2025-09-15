@@ -5,14 +5,16 @@ from typing import TYPE_CHECKING, cast
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import (
-        AbstractConfigOption,
-    )
     from wexample_filestate.enum.scopes import Scope
 
 
 class ItemChangeModeOperation(AbstractOperation):
     _original_octal_mode: str | None = None
+    _recursive: bool = False
+    
+    def __init__(self, target, recursive: bool = False):
+        super().__init__(target=target)
+        self._recursive = recursive
 
     @classmethod
     def get_scope(cls) -> Scope:
@@ -20,30 +22,9 @@ class ItemChangeModeOperation(AbstractOperation):
 
         return Scope.PERMISSIONS
 
-    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.option.mode_option import ModeOption
-        from wexample_helpers.helpers.file import (
-            file_path_get_mode_num,
-            file_validate_mode_octal_or_fail,
-        )
-
-        if not self.target.source:
-            return False
-
-        if isinstance(option, ModeOption):
-            file_validate_mode_octal_or_fail(option.get_octal())
-            return (
-                file_path_get_mode_num(self.target.get_source().get_path())
-                != option.get_int()
-            )
-
-        return False
 
     def apply(self) -> None:
         from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.option.mode_recursive_option import (
-            ModeRecursiveOption,
-        )
         from wexample_helpers.helpers.file import (
             file_change_mode,
             file_change_mode_recursive,
@@ -53,15 +34,11 @@ class ItemChangeModeOperation(AbstractOperation):
         mode_int = cast(
             ModeOption, self.target.get_option(ModeOption)
         ).get_int()
-        mode_recursive_option = self.target.get_option(ModeRecursiveOption)
 
-        if (
-            mode_recursive_option
-            and mode_recursive_option.get_value().get_bool() is True
-        ):
-            file_change_mode(self.target.get_source().get_path(), mode_int)
-        else:
+        if self._recursive:
             file_change_mode_recursive(self.target.get_source().get_path(), mode_int)
+        else:
+            file_change_mode(self.target.get_source().get_path(), mode_int)
 
     def describe_after(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption

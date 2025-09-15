@@ -23,7 +23,7 @@
 ## Options to Migrate
 
 ### Core Filestate Options
-- [ ] active_config_option.py
+- [x] active_config_option.py
 - [ ] children_config_option.py
 - [ ] children_file_factory_config_option.py
 - [ ] children_filter_config_option.py
@@ -33,7 +33,7 @@
 - [ ] default_content_config_option.py
 - [ ] mode_config_option.py
 - [ ] mode_recursive_config_option.py
-- [ ] name_pattern_config_option.py
+- [x] name_pattern_config_option.py
 - [ ] remove_backup_max_file_size_config_option.py
 - [ ] shortcut_config_option.py
 - [ ] should_contain_lines_config_option.py
