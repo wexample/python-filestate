@@ -138,26 +138,20 @@ class AbstractItemTarget(
         
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
-        try:
-            # Skip if option doesn't have the new method (backward compatibility)
-            if not self._option_supports_new_interface(option):
-                return None
-                
-            # Create the required operation (returns None if satisfied/not applicable)
-            operation = option.create_required_operation(self)
-            if operation is None:
-                return None
-                
-            # Apply filters
-            if not self._operation_passes_filters(operation, scopes, filter_operation):
-                return None
-                
-            return operation
-            
-        except Exception as e:
-            # Log error but continue with other options for robustness
-            self.io.error(f"Error processing option {option.__class__.__name__}: {e}")
+        # Skip if option doesn't have the new method (backward compatibility)
+        if not self._option_supports_new_interface(option):
             return None
+
+        # Create the required operation (returns None if satisfied/not applicable)
+        operation = option.create_required_operation(self)
+        if operation is None:
+            return None
+
+        # Apply filters
+        if not self._operation_passes_filters(operation, scopes, filter_operation):
+            return None
+
+        return operation
 
     def _option_supports_new_interface(self, option) -> bool:
         """Check if option supports the new create_required_operation interface."""
