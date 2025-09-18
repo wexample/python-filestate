@@ -8,13 +8,11 @@ if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 
 
-class TestContentOption(AbstractTestOperation):
-    missing_dir_name: str = "simple-directory-missing"
-    missing_file_name: str = "simple-text-missing.txt"
-    test_content: str = "CHANGED_CONTENT"
+class TestContentOptionSimple(AbstractTestOperation):
+    """Test ContentOption with simple string content."""
+    test_content: str = "SIMPLE_CONTENT"
 
     def _operation_get_count(self) -> int:
-        # Will create a file and a directory.
         return 1
 
     def _operation_test_assert_applied(self) -> None:
