@@ -12,9 +12,9 @@ from wexample_helpers.decorator.base_class import base_class
 class NameOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_helpers.const.types import StringKeysDict
+        from wexample_filestate.config_value.name_config_value import NameConfigValue
         
-        return Union[str, dict, StringKeysDict]
+        return Union[str, dict, NameConfigValue]
 
     def set_value(self, raw_value: Any) -> None:
         from wexample_filestate.config_option.value_config_option import ValueConfigOption
