@@ -50,7 +50,7 @@ After migrating an option/operation pair:
 - [ ] content_options_config_option.py
 - [ ] default_content_config_option.py
 - [x] mode_config_option.py
-- [ ] mode_recursive_config_option.py
+- [x] --mode_recursive_config_option.py--
 - [x] name_pattern_config_option.py
 - [ ] remove_backup_max_file_size_config_option.py
 - [ ] shortcut_config_option.py
