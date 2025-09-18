@@ -26,7 +26,7 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
                     NameOption.get_name(): TEST_FILE_NAME_SIMPLE_TEXT,
                     ModeOption.get_name(): {
                         "permissions": "644",
-                        RecursiveConfigOption.get_name(): True
+                        "recursive": True
                     }
                 },
             ]
