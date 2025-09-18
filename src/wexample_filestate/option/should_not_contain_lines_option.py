@@ -1,16 +1,63 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
+
+if TYPE_CHECKING:
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 @base_class
 class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        # Expect a list of exact line strings to forbid in the file
         return list[str]
+
+    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+        """Create FileWriteOperation if forbidden lines are present in file."""
+        # Get the forbidden lines
+        forbidden_lines_value = self.get_value()
+        if not forbidden_lines_value or forbidden_lines_value.is_none():
+            return None
+
+        forbidden_lines = forbidden_lines_value.get_list()
+        if not forbidden_lines:
+            return None
+
+        # Get current content
+        current_content = self._read_current_content(target)
+        if not current_content:
+            return None  # No content to process
+
+        # Check if any forbidden lines are present and remove them
+        updated_content = self._remove_forbidden_lines(
+            lines=forbidden_lines,
+            content=current_content,
+        )
+
+        # If content changed, create operation
+        if updated_content != current_content:
+            return self._create_file_write_operation(target=target, content=updated_content)
+
+        return None
+
+    def _remove_forbidden_lines(self, lines: list[str], content: str) -> str:
+        """Remove specified lines from content."""
+        current_lines = content.splitlines()
+        filtered_lines = [line for line in current_lines if line not in lines]
+        return '\n'.join(filtered_lines)
+
+    def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
+        """Read current file content, return None if file doesn't exist."""
+        if not target.source or not target.source.get_path().exists():
+            return None
+        return target.get_local_file().read() or ""
+
+    def _create_file_write_operation(self, **kwargs):
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
+
+        return FileWriteOperation(**kwargs)

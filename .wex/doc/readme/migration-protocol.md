@@ -55,12 +55,12 @@ After migrating an option/operation pair:
 - [ ] remove_backup_max_file_size_option.py
 - [ ] shortcut_option.py
 - [x] should_contain_lines_option.py
-- [ ] should_exist_option.py
+- [x] should_exist_option.py
 - [ ] should_have_extension_option.py
-- [ ] should_not_contain_lines_option.py
+- [x] should_not_contain_lines_option.py
 - [ ] text_filter_option.py
 - [x] type_option.py
-- [ ] yaml_filter_option.py
+- [x] yaml_option.py
 
 ### Git Options
 - [ ] create_remote_option.py
@@ -81,9 +81,9 @@ After migrating an option/operation pair:
 - [ ] content_lines_unique_operation.py
 - [ ] content_trim_operation.py
 - [ ] file_change_extension_operation.py
-- [ ] file_create_operation.py
-- [ ] file_remove_operation.py
-- [ ] file_write_operation.py
+- [x] file_create_operation.py
+- [x] file_remove_operation.py
+- [x] file_write_operation.py
 - [x] item_change_mode_operation.py
 - [ ] yaml_sort_recursive_operation.py
 
