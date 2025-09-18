@@ -40,9 +40,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             DefaultContentOption,
         )
         from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.option.mode_recursive_option import (
-            ModeRecursiveOption,
-        )
         from wexample_filestate.option.name_pattern_option import (
             NamePatternOption,
         )
@@ -82,7 +79,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ContentOptionsOption,
             DefaultContentOption,
             ModeOption,
-            ModeRecursiveOption,
             NameOption,
             NamePatternOption,
             RemoveBackupMaxFileSizeOption,
