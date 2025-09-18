@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 
 
-class TestFileCreateFromClassOperation(TestAbstractOperation):
+class TestFileCreateFromClassOperation(AbstractTestOperation):
     missing_file_name: str = "simple-readme.md"
 
     def _operation_get_count(self) -> int:

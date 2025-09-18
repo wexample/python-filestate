@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 
 
-class TestFileWriteOperation(TestAbstractOperation):
+class TestFileWriteOperation(AbstractTestOperation):
     initial_content: str = "Initial line 1\nInitial line 2"
     required_lines: list = ["Required line 1", "Required line 2"]
     test_file_name: str = "test-should-contain-lines.txt"

@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
     )
 
 
-class TestAbstractOperation(AbstractStateManagerTest, ABC):
+class AbstractTestOperation(AbstractStateManagerTest, ABC):
     def test_apply(self) -> None:
         self._operation_test_setup()
         self._operation_test_assert_initial()

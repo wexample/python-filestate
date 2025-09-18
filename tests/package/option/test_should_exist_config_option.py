@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 
-class TestShouldExistConfigOption(TestAbstractOperation):
+class TestShouldExistConfigOption(AbstractTestOperation):
     def _operation_get_count(self) -> int:
         return 0
 

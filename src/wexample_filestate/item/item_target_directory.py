@@ -59,9 +59,12 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     ) -> bool:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
-        has_task = super().build_operations(result, scopes=scopes, filter_path=filter_path,
-                                            filter_operation=filter_operation,
-                                            max=max)
+        has_task = super().build_operations(
+            result,
+            scopes=scopes,
+            filter_path=filter_path,
+            filter_operation=filter_operation,
+            max=max)
         count = 1 if has_task is True else 0
 
         for item in self.get_children_list():

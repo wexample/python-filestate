@@ -9,6 +9,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
@@ -130,7 +131,7 @@ class AbstractItemTarget(
 
     def _try_create_operation_from_option(
         self: TargetFileOrDirectoryType,
-        option,
+        option: OptionMixin,
         scopes: set[Scope] | None = None,
         filter_operation: str | None = None,
     ) -> AbstractOperation | None:

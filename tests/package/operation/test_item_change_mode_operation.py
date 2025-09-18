@@ -2,16 +2,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_config.const.types import DictConfig
-from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-from wexample_filestate.testing.test_abstract_operation import TestAbstractOperation
+from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
-class TestItemChangeModeOperation(TestAbstractOperation):
+class TestItemChangeModeOperation(AbstractTestOperation):
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
