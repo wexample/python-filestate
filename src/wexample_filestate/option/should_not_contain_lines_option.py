@@ -18,6 +18,8 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
         return list[str]
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
+
         """Create FileWriteOperation if forbidden lines are present in file."""
         # Get the forbidden lines
         forbidden_lines_value = self.get_value()
@@ -41,7 +43,7 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
 
         # If content changed, create operation
         if updated_content != current_content:
-            return self._create_file_write_operation(target=target, content=updated_content)
+            return FileWriteOperation(target=target, content=updated_content)
 
         return None
 
@@ -56,8 +58,3 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
         if not target.source or not target.source.get_path().exists():
             return None
         return target.get_local_file().read() or ""
-
-    def _create_file_write_operation(self, **kwargs):
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
-
-        return FileWriteOperation(**kwargs)
