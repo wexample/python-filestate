@@ -33,9 +33,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.content_option import (
             ContentOption,
         )
-        from wexample_filestate.option.content_options_option import (
-            ContentOptionsOption,
-        )
         from wexample_filestate.option.default_content_option import (
             DefaultContentOption,
         )
@@ -76,7 +73,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ChildrenFileFactoryOption,
             ClassOption,
             ContentOption,
-            ContentOptionsOption,
             DefaultContentOption,
             ModeOption,
             NameOption,
