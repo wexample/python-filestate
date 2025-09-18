@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
 
-class ItemChangeModeOperation(AbstractOperation):
+class FileChangeModeOperation(AbstractOperation):
     _original_octal_mode: str | None = None
     _recursive: bool = False
     _target_mode: int

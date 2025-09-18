@@ -72,10 +72,10 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
     def _create_mode_operation(self, **kwargs):
         from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
-        from wexample_filestate.operation.item_change_mode_operation import ItemChangeModeOperation
+        from wexample_filestate.operation.file_change_mode_operation import FileChangeModeOperation
 
         # Check if recursive flag should be set from dict format
         if self.get_option_value(RecursiveConfigOption, default=False).is_true():
             kwargs[RecursiveConfigOption.get_name()] = True
 
-        return ItemChangeModeOperation(**kwargs)
+        return FileChangeModeOperation(**kwargs)

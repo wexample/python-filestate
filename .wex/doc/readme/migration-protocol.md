@@ -84,7 +84,7 @@ After migrating an option/operation pair:
 - [x] file_create_operation.py
 - [x] file_remove_operation.py
 - [x] file_write_operation.py
-- [x] item_change_mode_operation.py
+- [x] file_change_mode_operation.py
 - [ ] yaml_sort_recursive_operation.py
 
 ### Git Operations
