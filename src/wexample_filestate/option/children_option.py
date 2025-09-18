@@ -47,7 +47,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
 
-        option_name = ClassOption.get_snake_short_class_name()
+        option_name = ClassOption.get_name()
         if option_name in child_config:
             class_definition = child_config.get(option_name)
 
@@ -74,7 +74,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
             has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
 
             name = item_name or child_config.get(
-                NameConfigOption.get_snake_short_class_name(), None
+                NameConfigOption.get_name(), None
             )
             path = None
             if isinstance(name, str) and name:

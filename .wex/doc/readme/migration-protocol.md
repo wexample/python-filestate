@@ -43,9 +43,9 @@ After migrating an option/operation pair:
 ### Core Filestate Options
 - [x] active_option.py
 - [x] children_option.py
-- [ ] children_file_factory_option.py``
-- [ ] children_filter_option.py
-- [ ] class_option.py
+- [x] children_file_factory_option.py``
+- [x] children_filter_option.py
+- [x] class_option.py
 - [ ] content_option.py
 - [ ] content_options_option.py
 - [ ] default_content_option.py

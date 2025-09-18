@@ -16,26 +16,24 @@ if TYPE_CHECKING:
 class ModeOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return Union[str, int, dict]
+        from wexample_filestate.config_value.mode_config_value import ModeConfigValue
 
-    def get_int(self) -> int:
-        from wexample_helpers.helpers.file import file_mode_octal_to_num
-
-        return file_mode_octal_to_num(self.get_octal())
+        return Union[str, int, dict, ModeConfigValue]
 
     def get_octal(self) -> str:
         from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
         return self.get_value().get_dict().get(PermissionsConfigOption.get_name())
 
-    def set_value(self, raw_value: Any) -> None:
+    def prepare_value(self, raw_value: Any) -> Any:
         from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
+
         # Always work with a dict.
-        if not isinstance(raw_value, dict):
+        if isinstance(raw_value, str) or isinstance(raw_value, int):
             raw_value = {
                 PermissionsConfigOption.get_name(): str(raw_value)
             }
 
-        super().set_value(raw_value=raw_value)
+        return super().prepare_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
@@ -47,6 +45,8 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         ]
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+        from wexample_helpers.helpers.file import file_mode_octal_to_num
+
         """Create ItemChangeModeOperation if current mode differs from target mode."""
         from wexample_helpers.helpers.file import (
             file_path_get_mode_num,
@@ -62,7 +62,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         # Get current mode and compare with target mode
         current_mode = file_path_get_mode_num(target.get_source().get_path())
-        target_mode = self.get_int()
+        target_mode = file_mode_octal_to_num(self.get_octal())
 
         # If modes are different, create the operation
         if current_mode != target_mode:
