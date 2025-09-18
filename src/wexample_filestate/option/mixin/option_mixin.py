@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_file.enum.local_path_type import LocalPathType
 from wexample_filestate.config_option.mixin.item_config_option_mixin import ItemTreeConfigOptionMixin
-from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
@@ -31,3 +31,18 @@ class OptionMixin(ItemTreeConfigOptionMixin):
         - Passing any computed values (e.g., new content for FileWriteOperation)
         """
         return None
+
+    def get_supported_item_types(self) -> list[LocalPathType]:
+        return [
+            LocalPathType.FILE,
+            LocalPathType.DIRECTORY,
+        ]
+
+    def applicable_on_file(self) -> bool:
+        return True
+
+    def applicable_on_directory(self) -> bool:
+        return True
+
+    def applicable_on_missing(self) -> bool:
+        return True

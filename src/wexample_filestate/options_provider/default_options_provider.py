@@ -65,8 +65,8 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             TextFilterOption,
         )
         from wexample_filestate.option.type_option import TypeOption
-        from wexample_filestate.option.yaml_filter_option import (
-            YamlFilterOption,
+        from wexample_filestate.option.yaml_option import (
+            YamlOption,
         )
 
         return [
@@ -89,5 +89,5 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldHaveExtensionOption,
             TextFilterOption,
             TypeOption,
-            YamlFilterOption,
+            YamlOption,
         ]

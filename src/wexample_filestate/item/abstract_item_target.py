@@ -143,6 +143,15 @@ class AbstractItemTarget(
         if not self._option_supports_new_interface(option):
             return None
 
+        if option.applicable_on_file() and not self.is_file():
+            return None
+
+        if option.applicable_on_directory() and not self.is_directory():
+            return None
+
+        if option.applicable_on_missing() and not self.get_path().exists():
+            return None
+
         # Create the required operation (returns None if satisfied/not applicable)
         operation = option.create_required_operation(self)
         if operation is None:

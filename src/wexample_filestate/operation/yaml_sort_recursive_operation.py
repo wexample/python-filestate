@@ -8,9 +8,6 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import (
-        AbstractConfigOption,
-    )
     from wexample_filestate.enum.scopes import Scope
 
 
@@ -47,35 +44,6 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
         return current_dump == sorted_dump
 
-    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        from wexample_filestate.option.yaml_filter_option import (
-            YamlFilterOption,
-        )
-
-        if (
-            self.target.is_file()
-            and self.target.get_local_file().path.exists()
-            and isinstance(option, YamlFilterOption)
-        ):
-            value = option.get_value()
-            if value is None:
-                return False
-
-            # Only applicable if the flag is set (support list or dict form)
-            has_flag = value.has_item_in_list(
-                "sort_recursive"
-            ) or value.has_key_in_dict("sort_recursive")
-            if not has_flag:
-                return False
-
-            # read() already returns parsed YAML (dict/list) or None for YAML files
-            # Use internal helper to detect if sorting is needed
-            return not YamlSortRecursiveOperation._is_sorted(
-                data=self.target.get_local_file().read()
-            )
-
-        return False
-
     def apply(self) -> None:
         import yaml
 
@@ -95,13 +63,6 @@ class YamlSortRecursiveOperation(FileManipulationOperationMixin, AbstractOperati
         dumped = yaml.safe_dump(sorted_data, sort_keys=False)
 
         self._target_file_write(content=dumped)
-
-    def dependencies(self) -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.file_create_operation import (
-            FileCreateOperation,
-        )
-
-        return [FileCreateOperation]
 
     def describe_after(self) -> str:
         return "The YAML file keys have been recursively sorted alphabetically."
