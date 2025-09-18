@@ -3,17 +3,35 @@
 ## For Each Option
 
 1. **Inherit from AbstractItemConfigOption** instead of AbstractConfigOption
-2. **Implement is_satisfied(target)** - Check if current state meets option requirements
-3. **Implement get_required_operations(target)** - Return list of operation instances with parameters
-4. **Remove any operation-checking logic** - Options should not reference operations directly
+2. **Implement create_required_operation(target)** - Return operation instance with parameters or None if satisfied
+3. **Remove any operation-checking logic** - Options should not reference operations directly
 
 ## For Each Operation
 
-1. **Remove applicable() method** - No longer needed
-2. **Remove applicable_for_option() method** - No longer needed  
+1. **Remove applicable() and applicable_for_option() methods** - No longer needed
+2. **Remove dependencies() method** - No longer needed
 3. **Keep apply(), undo(), describe_*() methods** - Core functionality remains
 4. **Add constructor parameters** - Accept values from options (content, lines, etc.)
 5. **Update operation logic** - Use passed parameters instead of querying options
+6. **Remove all option lookups** - Operations should be self-contained with data from constructor
+
+## Testing Protocol
+
+After migrating an option/operation pair:
+
+1. **Run existing tests** - Verify migration doesn't break functionality:
+   ```bash
+   .wex/python/venv/bin/pytest -x tests/package/operation/test_[operation_name].py
+   ```
+
+2. **Fix test failures** - Update tests to work with new constructor signatures
+
+3. **Verify integration** - Run broader test suite to ensure no regressions:
+   ```bash
+   .wex/python/venv/bin/pytest -x tests/package/operation/
+   ```
+
+4. **Update test documentation** - Ensure test cases reflect new architecture
 
 ## Note
 
