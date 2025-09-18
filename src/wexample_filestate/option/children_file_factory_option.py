@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_config.const.types import DictConfig
 from wexample_filestate.option.abstract_children_manipulator_option import (
     AbstractChildrenManipulationOption,
 )
@@ -53,24 +52,28 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
         return children
 
     def _generate_children_recursive(
-        self,
-        path: Path,
+            self,
+            path: Path,
     ) -> DictConfig:
         from wexample_filestate.const.disk import DiskItemType
+        from wexample_filestate.option.name_option import NameOption
+        from wexample_filestate.option.type_option import TypeOption
+        from wexample_filestate.option.children_option import ChildrenOption
+        from wexample_filestate.option.should_exist_option import ShouldExistOption
 
         dir_config = {
-            "name": path.name,
-            "type": DiskItemType.DIRECTORY,
-            "children": [],
-            "should_exist": True,
+            NameOption.get_name(): path.name,
+            TypeOption.get_name(): DiskItemType.DIRECTORY,
+            ChildrenOption.get_name(): [],
+            ShouldExistOption.get_name(): True,
         }
 
         if self._path_match_patterns(path.name):
-            dir_config["children"].append(
+            dir_config[ChildrenOption.get_name()].append(
                 {
-                    "name": self.pattern["name"],
-                    "type": self.pattern["type"],
-                    "should_exist": True,
+                    NameOption.get_name(): self.pattern[NameOption.get_name()],
+                    TypeOption.get_name(): self.pattern[TypeOption.get_name()],
+                    ShouldExistOption.get_name(): True,
                 }
             )
 
@@ -78,7 +81,7 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
             # Iterate safely over child entries using Path API
             for entry in path.iterdir():
                 if entry.is_dir():
-                    dir_config["children"].append(
+                    dir_config[ChildrenOption.get_name()].append(
                         self._generate_children_recursive(
                             path=entry,
                         )

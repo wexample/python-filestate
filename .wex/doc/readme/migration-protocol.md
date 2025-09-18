@@ -41,37 +41,37 @@ After migrating an option/operation pair:
 ## Options to Migrate
 
 ### Core Filestate Options
-- [x] active_config_option.py
-- [ ] children_config_option.py
-- [ ] children_file_factory_config_option.py``
-- [ ] children_filter_config_option.py
-- [ ] class_config_option.py
-- [ ] content_config_option.py
-- [ ] content_options_config_option.py
-- [ ] default_content_config_option.py
-- [x] mode_config_option.py
-- [x] --mode_recursive_config_option.py--
-- [x] name_pattern_config_option.py
-- [ ] remove_backup_max_file_size_config_option.py
-- [ ] shortcut_config_option.py
-- [ ] should_contain_lines_config_option.py
-- [ ] should_exist_config_option.py
-- [ ] should_have_extension_config_option.py
-- [ ] should_not_contain_lines_config_option.py
-- [ ] text_filter_config_option.py
-- [ ] type_config_option.py
-- [ ] yaml_filter_config_option.py
+- [x] active_option.py
+- [x] children_option.py
+- [ ] children_file_factory_option.py``
+- [ ] children_filter_option.py
+- [ ] class_option.py
+- [ ] content_option.py
+- [ ] content_options_option.py
+- [ ] default_content_option.py
+- [x] mode_option.py
+- [x] --mode_recursive_option.py--
+- [x] name_pattern_option.py
+- [ ] remove_backup_max_file_size_option.py
+- [ ] shortcut_option.py
+- [ ] should_contain_lines_option.py
+- [ ] should_exist_option.py
+- [ ] should_have_extension_option.py
+- [ ] should_not_contain_lines_option.py
+- [ ] text_filter_option.py
+- [ ] type_option.py
+- [ ] yaml_filter_option.py
 
 ### Git Options
-- [ ] create_remote_config_option.py
-- [ ] git_config_option.py
-- [ ] main_branch_config_option.py
-- [ ] remote_config_option.py
-- [ ] remote_item_config_option.py
-- [ ] type_config_option.py (git)
+- [ ] create_remote_option.py
+- [ ] git_option.py
+- [ ] main_branch_option.py
+- [ ] remote_option.py
+- [ ] remote_item_option.py
+- [ ] type_option.py (git)
 
 ### Python Options
-- [ ] python_config_option.py
+- [ ] python_option.py
 
 ## Operations to Migrate
 
