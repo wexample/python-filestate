@@ -37,7 +37,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         super().set_value(raw_value=raw_value)
 
-    def get_allowed_options(self) -> dict[str, type[AbstractConfigOption]]:
+    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
         from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
 
@@ -75,10 +75,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         from wexample_filestate.operation.item_change_mode_operation import ItemChangeModeOperation
 
         # Check if recursive flag should be set from dict format
-        value = self.get_value()
-        if value.is_dict():
-            value_dict = value.get_dict()
-            if value_dict.get(RecursiveConfigOption.get_name()):
-                kwargs[RecursiveConfigOption.get_name()] = True
+        if self.get_option_value(RecursiveConfigOption, default=False).is_true():
+            kwargs[RecursiveConfigOption.get_name()] = True
 
         return ItemChangeModeOperation(**kwargs)
