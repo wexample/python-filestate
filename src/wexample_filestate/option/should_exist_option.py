@@ -67,7 +67,7 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
             default_content=default_content
         )
 
-    def _create_file_remove_operation(self, **target: TargetFileOrDirectoryType):
+    def _create_file_remove_operation(self, target: TargetFileOrDirectoryType):
         from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
 
         return FileRemoveOperation(target=target)
