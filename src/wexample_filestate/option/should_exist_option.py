@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_filestate.option.default_content_option import DefaultContentOption
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
@@ -52,13 +53,21 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
 
         # No operation needed if state matches expectation
         return None
-        
-    def _create_file_create_operation(self, **kwargs):
+
+    def _create_file_create_operation(self, target: TargetFileOrDirectoryType):
         from wexample_filestate.operation.file_create_operation import FileCreateOperation
-        
-        return FileCreateOperation(**kwargs)
-        
-    def _create_file_remove_operation(self, **kwargs):
+
+        default_content_option = target.get_option(DefaultContentOption)
+        default_content = None
+        if default_content_option:
+            default_content = default_content_option.get_value().to_str_or_none()
+
+        return FileCreateOperation(
+            target=target,
+            default_content=default_content
+        )
+
+    def _create_file_remove_operation(self, **target: TargetFileOrDirectoryType):
         from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
-        
-        return FileRemoveOperation(**kwargs)
+
+        return FileRemoveOperation(target=target)

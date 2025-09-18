@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
-
 from wexample_config.const.types import DictConfig
-from wexample_filestate.option.name_option import NameOption
-from wexample_filestate.option.should_exist_option import ShouldExistOption
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 
@@ -48,7 +44,7 @@ class TestShouldExistConfigOptionCreate(AbstractTestOperation):
                     "name": self.missing_file_name,
                     "should_exist": True,
                     "type": DiskItemType.FILE,
-                    "default_content": "This is a test",
+                    "default_content": "This is a test"
                 },
             ]
         }

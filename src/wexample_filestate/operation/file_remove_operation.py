@@ -10,9 +10,6 @@ from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import
 )
 
 if TYPE_CHECKING:
-    from wexample_config.config_option.abstract_config_option import (
-        AbstractConfigOption,
-    )
     from wexample_filestate.enum.scopes import Scope
 
 
@@ -22,9 +19,6 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
         from wexample_filestate.enum.scopes import Scope
 
         return Scope.LOCATION
-
-    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        return self.target.source and not self.option_should_exist_is_true(self.target)
 
     def apply(self) -> None:
         self._backup_target_file()

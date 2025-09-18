@@ -43,15 +43,6 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         pass
 
-    @classmethod
-    def _apply_on_empty_content(cls) -> bool:
-        """Indicate whether the operation is applicable on empty/whitespace-only files.
-
-        By default, operations are NOT applicable on empty content.
-        Subclasses may override to allow applicability on empty files.
-        """
-        return False
-
     @staticmethod
     def _is_existing_file(target: TargetFileOrDirectoryType) -> bool:
         if not target.source or not target.is_file():
@@ -77,32 +68,6 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
     def apply(self) -> None:
         if self._changed_source is not None:
             self._target_file_write(content=self._changed_source)
-
-    def source_need_change(self, target: TargetFileOrDirectoryType) -> bool:
-        if self._source_need_change is not None:
-            return self._source_need_change
-
-        # If the file does not exist, do not attempt any change.
-        if not self._is_existing_file(target):
-            return False
-
-        # Read the exact current content (may be an empty string).
-        current = self._read_current_src(target)
-        assert isinstance(current, str)
-
-        # If current content is empty/whitespace-only and the operation
-        # does not apply on empty content, consider "no change needed".
-        if current.strip() == "" and not self._apply_on_empty_content():
-            return False
-
-        # If preview is None, consider that as "no change needed".
-        if self._changed_source is None:
-            self._changed_source = self.preview_source_change(target)
-        if self._changed_source is None:
-            return False
-
-        self._source_need_change = self._changed_source != current
-        return self._source_need_change
 
     def undo(self) -> None:
         self._restore_target_file()

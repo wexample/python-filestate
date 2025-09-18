@@ -41,6 +41,9 @@ class OptionMixin(ItemTreeConfigOptionMixin):
     def applicable_on_file(self) -> bool:
         return True
 
+    def applicable_on_empty_content_file(self) -> bool:
+        return True
+
     def applicable_on_directory(self) -> bool:
         return True
 
