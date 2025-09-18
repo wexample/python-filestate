@@ -37,14 +37,14 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         super().set_value(raw_value=raw_value)
 
-    def get_available_options(self) -> dict[str, type[AbstractConfigOption]]:
+    def get_allowed_options(self) -> dict[str, type[AbstractConfigOption]]:
         from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
         from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
 
-        return {
-            PermissionsConfigOption.get_name(): PermissionsConfigOption,
-            RecursiveConfigOption.get_name(): RecursiveConfigOption,
-        }
+        return [
+            PermissionsConfigOption,
+            RecursiveConfigOption,
+        ]
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create ItemChangeModeOperation if current mode differs from target mode."""
@@ -78,7 +78,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         value = self.get_value()
         if value.is_dict():
             value_dict = value.get_dict()
-            if value_dict.get( RecursiveConfigOption.get_name()):
-                kwargs[ RecursiveConfigOption.get_name()] = True
+            if value_dict.get(RecursiveConfigOption.get_name()):
+                kwargs[RecursiveConfigOption.get_name()] = True
 
         return ItemChangeModeOperation(**kwargs)
