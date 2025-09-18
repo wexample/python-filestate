@@ -35,7 +35,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
-        from wexample_config.config_option.name_config_option import NameConfigOption
+        from wexample_filestate.option.name_option import NameOption
         from wexample_filestate.option.class_option import (
             ClassOption,
         )
@@ -74,7 +74,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
             has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
 
             name = item_name or child_config.get(
-                NameConfigOption.get_name(), None
+                NameOption.get_name(), None
             )
             path = None
             if isinstance(name, str) and name:

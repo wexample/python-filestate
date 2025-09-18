@@ -289,9 +289,10 @@ class AbstractItemTarget(
         return default
 
     def get_item_name(self) -> str:
-        from wexample_config.config_option.name_config_option import NameConfigOption
+        from wexample_filestate.option.name_option import NameOption
 
-        return self.get_option(NameConfigOption).get_value().get_str()
+        name_option = self.get_option(NameOption)
+        return name_option.get_name_value()
 
     def get_operations(self) -> list[type[AbstractOperation]]:
         providers = self.get_operations_providers()
