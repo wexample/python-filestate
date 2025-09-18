@@ -12,10 +12,7 @@ if TYPE_CHECKING:
 class TestItemChangeModeOperation(AbstractTestOperation):
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-
-        target = self.state_manager.find_by_name(TEST_FILE_NAME_SIMPLE_TEXT)
-        return target.get_option_value(ModeOption).get_str()
+        return self._get_target().get_option_value(ModeOption).get_str()
 
     def _get_target(self) -> TargetFileOrDirectoryType | None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
@@ -34,6 +31,9 @@ class TestItemChangeModeOperation(AbstractTestOperation):
 
         return {
             "children": [
-                {"name": TEST_FILE_NAME_SIMPLE_TEXT, "mode": "644"},
+                {
+                    "name": TEST_FILE_NAME_SIMPLE_TEXT,
+                    "mode": "644"
+                },
             ]
         }
