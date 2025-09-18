@@ -25,13 +25,13 @@
 ### Core Filestate Options
 - [x] active_config_option.py
 - [ ] children_config_option.py
-- [ ] children_file_factory_config_option.py
+- [ ] children_file_factory_config_option.py``
 - [ ] children_filter_config_option.py
 - [ ] class_config_option.py
 - [ ] content_config_option.py
 - [ ] content_options_config_option.py
 - [ ] default_content_config_option.py
-- [ ] mode_config_option.py
+- [x] mode_config_option.py
 - [ ] mode_recursive_config_option.py
 - [x] name_pattern_config_option.py
 - [ ] remove_backup_max_file_size_config_option.py
@@ -66,7 +66,7 @@
 - [ ] file_create_operation.py
 - [ ] file_remove_operation.py
 - [ ] file_write_operation.py
-- [ ] item_change_mode_operation.py
+- [x] item_change_mode_operation.py
 - [ ] yaml_sort_recursive_operation.py
 
 ### Git Operations
