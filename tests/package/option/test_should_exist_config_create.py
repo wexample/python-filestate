@@ -4,7 +4,7 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 
-class TestShouldExistConfigOptionCreate(AbstractTestOperation):
+class TestShouldExistOptionCreate(AbstractTestOperation):
     missing_dir_name: str = "simple-directory-missing"
     missing_file_name: str = "simple-text-missing.txt"
 

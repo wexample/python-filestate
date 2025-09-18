@@ -3,17 +3,18 @@ from __future__ import annotations
 from wexample_filestate.operation.abstract_existing_file_operation import (
     AbstractExistingFileOperation,
 )
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 
+@base_class
 class FileWriteOperation(AbstractExistingFileOperation):
-    @staticmethod
-    def _join_with_original_newline(lines: list[str], original: str) -> str:
-        """Join lines using \n and preserve a trailing newline if present in original."""
-        trailing_newline = original.endswith("\n")
-        updated = "\n".join(lines)
-        if trailing_newline and (updated or original.splitlines()):
-            updated += "\n"
-        return updated
+    content: str = public_field(
+        description="The content to write",
+    )
+
+    def apply(self) -> None:
+        self._target_file_write(content=self.content)
 
     def describe_after(self) -> str:
         return "The file content has been updated according to configuration."

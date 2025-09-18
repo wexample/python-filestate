@@ -4,7 +4,7 @@ from wexample_config.const.types import DictConfig
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 
-class TestShouldExistConfigOptionCreate(AbstractTestOperation):
+class TestShouldExistOptionCreate(AbstractTestOperation):
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 
