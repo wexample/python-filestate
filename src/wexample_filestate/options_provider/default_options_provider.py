@@ -61,8 +61,8 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.should_not_contain_lines_option import (
             ShouldNotContainLinesOption,
         )
-        from wexample_filestate.option.text_filter_option import (
-            TextFilterOption,
+        from wexample_filestate.option.text_option import (
+            TextOption,
         )
         from wexample_filestate.option.type_option import TypeOption
         from wexample_filestate.option.yaml_option import (
@@ -87,7 +87,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldNotContainLinesOption,
             ShouldExistOption,
             ShouldHaveExtensionOption,
-            TextFilterOption,
+            TextOption,
             TypeOption,
             YamlOption,
         ]
