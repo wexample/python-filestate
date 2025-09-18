@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from tests.package.operation.test_item_change_mode_operation import TestItemChangeModeOperation
+from tests.package.option.mode.test_mode_option import TestItemChangeModeOperation
 
 from wexample_filestate.option.mode_option import ModeOption
 from wexample_filestate.option.name_option import NameOption

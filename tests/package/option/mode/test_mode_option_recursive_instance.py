@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from tests.package.operation.test_item_change_mode_recursive_operation import TestItemChangeModeRecursiveOperation
+from tests.package.option.mode.test_mode_option_recursive import TestItemChangeModeRecursiveOperation
 from wexample_filestate.config_value.mode_config_value import ModeConfigValue
 
 if TYPE_CHECKING:
