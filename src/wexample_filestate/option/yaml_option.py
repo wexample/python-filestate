@@ -72,7 +72,22 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
         return current_dump == sorted_dump
 
-    def _create_yaml_sort_operation(self, **kwargs):
-        from wexample_filestate.operation.yaml_sort_recursive_operation import YamlSortRecursiveOperation
+    def _create_yaml_sort_operation(self, target: TargetFileOrDirectoryType, **kwargs):
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
+        import yaml
+        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
 
-        return YamlSortRecursiveOperation(**kwargs)
+        # Read and sort the YAML content
+        data = yaml_read(target.get_path())
+        
+        def sort_rec(obj):
+            if isinstance(obj, dict):
+                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
+            if isinstance(obj, list):
+                return [sort_rec(v) for v in obj]
+            return obj
+
+        sorted_data = sort_rec(data)
+        sorted_content = yaml.safe_dump(sorted_data, sort_keys=False)
+
+        return FileWriteOperation(target=target, content=sorted_content, **kwargs)
