@@ -59,7 +59,7 @@ After migrating an option/operation pair:
 - [ ] should_have_extension_option.py
 - [ ] should_not_contain_lines_option.py
 - [ ] text_filter_option.py
-- [ ] type_option.py
+- [x] type_option.py
 - [ ] yaml_filter_option.py
 
 ### Git Options
