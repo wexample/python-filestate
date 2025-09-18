@@ -42,11 +42,8 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
         """Create operation based on name format validation and enforcement action."""
         from wexample_filestate.option.name_format_option import NameFormatOption
         from wexample_filestate.config_option.action_config_option import ActionConfigOption
-        
-        # Check if there's a name_format option to validate against
-        name_format_option = target.get_option_or_none(NameFormatOption)
-        if not name_format_option:
-            return None
+
+        name_format_option = target.get_option(NameFormatOption)
         
         # Get the current name
         current_name = target.get_item_name()
@@ -76,9 +73,9 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
 
     def _create_delete_operation(self, target: TargetFileOrDirectoryType):
         """Create operation to delete the file/directory."""
-        from wexample_filestate.operation.file_delete_operation import FileDeleteOperation
+        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
         
-        return FileDeleteOperation(target=target)
+        return FileRemoveOperation(target=target)
 
     def _create_rename_operation(self, target: TargetFileOrDirectoryType, name_format_option):
         """Create operation to rename the file/directory to match format."""
