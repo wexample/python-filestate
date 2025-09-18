@@ -60,7 +60,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
         self.state_manager.configure(config={"name": _name})
 
-        assert self.state_manager.get_key() == "file_state_manager"
+        assert self.state_manager.get_name() == "file_state_manager"
         assert self.state_manager.get_item_name() == "yes"
 
     def test_configure_from_callback_class(self) -> None:
