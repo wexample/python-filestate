@@ -101,11 +101,6 @@ class AbstractItemTarget(
                               max=max)
 
         if len(result.operations) > 0:
-            # Execute only the first operation (single operation per run)
-            if len(result.operations) > 1:
-                self.io.info(f"Found {len(result.operations)} operations, executing only the first one")
-                result.operations = result.operations[:1]
-            
             result.apply_operations(interactive=interactive)
         else:
             self.io.info(
@@ -114,7 +109,7 @@ class AbstractItemTarget(
 
         return result
 
-    def _find_first_required_operation(
+    def _find_first_operation(
         self: TargetFileOrDirectoryType,
         scopes: set[Scope] | None = None,
         filter_operation: str | None = None,
@@ -140,16 +135,17 @@ class AbstractItemTarget(
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
         # Skip if option doesn't have the new method (backward compatibility)
+        # TODO Remove once migrated
         if not self._option_supports_new_interface(option):
             return None
 
-        if option.applicable_on_file() and not self.is_file():
+        if  self.is_file() and not option.applicable_on_file():
             return None
 
-        if option.applicable_on_directory() and not self.is_directory():
+        if self.is_directory() and not option.applicable_on_directory():
             return None
 
-        if option.applicable_on_missing() and not self.get_path().exists():
+        if not self.get_path().exists() and not option.applicable_on_missing():
             return None
 
         # Create the required operation (returns None if satisfied/not applicable)
@@ -217,12 +213,11 @@ class AbstractItemTarget(
 
             has_task: bool = False
             
-            # NEW APPROACH: Iterate through options instead of operations
-            operation = self._find_first_required_operation(scopes, filter_operation)
+            operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
                 has_task = True
                 self.io.task(
-                    f'Required operation from option: "{operation.__class__.get_snake_short_class_name()}"'
+                    f'Applicable operation: "{operation.get_name()}"'
                 )
                 result.operations.append(operation)
 

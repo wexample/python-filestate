@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from wexample_config.const.types import DictConfig
+from wexample_filestate.option.name_option import NameOption
+from wexample_filestate.option.should_exist_option import ShouldExistOption
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
-if TYPE_CHECKING:
-    from wexample_config.const.types import DictConfig
 
-
-class TestFileCreateOperation(AbstractTestOperation):
+class TestShouldExistConfigOptionCreate(AbstractTestOperation):
     missing_dir_name: str = "simple-directory-missing"
     missing_file_name: str = "simple-text-missing.txt"
 
