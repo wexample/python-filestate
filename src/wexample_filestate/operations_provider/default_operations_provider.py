@@ -13,12 +13,6 @@ if TYPE_CHECKING:
 class DefaultOperationsProvider(AbstractOperationsProvider):
     @staticmethod
     def get_operations() -> list[type[AbstractOperation]]:
-        from wexample_filestate.operation.content_lines_sort_operation import (
-            ContentLinesSortOperation,
-        )
-        from wexample_filestate.operation.content_lines_unique_operation import (
-            ContentLinesUniqueOperation,
-        )
         from wexample_filestate.operation.content_trim_operation import (
             ContentTrimOperation,
         )
@@ -38,8 +32,6 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
 
         return [
             # filestate: python-iterable-sort
-            ContentLinesSortOperation,
-            ContentLinesUniqueOperation,
             ContentTrimOperation,
             FileChangeExtensionOperation,
             FileCreateOperation,
