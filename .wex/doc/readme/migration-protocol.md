@@ -46,7 +46,7 @@ After migrating an option/operation pair:
 - [x] children_file_factory_option.py``
 - [x] children_filter_option.py
 - [x] class_option.py
-- [ ] content_option.py
+- [x] content_option.py
 - [ ] content_options_option.py
 - [ ] default_content_option.py
 - [x] mode_option.py
@@ -54,7 +54,7 @@ After migrating an option/operation pair:
 - [x] name_pattern_option.py
 - [ ] remove_backup_max_file_size_option.py
 - [ ] shortcut_option.py
-- [ ] should_contain_lines_option.py
+- [x] should_contain_lines_option.py
 - [ ] should_exist_option.py
 - [ ] should_have_extension_option.py
 - [ ] should_not_contain_lines_option.py
