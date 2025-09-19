@@ -11,11 +11,6 @@ if TYPE_CHECKING:
 
 @base_class
 class FileStateManager(ItemTargetDirectory):
-    # Lazy bootstrap: ensure imports are loaded once before creating from path
-    @classmethod
-    def create_from_path(cls, *args, **kwargs):  # type: ignore[override]
-        return super().create_from_path(*args, **kwargs)
-
     def configure(self, config: DictConfig) -> None:
         super().configure(config=config)
 
