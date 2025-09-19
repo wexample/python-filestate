@@ -148,11 +148,6 @@ class AbstractItemTarget(
 
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
-        # Skip if option doesn't have the new method (backward compatibility)
-        # TODO Remove once migrated
-        if not hasattr(option, "create_required_operation"):
-            return None
-
         if self.is_file() and not option.applicable_on_file():
             return None
 

@@ -16,7 +16,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         
         return Union[str, dict, NameConfigValue, Callable]
 
-    def set_value(self, raw_value: Any) -> None:
+    def prepare_value(self, raw_value: Any) -> None:
         from wexample_filestate.config_option.value_config_option import ValueConfigOption
         
         # Store callable directly without conversion
@@ -32,7 +32,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
                 ValueConfigOption.get_name(): raw_value
             }
         
-        super().set_value(raw_value=raw_value)
+        super().prepare_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.value_config_option import ValueConfigOption
