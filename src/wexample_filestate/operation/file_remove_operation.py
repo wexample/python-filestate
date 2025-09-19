@@ -28,17 +28,5 @@ class FileRemoveOperation(FileManipulationOperationMixin, AbstractOperation):
         elif self.target.is_directory():
             shutil.rmtree(self._original_path)
 
-    def describe_after(self) -> str:
-        path = self.target.get_path().as_posix()
-        return f"'{path}' has been removed as requested by configuration."
-
-    def describe_before(self) -> str:
-        path = self.target.get_path().as_posix()
-        kind = "directory" if self.target.is_directory() else "file"
-        return f"The {kind} '{path}' exists but is configured to be absent. It will be removed."
-
-    def description(self) -> str:
-        return "Remove a file or directory that should not exist according to configuration."
-
     def undo(self) -> None:
         self._restore_target_file()

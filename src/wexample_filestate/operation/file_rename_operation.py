@@ -31,18 +31,5 @@ class FileRenameOperation(FileManipulationOperationMixin, AbstractOperation):
         
         os.rename(old_path, new_path)
 
-    def describe_after(self) -> str:
-        old_path = self.target.get_path().as_posix()
-        new_path = (self.target.get_path().parent / self.new_name).as_posix()
-        return f"'{old_path}' has been renamed to '{new_path}'."
-
-    def describe_before(self) -> str:
-        old_path = self.target.get_path().as_posix()
-        new_path = (self.target.get_path().parent / self.new_name).as_posix()
-        return f"The file '{old_path}' will be renamed to '{new_path}'."
-
-    def description(self) -> str:
-        return f"Rename file to '{self.new_name}' to match format requirements."
-
     def undo(self) -> None:
         self._restore_target_file()

@@ -15,12 +15,3 @@ class FileWriteOperation(AbstractExistingFileOperation):
 
     def apply(self) -> None:
         self._target_file_write(content=self.content)
-
-    def describe_after(self) -> str:
-        return "The file content has been updated according to configuration."
-
-    def describe_before(self) -> str:
-        return "The file content needs to be updated."
-
-    def description(self) -> str:
-        return "Write or update file content with specified content."

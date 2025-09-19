@@ -20,10 +20,10 @@ class FileStateResult(AbstractResult):
 
         if interactive:
             if self.state_manager.io.confirm(
-                question=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
-                f"  {operation.describe_before()}\n"
-                f"  Do you want to apply this change:\n"
-                f"    -> {operation.description}",
+                question=f"Do you want to apply this change:\n"
+                f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                f"  → {operation.description}\n"
+                f"    ",
                 choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
                 default="yes",
             ).is_ok():
