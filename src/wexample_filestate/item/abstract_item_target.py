@@ -8,6 +8,7 @@ from wexample_config.config_option.abstract_nested_config_option import (
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_filestate.exception.user_interrupted_exception import UserInterruptedException
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.field import public_field
@@ -96,23 +97,28 @@ class AbstractItemTarget(
         from wexample_helpers.helpers.cli import cli_make_clickable_path
 
         result = FileStateResult(state_manager=self)
-        self.last_result = result
-        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation,
-                              max=max)
 
-        if len(result.operations) > 0:
-            result.apply_operations(interactive=interactive)
-        else:
-            self.io.info(
-                message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
-            )
+        try:
+            self.last_result = result
+            self.build_operations(result=result, scopes=scopes, filter_path=filter_path,
+                                  filter_operation=filter_operation,
+                                  max=max)
+
+            if len(result.operations) > 0:
+                result.apply_operations(interactive=interactive)
+            else:
+                self.io.info(
+                    message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
+                )
+        except UserInterruptedException:
+            self.log('Canceled by user')
 
         return result
 
     def _find_first_operation(
-        self: TargetFileOrDirectoryType,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
+            self: TargetFileOrDirectoryType,
+            scopes: set[Scope] | None = None,
+            filter_operation: str | None = None,
     ) -> AbstractOperation | None:
         """Find the first option that requires an operation and return it.
         
@@ -125,10 +131,10 @@ class AbstractItemTarget(
         return None
 
     def try_create_operation_from_option(
-        self: TargetFileOrDirectoryType,
-        option: OptionMixin,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
+            self: TargetFileOrDirectoryType,
+            option: OptionMixin,
+            scopes: set[Scope] | None = None,
+            filter_operation: str | None = None,
     ) -> AbstractOperation | None:
         """Try to create an operation from an option.
 
@@ -139,7 +145,7 @@ class AbstractItemTarget(
         # if not self._option_supports_new_interface(option):
         #     return None
 
-        if  self.is_file() and not option.applicable_on_file():
+        if self.is_file() and not option.applicable_on_file():
             return None
 
         if self.is_directory() and not option.applicable_on_directory():
@@ -163,23 +169,19 @@ class AbstractItemTarget(
 
         return operation
 
-    def _option_supports_new_interface(self, option) -> bool:
-        """Check if option supports the new create_required_operation interface."""
-        return hasattr(option, 'create_required_operation')
-
     def _operation_passes_filters(
-        self,
-        operation: AbstractOperation,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
+            self,
+            operation: AbstractOperation,
+            scopes: set[Scope] | None = None,
+            filter_operation: str | None = None,
     ) -> bool:
         """Check if operation passes the provided filters."""
         if filter_operation is not None and not operation.__class__.matches_filter(filter_operation):
             return False
-            
+
         if scopes is not None and operation.get_scope() not in scopes:
             return False
-            
+
         return True
 
     def _path_matches(self, filter_path: str) -> bool:
@@ -216,12 +218,12 @@ class AbstractItemTarget(
             )
 
             has_task: bool = False
-            
+
             operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
                 has_task = True
                 self.io.task(
-                    f'Applicable operation: "{operation.get_name()}"'
+                    f'[{operation.get_name()}] Applicable operation: {operation.description}'
                 )
                 result.operations.append(operation)
 
@@ -250,9 +252,14 @@ class AbstractItemTarget(
         )
 
         result = FileStateDryRunResult(state_manager=self)
-        self.last_result = result
-        self.build_operations(result=result, scopes=scopes, filter_path=filter_path, filter_operation=filter_operation, max=max)
-        result.apply_operations()
+        try:
+            self.last_result = result
+            self.build_operations(result=result, scopes=scopes, filter_path=filter_path,
+                                  filter_operation=filter_operation,
+                                  max=max)
+            result.apply_operations()
+        except UserInterruptedException:
+            self.log('Canceled by user')
 
         return result
 

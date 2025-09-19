@@ -14,6 +14,7 @@ class FileStateResult(AbstractResult):
     def _apply_single_operation(
             self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
+        from wexample_filestate.exception.user_interrupted_exception import UserInterruptedException
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
@@ -32,8 +33,8 @@ class FileStateResult(AbstractResult):
 
                 return False
             except KeyboardInterrupt:
-                self.state_manager.io.log('Canceled')
-                return False
+                # User pressed Ctrl+C, raise custom exception
+                raise UserInterruptedException("User manually interrupted the script execution")
 
         # Non interactive.
         operation.apply()
