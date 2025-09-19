@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from wexample_filestate.option.text_option import TextOption
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.decorator.base_class import base_class
 
@@ -12,9 +13,6 @@ if TYPE_CHECKING:
 @base_class
 class WithVersionWorkdirMixin(BaseClass):
     def append_version(self, config: DictConfig | None = None) -> DictConfig:
-        from wexample_filestate.option.text_filter_option import (
-            TextFilterOption,
-        )
         from wexample_filestate.const.disk import DiskItemType
 
         config.get("children").append(
@@ -23,7 +21,9 @@ class WithVersionWorkdirMixin(BaseClass):
                 "type": DiskItemType.FILE,
                 "should_exist": True,
                 "content": self._get_version_default_content(),
-                "text_filter": [TextFilterOption.OPTION_NAME_ENSURE_NEWLINE],
+                TextOption.get_name(): {
+                    "end_new_line": True
+                },
             }
         )
 
