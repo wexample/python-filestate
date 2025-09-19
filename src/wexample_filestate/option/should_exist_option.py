@@ -32,48 +32,40 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create FileCreateOperation or FileRemoveOperation based on should_exist value and current state."""
+        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+        from wexample_filestate.operation.file_create_operation import FileCreateOperation
 
         # Get the should_exist value
         should_exist_value = self.get_value()
         if should_exist_value is None:
             return None
 
-        should_exist = should_exist_value.is_true() if hasattr(should_exist_value, 'is_true') else bool(should_exist_value)
-        
+        should_exist = should_exist_value.is_true() if hasattr(should_exist_value, 'is_true') else bool(
+            should_exist_value)
+
         # Check current existence state
         exists = target.source is not None
 
         # Create operation based on mismatch
         if should_exist and not exists:
-            # File should exist but doesn't - create it
-            return self._create_file_create_operation(target=target)
+            default_content_option = target.get_option(DefaultContentOption)
+            default_content = None
+            if default_content_option:
+                default_content = default_content_option.get_value().to_str_or_none()
+
+            return FileCreateOperation(
+                option=self,
+                target=target,
+                default_content=default_content,
+                description=f"Create missing {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'"
+            )
         elif not should_exist and exists:
             # File shouldn't exist but does - remove it
-            return self._create_file_remove_operation(target=target)
+            return FileRemoveOperation(
+                option=self,
+                target=target,
+                description=f"Remove unwanted {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'"
+            )
 
         # No operation needed if state matches expectation
         return None
-
-    def _create_file_create_operation(self, target: TargetFileOrDirectoryType):
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
-
-        default_content_option = target.get_option(DefaultContentOption)
-        default_content = None
-        if default_content_option:
-            default_content = default_content_option.get_value().to_str_or_none()
-
-        return FileCreateOperation(
-            option=self,
-            target=target,
-            default_content=default_content,
-            description=f"Create missing file '{target.get_item_name()}'"
-        )
-
-    def _create_file_remove_operation(self, target: TargetFileOrDirectoryType):
-        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
-
-        return FileRemoveOperation(
-            option=self, 
-            target=target,
-            description=f"Remove unwanted file '{target.get_item_name()}'"
-        )

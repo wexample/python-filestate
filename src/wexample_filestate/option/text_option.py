@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, Union
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
@@ -44,6 +45,10 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
             EndNewLineConfigOption,
         ]
 
+    @abstract_method
+    def get_description(self) -> str:
+        return "Apply rules to text content"
+
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create FileWriteOperation if text processing is needed."""
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
@@ -55,27 +60,31 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         if current_content is None:
             return None  # No content to process
 
-        updated_content = current_content
-        
-        # Apply trim if enabled
-        trim_option = self.get_option_value(TrimConfigOption, default=False)
-        if trim_option.is_true():
-            updated_content = updated_content.strip()
+        # Check trim first
+        trim_option = self.get_option(TrimConfigOption)
+        if trim_option:
+            if trim_option.get_value().is_true():
+                updated_content = current_content.strip()
+                if updated_content != current_content:
+                    return FileWriteOperation(
+                        option=self,
+                        target=target,
+                        content=updated_content,
+                        description=trim_option.get_description()
+                    )
 
-        # Apply end_new_line if enabled
-        end_new_line_option = self.get_option_value(EndNewLineConfigOption, default=False)
-        if end_new_line_option.is_true():
-            if not updated_content.endswith('\n'):
-                updated_content += '\n'
-
-        # If content changed, create operation
-        if updated_content != current_content:
-            return FileWriteOperation(
-                option=self, 
-                target=target, 
-                content=updated_content,
-                description="Update file content with processed text transformations"
-            )
+        # Check end_new_line second
+        end_new_line_option = self.get_option(TrimConfigOption)
+        if end_new_line_option:
+            if end_new_line_option.is_true():
+                if not current_content.endswith('\n'):
+                    updated_content = current_content + '\n'
+                    return FileWriteOperation(
+                        option=self,
+                        target=target,
+                        content=updated_content,
+                        description=end_new_line_option.get_description()
+                    )
 
         return None
 

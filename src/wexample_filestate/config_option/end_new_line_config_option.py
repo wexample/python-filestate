@@ -11,3 +11,6 @@ class EndNewLineConfigOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return bool
+    
+    def get_description(self) -> str:
+        return "Ensure file ends with a newline character"
