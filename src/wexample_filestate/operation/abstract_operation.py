@@ -29,6 +29,9 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     target: TargetFileOrDirectory = public_field(
         description="The target file or directory on which this operation is executed",
     )
+    description: TargetFileOrDirectory = public_field(
+        description="Explain the content of the change",
+    )
     _tty_width: int = private_field(
         description="The terminal width in characters used for display formatting",
         default=80,
@@ -41,18 +44,6 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
 
     @abstract_method
     def apply(self) -> None:
-        pass
-
-    @abstract_method
-    def describe_after(self) -> str:
-        pass
-
-    @abstract_method
-    def describe_before(self) -> str:
-        pass
-
-    @abstract_method
-    def description(self) -> str:
         pass
 
     @abstract_method

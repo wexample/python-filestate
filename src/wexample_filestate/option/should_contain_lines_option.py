@@ -46,7 +46,8 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
             return FileWriteOperation(
                 option=self,
                 target=target,
-                content=updated_content
+                content=updated_content,
+                description="Add missing lines that should be present in the file"
             )
 
         return None

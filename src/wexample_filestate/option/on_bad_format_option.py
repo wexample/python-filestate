@@ -64,7 +64,11 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
         action = action_option.get_str()
         
         if action == "delete":
-            return FileRemoveOperation(option=self, target=target)
+            return FileRemoveOperation(
+                option=self, 
+                target=target,
+                description=f"Delete file '{target.get_item_name()}' due to bad format"
+            )
         elif action == "rename":
             current_name = target.get_item_name()
             new_name = self._generate_compliant_name(current_name, name_format_option)
@@ -73,7 +77,8 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
                 return FileRenameOperation(
                     option=self,
                     target=target,
-                    new_name=new_name
+                    new_name=new_name,
+                    description=f"Rename file from '{current_name}' to '{new_name}' to fix format"
                 )
 
             return self._create_rename_operation(target, name_format_option)

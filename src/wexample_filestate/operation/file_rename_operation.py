@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 class FileRenameOperation(FileManipulationOperationMixin, AbstractOperation):
-    def __init__(self, target, new_name: str):
-        super().__init__(target=target)
+    def __init__(self, target, new_name: str, description: str | None = None):
+        super().__init__(target=target, description=description)
         self.new_name = new_name
 
     @classmethod

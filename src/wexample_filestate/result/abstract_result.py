@@ -58,14 +58,14 @@ class AbstractResult(PrintableMixin, BaseClass):
 
                     self.state_manager.io.task(
                         message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
-                        f"    → {operation.description()}\n"
+                        f"    → {operation.description}\n"
                         f"    ⋮ Before : {operation.describe_before()}\n"
                         f"    ⋮ After  : {operation.describe_after()}",
                     )
                 else:
                     self.state_manager.io.log(
                         message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
-                        f"    → {operation.description()}\n"
+                        f"    → {operation.description}\n"
                         f"    ⋮ Operation aborted"
                     )
 

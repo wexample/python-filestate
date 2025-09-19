@@ -65,10 +65,15 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
         return FileCreateOperation(
             option=self,
             target=target,
-            default_content=default_content
+            default_content=default_content,
+            description=f"Create missing file '{target.get_item_name()}'"
         )
 
     def _create_file_remove_operation(self, target: TargetFileOrDirectoryType):
         from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
 
-        return FileRemoveOperation(options=self, target=target)
+        return FileRemoveOperation(
+            option=self, 
+            target=target,
+            description=f"Remove unwanted file '{target.get_item_name()}'"
+        )

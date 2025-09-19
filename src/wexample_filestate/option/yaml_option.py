@@ -67,7 +67,12 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         sorted_data = sort_rec(data)
         sorted_content = yaml.safe_dump(sorted_data, sort_keys=False)
 
-        return FileWriteOperation(option=self, target=target, content=sorted_content)
+        return FileWriteOperation(
+            option=self, 
+            target=target, 
+            content=sorted_content,
+            description="Sort YAML file content recursively"
+        )
 
     def _is_yaml_sorted(self, target: TargetFileOrDirectoryType) -> bool:
         """Check if YAML file is already recursively sorted."""

@@ -70,7 +70,12 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
 
         # If content changed, create operation
         if updated_content != current_content:
-            return FileWriteOperation(option=self, target=target, content=updated_content)
+            return FileWriteOperation(
+                option=self, 
+                target=target, 
+                content=updated_content,
+                description="Update file content with processed text transformations"
+            )
 
         return None
 

@@ -68,11 +68,17 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         # If modes are different, create the operation
         if current_mode != target_mode:
+            from wexample_helpers.helpers.file import file_mode_num_to_octal
+            
+            current_octal = file_mode_num_to_octal(current_mode)
+            target_octal = file_mode_num_to_octal(target_mode)
+            
             return FileChangeModeOperation(
                 option=self,
                 target=target,
                 target_mode=target_mode,
-                recursive=self.get_option_value(RecursiveConfigOption, default=False).is_true()
+                recursive=self.get_option_value(RecursiveConfigOption, default=False).is_true(),
+                description=f"Update file permissions from {current_octal} to {target_octal}"
             )
 
         return None

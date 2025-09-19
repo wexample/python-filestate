@@ -81,7 +81,12 @@ class ContentOption(OptionMixin, AbstractNestedConfigOption):
 
         # If content is different, create operation
         if target_content != current_content:
-            return FileWriteOperation(option=self, target=target, content=target_content)
+            return FileWriteOperation(
+                option=self,
+                target=target,
+                content=target_content,
+                description="Update file content to match the expected content"
+            )
 
         return None
 

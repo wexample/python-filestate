@@ -28,7 +28,6 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
         from pathlib import Path
 
-        self.pattern
         children = []
         path = self.get_parent_item().get_path()
 
