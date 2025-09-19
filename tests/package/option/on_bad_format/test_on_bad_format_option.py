@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestOnBadFormatOptionDelete(AbstractTestOperation):
     """Test OnBadFormatOption with delete action."""
+
     test_name: str = "INVALID_case.txt"
 
     def _operation_get_count(self) -> int:
@@ -34,12 +35,8 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "case_format": "lowercase"
-                    },
-                    "on_bad_format": {
-                        "action": "delete"
-                    },
+                    "name_format": {"case_format": "lowercase"},
+                    "on_bad_format": {"action": "delete"},
                 }
             ]
         }
@@ -47,6 +44,7 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
 
 class TestOnBadFormatOptionRename(AbstractTestOperation):
     """Test OnBadFormatOption with rename action."""
+
     test_name: str = "INVALID_case.txt"
     expected_name: str = "invalid_case.txt"
 
@@ -57,7 +55,7 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
         # Verify the file was renamed to correct format
         old_file_path = self._get_absolute_path_from_state_manager(self.test_name)
         new_file_path = self._get_absolute_path_from_state_manager(self.expected_name)
-        
+
         self._assert_file_exists(file_path=old_file_path, positive=False)
         self._assert_file_exists(file_path=new_file_path, positive=True)
 
@@ -75,12 +73,8 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "case_format": "lowercase"
-                    },
-                    "on_bad_format": {
-                        "action": "rename"
-                    },
+                    "name_format": {"case_format": "lowercase"},
+                    "on_bad_format": {"action": "rename"},
                 }
             ]
         }
@@ -88,6 +82,7 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
 
 class TestOnBadFormatOptionIgnore(AbstractTestOperation):
     """Test OnBadFormatOption with ignore action."""
+
     test_name: str = "INVALID_case.txt"
 
     def _operation_get_count(self) -> int:
@@ -112,12 +107,8 @@ class TestOnBadFormatOptionIgnore(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "case_format": "lowercase"
-                    },
-                    "on_bad_format": {
-                        "action": "ignore"
-                    },
+                    "name_format": {"case_format": "lowercase"},
+                    "on_bad_format": {"action": "ignore"},
                 }
             ]
         }

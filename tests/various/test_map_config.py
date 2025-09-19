@@ -35,10 +35,10 @@ class TestFileCreateFromMapConfigOperation(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_filter_option import (
             ChildrenFilterOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         class TestClass(ItemTargetFile):
             def prepare_value(self, config: DictConfig | None = None) -> DictConfig:

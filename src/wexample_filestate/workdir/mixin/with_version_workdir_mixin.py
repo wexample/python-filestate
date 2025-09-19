@@ -21,9 +21,7 @@ class WithVersionWorkdirMixin(BaseClass):
                 "type": DiskItemType.FILE,
                 "should_exist": True,
                 "content": self._get_version_default_content(),
-                TextOption.get_name(): {
-                    "end_new_line": True
-                },
+                TextOption.get_name(): {"end_new_line": True},
             }
         )
 

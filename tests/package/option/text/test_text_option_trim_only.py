@@ -22,7 +22,9 @@ class TestTextOptionTrimOnly(AbstractTestOperation):
         content = file_read(target_file.get_path())
 
         # Check content was trimmed
-        assert content == "Initial content", f"Content should be trimmed, got: {repr(content)}"
+        assert (
+            content == "Initial content"
+        ), f"Content should be trimmed, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -31,7 +33,9 @@ class TestTextOptionTrimOnly(AbstractTestOperation):
         content = file_read(target_file.get_path())
 
         # Check initial content has whitespace
-        assert content == self.initial_content, f"Initial content should be unchanged, got: {repr(content)}"
+        assert (
+            content == self.initial_content
+        ), f"Initial content should be unchanged, got: {repr(content)}"
 
     def _operation_test_setup(self) -> None:
         from wexample_helpers.helpers.file import file_write

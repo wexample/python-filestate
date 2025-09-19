@@ -27,10 +27,10 @@ class TestFileStateManager(AbstractStateManagerTest):
             self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
     def test_configure_define_child(self) -> None:
+        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
         from wexample_filestate.option.children_option import (
             ChildrenOption,
         )
-        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 
         self.state_manager.allow_undefined_keys = True
         self.state_manager.configure(
