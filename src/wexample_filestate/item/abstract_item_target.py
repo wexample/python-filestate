@@ -119,25 +119,25 @@ class AbstractItemTarget(
         Returns None if no operation is required.
         """
         for option in self.options.values():
-            operation = self._try_create_operation_from_option(option, scopes, filter_operation)
+            operation = self.try_create_operation_from_option(option, scopes, filter_operation)
             if operation is not None:
                 return operation
         return None
 
-    def _try_create_operation_from_option(
+    def try_create_operation_from_option(
         self: TargetFileOrDirectoryType,
         option: OptionMixin,
         scopes: set[Scope] | None = None,
         filter_operation: str | None = None,
     ) -> AbstractOperation | None:
         """Try to create an operation from an option.
-        
+
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
         # Skip if option doesn't have the new method (backward compatibility)
-        # TODO Remove once migrated
-        if not self._option_supports_new_interface(option):
-            return None
+        # # TODO Remove once migrated
+        # if not self._option_supports_new_interface(option):
+        #     return None
 
         if  self.is_file() and not option.applicable_on_file():
             return None
@@ -148,8 +148,12 @@ class AbstractItemTarget(
         if not self.get_path().exists() and not option.applicable_on_missing():
             return None
 
+        if not option.applicable_on_empty_content_file():
+            if not self.get_local_file().read().strip():
+                return None
+
         # Create the required operation (returns None if satisfied/not applicable)
-        operation = option.create_required_operation(self)
+        operation = option.create_required_operation(target=self)
         if operation is None:
             return None
 
