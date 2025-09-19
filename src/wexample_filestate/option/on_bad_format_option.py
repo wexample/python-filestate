@@ -42,6 +42,8 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
         """Create operation based on name format validation and enforcement action."""
         from wexample_filestate.option.name_format_option import NameFormatOption
         from wexample_filestate.config_option.action_config_option import ActionConfigOption
+        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+        from wexample_filestate.operation.file_rename_operation import FileRenameOperation
 
         name_format_option = target.get_option(NameFormatOption)
         
@@ -62,33 +64,27 @@ class OnBadFormatOption(OptionMixin, AbstractNestedConfigOption):
         action = action_option.get_str()
         
         if action == "delete":
-            return self._create_delete_operation(target)
+            return FileRemoveOperation(option=self, target=target)
         elif action == "rename":
+            current_name = target.get_item_name()
+            new_name = self._generate_compliant_name(current_name, name_format_option)
+
+            if new_name and new_name != current_name:
+                return FileRenameOperation(
+                    option=self,
+                    target=target,
+                    new_name=new_name
+                )
+
             return self._create_rename_operation(target, name_format_option)
         elif action == "error":
             raise ValueError(f"Name format validation failed for: {current_name}")
-        # "ignore" action returns None (no operation)
-        
-        return None
 
-    def _create_delete_operation(self, target: TargetFileOrDirectoryType):
-        """Create operation to delete the file/directory."""
-        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
-        
-        return FileRemoveOperation(target=target)
+        return None
 
     def _create_rename_operation(self, target: TargetFileOrDirectoryType, name_format_option):
         """Create operation to rename the file/directory to match format."""
-        from wexample_filestate.operation.file_rename_operation import FileRenameOperation
-        
-        current_name = target.get_item_name()
-        new_name = self._generate_compliant_name(current_name, name_format_option)
-        
-        if new_name and new_name != current_name:
-            return FileRenameOperation(
-                target=target,
-                new_name=new_name
-            )
+
         
         return None
 

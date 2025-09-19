@@ -48,6 +48,7 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         """Create FileWriteOperation if text processing is needed."""
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
         from wexample_filestate.config_option.end_new_line_config_option import EndNewLineConfigOption
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
         
         # Get current content
         current_content = self._read_current_content(target)
@@ -69,7 +70,7 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
 
         # If content changed, create operation
         if updated_content != current_content:
-            return self._create_file_write_operation(target=target, content=updated_content)
+            return FileWriteOperation(option=self, target=target, content=updated_content)
 
         return None
 
@@ -79,7 +80,3 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
             return None
         return target.get_local_file().read() or ""
 
-    def _create_file_write_operation(self, **kwargs):
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
-
-        return FileWriteOperation(**kwargs)

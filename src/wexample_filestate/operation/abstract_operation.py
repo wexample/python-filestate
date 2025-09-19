@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
@@ -22,6 +23,9 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
         description="Flag indicating whether the operation has already been applied",
         default=False,
     )
+    option: OptionMixin = public_field(
+        description="The source option which created the operation",
+    )
     target: TargetFileOrDirectory = public_field(
         description="The target file or directory on which this operation is executed",
     )
@@ -35,11 +39,9 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     def get_scope(cls) -> Scope:
         pass
 
-
     @abstract_method
     def apply(self) -> None:
         pass
-
 
     @abstract_method
     def describe_after(self) -> str:

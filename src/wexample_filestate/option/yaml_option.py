@@ -41,6 +41,9 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create YamlSortRecursiveOperation if sort_recursive is enabled and file needs sorting."""
         from wexample_filestate.config_option.sort_recursive_config_option import SortRecursiveConfigOption
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
+        import yaml
+        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
 
         # Check if sort_recursive is enabled
         sort_recursive_option = self.get_option_value(SortRecursiveConfigOption, default=False)
@@ -51,7 +54,20 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         if self._is_yaml_sorted(target):
             return None
 
-        return self._create_yaml_sort_operation(target=target)
+        # Read and sort the YAML content
+        data = yaml_read(target.get_path())
+
+        def sort_rec(obj):
+            if isinstance(obj, dict):
+                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
+            if isinstance(obj, list):
+                return [sort_rec(v) for v in obj]
+            return obj
+
+        sorted_data = sort_rec(data)
+        sorted_content = yaml.safe_dump(sorted_data, sort_keys=False)
+
+        return FileWriteOperation(option=self, target=target, content=sorted_content)
 
     def _is_yaml_sorted(self, target: TargetFileOrDirectoryType) -> bool:
         """Check if YAML file is already recursively sorted."""
@@ -72,22 +88,3 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
         return current_dump == sorted_dump
 
-    def _create_yaml_sort_operation(self, target: TargetFileOrDirectoryType, **kwargs):
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
-        import yaml
-        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
-
-        # Read and sort the YAML content
-        data = yaml_read(target.get_path())
-        
-        def sort_rec(obj):
-            if isinstance(obj, dict):
-                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
-            if isinstance(obj, list):
-                return [sort_rec(v) for v in obj]
-            return obj
-
-        sorted_data = sort_rec(data)
-        sorted_content = yaml.safe_dump(sorted_data, sort_keys=False)
-
-        return FileWriteOperation(target=target, content=sorted_content, **kwargs)

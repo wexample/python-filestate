@@ -50,6 +50,7 @@ class ContentOption(OptionMixin, AbstractNestedConfigOption):
         from wexample_filestate.config_option.text_config_option import TextConfigOption
         from wexample_filestate.config_option.sort_lines_config_option import SortLinesConfigOption
         from wexample_filestate.config_option.unique_lines_config_option import UniqueLinesConfigOption
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
         
         # Get the text content
         text_option = self.get_option_value(TextConfigOption, default=None)
@@ -80,7 +81,7 @@ class ContentOption(OptionMixin, AbstractNestedConfigOption):
 
         # If content is different, create operation
         if target_content != current_content:
-            return self._create_file_write_operation(target=target, content=target_content)
+            return FileWriteOperation(option=self, target=target, content=target_content)
 
         return None
 
@@ -116,8 +117,3 @@ class ContentOption(OptionMixin, AbstractNestedConfigOption):
         if not target.source or not target.source.get_path().exists():
             return None
         return target.get_local_file().read()
-
-    def _create_file_write_operation(self, **kwargs):
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
-
-        return FileWriteOperation(**kwargs)

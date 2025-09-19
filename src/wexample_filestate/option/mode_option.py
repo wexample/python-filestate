@@ -46,6 +46,8 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         from wexample_helpers.helpers.file import file_mode_octal_to_num
+        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
+        from wexample_filestate.operation.file_change_mode_operation import FileChangeModeOperation
 
         """Create ItemChangeModeOperation if current mode differs from target mode."""
         from wexample_helpers.helpers.file import (
@@ -66,16 +68,11 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         # If modes are different, create the operation
         if current_mode != target_mode:
-            return self._create_mode_operation(target=target, target_mode=target_mode)
+            return FileChangeModeOperation(
+                option=self,
+                target=target,
+                target_mode=target_mode,
+                recursive=self.get_option_value(RecursiveConfigOption, default=False).is_true()
+            )
 
         return None
-
-    def _create_mode_operation(self, **kwargs):
-        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
-        from wexample_filestate.operation.file_change_mode_operation import FileChangeModeOperation
-
-        # Check if recursive flag should be set from dict format
-        if self.get_option_value(RecursiveConfigOption, default=False).is_true():
-            kwargs[RecursiveConfigOption.get_name()] = True
-
-        return FileChangeModeOperation(**kwargs)

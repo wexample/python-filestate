@@ -43,7 +43,11 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
 
         # If content changed, create operation
         if updated_content != current_content:
-            return FileWriteOperation(target=target, content=updated_content)
+            return FileWriteOperation(
+                option=self,
+                target=target,
+                content=updated_content
+            )
 
         return None
 

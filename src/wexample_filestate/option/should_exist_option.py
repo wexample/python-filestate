@@ -63,6 +63,7 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
             default_content = default_content_option.get_value().to_str_or_none()
 
         return FileCreateOperation(
+            option=self,
             target=target,
             default_content=default_content
         )
@@ -70,4 +71,4 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
     def _create_file_remove_operation(self, target: TargetFileOrDirectoryType):
         from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
 
-        return FileRemoveOperation(target=target)
+        return FileRemoveOperation(options=self, target=target)
