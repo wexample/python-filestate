@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.decorator.base_class import base_class
@@ -25,20 +27,25 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
 
     def set_value(self, raw_value: Any) -> None:
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import EndNewLineConfigOption
-        
+        from wexample_filestate.config_option.end_new_line_config_option import (
+            EndNewLineConfigOption,
+        )
+
         # Convert list form to dict form for consistency
         if isinstance(raw_value, list):
             raw_value = {
                 TrimConfigOption.get_name(): "trim" in raw_value,
-                EndNewLineConfigOption.get_name(): "ensure_newline" in raw_value or "end_new_line" in raw_value
+                EndNewLineConfigOption.get_name(): "ensure_newline" in raw_value
+                or "end_new_line" in raw_value,
             }
-        
+
         super().set_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import EndNewLineConfigOption
+        from wexample_filestate.config_option.end_new_line_config_option import (
+            EndNewLineConfigOption,
+        )
 
         return [
             TrimConfigOption,
@@ -49,12 +56,16 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
     def get_description(self) -> str:
         return "Apply rules to text content"
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         """Create FileWriteOperation if text processing is needed."""
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import EndNewLineConfigOption
+        from wexample_filestate.config_option.end_new_line_config_option import (
+            EndNewLineConfigOption,
+        )
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
-        
+
         # Get current content
         current_content = self._read_current_content(target)
         if current_content is None:
@@ -70,20 +81,20 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
                         option=self,
                         target=target,
                         content=updated_content,
-                        description=trim_option.get_description()
+                        description=trim_option.get_description(),
                     )
 
         # Check end_new_line second
         end_new_line_option = self.get_option(TrimConfigOption)
         if end_new_line_option:
             if end_new_line_option.is_true():
-                if not current_content.endswith('\n'):
-                    updated_content = current_content + '\n'
+                if not current_content.endswith("\n"):
+                    updated_content = current_content + "\n"
                     return FileWriteOperation(
                         option=self,
                         target=target,
                         content=updated_content,
-                        description=end_new_line_option.get_description()
+                        description=end_new_line_option.get_description(),
                     )
 
         return None
@@ -93,4 +104,3 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         if not target.source or not target.source.get_path().exists():
             return None
         return target.get_local_file().read() or ""
-

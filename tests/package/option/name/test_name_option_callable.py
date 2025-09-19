@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestNameOptionCallable(AbstractTestOperation):
     """Test NameOption with callable/function value."""
+
     expected_name: str = "dynamic-name.txt"
 
     def _operation_get_count(self) -> int:
@@ -27,7 +28,7 @@ class TestNameOptionCallable(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType
-        
+
         def dynamic_name_generator(option) -> str:
             return self.expected_name
 

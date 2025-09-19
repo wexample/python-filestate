@@ -22,7 +22,9 @@ class TestTextOptionLegacyFormat(AbstractTestOperation):
         content = file_read(target_file.get_path())
 
         # Check content was trimmed and ends with newline (legacy format support)
-        assert content == "Initial content\n", f"Content should be trimmed and end with newline, got: {repr(content)}"
+        assert (
+            content == "Initial content\n"
+        ), f"Content should be trimmed and end with newline, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -30,7 +32,9 @@ class TestTextOptionLegacyFormat(AbstractTestOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
-        assert content == self.initial_content, f"Initial content should be unchanged, got: {repr(content)}"
+        assert (
+            content == self.initial_content
+        ), f"Initial content should be unchanged, got: {repr(content)}"
 
     def _operation_test_setup(self) -> None:
         from wexample_helpers.helpers.file import file_write

@@ -20,12 +20,22 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
 
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
-        return self._get_target().get_option_value(ModeOption).get_dict().get('permissions')
+
+        return (
+            self._get_target()
+            .get_option_value(ModeOption)
+            .get_dict()
+            .get("permissions")
+        )
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
-        from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
-        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
+        from wexample_filestate.config_option.permissions_config_option import (
+            PermissionsConfigOption,
+        )
+        from wexample_filestate.config_option.recursive_config_option import (
+            RecursiveConfigOption,
+        )
 
         return {
             "children": [
@@ -33,8 +43,8 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
                     NameOption.get_name(): TEST_DIR_NAME_RECURSIVE,
                     ModeOption.get_name(): {
                         PermissionsConfigOption.get_name(): "755",
-                        RecursiveConfigOption.get_name(): True
-                    }
+                        RecursiveConfigOption.get_name(): True,
+                    },
                 },
             ]
         }

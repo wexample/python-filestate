@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.option.text_option import TextOption
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.decorator.base_class import base_class
 
@@ -14,6 +12,7 @@ if TYPE_CHECKING:
 class WithVersionWorkdirMixin(BaseClass):
     def append_version(self, config: DictConfig | None = None) -> DictConfig:
         from wexample_filestate.const.disk import DiskItemType
+        from wexample_filestate.option.text_option import TextOption
 
         config.get("children").append(
             {

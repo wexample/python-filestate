@@ -26,8 +26,8 @@ class DefaultOperationsProvider(AbstractOperationsProvider):
 
         return [
             # filestate: python-iterable-sort
+            FileChangeModeOperation,
             FileCreateOperation,
             FileRemoveOperation,
             FileWriteOperation,
-            FileChangeModeOperation,
         ]

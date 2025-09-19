@@ -50,7 +50,9 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         return target.get_local_file().path.exists()
 
     @classmethod
-    def _read_current_non_empty_src(cls,target: TargetFileOrDirectoryType) -> str | None:
+    def _read_current_non_empty_src(
+        cls, target: TargetFileOrDirectoryType
+    ) -> str | None:
         src = cls._read_current_src(target)
         return src if src is not None and src.strip() != "" else None
 
@@ -60,7 +62,7 @@ class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOper
         return target.get_local_file().read()
 
     @classmethod
-    def _read_current_str_or_fail(cls,target: TargetFileOrDirectoryType) -> str:
+    def _read_current_str_or_fail(cls, target: TargetFileOrDirectoryType) -> str:
         src = cls._read_current_src(target)
         assert isinstance(src, str)
         return src

@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestNameFormatOptionCaseFormat(AbstractTestOperation):
     """Test NameFormatOption with case format validation."""
+
     test_name: str = "TestFile.txt"
 
     def _operation_get_count(self) -> int:
@@ -35,9 +36,7 @@ class TestNameFormatOptionCaseFormat(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "case_format": "lowercase"
-                    },
+                    "name_format": {"case_format": "lowercase"},
                 }
             ]
         }
@@ -45,6 +44,7 @@ class TestNameFormatOptionCaseFormat(AbstractTestOperation):
 
 class TestNameFormatOptionRegex(AbstractTestOperation):
     """Test NameFormatOption with regex validation."""
+
     test_name: str = "valid123.txt"
 
     def _operation_get_count(self) -> int:
@@ -70,9 +70,7 @@ class TestNameFormatOptionRegex(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "regex": r"^[a-z]+\d+\.txt$"
-                    },
+                    "name_format": {"regex": r"^[a-z]+\d+\.txt$"},
                 }
             ]
         }
@@ -80,6 +78,7 @@ class TestNameFormatOptionRegex(AbstractTestOperation):
 
 class TestNameFormatOptionPrefixSuffix(AbstractTestOperation):
     """Test NameFormatOption with prefix and suffix validation."""
+
     test_name: str = "prefix_test_suffix.txt"
 
     def _operation_get_count(self) -> int:
@@ -105,10 +104,7 @@ class TestNameFormatOptionPrefixSuffix(AbstractTestOperation):
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {
-                        "prefix": "prefix_",
-                        "suffix": "_suffix.txt"
-                    },
+                    "name_format": {"prefix": "prefix_", "suffix": "_suffix.txt"},
                 }
             ]
         }

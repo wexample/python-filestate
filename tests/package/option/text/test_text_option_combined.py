@@ -22,7 +22,9 @@ class TestTextOptionCombined(AbstractTestOperation):
         content = file_read(target_file.get_path())
 
         # Check content was trimmed and ends with newline
-        assert content == "Initial line 1\nInitial line 2\n", f"Content should be trimmed and end with newline, got: {repr(content)}"
+        assert (
+            content == "Initial line 1\nInitial line 2\n"
+        ), f"Content should be trimmed and end with newline, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -31,7 +33,9 @@ class TestTextOptionCombined(AbstractTestOperation):
         content = file_read(target_file.get_path())
 
         # Check initial content is correct (with whitespace and no ending newline)
-        assert content == self.initial_content, f"Initial content should be unchanged, got: {repr(content)}"
+        assert (
+            content == self.initial_content
+        ), f"Initial content should be unchanged, got: {repr(content)}"
 
     def _operation_test_setup(self) -> None:
         from wexample_helpers.helpers.file import file_write

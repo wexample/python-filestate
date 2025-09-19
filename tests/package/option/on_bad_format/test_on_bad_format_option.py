@@ -44,9 +44,9 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
 
 class TestOnBadFormatOptionRename(AbstractTestOperation):
     """Test OnBadFormatOption with rename action."""
+    expected_name: str = "invalid_case.txt"
 
     test_name: str = "INVALID_case.txt"
-    expected_name: str = "invalid_case.txt"
 
     def _operation_get_count(self) -> int:
         return 1  # Only rename operation (file creation is handled by should_exist)

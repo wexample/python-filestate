@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 
 class TestShouldNotContainLinesOption(AbstractTestOperation):
-    initial_content: str = "Initial line 1\nForbidden line 1\nInitial line 2\nForbidden line 2\nInitial line 3"
+    initial_content: str = (
+        "Initial line 1\nForbidden line 1\nInitial line 2\nForbidden line 2\nInitial line 3"
+    )
     forbidden_lines: list = ["Forbidden line 1", "Forbidden line 2"]
     test_file_name: str = "test-should-not-contain-lines.txt"
 

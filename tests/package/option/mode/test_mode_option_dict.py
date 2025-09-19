@@ -14,8 +14,12 @@ if TYPE_CHECKING:
 class TestItemChangeModeOperationDict(TestItemChangeModeOperation):
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-        from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
-        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
+        from wexample_filestate.config_option.permissions_config_option import (
+            PermissionsConfigOption,
+        )
+        from wexample_filestate.config_option.recursive_config_option import (
+            RecursiveConfigOption,
+        )
 
         return {
             "children": [
@@ -23,8 +27,8 @@ class TestItemChangeModeOperationDict(TestItemChangeModeOperation):
                     NameOption.get_name(): TEST_FILE_NAME_SIMPLE_TEXT,
                     ModeOption.get_name(): {
                         PermissionsConfigOption.get_name(): "755",
-                        RecursiveConfigOption.get_name(): True
-                    }
+                        RecursiveConfigOption.get_name(): True,
+                    },
                 },
             ]
         }

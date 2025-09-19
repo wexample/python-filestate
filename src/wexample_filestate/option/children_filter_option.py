@@ -32,10 +32,10 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
     )
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.name_pattern_option import (
             NamePatternOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         config = self.pattern
         children = []

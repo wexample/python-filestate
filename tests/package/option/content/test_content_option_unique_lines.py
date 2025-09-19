@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestContentOptionUniqueLines(AbstractTestOperation):
     """Test ContentOption with unique_lines enabled."""
+
     test_content: str = "apple\nbanana\napple\ncherry\nbanana"
     expected_content: str = "apple\nbanana\ncherry"
 

@@ -32,9 +32,7 @@ class WithReadmeWorkdirMixin(BaseClass):
                 "default_content": ReadmeContentConfigValue(
                     templates=[], parameters={}
                 ),
-                TextOption.get_name(): {
-                    "end_new_line": True
-                },
+                TextOption.get_name(): {"end_new_line": True},
             }
         )
 

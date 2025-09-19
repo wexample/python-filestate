@@ -17,7 +17,9 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return list[str]
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         """Create FileWriteOperation if required lines are missing from file."""
         from wexample_helpers.helpers.string import string_append_missing_lines
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
@@ -47,7 +49,7 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
                 option=self,
                 target=target,
                 content=updated_content,
-                description="Add missing lines that should be present in the file"
+                description="Add missing lines that should be present in the file",
             )
 
         return None
