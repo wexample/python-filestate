@@ -12,25 +12,28 @@ class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
     def _apply_single_operation(
-        self, operation: AbstractOperation, interactive: bool = False
+            self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
 
         if interactive:
-            if self.state_manager.io.confirm(
-                question=f"Do you want to apply this change:\n"
-                f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
-                f"  → {operation.description}\n"
-                f"    ",
-                choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
-                default="yes",
-            ).is_ok():
-                operation.apply()
-                return True
+            try:
+                if self.state_manager.io.confirm(
+                        question=f"Do you want to apply this change:\n"
+                                 f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                                 f"  → {operation.description}\n",
+                        choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+                        default="yes",
+                ).is_ok():
+                    operation.apply()
+                    return True
 
-            return False
+                return False
+            except KeyboardInterrupt:
+                self.state_manager.io.log('Canceled')
+                return False
 
         # Non interactive.
         operation.apply()
