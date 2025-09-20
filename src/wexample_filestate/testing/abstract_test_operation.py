@@ -28,12 +28,9 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
 
     def _dry_run_and_count_operations(self) -> FileStateDryRunResult:
         result = self.state_manager.dry_run()
-        assert len(result.operations) == self._operation_get_count()
-
+        assert len(result.operations) == 1  # Single Operation Per Pass
         return result
 
-    def _operation_get_count(self) -> int:
-        return 1
 
     def _operation_test_apply(self) -> None:
         self.state_manager.apply()

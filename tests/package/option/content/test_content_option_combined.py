@@ -9,9 +9,10 @@ if TYPE_CHECKING:
 
 
 class TestContentOptionCombined(AbstractTestOperation):
-    """Test ContentOption with both sort_lines and unique_lines enabled."""
+    """Test content + text combination with both sort_lines and unique_lines enabled."""
     test_content: str = "zebra\napple\nbanana\napple\ncherry\nbanana"
     expected_content: str = "apple\nbanana\ncherry\nzebra"
+
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
@@ -45,8 +46,8 @@ class TestContentOptionCombined(AbstractTestOperation):
                     "name": TEST_FILE_NAME_SIMPLE_TEXT,
                     "should_exist": True,
                     "type": DiskItemType.FILE,
-                    "content": {
-                        "text": self.test_content,
+                    "content": self.test_content,
+                    "text": {
                         "sort_lines": True,
                         "unique_lines": True,
                     },
