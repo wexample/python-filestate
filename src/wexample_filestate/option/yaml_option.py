@@ -32,64 +32,13 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         ]
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.config_option.sort_recursive_config_option import SortRecursiveConfigOption
+        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
 
         return [
-            SortRecursiveConfigOption,
+            SortRecursiveOption,
         ]
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
-        """Create YamlSortRecursiveOperation if sort_recursive is enabled and file needs sorting."""
-        from wexample_filestate.config_option.sort_recursive_config_option import SortRecursiveConfigOption
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
-        import yaml
-        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
-
-        # Check if sort_recursive is enabled
-        sort_recursive_option = self.get_option_value(SortRecursiveConfigOption, default=False)
-        if not sort_recursive_option.is_true():
-            return None
-
-        # Check if file needs sorting
-        if self._is_yaml_sorted(target):
-            return None
-
-        # Read and sort the YAML content
-        data = yaml_read(target.get_path())
-
-        def sort_rec(obj):
-            if isinstance(obj, dict):
-                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
-            if isinstance(obj, list):
-                return [sort_rec(v) for v in obj]
-            return obj
-
-        sorted_data = sort_rec(data)
-        sorted_content = yaml.safe_dump(sorted_data, sort_keys=False)
-
-        return FileWriteOperation(
-            option=self, 
-            target=target, 
-            content=sorted_content,
-            description="Sort YAML file content recursively"
-        )
-
-    def _is_yaml_sorted(self, target: TargetFileOrDirectoryType) -> bool:
-        """Check if YAML file is already recursively sorted."""
-        import yaml
-        from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
-
-        data = yaml_read(target.get_path())
-
-        def sort_rec(obj):
-            if isinstance(obj, dict):
-                return {k: sort_rec(obj[k]) for k in sorted(obj.keys())}
-            if isinstance(obj, list):
-                return [sort_rec(v) for v in obj]
-            return obj
-
-        sorted_data = sort_rec(data)
-        current_dump = yaml.safe_dump(data, sort_keys=False)
-        sorted_dump = yaml.safe_dump(sorted_data, sort_keys=False)
-        return current_dump == sorted_dump
+        """Create operation using child options."""
+        return self._create_child_required_operation(target=target)
 
