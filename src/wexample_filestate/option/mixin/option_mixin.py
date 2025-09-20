@@ -49,3 +49,17 @@ class OptionMixin(ItemTreeConfigOptionMixin):
 
     def applicable_on_missing(self) -> bool:
         return True
+
+    def _create_child_required_operation(
+            self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
+        """Create operation by iterating through all enabled sub-options."""
+        for option_class in self.get_allowed_options():
+            option = self.get_option(option_class)
+            if option:
+                operation = target.try_create_operation_from_option(option=option)
+                if operation:
+                    # Return the first operation found
+                    return operation
+
+        return None
