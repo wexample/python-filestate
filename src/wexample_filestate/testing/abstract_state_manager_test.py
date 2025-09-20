@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from abc import ABC
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
@@ -56,8 +57,8 @@ class AbstractStateManagerTest(ABC):
         assert target is not None
         self._assert_dir_exists(target.get_path(), positive=positive)
 
-    def _get_absolute_path_from_state_manager(self, relative: str) -> str:
-        return os.path.join(self._get_test_state_manager_path(), relative)
+    def _get_absolute_path_from_state_manager(self, relative: str) -> Path:
+        return self._get_test_state_manager_path() / relative
 
     def _get_package_root_path(self) -> str:
         return f"{os.path.abspath(os.curdir)}{os.sep}"
@@ -77,7 +78,5 @@ class AbstractStateManagerTest(ABC):
     ) -> list[type[AbstractOptionsProvider]] | None:
         return None
 
-    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> str:
-        return os.path.join(
-            package_root_path or self._get_package_root_path(), "tests", "resources", ""
-        )
+    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> Path:
+        return Path(package_root_path or self._get_package_root_path()) / "tests" / "resources"

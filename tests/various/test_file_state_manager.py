@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 import pytest
@@ -81,7 +80,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
     def test_configure_from_file(self) -> None:
         self.state_manager.configure_from_file(
-            os.path.join(self._get_test_state_manager_path(), "config-test-one.yml")
+            self._get_test_state_manager_path() / "config-test-one.yml"
         )
 
     def test_configure_name(self) -> None:
