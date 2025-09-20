@@ -93,6 +93,19 @@ raw_value = {
 }
 ```
 
+### Single Operation Per Pass
+Each option can only return **one operation per execution pass**. This means complex scenarios require multiple passes:
+
+**Example**: File doesn't exist + needs specific content + wrong permissions
+- **Pass 1**: `ShouldExistOption` creates `FileWriteOperation` (creates empty file)
+- **Pass 2**: `ContentOption` creates `FileWriteOperation` (adds content)  
+- **Pass 3**: `ModeOption` creates `ItemChangeModeOperation` (sets permissions)
+
+This sequential approach ensures:
+- Each operation has a clear, single responsibility
+- Operations can depend on previous operations being completed
+- The system remains predictable and debuggable
+
 ### Conditional Operations
 Options only create operations when changes are actually needed:
 - File already has correct content → No operation
