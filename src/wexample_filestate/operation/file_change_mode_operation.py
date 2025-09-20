@@ -1,29 +1,33 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
 
+@base_class
 class FileChangeModeOperation(AbstractOperation):
-    _original_octal_mode: str | None = None
-    _recursive: bool = False
-    _target_mode: int
-    
-    def __init__(self, target, target_mode: int, recursive: bool = False, description: str | None = None):
-        super().__init__(target=target, description=description)
-        self._recursive = recursive
-        self._target_mode = target_mode
+    _original_octal_mode: str | None = private_field(
+        description="Cached mode to provide undo"
+    )
+    recursive: bool = public_field(
+        description="Apply mode to child list",
+    )
+    target_mode: bool = public_field(
+        description="The permissions mode to apply",
+    )
 
     @classmethod
     def get_scope(cls) -> Scope:
         from wexample_filestate.enum.scopes import Scope
 
         return Scope.PERMISSIONS
-
 
     def apply(self) -> None:
         from wexample_helpers.helpers.file import (
@@ -33,10 +37,10 @@ class FileChangeModeOperation(AbstractOperation):
 
         self._original_octal_mode = self.target.get_source().get_octal_mode()
 
-        if self._recursive:
-            file_change_mode_recursive(self.target.get_source().get_path(), self._target_mode)
+        if self.recursive:
+            file_change_mode_recursive(self.target.get_source().get_path(), self.target_mode)
         else:
-            file_change_mode(self.target.get_source().get_path(), self._target_mode)
+            file_change_mode(self.target.get_source().get_path(), self.target_mode)
 
     def undo(self) -> None:
         from wexample_helpers.helpers.file import (

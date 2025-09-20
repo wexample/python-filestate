@@ -4,8 +4,8 @@ import os
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
+from wexample_filestate.operation.abstract_file_manipulation_operation import (
+    AbstractFileManipulationOperation,
 )
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
+class FileCreateOperation(AbstractFileManipulationOperation):
     default_content: str | None = public_field(
         description="Flag indicating whether the operation has already been applied",
         default=None,

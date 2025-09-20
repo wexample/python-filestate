@@ -3,19 +3,23 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
+from wexample_filestate.operation.abstract_file_manipulation_operation import (
+    AbstractFileManipulationOperation,
 )
+from wexample_helpers.classes.field import public_field
 
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
+from wexample_helpers.decorator.base_class import base_class
 
-class FileRenameOperation(FileManipulationOperationMixin, AbstractOperation):
-    def __init__(self, target, new_name: str, description: str | None = None) -> None:
-        super().__init__(target=target, description=description)
-        self.new_name = new_name
+
+@base_class
+class FileRenameOperation(AbstractFileManipulationOperation):
+    new_name: str = public_field(
+        description="The new name",
+        default=False,
+    )
 
     @classmethod
     def get_scope(cls) -> Scope:
@@ -25,10 +29,10 @@ class FileRenameOperation(FileManipulationOperationMixin, AbstractOperation):
 
     def apply(self) -> None:
         self._backup_target_file()
-        
+
         old_path = self._original_path
         new_path = old_path.parent / self.new_name
-        
+
         os.rename(old_path, new_path)
 
     def undo(self) -> None:

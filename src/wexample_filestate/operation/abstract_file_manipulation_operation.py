@@ -3,28 +3,22 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_helpers.const.types import PathOrString
+from wexample_helpers.classes.private_field import private_field
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_helpers.const.types import PathOrString
 
 
-class FileManipulationOperationMixin(AbstractOperation):
-    _original_file_content: str = ""
-    _original_file_mode: int
-    _original_path: PathOrString
-
-    @staticmethod
-    def option_should_exist_is_true(target: TargetFileOrDirectoryType) -> bool:
-        from wexample_filestate.option.should_exist_option import (
-            ShouldExistOption,
-        )
-
-        return target.get_option_value(ShouldExistOption, default=True).is_true()
+from wexample_helpers.decorator.base_class import base_class
+@base_class
+class AbstractFileManipulationOperation(AbstractOperation):
+    _original_file_content: str = private_field(description="Cached original file content for undo")
+    _original_file_mode: int = private_field(description="Cached original file mode for undo")
+    _original_path: PathOrString = private_field(description="Cached original file path for undo")
 
     def _backup_file_content(
-        self, target: TargetFileOrDirectoryType, file_path: PathOrString
+            self, target: TargetFileOrDirectoryType, file_path: PathOrString
     ) -> bool:
         import os
 
@@ -38,10 +32,10 @@ class FileManipulationOperationMixin(AbstractOperation):
 
         # Save content if not too large.
         if size < int(
-            target.get_option_value(
-                RemoveBackupMaxFileSizeOption,
-                default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
-            ).get_int()
+                target.get_option_value(
+                    RemoveBackupMaxFileSizeOption,
+                    default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
+                ).get_int()
         ):
             self._original_file_content = file_read(file_path)
 

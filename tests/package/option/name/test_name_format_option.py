@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 class TestNameFormatOptionCaseFormat(AbstractTestOperation):
     """Test NameFormatOption with case format validation."""
-
     test_name: str = "TestFile.txt"
 
 

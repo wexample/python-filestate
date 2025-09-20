@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
+from wexample_filestate.operation.abstract_file_manipulation_operation import (
+    AbstractFileManipulationOperation,
 )
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.private_field import private_field
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class AbstractExistingFileOperation(FileManipulationOperationMixin, AbstractOperation):
+class AbstractExistingFileOperation(AbstractFileManipulationOperation):
     """Base class for operations that require the target to be an existing file on disk.
 
     This class only abstracts the existence check (no extension or name check).
