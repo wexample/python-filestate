@@ -21,32 +21,32 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         return Union[str, int, dict, ModeConfigValue]
 
     def get_octal(self) -> str:
-        from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
-        return self.get_value().get_dict().get(PermissionsConfigOption.get_name())
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
+        return self.get_value().get_dict().get(PermissionsOption.get_name())
 
     def prepare_value(self, raw_value: Any) -> Any:
-        from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
 
         # Always work with a dict.
         if isinstance(raw_value, str) or isinstance(raw_value, int):
             raw_value = {
-                PermissionsConfigOption.get_name(): str(raw_value)
+                PermissionsOption.get_name(): str(raw_value)
             }
 
         return super().prepare_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
-        from wexample_filestate.config_option.permissions_config_option import PermissionsConfigOption
+        from wexample_filestate.option.mode.recursive_option import RecursiveOption
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
 
         return [
-            PermissionsConfigOption,
-            RecursiveConfigOption,
+            PermissionsOption,
+            RecursiveOption,
         ]
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         from wexample_helpers.helpers.file import file_mode_octal_to_num
-        from wexample_filestate.config_option.recursive_config_option import RecursiveConfigOption
+        from wexample_filestate.option.mode.recursive_option import RecursiveOption
         from wexample_filestate.operation.file_change_mode_operation import FileChangeModeOperation
 
         """Create ItemChangeModeOperation if current mode differs from target mode."""
@@ -77,7 +77,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
                 option=self,
                 target=target,
                 target_mode=target_mode,
-                recursive=self.get_option_value(RecursiveConfigOption, default=False).is_true(),
+                recursive=self.get_option_value(RecursiveOption, default=False).is_true(),
                 description=f"Update file permissions from {current_octal} to {target_octal}"
             )
 
