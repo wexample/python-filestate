@@ -20,14 +20,28 @@ class AbstractStateManagerTest(ABC):
     state_manager: FileStateManager
 
     def setup_method(self) -> None:
+        # State manager will be initialized in _setup_with_tmp_path
+        pass
+
+    def _setup_with_tmp_path(self, tmp_path) -> None:
         from wexample_filestate.file_state_manager import FileStateManager
         from wexample_prompt.common.io_manager import IoManager
+        import shutil
+
+        # Copy test data from resources to tmp_path
+        resources_path = self._get_test_state_manager_path()
+        if resources_path.exists():
+            for item in resources_path.iterdir():
+                if item.is_file():
+                    shutil.copy2(item, tmp_path)
+                elif item.is_dir():
+                    shutil.copytree(item, tmp_path / item.name)
 
         self.state_manager = cast(
             FileStateManager,
             self._get_test_manager_class().create_from_path(
                 io=IoManager(),
-                path=self._get_test_state_manager_path(),
+                path=tmp_path,
                 options_providers=self._get_test_options_providers(),
                 operations_providers=self._get_test_operations_providers(),
             ),

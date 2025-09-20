@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 
 
 class AbstractTestOperation(AbstractStateManagerTest, ABC):
-    def test_apply(self) -> None:
+    def test_apply(self, tmp_path) -> None:
+        self._setup_with_tmp_path(tmp_path)
         self._operation_test_setup()
         self._operation_test_assert_initial()
         self._operation_test_dry_run()
