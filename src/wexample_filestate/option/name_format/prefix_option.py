@@ -16,3 +16,13 @@ class PrefixOption(AbstractNameFormatChildOption):
             
         prefix = self.get_value().get_str()
         return name.startswith(prefix)
+
+    def apply_correction(self, name: str) -> str:
+        """Apply prefix correction to name."""
+        if self.get_value().is_none():
+            return name
+            
+        prefix = self.get_value().get_str()
+        if not name.startswith(prefix):
+            return prefix + name
+        return name

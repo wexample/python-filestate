@@ -16,3 +16,13 @@ class SuffixOption(AbstractNameFormatChildOption):
             
         suffix = self.get_value().get_str()
         return name.endswith(suffix)
+
+    def apply_correction(self, name: str) -> str:
+        """Apply suffix correction to name."""
+        if self.get_value().is_none():
+            return name
+            
+        suffix = self.get_value().get_str()
+        if not name.endswith(suffix):
+            return name + suffix
+        return name

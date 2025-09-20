@@ -18,3 +18,9 @@ class RegexOption(AbstractNameFormatChildOption):
             
         regex_pattern = self.get_value().get_str()
         return re.match(regex_pattern, name) is not None
+
+    def apply_correction(self, name: str) -> str:
+        """Apply regex correction to name (no automatic correction possible)."""
+        # Regex patterns can't be automatically corrected, return name as-is
+        # This would require domain-specific logic or user intervention
+        return name

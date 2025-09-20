@@ -36,8 +36,16 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
                 description=f"Delete file with invalid name format: {current_name}"
             )
         elif action == "rename":
-            # TODO: Implement rename logic based on format rules
-            # For now, just log that rename would happen
+            # Generate new name based on format rules
+            new_name = self._generate_corrected_name(current_name, parent_option)
+            if new_name and new_name != current_name:
+                from wexample_filestate.operation.file_rename_operation import FileRenameOperation
+                return FileRenameOperation(
+                    option=self,
+                    target=target,
+                    new_name=new_name,
+                    description=f"Rename file from '{current_name}' to '{new_name}' to match format rules"
+                )
             return None
         elif action == "error":
             from wexample_filestate.exception.name_format_exception import NameFormatException
@@ -45,3 +53,30 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         # "ignore" action returns None (no operation)
 
         return None
+
+    def _generate_corrected_name(self, current_name: str, parent_option) -> str | None:
+        """Generate a corrected name based on format rules using child options."""
+        from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
+        from wexample_filestate.option.name_format.prefix_option import PrefixOption
+        from wexample_filestate.option.name_format.suffix_option import SuffixOption
+        from wexample_filestate.option.name_format.regex_option import RegexOption
+        import os
+        
+        if not parent_option:
+            return None
+            
+        # Split name and extension
+        name_part, ext = os.path.splitext(current_name)
+        corrected_name = name_part
+        
+        # Apply corrections in order: case format, prefix, suffix
+        # Each child option handles its own correction logic
+        for option_class in [CaseFormatOption, PrefixOption, SuffixOption]:
+            option = parent_option.get_option(option_class)
+            if option:
+                corrected_name = option.apply_correction(corrected_name)
+        
+        # Note: RegexOption doesn't provide automatic correction
+        
+        # Reconstruct full name with extension
+        return corrected_name + ext
