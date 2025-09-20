@@ -44,9 +44,7 @@ class TestContentOptionNested(AbstractTestOperation):
                     "name": TEST_FILE_NAME_SIMPLE_TEXT,
                     "should_exist": True,
                     "type": DiskItemType.FILE,
-                    "content": {
-                        "text": self.test_content
-                    },
+                    "content": self.test_content,
                 }
             ]
         }

@@ -28,9 +28,14 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
 
     def _dry_run_and_count_operations(self) -> FileStateDryRunResult:
         result = self.state_manager.dry_run()
-        assert len(result.operations) == 1  # Single Operation Per Pass
+        operations_count = len(result.operations)
+        expected_count = self._operation_get_count()
+        assert operations_count == expected_count, f"Expected {expected_count} operation(s) but found {operations_count}"
         return result
 
+    def _operation_get_count(self) -> int:
+        """Override this method if your test expects more than 1 operation."""
+        return 1
 
     def _operation_test_apply(self) -> None:
         self.state_manager.apply()
@@ -47,7 +52,14 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
         self._operation_test_assert_initial()
 
     def _operation_test_dry_run(self) -> None:
-        self._dry_run_and_count_operations()
+        expected_count = self._operation_get_count()
+        if expected_count > 0:
+            self._dry_run_and_count_operations()
+        else:
+            # For tests expecting 0 operations, just verify no operations are created
+            result = self.state_manager.dry_run()
+            operations_count = len(result.operations)
+            assert operations_count == 0, f"Expected 0 operations but found {operations_count}"
 
     def _operation_test_rollback(self) -> None:
         self.state_manager.rollback()

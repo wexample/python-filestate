@@ -8,6 +8,9 @@ class TestShouldExistOptionCreate(AbstractTestOperation):
     missing_dir_name: str = "simple-directory-missing"
     missing_file_name: str = "simple-text-missing.txt"
 
+    def _operation_get_count(self) -> int:
+        return 2  # Creates directory + file
+
 
     def _operation_test_assert_applied(self) -> None:
         target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)

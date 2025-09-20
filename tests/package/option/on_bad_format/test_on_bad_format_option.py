@@ -81,7 +81,10 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
 class TestOnBadFormatOptionIgnore(AbstractTestOperation):
     """Test OnBadFormatOption with ignore action."""
 
-    test_name: str = "INVALID_case.txt" 
+    test_name: str = "INVALID_case.txt"
+
+    def _operation_get_count(self) -> int:
+        return 0  # No operations should be created for ignore action 
 
 
     def _operation_test_assert_applied(self) -> None:
