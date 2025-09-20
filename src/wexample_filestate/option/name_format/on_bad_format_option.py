@@ -21,12 +21,24 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         return "Action to take when name format validation fails (delete, rename, ignore, error)"
 
     def create_required_operation(
-            self, target: TargetFileOrDirectoryType, parent_option=None
+        self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
+        """Create operation based on the action when format validation fails."""
+        # Get parent NameOption that contains the format rules
+        parent_option = self.get_parent()
+        if not parent_option:
+            return None
+            
+        # Get the current name
+        current_name = target.get_item_name()
+        
+        # Validate name using parent NameOption
+        if parent_option.validate_name(current_name):
+            return None  # Name is valid, no action needed
+            
         # Name is invalid, take action based on configuration
         action = self.get_value().get_str()
-        current_name = target.get_item_name()
-
+        
         if action == "delete":
             from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
 
@@ -37,7 +49,7 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
             )
         elif action == "rename":
             # Generate new name based on format rules
-            new_name = self._generate_corrected_name(current_name, parent_option)
+            new_name = self._generate_corrected_name(current_name)
             if new_name and new_name != current_name:
                 from wexample_filestate.operation.file_rename_operation import FileRenameOperation
                 return FileRenameOperation(
@@ -54,7 +66,7 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
 
         return None
 
-    def _generate_corrected_name(self, current_name: str, parent_option) -> str | None:
+    def _generate_corrected_name(self, current_name: str) -> str | None:
         """Generate a corrected name based on format rules using child options."""
         from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
         from wexample_filestate.option.name_format.prefix_option import PrefixOption
@@ -62,6 +74,8 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         from wexample_filestate.option.name_format.regex_option import RegexOption
         import os
         
+        # Get parent NameOption that contains the format rules
+        parent_option = self.get_parent()
         if not parent_option:
             return None
             
