@@ -26,15 +26,13 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         return Union[list[str], dict, StringKeysDict, TextConfigValue]
 
     def set_value(self, raw_value: Any) -> None:
-        from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.option.text.end_new_line_option import (
-            EndNewLineOption,
-        )
-
         # Convert list form to dict form for consistency
         if isinstance(raw_value, list):
+            from wexample_filestate.option.text.trim_option import TrimOption
+            from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
+            
             raw_value = {
-                TrimConfigOption.get_name(): "trim" in raw_value,
+                TrimOption.get_name(): "trim" in raw_value,
                 EndNewLineOption.get_name(): "ensure_newline" in raw_value
                                              or "end_new_line" in raw_value,
             }
@@ -42,13 +40,11 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         super().set_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.option.text.end_new_line_option import (
-            EndNewLineOption,
-        )
+        from wexample_filestate.option.text.trim_option import TrimOption
+        from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
 
         return [
-            TrimConfigOption,
+            TrimOption,
             EndNewLineOption,
         ]
 
@@ -62,24 +58,3 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         """Create FileWriteOperation if text processing is needed."""
 
         return self._create_child_required_operation(target=target)
-
-        # Check end_new_line second
-        end_new_line_option = self.get_option(EndNewLineConfigOption)
-        if end_new_line_option:
-            if end_new_line_option.get_value().is_true():
-                if not current_content.endswith("\n"):
-                    updated_content = current_content + "\n"
-                    return FileWriteOperation(
-                        option=self,
-                        target=target,
-                        content=updated_content,
-                        description=end_new_line_option.get_description(),
-                    )
-
-        return None
-
-    def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
-        """Read current file content, return None if file doesn't exist."""
-        if not target.source or not target.source.get_path().exists():
-            return None
-        return target.get_local_file().read() or ""
