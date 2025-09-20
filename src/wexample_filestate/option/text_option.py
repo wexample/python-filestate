@@ -27,29 +27,29 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
 
     def set_value(self, raw_value: Any) -> None:
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import (
-            EndNewLineConfigOption,
+        from wexample_filestate.option.text.end_new_line_option import (
+            EndNewLineOption,
         )
 
         # Convert list form to dict form for consistency
         if isinstance(raw_value, list):
             raw_value = {
                 TrimConfigOption.get_name(): "trim" in raw_value,
-                EndNewLineConfigOption.get_name(): "ensure_newline" in raw_value
-                or "end_new_line" in raw_value,
+                EndNewLineOption.get_name(): "ensure_newline" in raw_value
+                                             or "end_new_line" in raw_value,
             }
 
         super().set_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import (
-            EndNewLineConfigOption,
+        from wexample_filestate.option.text.end_new_line_option import (
+            EndNewLineOption,
         )
 
         return [
             TrimConfigOption,
-            EndNewLineConfigOption,
+            EndNewLineOption,
         ]
 
     @abstract_method
@@ -60,29 +60,8 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         """Create FileWriteOperation if text processing is needed."""
-        from wexample_filestate.config_option.trim_config_option import TrimConfigOption
-        from wexample_filestate.config_option.end_new_line_config_option import (
-            EndNewLineConfigOption,
-        )
-        from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
-        # Get current content
-        current_content = self._read_current_content(target)
-        if current_content is None:
-            return None  # No content to process
-
-        # Check trim first
-        trim_option = self.get_option(TrimConfigOption)
-        if trim_option:
-            if trim_option.get_value().is_true():
-                updated_content = current_content.strip()
-                if updated_content != current_content:
-                    return FileWriteOperation(
-                        option=self,
-                        target=target,
-                        content=updated_content,
-                        description=trim_option.get_description(),
-                    )
+        return self._create_child_required_operation(target=target)
 
         # Check end_new_line second
         end_new_line_option = self.get_option(EndNewLineConfigOption)
