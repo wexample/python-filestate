@@ -13,8 +13,6 @@ class TestNameFormatOptionCaseFormat(AbstractTestOperation):
 
     test_name: str = "TestFile.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
 
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists
@@ -47,9 +45,6 @@ class TestNameFormatOptionRegex(AbstractTestOperation):
 
     test_name: str = "valid123.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists
         file_path = self._get_absolute_path_from_state_manager(self.test_name)
@@ -80,9 +75,6 @@ class TestNameFormatOptionPrefixSuffix(AbstractTestOperation):
     """Test NameFormatOption with prefix and suffix validation."""
 
     test_name: str = "prefix_test_suffix.txt"
-
-    def _operation_get_count(self) -> int:
-        return 1
 
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists

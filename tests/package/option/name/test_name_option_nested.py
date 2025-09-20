@@ -12,9 +12,6 @@ class TestNameOptionNested(AbstractTestOperation):
     """Test NameOption with nested dict format."""
     test_name: str = "nested-file.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists with the correct name
         file_path = self._get_absolute_path_from_state_manager(self.test_name)

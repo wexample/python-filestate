@@ -14,9 +14,6 @@ class TestContentOptionUniqueLines(AbstractTestOperation):
     test_content: str = "apple\nbanana\napple\ncherry\nbanana"
     expected_content: str = "apple\nbanana\ncherry"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 

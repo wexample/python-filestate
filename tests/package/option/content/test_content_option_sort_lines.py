@@ -13,9 +13,6 @@ class TestContentOptionSortLines(AbstractTestOperation):
     test_content: str = "zebra\napple\nbanana"
     expected_content: str = "apple\nbanana\nzebra"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 

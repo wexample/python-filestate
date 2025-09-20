@@ -12,9 +12,6 @@ if TYPE_CHECKING:
 class TestFileCreateReadmeOperation(AbstractTestOperation):
     missing_file_name: str = "simple-readme.md"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
         assert (

@@ -13,9 +13,6 @@ class TestNameOptionCallable(AbstractTestOperation):
 
     expected_name: str = "dynamic-name.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists with the dynamically generated name
         file_path = self._get_absolute_path_from_state_manager(self.expected_name)

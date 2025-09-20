@@ -15,9 +15,6 @@ class TestShouldNotContainLinesOption(AbstractTestOperation):
     forbidden_lines: list = ["Forbidden line 1", "Forbidden line 2"]
     test_file_name: str = "test-should-not-contain-lines.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
 

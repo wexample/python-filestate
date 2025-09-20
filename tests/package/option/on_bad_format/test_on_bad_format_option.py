@@ -13,9 +13,6 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
 
     test_name: str = "INVALID_case.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1  # Only delete operation (file creation is handled by should_exist)
-
     def _operation_test_assert_applied(self) -> None:
         # Verify the file was deleted due to invalid format
         file_path = self._get_absolute_path_from_state_manager(self.test_name)
@@ -47,9 +44,6 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
     expected_name: str = "invalid_case.txt"
 
     test_name: str = "INVALID_case.txt"
-
-    def _operation_get_count(self) -> int:
-        return 1  # Only rename operation (file creation is handled by should_exist)
 
     def _operation_test_assert_applied(self) -> None:
         # Verify the file was renamed to correct format

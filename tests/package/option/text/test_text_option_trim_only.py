@@ -12,9 +12,6 @@ class TestTextOptionTrimOnly(AbstractTestOperation):
     initial_content: str = "  Initial content  "
     test_file_name: str = "test-text-trim-only.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
 

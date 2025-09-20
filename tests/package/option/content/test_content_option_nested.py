@@ -12,9 +12,6 @@ class TestContentOptionNested(AbstractTestOperation):
     """Test ContentOption with nested dict structure."""
     test_content: str = "NESTED_CONTENT"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
 

@@ -13,9 +13,6 @@ class TestShouldContainLinesOption(AbstractTestOperation):
     required_lines: list = ["Required line 1", "Required line 2"]
     test_file_name: str = "test-should-contain-lines.txt"
 
-    def _operation_get_count(self) -> int:
-        return 1
-
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
 
