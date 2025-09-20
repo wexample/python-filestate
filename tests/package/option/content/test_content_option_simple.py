@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 
 class TestContentOptionSimple(AbstractTestOperation):
-    """Test ContentOption with simple string content."""
-    test_content: str = "SIMPLE_CONTENT"
+    """Test ContentOption - simple content writing."""
+    test_content: str = "Simple content for testing"
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
