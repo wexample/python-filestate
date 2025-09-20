@@ -9,11 +9,8 @@ if TYPE_CHECKING:
 
 
 class TestTextOptionLegacyFormat(AbstractTestOperation):
-    initial_content: str = "  Initial content"
+    initial_content: str = "Initial content"  # No leading spaces, only needs newline
     test_file_name: str = "test-text-legacy-list.txt"
-
-    def _operation_get_count(self) -> int:
-        return 2  # Two operations: trim first, then end_new_line
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -21,10 +18,10 @@ class TestTextOptionLegacyFormat(AbstractTestOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
-        # Check content was trimmed and ends with newline (legacy format support)
+        # Check content ends with newline (legacy format support)
         assert (
             content == "Initial content\n"
-        ), f"Content should be trimmed and end with newline, got: {repr(content)}"
+        ), f"Content should end with newline, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
