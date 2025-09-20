@@ -1,1 +1,6 @@
-Hi
+zebra
+apple
+banana
+apple
+cherry
+banana
