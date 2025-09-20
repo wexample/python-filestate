@@ -65,9 +65,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.yaml_option import (
             YamlOption,
         )
-        from wexample_filestate.option.name_format_option import (
-            NameFormatOption,
-        )
         from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
 
         return [
@@ -90,6 +87,5 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             TextOption,
             TypeOption,
             YamlOption,
-            NameFormatOption,
             OnBadFormatOption,
         ]

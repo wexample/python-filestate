@@ -12,7 +12,6 @@ class TestNameFormatOptionCaseFormat(AbstractTestOperation):
     """Test NameFormatOption with case format validation."""
     test_name: str = "TestFile.txt"
 
-
     def _operation_test_assert_applied(self) -> None:
         # Verify the file exists
         file_path = self._get_absolute_path_from_state_manager(self.test_name)
@@ -29,11 +28,10 @@ class TestNameFormatOptionCaseFormat(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {"value": self.test_name, "case_format": "lowercase"},
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"case_format": "lowercase"},
                 }
             ]
         }
@@ -60,11 +58,10 @@ class TestNameFormatOptionRegex(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {"value": self.test_name, "regex": r"^[a-z]+\d+\.txt$"},
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"regex": r"^[a-z]+\d+\.txt$"},
                 }
             ]
         }
@@ -91,11 +88,10 @@ class TestNameFormatOptionPrefixSuffix(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {"value": self.test_name, "prefix": "prefix_", "suffix": "_suffix.txt"},
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"prefix": "prefix_", "suffix": "_suffix.txt"},
                 }
             ]
         }
