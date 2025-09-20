@@ -78,11 +78,15 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create operation via OnBadFormatOption if name format validation fails."""
         from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
-        
-        # Check if OnBadFormatOption is configured
-        on_bad_format_option = self.get_option(OnBadFormatOption)
-        if on_bad_format_option:
-            return on_bad_format_option.create_required_operation(target, parent_option=self)
+
+        # Get the current name
+        current_name = target.get_item_name()
+        # Validate name using parent NameFormatOption
+        if not self.validate_name(current_name):
+            # Check if OnBadFormatOption is configured
+            on_bad_format_option = self.get_option(OnBadFormatOption)
+            if on_bad_format_option:
+                return on_bad_format_option.create_required_operation(target)
         
         return None
 

@@ -16,29 +16,20 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return str
-    
+
     def get_description(self) -> str:
         return "Action to take when name format validation fails (delete, rename, ignore, error)"
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType, parent_option=None
+            self, target: TargetFileOrDirectoryType, parent_option=None
     ) -> AbstractOperation | None:
-        """Create operation based on the action when format validation fails."""
-        if not parent_option:
-            return None
-            
-        # Get the current name
-        current_name = target.get_name()
-        
-        # Validate name using parent NameFormatOption
-        if parent_option.validate_name(current_name):
-            return None  # Name is valid, no action needed
-            
         # Name is invalid, take action based on configuration
         action = self.get_value().get_str()
-        
+        current_name = target.get_item_name()
+
         if action == "delete":
             from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+
             return FileRemoveOperation(
                 option=self,
                 target=target,
@@ -52,5 +43,5 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
             from wexample_filestate.exception.name_format_exception import NameFormatException
             raise NameFormatException(f"File name '{current_name}' does not match required format")
         # "ignore" action returns None (no operation)
-        
+
         return None
