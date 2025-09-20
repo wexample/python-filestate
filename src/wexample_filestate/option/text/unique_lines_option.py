@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.option.content.abstract_content_child_option import AbstractContentChildOption
+from wexample_filestate.option.text.abstract_text_child_option import AbstractTextChildOption
 from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
-class UniqueLinesOption(AbstractContentChildOption):
+class UniqueLinesOption(AbstractTextChildOption):
     def get_description(self) -> str:
         return "Remove duplicate lines from file content"
 
@@ -17,10 +17,9 @@ class UniqueLinesOption(AbstractContentChildOption):
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
         if self.get_value().is_true():
-            base_content = self._get_base_content(target)
-            if base_content is not None:
-                unique_content = self._unique_lines_content(base_content)
-                current_content = self._read_current_content(target) or ""
+            current_content = self._read_current_content(target)
+            if current_content is not None:
+                unique_content = self._unique_lines_content(current_content)
                 
                 if unique_content != current_content:
                     return FileWriteOperation(

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
@@ -13,36 +12,40 @@ if TYPE_CHECKING:
 
 
 @base_class
-class ContentOption(OptionMixin, AbstractNestedConfigOption):
+class ContentOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_filestate.config_value.content_config_value import ContentConfigValue
-        from wexample_helpers.const.types import StringKeysDict
+        return str
 
-        return Union[str, dict, StringKeysDict, ContentConfigValue]
-
-    def set_value(self, raw_value: Any) -> None:
-        from wexample_filestate.option.content.value_option import ValueOption
-        
-        # Convert string form to dict form for consistency
-        if isinstance(raw_value, str):
-            raw_value = {
-                ValueOption.get_name(): raw_value
-            }
-        
-        super().set_value(raw_value=raw_value)
-
-    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.option.content.value_option import ValueOption
-        from wexample_filestate.option.content.sort_lines_option import SortLinesOption
-        from wexample_filestate.option.content.unique_lines_option import UniqueLinesOption
-
-        return [
-            ValueOption,
-            SortLinesOption,
-            UniqueLinesOption,
-        ]
+    def get_description(self) -> str:
+        return "Set file content to the specified value"
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
-        """Create operation using child options."""
-        return self._create_child_required_operation(target=target)
+        """Create FileWriteOperation if content is different."""
+        from wexample_filestate.operation.file_write_operation import FileWriteOperation
+
+        if not self.get_value().is_none():
+            target_content = self.get_value().get_str()
+            if target_content is not None:
+                # Apply any class-level content transformations
+                target_content = target.preview_write(content=target_content)
+                
+                # Get current content
+                current_content = self._read_current_content(target) or ""
+                
+                # If content is different, create operation
+                if target_content != current_content:
+                    return FileWriteOperation(
+                        option=self,
+                        target=target,
+                        content=target_content,
+                        description=self.get_description(),
+                    )
+
+        return None
+
+    def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
+        """Read current file content, return None if file doesn't exist."""
+        if not target.source or not target.source.get_path().exists():
+            return None
+        return target.get_local_file().read()
