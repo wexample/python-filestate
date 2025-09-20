@@ -33,7 +33,7 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
                     "type": DiskItemType.FILE,
                     "content": "test content",
                     "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": {"action": "delete"},
+                    "on_bad_format": "delete",
                 }
             ]
         }
@@ -68,7 +68,7 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
                     "type": DiskItemType.FILE,
                     "content": "test content",
                     "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": {"action": "rename"},
+                    "on_bad_format": "rename",
                 }
             ]
         }
@@ -102,7 +102,7 @@ class TestOnBadFormatOptionIgnore(AbstractTestOperation):
                     "type": DiskItemType.FILE,
                     "content": "test content",
                     "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": {"action": "ignore"},
+                    "on_bad_format": "ignore",
                 }
             ]
         }
