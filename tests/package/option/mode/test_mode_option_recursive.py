@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from tests.package.option.mode.test_mode_option import TestItemChangeModeOperation
 
+from wexample_filestate.option.mode.permissions_option import PermissionsOption
+from wexample_filestate.option.mode.recursive_option import RecursiveOption
 from wexample_filestate.option.mode_option import ModeOption
 from wexample_filestate.option.name_option import NameOption
 
@@ -30,20 +32,14 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
-        from wexample_filestate.config_option.permissions_config_option import (
-            PermissionsConfigOption,
-        )
-        from wexample_filestate.config_option.recursive_config_option import (
-            RecursiveConfigOption,
-        )
 
         return {
             "children": [
                 {
                     NameOption.get_name(): TEST_DIR_NAME_RECURSIVE,
                     ModeOption.get_name(): {
-                        PermissionsConfigOption.get_name(): "755",
-                        RecursiveConfigOption.get_name(): True,
+                        PermissionsOption.get_name(): "755",
+                        RecursiveOption.get_name(): True,
                     },
                 },
             ]
