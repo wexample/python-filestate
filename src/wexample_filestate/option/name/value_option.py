@@ -7,7 +7,7 @@ from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
-class ValueConfigOption(AbstractConfigOption):
+class ValueOption(AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return str
