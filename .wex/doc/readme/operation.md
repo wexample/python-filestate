@@ -1,55 +1,4 @@
-# Options and Operations
-
-## What are Options?
-
-Options are configuration properties that define the desired state of files and directories. When you write a filestate configuration, you're primarily working with options:
-
-```yaml
-{
-    "name": "my_file.txt",
-    "should_exist": true,
-    "type": "file",
-    "content": "Hello World",
-    "mode": "644",
-    "text": {
-        "trim": true,
-        "end_new_line": true
-    }
-}
-```
-
-Each key in your configuration corresponds to an option class:
-- `name` → `NameOption`
-- `should_exist` → `ShouldExistOption`
-- `content` → `ContentOption`
-- `mode` → `ModeOption`
-- `text` → `TextOption`
-
-## Option Types
-
-### Simple Options
-Accept a single value:
-```yaml
-"name": "file.txt"
-"should_exist": true
-"mode": "755"
-```
-
-### Nested Options
-Accept structured configuration with multiple sub-options:
-```yaml
-"content": {
-    "text": "file content",
-    "sort_lines": true,
-    "unique_lines": true
-}
-
-"name_format": {
-    "case_format": "lowercase",
-    "prefix": "test_",
-    "regex": "^test_.*\\.txt$"
-}
-```
+# Operations
 
 ## How Options Create Operations
 
@@ -78,20 +27,7 @@ Options don't just store configuration - they actively analyze the current state
 4. Creates `FileWriteOperation` with sorted content
 5. Operation executes, writing the sorted content to file
 
-## Option Architecture
-
-### Configuration Processing
-Options handle multiple input formats and convert them to a standardized internal representation:
-
-```python
-# String input
-raw_value = "my_file.txt"
-
-# Converted internally to
-raw_value = {
-    "value": "my_file.txt"
-}
-```
+## Operation Execution Model
 
 ### Single Operation Per Pass
 Each option can only return **one operation per execution pass**. This means complex scenarios require multiple passes:
@@ -113,3 +49,17 @@ Options only create operations when changes are actually needed:
 - File has wrong permissions → Create `ItemChangeModeOperation`
 
 This design ensures efficiency and idempotency - running the same configuration multiple times produces the same result without unnecessary work.
+
+## Operation Simplification
+
+### Generic Operations
+Options create generic operations (`FileWriteOperation`, `ItemChangeModeOperation`) instead of specialized ones, making the system more maintainable.
+
+**Before**: Many specialized operations like `ContentLinesSortOperation`, `ContentLinesUniqueOperation`, `ContentTrimOperation`
+**After**: Single generic `FileWriteOperation` with options handling the logic
+
+### Operation Lifecycle
+1. **Creation**: Option analyzes state and creates operation if needed
+2. **Validation**: Operation validates it can be executed
+3. **Execution**: Operation performs the actual filesystem changes
+4. **Rollback**: Operation can undo changes if needed
