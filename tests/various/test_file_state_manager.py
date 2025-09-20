@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
@@ -50,7 +51,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         )
 
         assert self.state_manager.dump() == {
-            "name": "resources",
+            "name": self._get_parent_dir(),
             "children": [{"name": "simple-text.txt", "type": "file"}],
         }
 
@@ -58,6 +59,7 @@ class TestFileStateManager(AbstractStateManagerTest):
 
     def test_configure_from_callback(self, tmp_path) -> None:
         self._setup_with_tmp_path(tmp_path)
+
         def _name(option: ItemTreeConfigOptionMixin) -> str:
             return "yes"
 
@@ -120,7 +122,7 @@ class TestFileStateManager(AbstractStateManagerTest):
         dump = self.state_manager.dump()
 
         assert dump == {
-            "name": "resources",
+            "name": self._get_parent_dir(),
             "children": [{"name": "simple-text.txt", "type": "file"}],
         }
         assert isinstance(dump, dict)
@@ -128,3 +130,6 @@ class TestFileStateManager(AbstractStateManagerTest):
     def test_setup(self, tmp_path) -> None:
         self._setup_with_tmp_path(tmp_path)
         assert self.state_manager is not None
+
+    def _get_parent_dir(self) -> str:
+        return self.state_manager.get_path().name
