@@ -8,11 +8,11 @@ if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
 
 
-class TestTextOptionSortUnique(AbstractTestOperation):
-    """Test TextOption with sort_lines and unique_lines on existing file."""
-    initial_content: str = "zebra\napple\nbanana\napple\ncherry\nbanana"
-    expected_content: str = "apple\nbanana\ncherry\nzebra"
-    test_file_name: str = "test-text-sort-unique.txt"
+class TestTextOptionSortLines(AbstractTestOperation):
+    """Test TextOption with sort_lines only."""
+    initial_content: str = "zebra\napple\nbanana\napple\ncherry\nbanana\n"
+    expected_content: str = "apple\napple\nbanana\nbanana\ncherry\nzebra\n"
+    test_file_name: str = "test-text-sort-lines.txt"
 
     def _operation_test_assert_applied(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -20,7 +20,7 @@ class TestTextOptionSortUnique(AbstractTestOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
-        assert content == self.expected_content, f"Expected sorted and unique content, got: {repr(content)}"
+        assert content == self.expected_content, f"Expected sorted content, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -41,7 +41,6 @@ class TestTextOptionSortUnique(AbstractTestOperation):
                     "type": DiskItemType.FILE,
                     "text": {
                         "sort_lines": True,
-                        "unique_lines": True,
                     },
                 }
             ]
