@@ -28,12 +28,14 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {
+                        "value": self.test_name,
+                        "case_format": "lowercase",
+                        "on_bad_format": "delete",
+                    },
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": "delete",
                 }
             ]
         }
@@ -63,12 +65,14 @@ class TestOnBadFormatOptionRename(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {
+                        "value": self.test_name,
+                        "case_format": "lowercase",
+                        "on_bad_format": "rename",
+                    },
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": "rename",
                 }
             ]
         }
@@ -97,12 +101,14 @@ class TestOnBadFormatOptionIgnore(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": self.test_name,
+                    "name": {
+                        "value": self.test_name,
+                        "case_format": "lowercase",
+                        "on_bad_format": "ignore",
+                    },
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",
-                    "name_format": {"case_format": "lowercase"},
-                    "on_bad_format": "ignore",
                 }
             ]
         }
