@@ -5,9 +5,9 @@ from typing import Any
 from pydantic import ConfigDict
 
 from wexample_config.config_value.config_value import ConfigValue
-from wexample_filestate.config_option.text_config_option import TextConfigOption
 from wexample_filestate.config_option.sort_lines_config_option import SortLinesConfigOption
 from wexample_filestate.config_option.unique_lines_config_option import UniqueLinesConfigOption
+from wexample_filestate.option.content.value_option import ValueOption
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
@@ -32,7 +32,7 @@ class ContentConfigValue(ConfigValue):
 
     def to_option_raw_value(self) -> ConfigDict:
         return {
-            TextConfigOption.get_name(): self.text,
+            ValueOption.get_name(): self.text,
             SortLinesConfigOption.get_name(): self.sort_lines,
             UniqueLinesConfigOption.get_name(): self.unique_lines,
         }
