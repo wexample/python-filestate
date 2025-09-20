@@ -36,9 +36,19 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.config_option.value_config_option import ValueConfigOption
+        from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
+        from wexample_filestate.option.name_format.regex_option import RegexOption
+        from wexample_filestate.option.name_format.prefix_option import PrefixOption
+        from wexample_filestate.option.name_format.suffix_option import SuffixOption
+        from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
 
         return [
             ValueConfigOption,
+            CaseFormatOption,
+            RegexOption,
+            PrefixOption,
+            SuffixOption,
+            OnBadFormatOption,
         ]
 
     def get_name_value(self) -> str | None:
