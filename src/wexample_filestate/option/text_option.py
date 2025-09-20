@@ -85,9 +85,9 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
                     )
 
         # Check end_new_line second
-        end_new_line_option = self.get_option(TrimConfigOption)
+        end_new_line_option = self.get_option(EndNewLineConfigOption)
         if end_new_line_option:
-            if end_new_line_option.is_true():
+            if end_new_line_option.get_value().is_true():
                 if not current_content.endswith("\n"):
                     updated_content = current_content + "\n"
                     return FileWriteOperation(
