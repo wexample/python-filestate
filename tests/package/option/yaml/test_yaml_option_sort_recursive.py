@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.config_option.sort_recursive_config_option import (
-    SortRecursiveConfigOption,
-)
+from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.option.name_option import NameOption
 from wexample_filestate.option.yaml_option import YamlOption
@@ -29,7 +27,7 @@ class TestYamlSortRecursiveOperation(AbstractTestOperation):
             "children": [
                 {
                     NameOption.get_name(): "unsorted.yml",
-                    YamlOption.get_name(): {SortRecursiveConfigOption.get_name(): True},
+                    YamlOption.get_name(): {SortRecursiveOption.get_name(): True},
                 },
             ]
         }
