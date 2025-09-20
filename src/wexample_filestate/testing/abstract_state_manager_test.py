@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class AbstractStateManagerTest(ABC):
     state_manager: FileStateManager
 
-    def setup_method(self) -> None:
+    def _setup_state_manager(self, datadir) -> None:
         from wexample_filestate.file_state_manager import FileStateManager
         from wexample_prompt.common.io_manager import IoManager
 
@@ -27,7 +27,7 @@ class AbstractStateManagerTest(ABC):
             FileStateManager,
             self._get_test_manager_class().create_from_path(
                 io=IoManager(),
-                path=self._get_test_state_manager_path(),
+                path=datadir,
                 options_providers=self._get_test_options_providers(),
                 operations_providers=self._get_test_operations_providers(),
             ),
@@ -58,7 +58,7 @@ class AbstractStateManagerTest(ABC):
         self._assert_dir_exists(target.get_path(), positive=positive)
 
     def _get_absolute_path_from_state_manager(self, relative: str) -> Path:
-        return self._get_test_state_manager_path() / relative
+        return self.state_manager.get_path() / relative
 
     def _get_package_root_path(self) -> str:
         return f"{os.path.abspath(os.curdir)}{os.sep}"
@@ -78,5 +78,3 @@ class AbstractStateManagerTest(ABC):
     ) -> list[type[AbstractOptionsProvider]] | None:
         return None
 
-    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> Path:
-        return Path(package_root_path or self._get_package_root_path()) / "tests" / "resources"
