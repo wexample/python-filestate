@@ -24,37 +24,23 @@ class ContentOption(OptionMixin, AbstractConfigOption):
         """Create FileWriteOperation if content is different."""
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
-        print(f"DEBUG ContentOption: Checking content for {target.get_path()}")
-        print(f"DEBUG ContentOption: Value is_none: {self.get_value().is_none()}")
-        
         if not self.get_value().is_none():
             target_content = self.get_value().get_str()
-            print(f"DEBUG ContentOption: Target content: {repr(target_content)}")
-            
             if target_content is not None:
                 # Apply any class-level content transformations
                 target_content = target.preview_write(content=target_content)
-                print(f"DEBUG ContentOption: After preview_write: {repr(target_content)}")
                 
                 # Get current content
                 current_content = self._read_current_content(target) or ""
-                print(f"DEBUG ContentOption: Current content: {repr(current_content)}")
                 
                 # If content is different, create operation
                 if target_content != current_content:
-                    print(f"DEBUG ContentOption: Content differs, creating FileWriteOperation")
                     return FileWriteOperation(
                         option=self,
                         target=target,
                         content=target_content,
                         description=self.get_description(),
                     )
-                else:
-                    print(f"DEBUG ContentOption: Content is same, no operation needed")
-            else:
-                print(f"DEBUG ContentOption: Target content is None")
-        else:
-            print(f"DEBUG ContentOption: Value is None")
 
         return None
 
