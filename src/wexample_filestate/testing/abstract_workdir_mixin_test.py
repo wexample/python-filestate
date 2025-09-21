@@ -97,4 +97,4 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         for i in range(apply_count):
             manager.rollback()
 
-        # self._assert_not_applied(tmp_path) <<<<<<<<<<< TODO
+        self._assert_not_applied(tmp_path)

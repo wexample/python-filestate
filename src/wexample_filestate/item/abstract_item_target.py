@@ -52,6 +52,9 @@ class AbstractItemTarget(
     last_result: AbstractResult | None = public_field(
         default=None, description="The last applied result of state operation"
     )
+    operations_history: list[list[AbstractOperation]] = public_field(
+        factory=list, description="Stack of operation batches for sequential rollbacks"
+    )
     operations_providers: list[type[AbstractOperationsProvider]] | None = public_field(
         default=None, description="List of operations providers"
     )
@@ -112,6 +115,11 @@ class AbstractItemTarget(
 
             if len(result.operations) > 0:
                 result.apply_operations(interactive=interactive)
+                
+                # Push applied operations to history stack for sequential rollbacks
+                applied_operations = [op for op in result.operations if op.applied]
+                if applied_operations:
+                    self.operations_history.append(applied_operations)
             else:
                 self.io.info(
                     message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
@@ -399,13 +407,13 @@ class AbstractItemTarget(
 
         result = FileStateResult(state_manager=self, rollback=True)
 
-        # Fetch applied operations to a new stack.
-        if self.last_result:
-            for operation in self.last_result.operations:
-                if operation.applied:
-                    result.operations.append(operation)
+        # Pop the last batch of operations from history stack
+        if self.operations_history:
+            last_batch = self.operations_history.pop()
+            result.operations.extend(last_batch)
+            result.apply_operations()
+        else:
+            self.io.info(message="No operations to rollback")
 
-        result.apply_operations()
         self.last_result = result
-
         return result
