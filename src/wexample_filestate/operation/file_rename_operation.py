@@ -36,4 +36,9 @@ class FileRenameOperation(AbstractFileManipulationOperation):
         os.rename(old_path, new_path)
 
     def undo(self) -> None:
-        self._restore_target_file()
+        # Rename back from new name to original name
+        old_path = self._original_path
+        new_path = old_path.parent / self.new_name
+        
+        # Rename back to original name
+        os.rename(new_path, old_path)
