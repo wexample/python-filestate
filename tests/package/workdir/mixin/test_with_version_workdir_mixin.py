@@ -38,6 +38,10 @@ class TestWithVersionWorkdirMixin(AbstractWorkdirMixinTest):
         """Return list of files that should be created by the version mixin."""
         return ["version.txt"]
     
+    def _get_apply_count(self) -> int:
+        """Version mixin needs 2 applies: 1 for file creation, 1 for content writing."""
+        return 2
+    
     def test_version_content(self, tmp_path) -> None:
         """Test that version.txt contains the expected default version."""
         from wexample_helpers.const.version import DEFAULT_VERSION_NUMBER
@@ -48,8 +52,10 @@ class TestWithVersionWorkdirMixin(AbstractWorkdirMixinTest):
         # Create workdir manager with version mixin
         manager = self._create_test_workdir_manager(tmp_path)
         
-        # Apply to create version.txt
-        manager.apply()
+        # Apply multiple times to fully create and populate version.txt
+        apply_count = self._get_apply_count()
+        for i in range(apply_count):
+            manager.apply()
         
         # Check version.txt content
         version_file = tmp_path / "version.txt"

@@ -64,6 +64,10 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         """Return list of files that should be created by the mixin."""
         pass
     
+    def _get_apply_count(self) -> int:
+        """Return number of apply() calls needed for complete setup. Override if needed."""
+        return 1
+    
     def _assert_mixin_files_exist(self, tmp_path: Path, positive: bool = True) -> None:
         """Assert that mixin-created files exist or don't exist."""
         expected_files = self._get_expected_files()
@@ -85,10 +89,15 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         # Initially files should not exist
         self._assert_mixin_files_exist(tmp_path, positive=False)
         
-        # Apply - files should be created
-        manager.apply()
+        # Apply multiple times if needed (Single Operation Per Pass principle)
+        apply_count = self._get_apply_count()
+        for i in range(apply_count):
+            manager.apply()
+        
         self._assert_mixin_files_exist(tmp_path, positive=True)
         
-        # Rollback - files should be removed
-        manager.rollback()
+        # Rollback same number of times to fully undo
+        for i in range(apply_count):
+            manager.rollback()
+        
         self._assert_mixin_files_exist(tmp_path, positive=False)
