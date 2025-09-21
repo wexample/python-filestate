@@ -39,8 +39,8 @@ class TestWithVersionWorkdirMixin(AbstractWorkdirMixinTest):
         return ["version.txt"]
     
     def _get_apply_count(self) -> int:
-        """Version mixin needs 2 applies: 1 for file creation, 1 for content writing."""
-        return 2
+        """Version mixin needs 3 applies: 1 for file creation, 1 for content writing, 1 for text processing."""
+        return 3
     
     def test_version_content(self, tmp_path) -> None:
         """Test that version.txt contains the expected default version."""
@@ -55,7 +55,19 @@ class TestWithVersionWorkdirMixin(AbstractWorkdirMixinTest):
         # Apply multiple times to fully create and populate version.txt
         apply_count = self._get_apply_count()
         for i in range(apply_count):
-            manager.apply()
+            print(f"DEBUG: Apply #{i+1}")
+            result = manager.dry_run()
+            print(f"DEBUG: Found {len(result.operations)} operations: {[op.__class__.__name__ for op in result.operations]}")
+            if result.operations:
+                manager.apply()
+                # Check if file exists after apply
+                version_file = tmp_path / "version.txt"
+                print(f"DEBUG: File exists after apply #{i+1}: {version_file.exists()}")
+                if version_file.exists():
+                    print(f"DEBUG: File size: {version_file.stat().st_size} bytes")
+            else:
+                print("DEBUG: No operations to apply")
+                break
         
         # Check version.txt content
         version_file = tmp_path / "version.txt"

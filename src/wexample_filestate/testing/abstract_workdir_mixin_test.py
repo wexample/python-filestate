@@ -40,6 +40,7 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         # Configure with mixin-specific config
         config = self._get_mixin_config()
         enhanced_config = self._apply_mixin_to_config(test_instance, config)
+        print(f"DEBUG: Enhanced config: {enhanced_config}")
         manager.configure(config=enhanced_config)
         
         return manager
