@@ -89,7 +89,7 @@ class SearchResult(BaseClass):
         if not search:
             return None
 
-        content = item.read()
+        content = item.read_text()
         if regex:
             import re
 
