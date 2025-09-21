@@ -14,7 +14,7 @@ class TomlFile(StructuredContentFile):
     EXTENSION_TOML: ClassVar[str] = "toml"
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
-        from tomlkit import _TOMLDocument, document, toml_dumps
+        from tomlkit import TOMLDocument, document, dumps as toml_dumps
 
         if content is None:
             return toml_dumps(document())
@@ -22,7 +22,7 @@ class TomlFile(StructuredContentFile):
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
 
-            if isinstance(content, _TOMLDocument):
+            if isinstance(content, TOMLDocument):
                 return toml_dumps(content)
         except Exception:
             pass

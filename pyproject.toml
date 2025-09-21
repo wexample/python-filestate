@@ -19,7 +19,7 @@ dependencies = [
     "attrs>=23.1.0",
     "cattrs>=23.1.0",
     "python-dotenv",
-    "toml",
+    "tomlkit",
     "wexample-config==0.0.54",
     "wexample-file==0.0.9",
     "wexample-helpers-yaml==0.0.70",

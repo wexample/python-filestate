@@ -38,8 +38,8 @@ class TestYamlFile(AbstractStateManagerTest):
         
         # Test basic properties
         assert yaml_file is not None, "YamlFile should be created successfully"
-        assert yaml_file._expected_file_name_extension() == "yaml", "Extension should be 'yaml'"
-        assert yaml_file.EXTENSION_YAML == "yaml", "Class constant should be 'yaml'"
+        assert yaml_file._expected_file_name_extension() == "yml", "Extension should be 'yml'"
+        assert yaml_file.EXTENSION_YML == "yml", "Class constant should be 'yml'"
     
     def test_yaml_file_loads(self, tmp_path) -> None:
         """Test YamlFile can parse YAML content."""
