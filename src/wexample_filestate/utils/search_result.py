@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
@@ -24,12 +23,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_for_all_matches(
-        cls,
-        search: str,
-        item: ItemTargetFile,
-        *,
-        regex: bool = False,
-        flags: int = 0,
+            cls,
+            search: str,
+            item: ItemTargetFile,
+            *,
+            regex: bool = False,
+            flags: int = 0,
     ) -> list[SearchResult]:
         """Return all matches as a list of SearchResult.
 
@@ -74,12 +73,12 @@ class SearchResult(BaseClass):
 
     @classmethod
     def create_one_if_match(
-        cls,
-        search: str,
-        item: ItemTargetFile,
-        *,
-        regex: bool = False,
-        flags: int = 0,
+            cls,
+            search: str,
+            item: ItemTargetFile,
+            *,
+            regex: bool = False,
+            flags: int = 0,
     ) -> SearchResult | None:
         """Return the first match as a SearchResult or None.
 

@@ -28,7 +28,7 @@ class WithReadmeWorkdirMixin(BaseClass):
                 "name": self.README_FILENAME,
                 "type": DiskItemType.FILE,
                 "should_exist": True,
-                "content": self._get_readme_content(),
+                "content": self._get_readme_content_string(),
                 "default_content": ReadmeContentConfigValue(
                     templates=[], parameters={}
                 ),
@@ -37,6 +37,12 @@ class WithReadmeWorkdirMixin(BaseClass):
         )
 
         return config
+
+    def _get_readme_content_string(self) -> str:
+        """Get README content as a simple string for ContentOption."""
+        # For now, return a basic README content
+        # This can be enhanced later to use templates
+        return "# README\n\nThis is a generated README file.\n"
 
     def _get_readme_content(self) -> ReadmeContentConfigValue | None:
         from wexample_filestate.config_value.readme_content_config_value import (
