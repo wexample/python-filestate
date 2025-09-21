@@ -55,3 +55,9 @@ package-dir = "src"
 [[tool.pdm.build.packages]]
 include = "wexample_filestate"
 from = "src"
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+omit = ["src/wexample_filestate/testing/*"]
