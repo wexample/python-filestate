@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
-    from wexample_filestate.file_state_manager import FileStateManager
+    from wexample_filestate.utils.file_state_manager import FileStateManager
     from wexample_filestate.operations_provider.abstract_operations_provider import (
         AbstractOperationsProvider,
     )
@@ -24,7 +24,7 @@ class AbstractStateManagerTest(ABC):
         pass
 
     def _setup_with_tmp_path(self, tmp_path) -> None:
-        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.utils.file_state_manager import FileStateManager
         from wexample_prompt.common.io_manager import IoManager
         import shutil
 
@@ -78,7 +78,7 @@ class AbstractStateManagerTest(ABC):
         return f"{os.path.abspath(os.curdir)}{os.sep}"
 
     def _get_test_manager_class(self):
-        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.utils.file_state_manager import FileStateManager
 
         return FileStateManager
 

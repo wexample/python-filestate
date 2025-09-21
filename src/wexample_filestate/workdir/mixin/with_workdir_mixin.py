@@ -9,7 +9,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-    from wexample_filestate.file_state_manager import FileStateManager
+    from wexample_filestate.utils.file_state_manager import FileStateManager
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -50,7 +50,7 @@ class WithWorkdirMixin(BaseClass):
         io: IoManager,
         config: DictConfig | None = None,
     ) -> FileStateManager:
-        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.utils.file_state_manager import FileStateManager
 
         return FileStateManager.create_from_path(
             path=entrypoint_path, config=config or {}, io=io
@@ -65,7 +65,7 @@ class WithWorkdirMixin(BaseClass):
         import os
 
         from wexample_filestate.enum.scopes import Scope
-        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.utils.file_state_manager import FileStateManager
 
         self.workdir = self._get_workdir_state_manager_class(
             entrypoint_path=entrypoint_path,

@@ -27,7 +27,7 @@ class TestFileCreateFromClassOperation(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_config.const.types import DictConfig
-        from wexample_filestate.file_state_manager import FileStateManager
+        from wexample_filestate.utils.file_state_manager import FileStateManager
 
         class TestClassForTestFileCreateFromClassOperation(FileStateManager):
             def prepare_value(self, config: DictConfig | None = None) -> DictConfig:
