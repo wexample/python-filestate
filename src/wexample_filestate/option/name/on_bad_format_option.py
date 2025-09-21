@@ -68,10 +68,10 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
 
     def _generate_corrected_name(self, current_name: str) -> str | None:
         """Generate a corrected name based on format rules using child options."""
-        from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
-        from wexample_filestate.option.name_format.prefix_option import PrefixOption
-        from wexample_filestate.option.name_format.suffix_option import SuffixOption
-        from wexample_filestate.option.name_format.regex_option import RegexOption
+        from wexample_filestate.option.name.case_format_option import CaseFormatOption
+        from wexample_filestate.option.name.prefix_option import PrefixOption
+        from wexample_filestate.option.name.suffix_option import SuffixOption
+        from wexample_filestate.option.name.regex_option import RegexOption
         import os
         
         # Get parent NameOption that contains the format rules

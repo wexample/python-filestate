@@ -8,10 +8,10 @@ from wexample_config.config_value.config_value import ConfigValue
 from wexample_filestate.option.name.value_option import ValueOption
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
-from wexample_filestate.option.name_format.prefix_option import PrefixOption
-from wexample_filestate.option.name_format.regex_option import RegexOption
-from wexample_filestate.option.name_format.suffix_option import SuffixOption
+from wexample_filestate.option.name.case_format_option import CaseFormatOption
+from wexample_filestate.option.name.prefix_option import PrefixOption
+from wexample_filestate.option.name.regex_option import RegexOption
+from wexample_filestate.option.name.suffix_option import SuffixOption
 
 
 @base_class

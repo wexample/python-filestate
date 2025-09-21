@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     pass
 
 
-class AbstractNameFormatChildOption(OptionMixin, AbstractConfigOption):
+class AbstractNameChildOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return str

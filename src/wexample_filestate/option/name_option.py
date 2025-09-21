@@ -40,11 +40,11 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.option.name.value_option import ValueOption
-        from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
-        from wexample_filestate.option.name_format.regex_option import RegexOption
-        from wexample_filestate.option.name_format.prefix_option import PrefixOption
-        from wexample_filestate.option.name_format.suffix_option import SuffixOption
-        from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
+        from wexample_filestate.option.name.case_format_option import CaseFormatOption
+        from wexample_filestate.option.name.regex_option import RegexOption
+        from wexample_filestate.option.name.prefix_option import PrefixOption
+        from wexample_filestate.option.name.suffix_option import SuffixOption
+        from wexample_filestate.option.name.on_bad_format_option import OnBadFormatOption
 
         return [
             ValueOption,
@@ -77,7 +77,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
     def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
         """Create operation via OnBadFormatOption if name format validation fails."""
-        from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
+        from wexample_filestate.option.name.on_bad_format_option import OnBadFormatOption
 
         # Check if OnBadFormatOption is configured
         on_bad_format_option = self.get_option(OnBadFormatOption)
@@ -88,10 +88,10 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
     def validate_name(self, name: str) -> bool:
         """Validate if a name matches all format rules using child options."""
-        from wexample_filestate.option.name_format.case_format_option import CaseFormatOption
-        from wexample_filestate.option.name_format.regex_option import RegexOption
-        from wexample_filestate.option.name_format.prefix_option import PrefixOption
-        from wexample_filestate.option.name_format.suffix_option import SuffixOption
+        from wexample_filestate.option.name.case_format_option import CaseFormatOption
+        from wexample_filestate.option.name.regex_option import RegexOption
+        from wexample_filestate.option.name.prefix_option import PrefixOption
+        from wexample_filestate.option.name.suffix_option import SuffixOption
         
         # Check each format rule using child options
         for option_class in [CaseFormatOption, RegexOption, PrefixOption, SuffixOption]:

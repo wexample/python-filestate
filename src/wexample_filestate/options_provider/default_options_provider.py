@@ -65,7 +65,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.yaml_option import (
             YamlOption,
         )
-        from wexample_filestate.option.name_format.on_bad_format_option import OnBadFormatOption
+        from wexample_filestate.option.name.on_bad_format_option import OnBadFormatOption
 
         return [
             # filestate: python-iterable-sort

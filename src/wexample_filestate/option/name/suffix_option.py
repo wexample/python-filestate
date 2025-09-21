@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from wexample_filestate.option.name_format.abstract_name_format_child_option import AbstractNameFormatChildOption
+from wexample_filestate.option.name.abstract_name_child_option import AbstractNameChildOption
 from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
-class SuffixOption(AbstractNameFormatChildOption):
+class SuffixOption(AbstractNameChildOption):
     def get_description(self) -> str:
         return "Enforce suffix requirement for file names"
 
