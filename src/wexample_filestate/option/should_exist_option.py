@@ -44,7 +44,7 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
             should_exist_value)
 
         # Check current existence state
-        exists = target.source is not None
+        exists = target.get_path().exists()
 
         # Create operation based on mismatch
         if should_exist and not exists:

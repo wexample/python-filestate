@@ -39,18 +39,14 @@ class TestWithVersionWorkdirMixin(AbstractWorkdirMixinTest):
     
     def _get_apply_count(self) -> int:
         """Version mixin needs 3 applies: 1 for file creation, 1 for content writing, 1 for text processing."""
-        return 3
+        return 2
     
-    def test_version_file_created(self, tmp_path) -> None:
-        """Test that version.txt is created by the mixin."""
-        self._setup_with_tmp_path(tmp_path)
-        
-        # Create workdir manager with version mixin
-        manager = self._create_test_workdir_manager(tmp_path)
-        
-        # Apply once to create the file
-        manager.apply()
-        
+    def _assert_not_applied(self, tmp_path) -> None:
+        # Check that version.txt exists
+        version_file = tmp_path / "version.txt"
+        assert not version_file.exists(), "version.txt should be created by the mixin"
+
+    def _assert_applied(self, tmp_path) -> None:
         # Check that version.txt exists
         version_file = tmp_path / "version.txt"
         assert version_file.exists(), "version.txt should be created by the mixin"

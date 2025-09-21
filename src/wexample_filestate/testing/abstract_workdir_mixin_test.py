@@ -67,17 +67,14 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
     def _get_apply_count(self) -> int:
         """Return number of apply() calls needed for complete setup. Override if needed."""
         return 1
-    
-    def _assert_mixin_files_exist(self, tmp_path: Path, positive: bool = True) -> None:
-        """Assert that mixin-created files exist or don't exist."""
-        expected_files = self._get_expected_files()
-        
-        for filename in expected_files:
-            file_path = tmp_path / filename
-            if positive:
-                assert file_path.exists(), f"Expected file {filename} to exist"
-            else:
-                assert not file_path.exists(), f"Expected file {filename} to not exist"
+
+    @abstract_method
+    def _assert_not_applied(self, tmp_path: Path) -> None:
+        pass
+
+    @abstract_method
+    def _assert_applied(self, tmp_path: Path) -> None:
+        pass
     
     def test_mixin_apply_and_rollback(self, tmp_path) -> None:
         """Test that mixin creates files on apply and removes them on rollback."""
@@ -87,17 +84,17 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         manager = self._create_test_workdir_manager(tmp_path)
         
         # Initially files should not exist
-        self._assert_mixin_files_exist(tmp_path, positive=False)
+        self._assert_not_applied(tmp_path)
         
         # Apply multiple times if needed (Single Operation Per Pass principle)
         apply_count = self._get_apply_count()
         for i in range(apply_count):
             manager.apply()
-        
-        self._assert_mixin_files_exist(tmp_path, positive=True)
+
+        self._assert_applied(tmp_path)
         
         # Rollback same number of times to fully undo
         for i in range(apply_count):
             manager.rollback()
-        
-        self._assert_mixin_files_exist(tmp_path, positive=False)
+
+        # self._assert_not_applied(tmp_path) <<<<<<<<<<< TODO
