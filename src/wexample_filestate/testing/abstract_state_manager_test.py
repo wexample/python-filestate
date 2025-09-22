@@ -10,9 +10,6 @@ if TYPE_CHECKING:
         AbstractOptionsProvider,
     )
     from wexample_filestate.utils.file_state_manager import FileStateManager
-    from wexample_filestate.operations_provider.abstract_operations_provider import (
-        AbstractOperationsProvider,
-    )
     from wexample_helpers.const.types import PathOrString
 
 
@@ -43,7 +40,6 @@ class AbstractStateManagerTest(ABC):
                 io=IoManager(),
                 path=tmp_path,
                 options_providers=self._get_test_options_providers(),
-                operations_providers=self._get_test_operations_providers(),
             ),
         )
 
@@ -81,11 +77,6 @@ class AbstractStateManagerTest(ABC):
         from wexample_filestate.utils.file_state_manager import FileStateManager
 
         return FileStateManager
-
-    def _get_test_operations_providers(
-        self,
-    ) -> list[type[AbstractOperationsProvider]] | None:
-        return None
 
     def _get_test_options_providers(
         self,

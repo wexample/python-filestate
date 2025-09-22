@@ -31,9 +31,6 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.operation.abstract_operation import AbstractOperation
-    from wexample_filestate.operations_provider.abstract_operations_provider import (
-        AbstractOperationsProvider,
-    )
     from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_filestate.result.file_state_dry_run_result import (
         FileStateDryRunResult,
@@ -54,9 +51,6 @@ class AbstractItemTarget(
     )
     operations_history: list[list[AbstractOperation]] = public_field(
         factory=list, description="Stack of operation batches for sequential rollbacks"
-    )
-    operations_providers: list[type[AbstractOperationsProvider]] | None = public_field(
-        default=None, description="List of operations providers"
     )
     source: SourceFileOrDirectory | None = public_field(
         default=None, description="The original existing file or directory"
@@ -318,32 +312,6 @@ class AbstractItemTarget(
 
         name_option = self.get_option(NameOption)
         return name_option.get_name_value()
-
-    def get_operations(self) -> list[type[AbstractOperation]]:
-        providers = self.get_operations_providers()
-        operations = []
-
-        for provider in providers:
-            operations.extend(provider.get_operations())
-
-        return operations
-
-    def get_operations_providers(self) -> list[type[AbstractOperationsProvider]]:
-        from wexample_filestate.operations_provider.default_operations_provider import (
-            DefaultOperationsProvider,
-        )
-
-        if self.parent:
-            return cast(
-                AbstractItemTarget, self.get_parent_item()
-            ).get_operations_providers()
-
-        if self.operations_providers:
-            return self.operations_providers
-
-        return [
-            DefaultOperationsProvider,
-        ]
 
     def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
         from wexample_filestate.options_provider.default_options_provider import (
