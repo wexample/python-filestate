@@ -33,6 +33,11 @@ class AbstractChildrenManipulationOption(
     pattern: DictConfig = public_field(
         description="Pattern configuration used for children manipulation",
     )
+    # Name pattern(s) to match against file/directory names
+    name_pattern: str | list[str] | None = public_field(
+        default=None,
+        description="Pattern(s) to match against file/directory names. Can be a single regex string or list of regex strings.",
+    )
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
@@ -93,20 +98,14 @@ class AbstractChildrenManipulationOption(
         return output
 
     def _path_match_patterns(self, path: str) -> bool:
+        """Check if path matches the name patterns defined in this option."""
         import re
         from pathlib import Path
 
-        from wexample_filestate.option.name_pattern_option import (
-            NamePatternOption,
-        )
-
-        config = self.pattern
-        option_name = NamePatternOption.get_name()
-        if config.get(option_name) is None:
+        if self.name_pattern is None:
             return True
 
-        patterns = config[option_name]
-
+        patterns = self.name_pattern
         if isinstance(patterns, str):
             patterns = [patterns]
 

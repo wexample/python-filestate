@@ -33,21 +33,18 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
 
     def generate_children(self) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.option.name_pattern_option import (
-            NamePatternOption,
-        )
 
         config = self.pattern
         children = []
 
-        name_pattern_option_name = NamePatternOption.get_name()
         parent_item = self.get_parent_item()
         has_callable_filter = (
             callable(self.filter) if self.filter is not None else False
         )
+        has_name_pattern = self.name_pattern is not None
 
         # Trigger generation if either a name_pattern is present or a callable filter is provided
-        if config.get(name_pattern_option_name) or has_callable_filter:
+        if has_name_pattern or has_callable_filter:
             base_path: Path = parent_item.get_path()
             if base_path.exists():
                 # Use the instance field `filter` when provided
@@ -179,3 +176,4 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
         if "type" in config and not config_has_same_type_as_path(config, entry_path):
             return False
         return True
+

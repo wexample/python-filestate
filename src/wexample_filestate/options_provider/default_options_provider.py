@@ -37,9 +37,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             DefaultContentOption,
         )
         from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.option.name_pattern_option import (
-            NamePatternOption,
-        )
         from wexample_filestate.option.remove_backup_max_file_size_option import (
             RemoveBackupMaxFileSizeOption,
         )
@@ -77,7 +74,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             DefaultContentOption,
             ModeOption,
             NameOption,
-            NamePatternOption,
             RemoveBackupMaxFileSizeOption,
             ShortcutOption,
             ShouldContainLinesOption,

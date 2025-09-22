@@ -35,15 +35,14 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
         self._setup_with_tmp_path(tmp_path)
         
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.option.name_pattern_option import NamePatternOption
         
         option = ChildrenFileFactoryOption(
             pattern={
                 "name": "test.txt",
                 "type": DiskItemType.FILE,
                 "should_exist": True,
-                NamePatternOption.get_name(): ["project_.*"]
             },
+            name_pattern=["project_.*"],
             recursive=False,
         )
         
@@ -56,15 +55,14 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
         self._setup_with_tmp_path(tmp_path)
         
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.option.name_pattern_option import NamePatternOption
         
         # Create the option with specific pattern
         option = ChildrenFileFactoryOption(
             pattern={
                 "name": "test.txt",
                 "type": DiskItemType.FILE,
-                NamePatternOption.get_name(): ["project_.*"]
             },
+            name_pattern=["project_.*"],
             recursive=False,
         )
         

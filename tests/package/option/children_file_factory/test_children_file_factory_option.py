@@ -30,7 +30,6 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         """Setup configuration for testing ChildrenFileFactoryOption."""
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.option.name_pattern_option import NamePatternOption
         
         return {
             "name": "test_root",
@@ -42,8 +41,8 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
                         "name": "config.txt",
                         "type": DiskItemType.FILE,
                         "should_exist": True,  # This should trigger FileCreateOperation
-                        NamePatternOption.get_name(): ["project_.*"]  # Match project_a, project_b
                     },
+                    name_pattern=["project_.*"],  # Match project_a, project_b
                     recursive=False,
                 )
             ]
