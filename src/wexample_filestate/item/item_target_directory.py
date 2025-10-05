@@ -228,6 +228,17 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if shortcut is None:
             raise UndefinedShortcutException(shortcut=name, root_item=self)
 
+    def prepare_value(self, raw_value: Any) -> Any:
+        from wexample_filestate.option.children_option import (
+            ChildrenOption,
+        )
+
+        key = ChildrenOption.get_name()
+        if not key in raw_value:
+            raw_value[key] = []
+
+        return raw_value
+
     def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
         from wexample_filestate.exception.existing_shortcut_exception import (
             ExistingShortcutException,
