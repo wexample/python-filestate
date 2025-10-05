@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_filestate.testing.abstract_workdir_mixin_test import AbstractWorkdirMixinTest
-from wexample_filestate.workdir.mixin.with_readme_workdir_mixin import WithReadmeWorkdirMixin
+from wexample_wex_addon_app.workdir.mixin.with_readme_workdir_mixin import WithReadmeWorkdirMixin
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.decorator.base_class import base_class
 
