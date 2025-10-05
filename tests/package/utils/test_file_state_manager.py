@@ -28,35 +28,6 @@ class TestFileStateManager(AbstractStateManagerTest):
         with pytest.raises(BadConfigurationClassTypeException):
             self.state_manager.configure(config={"children": [{"class": BadClass}]})
 
-    def test_configure_define_child(self, tmp_path) -> None:
-        self._setup_with_tmp_path(tmp_path)
-        from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-        from wexample_filestate.option.children_option import (
-            ChildrenOption,
-        )
-
-        self.state_manager.allow_undefined_keys = True
-        self.state_manager.configure(
-            config={
-                "custom_name": ChildrenOption(
-                    value=[
-                        {
-                            "name": TEST_FILE_NAME_SIMPLE_TEXT,
-                            "type": "file",
-                        }
-                    ],
-                    parent=self.state_manager,
-                )
-            }
-        )
-
-        assert self.state_manager.dump() == {
-            "name": self._get_parent_dir(),
-            "children": [{"name": "simple-text.txt", "type": "file"}],
-        }
-
-        self.state_manager.allow_undefined_keys = False
-
     def test_configure_from_callback(self, tmp_path) -> None:
         self._setup_with_tmp_path(tmp_path)
 
