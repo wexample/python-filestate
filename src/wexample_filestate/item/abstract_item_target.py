@@ -115,7 +115,7 @@ class AbstractItemTarget(
                 if applied_operations:
                     self.operations_history.append(applied_operations)
             else:
-                self.io.info(
+                self.info(
                     message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
                 )
         except UserInterruptedException:
