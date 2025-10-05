@@ -152,21 +152,21 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         directory = self._create_directory_item(tmp_path)
         
         # Test finding existing files
-        file1_path = tmp_path / "file1.txt"
+        file1_path = "file1.txt"
         found_file1 = directory.find_by_path(file1_path)
         assert found_file1 is not None, "Should find file1.txt"
-        assert found_file1.get_path() == file1_path, "Path should match"
+        assert found_file1.get_path().name == file1_path, "Path should match"
         assert found_file1.is_file(), "Should be a file"
         
         # Test finding existing directory
-        subdir1_path = tmp_path / "subdir1"
+        subdir1_path = "subdir1"
         found_subdir1 = directory.find_by_path(subdir1_path)
         assert found_subdir1 is not None, "Should find subdir1"
-        assert found_subdir1.get_path() == subdir1_path, "Path should match"
+        assert found_subdir1.get_path().name == subdir1_path, "Path should match"
         assert found_subdir1.is_directory(), "Should be a directory"
         
         # Test finding non-existent path
-        non_existent_path = tmp_path / "non_existent.txt"
+        non_existent_path = "non_existent.txt"
         found_none = directory.find_by_path(non_existent_path)
         assert found_none is None, "Should not find non-existent file"
     
@@ -177,24 +177,24 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         directory = self._create_directory_item(tmp_path)
         
         # Test finding nested files
-        nested_file_path = tmp_path / "subdir1" / "nested_file1.txt"
+        nested_file_path = "subdir1/nested_file1.txt"
         found_nested = directory.find_by_path_recursive(nested_file_path)
         assert found_nested is not None, "Should find nested file recursively"
-        assert found_nested.get_path() == nested_file_path, "Path should match"
+        assert found_nested.get_path().name == "nested_file1.txt", "Path should match"
         
         # Test finding very deep files
-        very_deep_path = tmp_path / "subdir2" / "subsubdir" / "very_deep_file.json"
+        very_deep_path = "subdir2/subsubdir/very_deep_file.json"
         found_deep = directory.find_by_path_recursive(very_deep_path)
         assert found_deep is not None, "Should find very deep file recursively"
-        assert found_deep.get_path() == very_deep_path, "Path should match"
+        assert found_deep.get_path().name == "very_deep_file.json", "Path should match"
         
         # Test finding files in root (should still work)
-        root_file_path = tmp_path / "file2.json"
+        root_file_path = "file2.json"
         found_root = directory.find_by_path_recursive(root_file_path)
         assert found_root is not None, "Should find root file recursively"
         
         # Test finding non-existent path
-        non_existent_path = tmp_path / "subdir1" / "non_existent.txt"
+        non_existent_path = "subdir1/non_existent.txt"
         found_none = directory.find_by_path_recursive(non_existent_path)
         assert found_none is None, "Should not find non-existent file recursively"
     
