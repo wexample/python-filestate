@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 class ContentOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return str
+        from wexample_config.config_value.config_value import ConfigValue
+
+        return Union[str, ConfigValue]
 
     def get_description(self) -> str:
         return "Set file content to the specified value"
