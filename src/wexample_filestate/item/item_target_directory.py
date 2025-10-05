@@ -131,11 +131,26 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         from pathlib import Path
 
         target = Path(path)
+        
+        # If the path contains multiple parts (e.g., "subfolder/file.txt")
+        parts = target.parts
+        if len(parts) > 1:
+            # Search for the first element of the path (the subfolder)
+            first_part = parts[0]
+            remaining_path = Path(*parts[1:])
 
+            # Find the corresponding subfolder
+            for child in self.get_children_list():
+                if child.get_item_name() == first_part and child.is_directory():
+                    # Continue the search in the subfolder
+                    return cast(ItemTargetDirectory, child).find_by_path(remaining_path)
+            return None
+        
+        # Simple search in direct children (original behavior)
         for child in self.get_children_list():
-            if child.get_path() == target:
+            # Compare by name if target is just a filename, otherwise compare full paths
+            if child.get_item_name() == str(target) or child.get_path() == target:
                 return child
-
         return None
 
     def find_by_path_recursive(
