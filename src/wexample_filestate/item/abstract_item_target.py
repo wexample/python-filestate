@@ -60,7 +60,6 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_config(cls, **kwargs) -> AbstractItemTarget:
-        debug_trace_and_die(skip_frames=None)
         config = kwargs.get("config")
         kwargs.pop("config", None)
         instance = cls(**kwargs)
