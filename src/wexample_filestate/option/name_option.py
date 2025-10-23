@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Union, Callable
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
@@ -18,11 +19,14 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.config_value.name_config_value import NameConfigValue
         
-        return Union[str, dict, NameConfigValue, Callable]
+        return Union[str, Path, dict, NameConfigValue, Callable]
 
     def set_value(self, raw_value: Any) -> None:
         from wexample_filestate.option.name.value_option import ValueOption
-        
+
+        if isinstance(raw_value, Path):
+            raw_value = str(raw_value)
+
         # Store callable directly without conversion
         if callable(raw_value):
             self._callable_value = raw_value
@@ -35,7 +39,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
             raw_value = {
                 ValueOption.get_name(): raw_value
             }
-        
+
         super().set_value(raw_value=raw_value)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:

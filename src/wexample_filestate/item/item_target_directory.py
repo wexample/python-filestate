@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
@@ -50,12 +50,12 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                 option.build_item_tree()
 
     def build_operations(
-        self,
-        result: AbstractResult,
-        scopes: set[Scope] | None = None,
-        filter_path: str | None = None,
-        filter_operation: str | None = None,
-        max: int = None,
+            self,
+            result: AbstractResult,
+            scopes: set[Scope] | None = None,
+            filter_path: str | None = None,
+            filter_operation: str | None = None,
+            max: int = None,
     ) -> bool:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
@@ -111,7 +111,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return child
 
     def find_by_name_recursive(
-        self, item_name: str
+            self, item_name: str
     ) -> TargetFileOrDirectoryType | None:
         found = self.find_by_name(item_name)
         if found:
@@ -131,7 +131,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         from pathlib import Path
 
         target = Path(path)
-        
+
         # If the path contains multiple parts (e.g., "subfolder/file.txt")
         parts = target.parts
         if len(parts) > 1:
@@ -145,7 +145,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                     # Continue the search in the subfolder
                     return cast(ItemTargetDirectory, child).find_by_path(remaining_path)
             return None
-        
+
         # Simple search in direct children (original behavior)
         for child in self.get_children_list():
             # Compare by name if target is just a filename, otherwise compare full paths
@@ -154,7 +154,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return None
 
     def find_by_path_recursive(
-        self, path: FileStringOrPath
+            self, path: FileStringOrPath
     ) -> TargetFileOrDirectoryType | None:
         from pathlib import Path
 
@@ -180,16 +180,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
 
     def for_each_child_of_type(
-        self,
-        class_type: type[AbstractItemTarget],
-        callback: Callable[[AbstractItemTarget], None],
+            self,
+            class_type: type[AbstractItemTarget],
+            callback: Callable[[AbstractItemTarget], None],
     ) -> None:
         for child in self.get_children_list():
             if isinstance(child, class_type):
                 callback(child)
 
     def for_each_child_of_type_recursive(
-        self, class_type: type[AbstractItemTarget], callback: Callable
+            self, class_type: type[AbstractItemTarget], callback: Callable
     ) -> None:
         def _only_type(item: AbstractItemTarget) -> None:
             if isinstance(item, class_type):

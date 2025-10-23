@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from pathlib import PosixPath
 from typing import Any
 
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
 
@@ -25,6 +26,10 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
         if root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
 
+    def prepare_value(self, raw_value: Any) -> Any:
+        # Enforce str
+        return super().prepare_value(raw_value=str(raw_value))
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return str
+        return str | PosixPath
