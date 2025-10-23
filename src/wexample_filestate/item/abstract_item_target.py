@@ -17,8 +17,6 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
-from wexample_helpers.helpers.debug import debug_trace_and_die
-
 if TYPE_CHECKING:
     from pathlib import Path
 
