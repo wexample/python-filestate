@@ -17,12 +17,13 @@ class YamlFile(StructuredContentFile):
     def dumps(self, content: StructuredData | None) -> str:
         import yaml
 
-        # Avoid dumping ConfigValue directly; convert to primitive via str by default
+        # Unwrap ConfigValue objects to their raw primitive values
         def _normalize(v):
             from wexample_config.config_value.config_value import ConfigValue
 
             if isinstance(v, ConfigValue):
-                return str(v)
+                # Extract the raw value instead of converting to string representation
+                return _normalize(v._get_nested_raw())
             if isinstance(v, dict):
                 return {k: _normalize(x) for k, x in v.items()}
             if isinstance(v, list):
