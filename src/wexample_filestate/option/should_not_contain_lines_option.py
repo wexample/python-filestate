@@ -17,7 +17,9 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return list[str]
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
         """Create FileWriteOperation if forbidden lines are present in file."""
@@ -44,10 +46,10 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
         # If content changed, create operation
         if updated_content != current_content:
             return FileWriteOperation(
-                option=self, 
-                target=target, 
+                option=self,
+                target=target,
                 content=updated_content,
-                description="Remove lines that should not be present in the file"
+                description="Remove lines that should not be present in the file",
             )
 
         return None
@@ -56,7 +58,7 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
         """Remove specified lines from content."""
         current_lines = content.splitlines()
         filtered_lines = [line for line in current_lines if line not in lines]
-        return '\n'.join(filtered_lines)
+        return "\n".join(filtered_lines)
 
     def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content, return None if file doesn't exist."""

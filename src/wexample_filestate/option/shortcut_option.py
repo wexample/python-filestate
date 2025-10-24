@@ -26,10 +26,10 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
         if root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
 
-    def prepare_value(self, raw_value: Any) -> Any:
-        # Enforce str
-        return super().prepare_value(raw_value=str(raw_value))
-
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return str | PosixPath
+
+    def prepare_value(self, raw_value: Any) -> Any:
+        # Enforce str
+        return super().prepare_value(raw_value=str(raw_value))

@@ -8,6 +8,6 @@ class NameFormatException(AbstractFileStateException):
     
     error_code: str = "FILE_STATE_NAME_FORMAT_ERROR"
     
-    def __init__(self, message: str, file_name: str = None, **kwargs):
+    def __init__(self, message: str, file_name: str = None, **kwargs) -> None:
         super().__init__(message, **kwargs)
         self.file_name = file_name

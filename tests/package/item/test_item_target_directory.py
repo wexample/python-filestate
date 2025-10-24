@@ -206,7 +206,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         
         # Collect files only
         files_found = []
-        def collect_files(item):
+        def collect_files(item) -> None:
             files_found.append(item)
         
         directory.for_each_child_of_type(ItemTargetFile, collect_files)
@@ -221,7 +221,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         
         # Collect directories only
         dirs_found = []
-        def collect_dirs(item):
+        def collect_dirs(item) -> None:
             dirs_found.append(item)
         
         directory.for_each_child_of_type(ItemTargetDirectory, collect_dirs)
@@ -242,7 +242,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         
         # Collect all files recursively
         all_files = []
-        def collect_all_files(item):
+        def collect_all_files(item) -> None:
             all_files.append(item)
         
         directory.for_each_child_of_type_recursive(ItemTargetFile, collect_all_files)
@@ -269,7 +269,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         
         # Collect all files using the convenience method
         files_found = []
-        def collect_files(item):
+        def collect_files(item) -> None:
             files_found.append(item)
         
         directory.for_each_child_file_recursive(collect_files)
@@ -296,7 +296,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         
         # Collect all items (files and directories) recursively
         all_items = []
-        def collect_all_items(item):
+        def collect_all_items(item) -> None:
             all_items.append(item)
         
         directory.for_each_child_recursive(collect_all_items)

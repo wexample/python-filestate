@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import re
 
-from wexample_filestate.option.name.abstract_name_child_option import AbstractNameChildOption
+from wexample_filestate.option.name.abstract_name_child_option import (
+    AbstractNameChildOption,
+)
 from wexample_helpers.decorator.base_class import base_class
 
 
@@ -15,7 +17,7 @@ class RegexOption(AbstractNameChildOption):
         """Validate if name matches the regex pattern."""
         if self.get_value().is_none():
             return True
-            
+
         regex_pattern = self.get_value().get_str()
         return re.match(regex_pattern, name) is not None
 

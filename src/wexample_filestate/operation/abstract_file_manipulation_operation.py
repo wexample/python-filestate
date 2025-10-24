@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_helpers.const.types import PathOrString
 
-
 from wexample_helpers.decorator.base_class import base_class
 @base_class
 class AbstractFileManipulationOperation(AbstractOperation):

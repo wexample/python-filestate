@@ -30,13 +30,13 @@ class AbstractChildrenManipulationOption(
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
-    pattern: DictConfig = public_field(
-        description="Pattern configuration used for children manipulation",
-    )
     # Name pattern(s) to match against file/directory names
     name_pattern: str | list[str] | None = public_field(
         default=None,
         description="Pattern(s) to match against file/directory names. Can be a single regex string or list of regex strings.",
+    )
+    pattern: DictConfig = public_field(
+        description="Pattern configuration used for children manipulation",
     )
 
     @staticmethod

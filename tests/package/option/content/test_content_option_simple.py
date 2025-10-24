@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestContentOptionSimple(AbstractTestOperation):
     """Test ContentOption - simple content writing."""
+
     test_content: str = "Simple content for testing"
 
     def _operation_test_assert_applied(self) -> None:

@@ -43,12 +43,6 @@ class AbstractExistingFileOperation(AbstractFileManipulationOperation):
     def preview_source_change(cls, target: TargetFileOrDirectoryType) -> str | None:
         pass
 
-    @staticmethod
-    def _is_existing_file(target: TargetFileOrDirectoryType) -> bool:
-        if not target.source or not target.is_file():
-            return False
-        return target.get_local_file().path.exists()
-
     @classmethod
     def _read_current_non_empty_src(
         cls, target: TargetFileOrDirectoryType
@@ -56,16 +50,22 @@ class AbstractExistingFileOperation(AbstractFileManipulationOperation):
         src = cls._read_current_src(target)
         return src if src is not None and src.strip() != "" else None
 
-    @staticmethod
-    def _read_current_src(target: TargetFileOrDirectoryType) -> str | None:
-        """Read current file content if it exists; return None if it does not exist."""
-        return target.get_local_file().read()
-
     @classmethod
     def _read_current_str_or_fail(cls, target: TargetFileOrDirectoryType) -> str:
         src = cls._read_current_src(target)
         assert isinstance(src, str)
         return src
+
+    @staticmethod
+    def _is_existing_file(target: TargetFileOrDirectoryType) -> bool:
+        if not target.source or not target.is_file():
+            return False
+        return target.get_local_file().path.exists()
+
+    @staticmethod
+    def _read_current_src(target: TargetFileOrDirectoryType) -> str | None:
+        """Read current file content if it exists; return None if it does not exist."""
+        return target.get_local_file().read()
 
     def apply(self) -> None:
         if self._changed_source is not None:

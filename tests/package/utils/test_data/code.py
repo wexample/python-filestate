@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 def hello_function():
     """A simple hello function."""
     print("Hello, world!")

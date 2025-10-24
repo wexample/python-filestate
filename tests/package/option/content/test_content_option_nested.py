@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestContentOptionNested(AbstractTestOperation):
     """Test ContentOption with nested dict structure."""
+
     test_content: str = "NESTED_CONTENT"
 
     def _operation_test_assert_applied(self) -> None:

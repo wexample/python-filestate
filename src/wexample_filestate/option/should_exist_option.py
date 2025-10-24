@@ -30,18 +30,27 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return bool
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         """Create FileCreateOperation or FileRemoveOperation based on should_exist value and current state."""
-        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
+        from wexample_filestate.operation.file_remove_operation import (
+            FileRemoveOperation,
+        )
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
 
         # Get the should_exist value
         should_exist_value = self.get_value()
         if should_exist_value is None:
             return None
 
-        should_exist = should_exist_value.is_true() if hasattr(should_exist_value, 'is_true') else bool(
-            should_exist_value)
+        should_exist = (
+            should_exist_value.is_true()
+            if hasattr(should_exist_value, "is_true")
+            else bool(should_exist_value)
+        )
 
         # Check current existence state
         exists = target.get_path().exists()
@@ -57,14 +66,14 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
                 option=self,
                 target=target,
                 default_content=default_content,
-                description=f"Create missing {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'"
+                description=f"Create missing {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'",
             )
         elif not should_exist and exists:
             # File shouldn't exist but does - remove it
             return FileRemoveOperation(
                 option=self,
                 target=target,
-                description=f"Remove unwanted {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'"
+                description=f"Remove unwanted {'directory' if target.is_directory() else 'file'} '{target.get_item_name()}'",
             )
 
         # No operation needed if state matches expectation

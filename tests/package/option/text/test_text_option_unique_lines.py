@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestTextOptionUniqueLines(AbstractTestOperation):
     """Test TextOption with unique_lines only."""
+
     initial_content: str = "apple\nbanana\napple\ncherry\nbanana\n"
     expected_content: str = "apple\nbanana\ncherry\n"
     test_file_name: str = "test-text-unique-lines.txt"
@@ -20,7 +21,9 @@ class TestTextOptionUniqueLines(AbstractTestOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
-        assert content == self.expected_content, f"Expected unique content, got: {repr(content)}"
+        assert (
+            content == self.expected_content
+        ), f"Expected unique content, got: {repr(content)}"
 
     def _operation_test_assert_initial(self) -> None:
         from wexample_helpers.helpers.file import file_read
@@ -28,7 +31,9 @@ class TestTextOptionUniqueLines(AbstractTestOperation):
         target_file = self.state_manager.find_by_name_or_fail(self.test_file_name)
         content = file_read(target_file.get_path())
 
-        assert content == self.initial_content, f"Expected initial content, got: {repr(content)}"
+        assert (
+            content == self.initial_content
+        ), f"Expected initial content, got: {repr(content)}"
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.disk import DiskItemType

@@ -17,10 +17,10 @@ class ContentConfigValue(ConfigValue):
         description="The text content to write to the file",
     )
 
-    def to_option_raw_value(self) -> str:
+    def build_content(self) -> str | None:
         return self.text
 
-    def build_content(self) -> str | None:
+    def to_option_raw_value(self) -> str:
         return self.text
 
     def _create_default_raw(self, raw: Any) -> str:

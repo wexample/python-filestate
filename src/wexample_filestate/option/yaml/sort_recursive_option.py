@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.option.yaml.abstract_yaml_child_option import AbstractYamlChildOption
+from wexample_filestate.option.yaml.abstract_yaml_child_option import (
+    AbstractYamlChildOption,
+)
 from wexample_helpers.decorator.base_class import base_class
 
 
@@ -12,7 +14,7 @@ class SortRecursiveOption(AbstractYamlChildOption):
         return "Sort YAML file content recursively by keys"
 
     def create_required_operation(
-            self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
@@ -47,8 +49,8 @@ class SortRecursiveOption(AbstractYamlChildOption):
         """Check if YAML file is already recursively sorted."""
         data = self._read_yaml_data(target)
         sorted_data = self._sort_recursive(data)
-        
+
         current_dump = self._dump_yaml_content(data)
         sorted_dump = self._dump_yaml_content(sorted_data)
-        
+
         return current_dump == sorted_dump

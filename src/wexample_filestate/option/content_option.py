@@ -22,7 +22,9 @@ class ContentOption(OptionMixin, AbstractConfigOption):
     def get_description(self) -> str:
         return "Set file content to the specified value"
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         """Create FileWriteOperation if content is different."""
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
@@ -31,10 +33,10 @@ class ContentOption(OptionMixin, AbstractConfigOption):
             if target_content is not None:
                 # Apply any class-level content transformations
                 target_content = target.preview_write(content=target_content)
-                
+
                 # Get current content
                 current_content = self._read_current_content(target) or ""
-                
+
                 # If content is different, create operation
                 if target_content != current_content:
                     return FileWriteOperation(

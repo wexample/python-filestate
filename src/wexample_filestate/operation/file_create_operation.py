@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.operation.abstract_file_manipulation_operation import (
     AbstractFileManipulationOperation,
 )

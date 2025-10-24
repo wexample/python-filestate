@@ -12,10 +12,6 @@ class TestYamlSortRecursiveOperation(AbstractTestOperation):
     def _get_target(self) -> TargetFileOrDirectoryType | None:
         return self.state_manager.find_by_name("unsorted.yml")
 
-    def _read_test_file(self) -> str:
-        target = self.state_manager.find_by_name("unsorted.yml")
-        return target.get_local_file().read()
-
     def _operation_test_assert_applied(self) -> None:
         assert self._read_test_file().startswith("a_key")
 
@@ -31,3 +27,7 @@ class TestYamlSortRecursiveOperation(AbstractTestOperation):
                 },
             ]
         }
+
+    def _read_test_file(self) -> str:
+        target = self.state_manager.find_by_name("unsorted.yml")
+        return target.get_local_file().read()

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.option.text.abstract_text_child_option import AbstractTextChildOption
+from wexample_filestate.option.text.abstract_text_child_option import (
+    AbstractTextChildOption,
+)
 from wexample_helpers.decorator.base_class import base_class
 
 
@@ -12,7 +14,7 @@ class EndNewLineOption(AbstractTextChildOption):
         return "Ensure file ends with a newline character"
 
     def create_required_operation(
-            self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 

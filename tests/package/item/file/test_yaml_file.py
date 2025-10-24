@@ -60,7 +60,6 @@ class TestYamlFile(AbstractStructuredFileTest):
         assert parsed["config"]["port"] == 8000, "Integer values should be parsed correctly"
     
     # YAML-specific tests that are not covered by the abstract class
-    
     def test_yaml_file_formatting(self, tmp_path) -> None:
         """Test YamlFile produces properly formatted YAML output."""
         self._setup_with_tmp_path(tmp_path)

@@ -12,6 +12,6 @@ class PermissionsOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return Union[str, int]
-    
+
     def get_description(self) -> str:
         return "File permissions in octal format (e.g., 755, 644)"

@@ -13,13 +13,15 @@ class AbstractYamlChildOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return bool
-    
+
     def _read_yaml_data(self, target: TargetFileOrDirectoryType):
         """Read YAML data from target file."""
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
+
         return yaml_read(target.get_path())
-    
+
     def _dump_yaml_content(self, data) -> str:
         """Dump YAML data to string content."""
         import yaml
+
         return yaml.safe_dump(data, sort_keys=False)

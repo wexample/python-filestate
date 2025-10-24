@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestNameOptionString(AbstractTestOperation):
     """Test NameOption with string format."""
+
     test_name: str = "test-file.txt"
 
     def _operation_test_assert_applied(self) -> None:

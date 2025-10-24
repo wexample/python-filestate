@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
@@ -22,6 +24,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
     def get_octal(self) -> str:
         from wexample_filestate.option.mode.permissions_option import PermissionsOption
+
         return self.get_value().get_dict().get(PermissionsOption.get_name())
 
     def prepare_value(self, raw_value: Any) -> Any:
@@ -29,9 +32,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         # Always work with a dict.
         if isinstance(raw_value, str) or isinstance(raw_value, int):
-            raw_value = {
-                PermissionsOption.get_name(): str(raw_value)
-            }
+            raw_value = {PermissionsOption.get_name(): str(raw_value)}
 
         return super().prepare_value(raw_value=raw_value)
 
@@ -44,10 +45,14 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
             RecursiveOption,
         ]
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         from wexample_helpers.helpers.file import file_mode_octal_to_num
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
-        from wexample_filestate.operation.file_change_mode_operation import FileChangeModeOperation
+        from wexample_filestate.operation.file_change_mode_operation import (
+            FileChangeModeOperation,
+        )
 
         """Create ItemChangeModeOperation if current mode differs from target mode."""
         from wexample_helpers.helpers.file import (
@@ -69,16 +74,18 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         # If modes are different, create the operation
         if current_mode != target_mode:
             from wexample_helpers.helpers.file import file_mode_num_to_octal
-            
+
             current_octal = file_mode_num_to_octal(current_mode)
             target_octal = file_mode_num_to_octal(target_mode)
-            
+
             return FileChangeModeOperation(
                 option=self,
                 target=target,
                 target_mode=target_mode,
-                recursive=self.get_option_value(RecursiveOption, default=False).is_true(),
-                description=f"Update file permissions from {current_octal} to {target_octal}"
+                recursive=self.get_option_value(
+                    RecursiveOption, default=False
+                ).is_true(),
+                description=f"Update file permissions from {current_octal} to {target_octal}",
             )
 
         return None

@@ -20,8 +20,7 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
         default=None, description="Disabled raw value for this field."
     )
     templates: list[str] | None = public_field(
-        factory=list,
-        description="List of templates contents to aggregate"
+        factory=list, description="List of templates contents to aggregate"
     )
 
     @staticmethod

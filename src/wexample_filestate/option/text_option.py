@@ -64,5 +64,4 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         """Create FileWriteOperation if text processing is needed."""
-
         return self._create_child_required_operation(target=target)

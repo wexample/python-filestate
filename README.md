@@ -1,117 +1,112 @@
-# wexample-filestate
+## Code Quality & Typing
 
-Package that allows you to manage the state of files and directories using YAML configuration files.
+All Wexample packages follow strict quality standards:
 
-Version: 0.0.52
+- **Type hints**: Full type coverage with mypy validation
+- **Code formatting**: Enforced with black and ruff
+- **Linting**: Comprehensive checks with ruff
+- **Testing**: High test coverage requirements
 
-## Features
+These standards ensure reliability and maintainability across the suite.
 
-- **Apply and Modify Permissions and Ownership**: Manage file and directory permissions and ownership individually or recursively.
-- **Create, Modify, and Delete Directories**: Use patterns and regex to create, modify, and delete directories and subdirectories (e.g., ensure each `Entity/MyEntity.php` file has a corresponding `Repository/MyEntityRepository.php`).
-- **Create Files Using Templates and Placeholders**: Generate files from templates with dynamic placeholders.
+## Versioning & Compatibility Policy
 
+Wexample packages follow **Semantic Versioning** (SemVer):
 
-## Requirements
+- **MAJOR**: Breaking changes
+- **MINOR**: New features, backward compatible
+- **PATCH**: Bug fixes, backward compatible
 
-- Python >=3.10
+We maintain backward compatibility within major versions and provide clear migration guides for breaking changes.
 
-## Dependencies
+## Changelog
 
-- attrs>=23.1.0
-- cattrs>=23.1.0
-- python-dotenv
-- toml
-- wexample-config==0.0.52
-- wexample-file==0.0.7
-- wexample-helpers-yaml==0.0.68
-- wexample-prompt==0.0.50
-- xmltodict
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and release notes.
 
-## Installation
+Major changes are documented with migration guides when applicable.
 
-```bash
-pip install wexample-filestate
-```
+## Migration Notes
 
-## Usage
+When upgrading between major versions, refer to the migration guides in the documentation.
 
+Breaking changes are clearly documented with upgrade paths and examples.
 
-### Configuration File Example
+## Known Limitations & Roadmap
 
-```yaml
-# example.yaml
-children:
-  - path: /path/to/file
-    owner: user
-    group: group
-    mode: '0644'
-  - path: /path/to/directory
-    recursive: true
-    mode: '0755'
-    create: true
-```
+Current limitations and planned features are tracked in the GitHub issues.
 
-## Usage
+See the [project roadmap](https://github.com/wexample/python-filestate/issues) for upcoming features and improvements.
 
-Here's how you can use filestate in your Python code:
+## Security Policy
 
-```
-from filestate import FileStateManager
+### Reporting Vulnerabilities
 
-# Initialize the state manager with the root directory
-state_manager = FileStateManager('root/directory/')
+If you discover a security vulnerability, please email security@wexample.com.
 
-# Configure the state manager from a YAML configuration file
-state_manager.configure_from_file('configuration.yaml')
+**Do not** open public issues for security vulnerabilities.
 
-# Perform a dry run to see what changes would be made
-result = state_manager.dry_run()
-result.print()
+We take security seriously and will respond promptly to verified reports.
 
-# Check if the configuration can be successfully applied
-if state_manager.succeed():
-    # Apply the configuration
-    state_manager.apply()
-else:
-    print("Configuration could not be applied successfully.")
+## Privacy & Telemetry
 
-```
+This package does **not** collect any telemetry or usage data.
 
-### Applying and Modifying Permissions
+Your privacy is respected — no data is transmitted to external services.
 
-```
-state_manager = FileStateManager('/var/www/')
-state_manager.configure({
-    'files': [
-        {'path': '/var/www/index.html', 'owner': 'www-data', 'group': 'www-data', 'mode': '0644'},
-        {'path': '/var/www/css/', 'recursive': True, 'owner': 'www-data', 'group': 'www-data', 'mode': '0755'}
-    ]
-})
-state_manager.apply()
-```
+## Support Channels
 
-### Applying and Modifying Permissions
+- **GitHub Issues**: Bug reports and feature requests
+- **GitHub Discussions**: Questions and community support
+- **Documentation**: Comprehensive guides and API reference
+- **Email**: contact@wexample.com for general inquiries
 
-```
-state_manager = FileStateManager('/project/')
-state_manager.configure({
-    'directories': [
-        {'path': '/project/src/Entity/', 'create': True},
-        {'path': '/project/src/Repository/', 'create': True, 'pattern': 'Entity/*Entity.php', 'target': 'Repository/*Repository.php'}
-    ]
-})
-state_manager.apply()
-```
+Community support is available through GitHub Discussions.
 
-## Links
+## Contribution Guidelines
 
-- Homepage: https://github.com/wexample/python-filestate
+We welcome contributions to the Wexample suite! 
+
+### How to Contribute
+
+1. **Fork** the repository
+2. **Create** a feature branch
+3. **Make** your changes
+4. **Test** thoroughly
+5. **Submit** a pull request
+
+## Maintainers & Authors
+
+Maintained by the Wexample team and community contributors.
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the full list of contributors.
 
 ## License
 
 MIT
-## Credits
 
-This package has been developed by [Wexample](https://wexample.com), a collection of tools and utilities to streamline development workflows.
+## Useful Links
 
-Visit [wexample.com](https://wexample.com) to discover more tools and resources for efficient development.
+- **Homepage**: https://github.com/wexample/python-filestate
+- **Documentation**: [docs.wexample.com](https://docs.wexample.com)
+- **Issue Tracker**: https://github.com/wexample/python-filestate/issues
+- **Discussions**: https://github.com/wexample/python-filestate/discussions
+- **PyPI**: [pypi.org/project/wexample-filestate](https://pypi.org/project/wexample-filestate/)
+
+## Integration in the Suite
+
+This package is part of the **Wexample Suite** — a collection of high-quality Python packages designed to work seamlessly together.
+
+### Related Packages
+
+The suite includes packages for configuration management, file handling, prompts, and more. Each package can be used independently or as part of the integrated suite.
+
+Visit the [Wexample Suite documentation](https://docs.wexample.com) for the complete package ecosystem.
+
+# About us
+
+Wexample stands as a cornerstone of the digital ecosystem — a collective of seasoned engineers, researchers, and creators driven by a relentless pursuit of technological excellence. More than a media platform, it has grown into a vibrant community where innovation meets craftsmanship, and where every line of code reflects a commitment to clarity, durability, and shared intelligence.
+
+This packages suite embodies this spirit. Trusted by professionals and enthusiasts alike, it delivers a consistent, high-quality foundation for modern development — open, elegant, and battle-tested. Its reputation is built on years of collaboration, refinement, and rigorous attention to detail, making it a natural choice for those who demand both robustness and beauty in their tools.
+
+Wexample cultivates a culture of mastery. Each package, each contribution carries the mark of a community that values precision, ethics, and innovation — a community proud to shape the future of digital craftsmanship.
+

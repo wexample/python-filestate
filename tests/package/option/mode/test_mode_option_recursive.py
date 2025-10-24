@@ -15,10 +15,6 @@ if TYPE_CHECKING:
 
 
 class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
-    def _get_target(self) -> TargetFileOrDirectoryType | None:
-        from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
-
-        return self.state_manager.find_by_name(TEST_DIR_NAME_RECURSIVE)
 
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
@@ -29,6 +25,10 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
             .get_dict()
             .get("permissions")
         )
+    def _get_target(self) -> TargetFileOrDirectoryType | None:
+        from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
+
+        return self.state_manager.find_by_name(TEST_DIR_NAME_RECURSIVE)
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE

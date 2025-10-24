@@ -61,7 +61,6 @@ class TestTomlFile(AbstractStructuredFileTest):
         assert config["port"] == 8000, "Integer values should be parsed correctly"
     
     # TOML-specific tests that are not covered by the abstract class
-    
     def test_toml_file_formatting(self, tmp_path) -> None:
         """Test TomlFile produces properly formatted TOML output."""
         self._setup_with_tmp_path(tmp_path)

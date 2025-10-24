@@ -53,7 +53,6 @@ class TestXmlFile(AbstractStructuredFileTest):
         assert isinstance(roundtrip, dict), "XML roundtrip should return dict"
     
     # XML-specific tests that are not covered by the abstract class
-    
     def test_xml_file_dumps_string_content(self, tmp_path) -> None:
         """Test XmlFile dumps method with string input."""
         self._setup_with_tmp_path(tmp_path)

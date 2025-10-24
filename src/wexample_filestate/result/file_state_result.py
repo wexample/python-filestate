@@ -12,7 +12,7 @@ class FileStateResult(AbstractResult):
     _executed_operations: list = []
 
     def _apply_single_operation(
-            self, operation: AbstractOperation, interactive: bool = False
+        self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
@@ -20,11 +20,11 @@ class FileStateResult(AbstractResult):
 
         if interactive:
             if self.state_manager.io.confirm(
-                    question=f"Do you want to apply this change:\n"
-                             f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
-                             f"  → {operation.description}\n",
-                    choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
-                    default="yes",
+                question=f"Do you want to apply this change:\n"
+                f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                f"  → {operation.description}\n",
+                choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+                default="yes",
             ).is_ok():
                 operation.apply()
                 return True

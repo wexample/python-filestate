@@ -71,7 +71,7 @@ class TestHtmlFile(AbstractContentFileTest):
         
         # Test with object that has __str__ method
         class MockHtmlObject:
-            def __str__(self):
+            def __str__(self) -> str:
                 return "<div>Generated HTML</div>"
         
         html_obj = MockHtmlObject()

@@ -16,8 +16,7 @@ if TYPE_CHECKING:
 class TestItemChangeModeOperationDict(TestItemChangeModeOperation):
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.const.test import TEST_FILE_NAME_SIMPLE_TEXT
-
-
+        
         return {
             "children": [
                 {

@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Union, cast
 
-from wexample_config.config_option.children_config_option import (
-    ChildrenConfigOption
-)
+from wexample_config.config_option.children_config_option import ChildrenConfigOption
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
@@ -73,9 +71,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
             is_file_type = config_is_item_type(child_config, DiskItemType.FILE)
             has_explicit_dir = config_is_item_type(child_config, DiskItemType.DIRECTORY)
 
-            name = item_name or child_config.get(
-                NameOption.get_name(), None
-            )
+            name = item_name or child_config.get(NameOption.get_name(), None)
             path = None
             if isinstance(name, str) and name:
                 path = self.get_parent_item().get_path() / name

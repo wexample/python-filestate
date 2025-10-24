@@ -54,7 +54,6 @@ class TestRegexOption(AbstractStateManagerTest):
         """Test RegexOption validation with file extension patterns."""
         self._setup_with_tmp_path(tmp_path)
         
-        
         # Test pattern for Python files
         option = RegexOption()
         option.set_value(r".*\.py$")
@@ -72,7 +71,6 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_validate_name_complex_pattern(self, tmp_path) -> None:
         """Test RegexOption validation with complex regex patterns."""
         self._setup_with_tmp_path(tmp_path)
-        
         
         # Test pattern for specific naming convention: word_word_number.ext
         option = RegexOption()
@@ -93,7 +91,6 @@ class TestRegexOption(AbstractStateManagerTest):
         """Test RegexOption validation with case-insensitive patterns."""
         self._setup_with_tmp_path(tmp_path)
         
-        
         # Test case-insensitive pattern using (?i) flag
         option = RegexOption()
         option.set_value(r"(?i)^readme\..*")
@@ -111,7 +108,6 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_apply_correction_no_change(self, tmp_path) -> None:
         """Test RegexOption apply_correction returns name unchanged."""
         self._setup_with_tmp_path(tmp_path)
-        
         
         option = RegexOption()
         option.set_value(r"test_.*")
@@ -151,7 +147,6 @@ class TestRegexOption(AbstractStateManagerTest):
         """Test RegexOption with empty pattern."""
         self._setup_with_tmp_path(tmp_path)
         
-        
         option = RegexOption()
         option.set_value("")
         
@@ -162,7 +157,6 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_dot_star_pattern(self, tmp_path) -> None:
         """Test RegexOption with .* pattern (matches everything)."""
         self._setup_with_tmp_path(tmp_path)
-        
         
         option = RegexOption()
         option.set_value(".*")
@@ -176,7 +170,6 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_anchored_vs_unanchored_patterns(self, tmp_path) -> None:
         """Test difference between anchored and unanchored regex patterns."""
         self._setup_with_tmp_path(tmp_path)
-        
         
         # Unanchored pattern (matches anywhere in string)
         option_unanchored = RegexOption()

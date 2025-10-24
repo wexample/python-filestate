@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.operation.abstract_existing_file_operation import (
     AbstractExistingFileOperation,
 )
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

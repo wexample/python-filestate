@@ -5,7 +5,6 @@ from typing import Any
 from pydantic import ConfigDict
 
 from wexample_config.config_value.config_value import ConfigValue
-from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
@@ -21,6 +20,7 @@ class YamlConfigValue(ConfigValue):
     )
 
     def to_option_raw_value(self) -> ConfigDict:
+        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
         return {
             SortRecursiveOption.get_name(): self.sort_recursive,
         }

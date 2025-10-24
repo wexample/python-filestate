@@ -63,7 +63,6 @@ class TestJsonFile(AbstractStructuredFileTest):
         assert original == roundtrip, "JSON roundtrip should preserve data exactly"
     
     # JSON-specific tests that are not covered by the abstract class
-    
     def test_json_file_formatting(self, tmp_path) -> None:
         """Test JsonFile produces properly formatted output."""
         self._setup_with_tmp_path(tmp_path)

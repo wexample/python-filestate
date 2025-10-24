@@ -91,6 +91,5 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
                 corrected_name = option.apply_correction(corrected_name)
         
         # Note: RegexOption doesn't provide automatic correction
-        
         # Reconstruct full name with extension
         return corrected_name + ext

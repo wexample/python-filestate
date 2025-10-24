@@ -13,7 +13,7 @@ class AbstractTextChildOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return bool
-    
+
     def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content, return None if file doesn't exist."""
         if not target.source or not target.source.get_path().exists():

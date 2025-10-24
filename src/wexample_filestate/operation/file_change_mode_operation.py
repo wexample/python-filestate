@@ -38,7 +38,9 @@ class FileChangeModeOperation(AbstractOperation):
         self._original_octal_mode = self.target.get_source().get_octal_mode()
 
         if self.recursive:
-            file_change_mode_recursive(self.target.get_source().get_path(), self.target_mode)
+            file_change_mode_recursive(
+                self.target.get_source().get_path(), self.target_mode
+            )
         else:
             file_change_mode(self.target.get_source().get_path(), self.target_mode)
 

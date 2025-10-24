@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestNameFormatOptionCaseFormat(AbstractTestOperation):
     """Test NameFormatOption with case format validation."""
+
     test_name: str = "TestFile.txt"
 
     def _operation_test_assert_applied(self) -> None:
@@ -88,7 +89,11 @@ class TestNameFormatOptionPrefixSuffix(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": {"value": self.test_name, "prefix": "prefix_", "suffix": "_suffix.txt"},
+                    "name": {
+                        "value": self.test_name,
+                        "prefix": "prefix_",
+                        "suffix": "_suffix.txt",
+                    },
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",

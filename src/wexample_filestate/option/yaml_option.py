@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_config.config_option.abstract_nested_config_option import AbstractNestedConfigOption
+from wexample_config.config_option.abstract_nested_config_option import (
+    AbstractNestedConfigOption,
+)
 from wexample_file.enum.local_path_type import LocalPathType
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
@@ -18,6 +20,7 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.config_value.yaml_config_value import YamlConfigValue
+
         return Union[dict, YamlConfigValue]
 
     def applicable_on_directory(self) -> bool:
@@ -32,13 +35,16 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         ]
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
+        from wexample_filestate.option.yaml.sort_recursive_option import (
+            SortRecursiveOption,
+        )
 
         return [
             SortRecursiveOption,
         ]
 
-    def create_required_operation(self, target: TargetFileOrDirectoryType) -> AbstractOperation | None:
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
         """Create operation using child options."""
         return self._create_child_required_operation(target=target)
-

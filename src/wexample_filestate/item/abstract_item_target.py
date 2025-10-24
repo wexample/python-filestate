@@ -120,79 +120,6 @@ class AbstractItemTarget(
 
         return result
 
-    def _find_first_operation(
-        self: TargetFileOrDirectoryType,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
-    ) -> AbstractOperation | None:
-        """Find the first option that requires an operation and return it.
-
-        Returns None if no operation is required.
-        """
-        for option in self.options.values():
-            operation = self.try_create_operation_from_option(
-                option, scopes, filter_operation
-            )
-            if operation is not None:
-                return operation
-        return None
-
-    def try_create_operation_from_option(
-        self: TargetFileOrDirectoryType,
-        option: OptionMixin,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
-    ) -> AbstractOperation | None:
-        """Try to create an operation from an option.
-
-        Returns None if no operation is needed or if the option doesn't support the new interface.
-        """
-        if self.is_file() and not option.applicable_on_file():
-            return None
-
-        if self.is_directory() and not option.applicable_on_directory():
-            return None
-
-        if not self.get_path().exists() and not option.applicable_on_missing():
-            return None
-
-        if not option.applicable_on_empty_content_file():
-            if not self.get_local_file().read().strip():
-                return None
-
-        # Create the required operation (returns None if satisfied/not applicable)
-        operation = option.create_required_operation(target=self)
-        if operation is None:
-            return None
-
-        # Apply filters
-        if not self._operation_passes_filters(operation, scopes, filter_operation):
-            return None
-
-        return operation
-
-    def _operation_passes_filters(
-        self,
-        operation: AbstractOperation,
-        scopes: set[Scope] | None = None,
-        filter_operation: str | None = None,
-    ) -> bool:
-        """Check if operation passes the provided filters."""
-        if filter_operation is not None and not operation.__class__.matches_filter(
-            filter_operation
-        ):
-            return False
-
-        if scopes is not None and operation.get_scope() not in scopes:
-            return False
-
-        return True
-
-    def _path_matches(self, filter_path: str) -> bool:
-        import fnmatch
-
-        return fnmatch.fnmatch(str(self.get_path()), filter_path)
-
     def build_operations(
         self: TargetFileOrDirectoryType,
         result: AbstractResult,
@@ -382,3 +309,76 @@ class AbstractItemTarget(
 
         self.last_result = result
         return result
+
+    def try_create_operation_from_option(
+        self: TargetFileOrDirectoryType,
+        option: OptionMixin,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> AbstractOperation | None:
+        """Try to create an operation from an option.
+
+        Returns None if no operation is needed or if the option doesn't support the new interface.
+        """
+        if self.is_file() and not option.applicable_on_file():
+            return None
+
+        if self.is_directory() and not option.applicable_on_directory():
+            return None
+
+        if not self.get_path().exists() and not option.applicable_on_missing():
+            return None
+
+        if not option.applicable_on_empty_content_file():
+            if not self.get_local_file().read().strip():
+                return None
+
+        # Create the required operation (returns None if satisfied/not applicable)
+        operation = option.create_required_operation(target=self)
+        if operation is None:
+            return None
+
+        # Apply filters
+        if not self._operation_passes_filters(operation, scopes, filter_operation):
+            return None
+
+        return operation
+
+    def _find_first_operation(
+        self: TargetFileOrDirectoryType,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> AbstractOperation | None:
+        """Find the first option that requires an operation and return it.
+
+        Returns None if no operation is required.
+        """
+        for option in self.options.values():
+            operation = self.try_create_operation_from_option(
+                option, scopes, filter_operation
+            )
+            if operation is not None:
+                return operation
+        return None
+
+    def _operation_passes_filters(
+        self,
+        operation: AbstractOperation,
+        scopes: set[Scope] | None = None,
+        filter_operation: str | None = None,
+    ) -> bool:
+        """Check if operation passes the provided filters."""
+        if filter_operation is not None and not operation.__class__.matches_filter(
+            filter_operation
+        ):
+            return False
+
+        if scopes is not None and operation.get_scope() not in scopes:
+            return False
+
+        return True
+
+    def _path_matches(self, filter_path: str) -> bool:
+        import fnmatch
+
+        return fnmatch.fnmatch(str(self.get_path()), filter_path)

@@ -16,27 +16,27 @@ from wexample_filestate.option.name.suffix_option import SuffixOption
 
 @base_class
 class NameConfigValue(ConfigValue):
-    raw: Any = public_field(
-        default=None, description="Disabled raw value for this config."
-    )
-    value: str = public_field(
-        description="The name value",
-    )
     case_format: str | None = public_field(
         default=None,
         description="Case format: uppercase, lowercase, camelCase, snake_case, kebab-case",
-    )
-    regex: str | None = public_field(
-        default=None,
-        description="Regular expression pattern the name must match",
     )
     prefix: str | None = public_field(
         default=None,
         description="Required prefix for the name",
     )
+    raw: Any = public_field(
+        default=None, description="Disabled raw value for this config."
+    )
+    regex: str | None = public_field(
+        default=None,
+        description="Regular expression pattern the name must match",
+    )
     suffix: str | None = public_field(
         default=None,
         description="Required suffix for the name",
+    )
+    value: str = public_field(
+        description="The name value",
     )
 
     def to_option_raw_value(self) -> ConfigDict:

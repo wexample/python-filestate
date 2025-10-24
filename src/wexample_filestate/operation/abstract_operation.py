@@ -23,14 +23,14 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
         description="Flag indicating whether the operation has already been applied",
         default=False,
     )
+    description: TargetFileOrDirectory = public_field(
+        description="Explain the content of the change",
+    )
     option: OptionMixin = public_field(
         description="The source option which created the operation",
     )
     target: TargetFileOrDirectory = public_field(
         description="The target file or directory on which this operation is executed",
-    )
-    description: TargetFileOrDirectory = public_field(
-        description="Explain the content of the change",
     )
     _tty_width: int = private_field(
         description="The terminal width in characters used for display formatting",

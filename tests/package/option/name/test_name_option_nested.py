@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class TestNameOptionNested(AbstractTestOperation):
     """Test NameOption with nested dict format."""
+
     test_name: str = "nested-file.txt"
 
     def _operation_test_assert_applied(self) -> None:
@@ -28,9 +29,7 @@ class TestNameOptionNested(AbstractTestOperation):
         return {
             "children": [
                 {
-                    "name": {
-                        "value": self.test_name
-                    },
+                    "name": {"value": self.test_name},
                     "should_exist": True,
                     "type": DiskItemType.FILE,
                     "content": "test content",

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from wexample_filestate.option.name.abstract_name_child_option import AbstractNameChildOption
+from wexample_filestate.option.name.abstract_name_child_option import (
+    AbstractNameChildOption,
+)
 from wexample_helpers.decorator.base_class import base_class
 
 
@@ -13,7 +15,7 @@ class PrefixOption(AbstractNameChildOption):
         """Validate if name starts with the required prefix."""
         if self.get_value().is_none():
             return True
-            
+
         prefix = self.get_value().get_str()
         return name.startswith(prefix)
 
@@ -21,7 +23,7 @@ class PrefixOption(AbstractNameChildOption):
         """Apply prefix correction to name."""
         if self.get_value().is_none():
             return name
-            
+
         prefix = self.get_value().get_str()
         if not name.startswith(prefix):
             return prefix + name

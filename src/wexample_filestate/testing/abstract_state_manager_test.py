@@ -83,5 +83,11 @@ class AbstractStateManagerTest(ABC):
     ) -> list[type[AbstractOptionsProvider]] | None:
         return None
 
-    def _get_test_state_manager_path(self, package_root_path: str | None = None) -> Path:
-        return Path(package_root_path or self._get_package_root_path()) / "tests" / "resources"
+    def _get_test_state_manager_path(
+        self, package_root_path: str | None = None
+    ) -> Path:
+        return (
+            Path(package_root_path or self._get_package_root_path())
+            / "tests"
+            / "resources"
+        )

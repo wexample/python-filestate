@@ -4,8 +4,7 @@ from collections.abc import Callable
 from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.option.mixin.option_mixin import \
-    OptionMixin
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 from wexample_helpers.decorator.base_class import base_class
 

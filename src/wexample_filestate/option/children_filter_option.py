@@ -176,4 +176,3 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
         if "type" in config and not config_has_same_type_as_path(config, entry_path):
             return False
         return True
-

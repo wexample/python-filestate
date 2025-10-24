@@ -19,7 +19,6 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
         """Get the path to test data directory."""
         return Path(__file__).parent / "test_data"
     
-    
     def _copy_directory_structure(self, source: Path, target: Path) -> None:
         """Recursively copy directory structure for testing."""
         import shutil

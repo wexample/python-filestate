@@ -13,11 +13,11 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class ModeConfigValue(ConfigValue):
-    raw: Any = public_field(
-        default=None, description="Disabled raw value for this config."
-    )
     permissions: str | int = public_field(
         description="The expected file permission",
+    )
+    raw: Any = public_field(
+        default=None, description="Disabled raw value for this config."
     )
     recursive: bool | None = public_field(
         default=None,

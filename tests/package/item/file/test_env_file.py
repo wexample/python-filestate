@@ -53,7 +53,6 @@ class TestEnvFile(AbstractContentFileTest):
         assert loaded_content["SECRET_KEY"] == ""  # Empty value
     
     # ENV-specific tests that are not covered by the abstract class
-    
     def test_env_file_dumps_formatting(self, tmp_path) -> None:
         """Test EnvFile produces properly formatted .env output."""
         self._setup_with_tmp_path(tmp_path)

@@ -30,7 +30,9 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
         result = self.state_manager.dry_run()
         operations_count = len(result.operations)
         expected_count = self._operation_get_count()
-        assert operations_count == expected_count, f"Expected {expected_count} operation(s) but found {operations_count}"
+        assert (
+            operations_count == expected_count
+        ), f"Expected {expected_count} operation(s) but found {operations_count}"
         return result
 
     def _operation_get_count(self) -> int:
@@ -59,7 +61,9 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
             # For tests expecting 0 operations, just verify no operations are created
             result = self.state_manager.dry_run()
             operations_count = len(result.operations)
-            assert operations_count == 0, f"Expected 0 operations but found {operations_count}"
+            assert (
+                operations_count == 0
+            ), f"Expected 0 operations but found {operations_count}"
 
     def _operation_test_rollback(self) -> None:
         self.state_manager.rollback()
