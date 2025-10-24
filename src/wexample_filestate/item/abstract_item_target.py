@@ -8,9 +8,6 @@ from wexample_config.config_option.abstract_nested_config_option import (
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
-from wexample_filestate.exception.user_interrupted_exception import (
-    UserInterruptedException,
-)
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.field import public_field
@@ -109,7 +106,7 @@ class AbstractItemTarget(
 
             if len(result.operations) > 0:
                 result.apply_operations(interactive=interactive)
-                
+
                 # Push applied operations to history stack for sequential rollbacks
                 applied_operations = [op for op in result.operations if op.applied]
                 if applied_operations:
@@ -118,7 +115,7 @@ class AbstractItemTarget(
                 self.info(
                     message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
                 )
-        except UserInterruptedException:
+        except KeyboardInterrupt:
             self.log("Canceled by user")
 
         return result
@@ -266,7 +263,7 @@ class AbstractItemTarget(
                 max=max,
             )
             result.apply_operations()
-        except UserInterruptedException:
+        except KeyboardInterrupt:
             self.log("Canceled by user")
 
         return result
