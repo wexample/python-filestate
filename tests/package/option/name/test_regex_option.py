@@ -15,6 +15,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_anchored_vs_unanchored_patterns(self, tmp_path) -> None:
         """Test difference between anchored and unanchored regex patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Unanchored pattern (matches anywhere in string)
@@ -51,6 +52,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_apply_correction_no_change(self, tmp_path) -> None:
         """Test RegexOption apply_correction returns name unchanged."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()
@@ -68,6 +70,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_apply_correction_with_none_value(self, tmp_path) -> None:
         """Test RegexOption apply_correction with None value."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()
@@ -81,6 +84,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_creation(self, tmp_path) -> None:
         """Test RegexOption can be created."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()
@@ -92,6 +96,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_dot_star_pattern(self, tmp_path) -> None:
         """Test RegexOption with .* pattern (matches everything)."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()
@@ -110,6 +115,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_empty_pattern(self, tmp_path) -> None:
         """Test RegexOption with empty pattern."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()
@@ -126,6 +132,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_invalid_regex_pattern(self, tmp_path) -> None:
         """Test RegexOption behavior with invalid regex patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         import re
@@ -145,6 +152,7 @@ class TestRegexOption(AbstractStateManagerTest):
     ) -> None:
         """Test RegexOption validation with case-insensitive patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test case-insensitive pattern using (?i) flag
@@ -168,6 +176,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_validate_name_complex_pattern(self, tmp_path) -> None:
         """Test RegexOption validation with complex regex patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test pattern for specific naming convention: word_word_number.ext
@@ -202,6 +211,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_validate_name_file_extension_pattern(self, tmp_path) -> None:
         """Test RegexOption validation with file extension patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test pattern for Python files
@@ -225,6 +235,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_validate_name_simple_pattern(self, tmp_path) -> None:
         """Test RegexOption validation with simple regex patterns."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test pattern for files starting with "test_"
@@ -252,6 +263,7 @@ class TestRegexOption(AbstractStateManagerTest):
     def test_regex_option_validate_name_with_none_value(self, tmp_path) -> None:
         """Test RegexOption validation with None value (should always return True)."""
         from wexample_filestate.option.name.regex_option import RegexOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = RegexOption()

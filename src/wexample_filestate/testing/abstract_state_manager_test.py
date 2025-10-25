@@ -5,12 +5,14 @@ from abc import ABC
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
-    from wexample_filestate.utils.file_state_manager import FileStateManager
     from wexample_helpers.const.types import PathOrString
-    from pathlib import Path
+
+    from wexample_filestate.utils.file_state_manager import FileStateManager
 
 
 class AbstractStateManagerTest(ABC):
@@ -72,9 +74,11 @@ class AbstractStateManagerTest(ABC):
         )
 
     def _setup_with_tmp_path(self, tmp_path) -> None:
-        from wexample_filestate.utils.file_state_manager import FileStateManager
-        from wexample_prompt.common.io_manager import IoManager
         import shutil
+
+        from wexample_prompt.common.io_manager import IoManager
+
+        from wexample_filestate.utils.file_state_manager import FileStateManager
 
         # Copy test data from resources to tmp_path
         resources_path = self._get_test_state_manager_path()

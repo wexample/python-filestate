@@ -1,17 +1,19 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Union
+
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
@@ -19,6 +21,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from pathlib import Path
+
         from wexample_filestate.config_value.name_config_value import NameConfigValue
 
         return Union[str, Path, dict, NameConfigValue, Callable]
@@ -39,14 +42,14 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         return None
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.option.name.value_option import ValueOption
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
-        from wexample_filestate.option.name.regex_option import RegexOption
-        from wexample_filestate.option.name.prefix_option import PrefixOption
-        from wexample_filestate.option.name.suffix_option import SuffixOption
         from wexample_filestate.option.name.on_bad_format_option import (
             OnBadFormatOption,
         )
+        from wexample_filestate.option.name.prefix_option import PrefixOption
+        from wexample_filestate.option.name.regex_option import RegexOption
+        from wexample_filestate.option.name.suffix_option import SuffixOption
+        from wexample_filestate.option.name.value_option import ValueOption
 
         return [
             ValueOption,
@@ -79,6 +82,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
     def set_value(self, raw_value: Any) -> None:
         from pathlib import Path
+
         from wexample_filestate.option.name.value_option import ValueOption
 
         if isinstance(raw_value, Path):
@@ -98,8 +102,8 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
     def validate_name(self, name: str) -> bool:
         """Validate if a name matches all format rules using child options."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
-        from wexample_filestate.option.name.regex_option import RegexOption
         from wexample_filestate.option.name.prefix_option import PrefixOption
+        from wexample_filestate.option.name.regex_option import RegexOption
         from wexample_filestate.option.name.suffix_option import SuffixOption
 
         # Check each format rule using child options

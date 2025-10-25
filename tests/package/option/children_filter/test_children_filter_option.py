@@ -16,7 +16,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_callable_filter(self, tmp_path) -> None:
         """Test ChildrenFilterOption with callable filter."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -68,7 +70,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     ) -> None:
         """Test ChildrenFilterOption handles exceptions in callable filter."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -110,7 +114,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_complex_pattern(self, tmp_path) -> None:
         """Test ChildrenFilterOption with complex regex pattern."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -166,7 +172,10 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
 
     def test_children_filter_option_creation(self, tmp_path) -> None:
         """Test ChildrenFilterOption can be created."""
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
+
         self._setup_with_tmp_path(tmp_path)
 
         option = ChildrenFilterOption(pattern={"type": "file"}, name_pattern="*.txt")
@@ -180,7 +189,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_name_pattern_directories(self, tmp_path) -> None:
         """Test ChildrenFilterOption with name pattern for directories."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -229,7 +240,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_name_pattern_files(self, tmp_path) -> None:
         """Test ChildrenFilterOption with name pattern for files."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -280,7 +293,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_no_pattern_no_filter(self, tmp_path) -> None:
         """Test ChildrenFilterOption with no pattern and no filter."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_prompt.common.io_manager import IoManager
 
         self._setup_with_tmp_path(tmp_path)
@@ -312,7 +327,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_recursive_false(self, tmp_path) -> None:
         """Test ChildrenFilterOption with recursive=False (default)."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -353,7 +370,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_recursive_true(self, tmp_path) -> None:
         """Test ChildrenFilterOption with recursive=True."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -399,7 +418,9 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def test_children_filter_option_type_filtering(self, tmp_path) -> None:
         """Test ChildrenFilterOption respects type filtering."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-        from wexample_filestate.option.children_filter_option import ChildrenFilterOption
+        from wexample_filestate.option.children_filter_option import (
+            ChildrenFilterOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_prompt.common.io_manager import IoManager
 
@@ -449,6 +470,7 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"
 
 
@@ -549,4 +571,5 @@ class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"

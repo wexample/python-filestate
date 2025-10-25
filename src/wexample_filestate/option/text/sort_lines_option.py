@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.option.text.abstract_text_child_option import (
     AbstractTextChildOption,
 )
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

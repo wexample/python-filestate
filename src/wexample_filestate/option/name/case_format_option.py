@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import re
 
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.option.name.abstract_name_child_option import (
     AbstractNameChildOption,
 )
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

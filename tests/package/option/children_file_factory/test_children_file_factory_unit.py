@@ -5,7 +5,6 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from pathlib import Path
 
 

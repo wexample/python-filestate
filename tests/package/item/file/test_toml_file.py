@@ -45,6 +45,7 @@ class TestTomlFile(AbstractStructuredFileTest):
     def _get_file_class(self) -> type[TomlFile]:
         """Get the TomlFile class."""
         from wexample_filestate.item.file.toml_file import TomlFile
+
         return TomlFile
 
     def _get_file_type_name(self) -> str:

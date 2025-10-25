@@ -15,6 +15,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_add_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction adds missing suffix."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .txt suffix
@@ -43,6 +44,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_case_sensitive(self, tmp_path) -> None:
         """Test SuffixOption apply_correction is case-sensitive."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .TXT suffix (uppercase)
@@ -65,6 +67,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_custom_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction with custom suffixes."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test _backup suffix
@@ -93,6 +96,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_empty_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction with empty suffix."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = SuffixOption()
@@ -110,6 +114,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_multiple_suffixes(self, tmp_path) -> None:
         """Test SuffixOption behavior with names that could have multiple suffixes."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .bak suffix
@@ -135,6 +140,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_apply_correction_with_none_value(self, tmp_path) -> None:
         """Test SuffixOption apply_correction with None value."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = SuffixOption()
@@ -151,6 +157,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_creation(self, tmp_path) -> None:
         """Test SuffixOption can be created."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = SuffixOption()
@@ -160,6 +167,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_roundtrip_validation_correction(self, tmp_path) -> None:
         """Test that apply_correction produces names that validate successfully."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .log suffix
@@ -177,6 +185,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_special_characters_in_suffix(self, tmp_path) -> None:
         """Test SuffixOption with special characters in suffix."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test suffix with special characters
@@ -208,6 +217,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_validate_name_case_sensitive(self, tmp_path) -> None:
         """Test SuffixOption validation is case-sensitive."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .TXT suffix (uppercase)
@@ -229,6 +239,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_validate_name_custom_suffix(self, tmp_path) -> None:
         """Test SuffixOption validation with custom suffixes."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test _backup suffix
@@ -255,6 +266,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_validate_name_empty_suffix(self, tmp_path) -> None:
         """Test SuffixOption validation with empty suffix."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = SuffixOption()
@@ -268,6 +280,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_validate_name_file_extension(self, tmp_path) -> None:
         """Test SuffixOption validation with file extension suffixes."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test .txt suffix
@@ -295,6 +308,7 @@ class TestSuffixOption(AbstractStateManagerTest):
     def test_suffix_option_validate_name_with_none_value(self, tmp_path) -> None:
         """Test SuffixOption validation with None value (should always return True)."""
         from wexample_filestate.option.name.suffix_option import SuffixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = SuffixOption()

@@ -104,6 +104,7 @@ class TestJsonFile(AbstractStructuredFileTest):
     def _get_file_class(self) -> type[JsonFile]:
         """Get the JsonFile class."""
         from wexample_filestate.item.file.json_file import JsonFile
+
         return JsonFile
 
     def _get_file_type_name(self) -> str:

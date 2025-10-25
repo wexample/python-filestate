@@ -89,6 +89,7 @@ class TestXmlFile(AbstractStructuredFileTest):
     def _get_file_class(self) -> type[XmlFile]:
         """Get the XmlFile class."""
         from wexample_filestate.item.file.xml_file import XmlFile
+
         return XmlFile
 
     def _get_file_type_name(self) -> str:

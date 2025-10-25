@@ -81,6 +81,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
     def test_for_each_child_file_recursive(self, tmp_path) -> None:
         """Test for_each_child_file_recursive() method."""
         from wexample_filestate.item.item_target_file import ItemTargetFile
+
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -113,6 +114,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         """Test for_each_child_of_type() method."""
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
+
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -156,6 +158,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
     def test_for_each_child_of_type_recursive(self, tmp_path) -> None:
         """Test for_each_child_of_type_recursive() method."""
         from wexample_filestate.item.item_target_file import ItemTargetFile
+
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -334,4 +337,5 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data" / "directory_test"

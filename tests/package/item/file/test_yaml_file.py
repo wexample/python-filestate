@@ -45,6 +45,7 @@ class TestYamlFile(AbstractStructuredFileTest):
     def _get_file_class(self) -> type[YamlFile]:
         """Get the YamlFile class."""
         from wexample_filestate.item.file.yaml_file import YamlFile
+
         return YamlFile
 
     def _get_file_type_name(self) -> str:

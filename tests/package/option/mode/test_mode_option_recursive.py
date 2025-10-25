@@ -6,6 +6,7 @@ from tests.package.option.mode.test_mode_option import TestItemChangeModeOperati
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
+
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
@@ -26,11 +27,11 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
         return self.state_manager.find_by_name(TEST_DIR_NAME_RECURSIVE)
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
-        from wexample_filestate.option.name_option import NameOption
+        from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
         from wexample_filestate.option.mode.permissions_option import PermissionsOption
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
         from wexample_filestate.option.mode_option import ModeOption
-        from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
+        from wexample_filestate.option.name_option import NameOption
 
         return {
             "children": [

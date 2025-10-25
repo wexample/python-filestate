@@ -74,5 +74,5 @@ class TestWithWorkdirMixin(AbstractWorkdirMixinTest):
         @base_class
         class WorkdirTest(WithWorkdirMixin, BaseClass):
             """Test class that inherits from WithWorkdirMixin."""
-        
+
         return WorkdirTest

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
@@ -7,8 +8,9 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 )
 
 if TYPE_CHECKING:
-    from wexample_helpers.const.types import StructuredData
     from pathlib import Path
+
+    from wexample_helpers.const.types import StructuredData
 
 
 class TestStructuredContentFile(AbstractStateManagerTest):

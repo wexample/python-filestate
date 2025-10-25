@@ -9,7 +9,6 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from pathlib import Path
 
 # Type variable for the specific file type (HtmlFile, EnvFile, etc.)
@@ -81,7 +80,6 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
     @abstractmethod
     def _get_expected_extension(self) -> str:
         """Get the expected file extension (e.g., 'html', 'env')."""
-        pass
 
     @abstractmethod
     def _get_extension_constants(self) -> dict[str, str]:
@@ -89,22 +87,18 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
 
         Example: {'EXTENSION_HTML': 'html', 'EXTENSION_HTM': 'htm'}
         """
-        pass
 
     @abstractmethod
     def _get_file_class(self) -> type[FileType]:
         """Get the file class to test (e.g., HtmlFile, EnvFile)."""
-        pass
 
     @abstractmethod
     def _get_file_type_name(self) -> str:
         """Get the file type name for messages (e.g., 'HtmlFile', 'EnvFile')."""
-        pass
 
     @abstractmethod
     def _get_sample_filename(self) -> str:
         """Get the sample test file name (e.g., 'sample.html')."""
-        pass
 
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
@@ -126,4 +120,3 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
 
         This method should contain file-type-specific validations.
         """
-        pass

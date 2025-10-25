@@ -43,6 +43,7 @@ class TestEnvFile(AbstractContentFileTest):
     def _get_file_class(self) -> type[EnvFile]:
         """Get the EnvFile class."""
         from wexample_filestate.item.file.env_file import EnvFile
+
         return EnvFile
 
     def _get_file_type_name(self) -> str:

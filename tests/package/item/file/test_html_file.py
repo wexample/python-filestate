@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.html_file import HtmlFile
 from wexample_filestate.testing.abstract_content_file_test import (
     AbstractContentFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.html_file import HtmlFile
 
 
 class TestHtmlFile(AbstractContentFileTest):
@@ -55,6 +54,7 @@ class TestHtmlFile(AbstractContentFileTest):
 
     def _get_file_class(self) -> type[HtmlFile]:
         """Get the HtmlFile class."""
+        from wexample_filestate.item.file.html_file import HtmlFile
         return HtmlFile
 
     def _get_file_type_name(self) -> str:

@@ -9,7 +9,6 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from pathlib import Path
 
 # Type variable for the specific file type (JsonFile, YamlFile, etc.)
@@ -220,27 +219,22 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
     @abstractmethod
     def _get_expected_extension(self) -> str:
         """Get the expected file extension (e.g., 'json', 'yml')."""
-        pass
 
     @abstractmethod
     def _get_extension_constant_name(self) -> str:
         """Get the extension constant name (e.g., 'EXTENSION_JSON')."""
-        pass
 
     @abstractmethod
     def _get_file_class(self) -> type[FileType]:
         """Get the file class to test (e.g., JsonFile, YamlFile)."""
-        pass
 
     @abstractmethod
     def _get_file_type_name(self) -> str:
         """Get the file type name for messages (e.g., 'JsonFile', 'YamlFile')."""
-        pass
 
     @abstractmethod
     def _get_sample_filename(self) -> str:
         """Get the sample test file name (e.g., 'sample.json')."""
-        pass
 
     def _get_test_data_for_dumps(self) -> dict[str, Any]:
         """Get test data for dumps test.

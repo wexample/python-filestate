@@ -3,12 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
@@ -78,10 +79,11 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
 
     def _generate_corrected_name(self, current_name: str) -> str | None:
         """Generate a corrected name based on format rules using child options."""
+        import os
+
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
         from wexample_filestate.option.name.prefix_option import PrefixOption
         from wexample_filestate.option.name.suffix_option import SuffixOption
-        import os
 
         # Get parent NameOption that contains the format rules
         parent_option = self.get_parent()
