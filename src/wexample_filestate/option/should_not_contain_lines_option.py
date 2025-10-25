@@ -3,12 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class

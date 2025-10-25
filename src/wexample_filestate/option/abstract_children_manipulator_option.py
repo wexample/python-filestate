@@ -42,6 +42,7 @@ class AbstractChildrenManipulationOption(
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_config.const.types import DictConfig
+
         return DictConfig
 
     @abstract_method

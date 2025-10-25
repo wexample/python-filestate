@@ -15,54 +15,19 @@ if TYPE_CHECKING:
 class TestJsonFile(AbstractStructuredFileTest):
     """Test JsonFile functionality - smoke tests for JSON file handling."""
 
-    def _get_file_class(self) -> type[JsonFile]:
-        """Get the JsonFile class."""
-        return JsonFile
+    def test_json_file_dumps_none_content(self, tmp_path) -> None:
+        """Test JsonFile dumps method with None input."""
+        self._setup_with_tmp_path(tmp_path)
 
-    def _get_expected_extension(self) -> str:
-        """Get the expected file extension."""
-        return "json"
+        json_file = self._create_file("sample.json", tmp_path)
 
-    def _get_extension_constant_name(self) -> str:
-        """Get the extension constant name."""
-        return "EXTENSION_JSON"
+        # Test with None content
+        result = json_file.dumps(None)
+        assert result == "{}", "Should return empty JSON object for None input"
 
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name."""
-        return "sample.json"
-
-    def _get_file_type_name(self) -> str:
-        """Get the file type name for messages."""
-        return "JsonFile"
-
-    def _validate_parsed_content(self, parsed: dict) -> None:
-        """Validate the structure of parsed JSON content."""
-        # Call parent validation
-        super()._validate_parsed_content(parsed)
-
-        # JSON-specific validations
-        assert "dependencies" in parsed, "Should parse dependencies field"
-        assert "scripts" in parsed, "Should parse scripts field"
-
-        # Test specific values
-        assert parsed["name"] == "test-project"
-        assert parsed["version"] == "1.0.0"
-        assert parsed["author"] == "Test Author"
-        assert parsed["license"] == "MIT"
-
-        # Test nested objects
-        assert isinstance(parsed["dependencies"], dict), "Dependencies should be dict"
-        assert "express" in parsed["dependencies"]
-        assert "lodash" in parsed["dependencies"]
-
-        assert isinstance(parsed["scripts"], dict), "Scripts should be dict"
-        assert "start" in parsed["scripts"]
-        assert "test" in parsed["scripts"]
-
-    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
-        """Assert JSON roundtrip equality."""
-        # For JSON, we expect exact equality
-        assert original == roundtrip, "JSON roundtrip should preserve data exactly"
+        # Should be valid JSON
+        parsed = json.loads(result)
+        assert parsed == {}, "Should parse to empty dict"
 
     # JSON-specific tests that are not covered by the abstract class
     def test_json_file_formatting(self, tmp_path) -> None:
@@ -102,20 +67,6 @@ class TestJsonFile(AbstractStructuredFileTest):
         except Exception:
             pass  # Expected
 
-    def test_json_file_dumps_none_content(self, tmp_path) -> None:
-        """Test JsonFile dumps method with None input."""
-        self._setup_with_tmp_path(tmp_path)
-
-        json_file = self._create_file("sample.json", tmp_path)
-
-        # Test with None content
-        result = json_file.dumps(None)
-        assert result == "{}", "Should return empty JSON object for None input"
-
-        # Should be valid JSON
-        parsed = json.loads(result)
-        assert parsed == {}, "Should parse to empty dict"
-
     def test_json_file_unicode_handling(self, tmp_path) -> None:
         """Test JsonFile handles Unicode characters correctly."""
         self._setup_with_tmp_path(tmp_path)
@@ -137,3 +88,52 @@ class TestJsonFile(AbstractStructuredFileTest):
         assert reparsed == test_data, "Unicode characters should be preserved"
         assert "tést-àpp" in serialized, "Unicode should be in output"
         assert "🚀" in serialized, "Emoji should be in output"
+
+    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
+        """Assert JSON roundtrip equality."""
+        # For JSON, we expect exact equality
+        assert original == roundtrip, "JSON roundtrip should preserve data exactly"
+
+    def _get_expected_extension(self) -> str:
+        """Get the expected file extension."""
+        return "json"
+
+    def _get_extension_constant_name(self) -> str:
+        """Get the extension constant name."""
+        return "EXTENSION_JSON"
+
+    def _get_file_class(self) -> type[JsonFile]:
+        """Get the JsonFile class."""
+        return JsonFile
+
+    def _get_file_type_name(self) -> str:
+        """Get the file type name for messages."""
+        return "JsonFile"
+
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name."""
+        return "sample.json"
+
+    def _validate_parsed_content(self, parsed: dict) -> None:
+        """Validate the structure of parsed JSON content."""
+        # Call parent validation
+        super()._validate_parsed_content(parsed)
+
+        # JSON-specific validations
+        assert "dependencies" in parsed, "Should parse dependencies field"
+        assert "scripts" in parsed, "Should parse scripts field"
+
+        # Test specific values
+        assert parsed["name"] == "test-project"
+        assert parsed["version"] == "1.0.0"
+        assert parsed["author"] == "Test Author"
+        assert parsed["license"] == "MIT"
+
+        # Test nested objects
+        assert isinstance(parsed["dependencies"], dict), "Dependencies should be dict"
+        assert "express" in parsed["dependencies"]
+        assert "lodash" in parsed["dependencies"]
+
+        assert isinstance(parsed["scripts"], dict), "Scripts should be dict"
+        assert "start" in parsed["scripts"]
+        assert "test" in parsed["scripts"]

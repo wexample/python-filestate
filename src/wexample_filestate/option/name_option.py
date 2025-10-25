@@ -24,22 +24,20 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
         return Union[str, Path, dict, NameConfigValue, Callable]
 
-    def set_value(self, raw_value: Any) -> None:
-        from wexample_filestate.option.name.value_option import ValueOption
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
+        """Create operation via OnBadFormatOption if name format validation fails."""
+        from wexample_filestate.option.name.on_bad_format_option import (
+            OnBadFormatOption,
+        )
 
-        if isinstance(raw_value, Path):
-            raw_value = str(raw_value)
+        # Check if OnBadFormatOption is configured
+        on_bad_format_option = self.get_option(OnBadFormatOption)
+        if on_bad_format_option:
+            return on_bad_format_option.create_required_operation(target)
 
-        # Store callable directly without conversion
-        if callable(raw_value):
-            self._callable_value = raw_value
-            # Create a placeholder dict to satisfy the nested config structure
-            raw_value = {ValueOption.get_name(): None}
-        # Convert string form to dict form for consistency
-        elif isinstance(raw_value, str):
-            raw_value = {ValueOption.get_name(): raw_value}
-
-        super().set_value(raw_value=raw_value)
+        return None
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.option.name.value_option import ValueOption
@@ -80,20 +78,22 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
         return None
 
-    def create_required_operation(
-        self, target: TargetFileOrDirectoryType
-    ) -> AbstractOperation | None:
-        """Create operation via OnBadFormatOption if name format validation fails."""
-        from wexample_filestate.option.name.on_bad_format_option import (
-            OnBadFormatOption,
-        )
+    def set_value(self, raw_value: Any) -> None:
+        from wexample_filestate.option.name.value_option import ValueOption
 
-        # Check if OnBadFormatOption is configured
-        on_bad_format_option = self.get_option(OnBadFormatOption)
-        if on_bad_format_option:
-            return on_bad_format_option.create_required_operation(target)
+        if isinstance(raw_value, Path):
+            raw_value = str(raw_value)
 
-        return None
+        # Store callable directly without conversion
+        if callable(raw_value):
+            self._callable_value = raw_value
+            # Create a placeholder dict to satisfy the nested config structure
+            raw_value = {ValueOption.get_name(): None}
+        # Convert string form to dict form for consistency
+        elif isinstance(raw_value, str):
+            raw_value = {ValueOption.get_name(): raw_value}
+
+        super().set_value(raw_value=raw_value)
 
     def validate_name(self, name: str) -> bool:
         """Validate if a name matches all format rules using child options."""

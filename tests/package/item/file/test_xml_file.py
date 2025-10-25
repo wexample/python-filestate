@@ -14,59 +14,6 @@ if TYPE_CHECKING:
 class TestXmlFile(AbstractStructuredFileTest):
     """Test XmlFile functionality - smoke tests for XML file handling."""
 
-    def _get_file_class(self) -> type[XmlFile]:
-        """Get the XmlFile class."""
-        return XmlFile
-
-    def _get_expected_extension(self) -> str:
-        """Get the expected file extension."""
-        return "xml"
-
-    def _get_extension_constant_name(self) -> str:
-        """Get the extension constant name."""
-        return "EXTENSION_XML"
-
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name."""
-        return "sample.xml"
-
-    def _get_file_type_name(self) -> str:
-        """Get the file type name for messages."""
-        return "XmlFile"
-
-    def _validate_parsed_content(self, parsed: dict) -> None:
-        """Validate the structure of parsed XML content."""
-        # XML has different structure - no name/version at root
-        # Custom validation for XML
-        assert "project" in parsed, "Should parse root element"
-
-        # Test project structure
-        project = parsed["project"]
-        assert isinstance(project, dict), "Project should be dict"
-
-        # Basic smoke test - just ensure parsing works without errors
-        # XML structure can vary based on xmltodict implementation
-        assert len(project) > 0, "Project should have content"
-
-    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
-        """Assert XML roundtrip equality - XML may not preserve exact structure."""
-        # XML roundtrip may not preserve exact structure due to conversion complexities
-        # Just ensure we get some structured data back
-        assert isinstance(roundtrip, dict), "XML roundtrip should return dict"
-
-    # XML-specific tests that are not covered by the abstract class
-    def test_xml_file_dumps_string_content(self, tmp_path) -> None:
-        """Test XmlFile dumps method with string input."""
-        self._setup_with_tmp_path(tmp_path)
-
-        xml_file = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Test with string content (should pass through)
-        xml_string = "<root><item>test</item></root>"
-        result = xml_file.dumps(xml_string)
-
-        assert result == xml_string, "String content should pass through unchanged"
-
     def test_xml_file_dumps_dict_content(self, tmp_path) -> None:
         """Test XmlFile dumps method with dict input."""
         self._setup_with_tmp_path(tmp_path)
@@ -91,6 +38,19 @@ class TestXmlFile(AbstractStructuredFileTest):
         assert "<name>" in xml_content, "Should contain name element"
         assert "test-app" in xml_content, "Should contain content"
 
+    # XML-specific tests that are not covered by the abstract class
+    def test_xml_file_dumps_string_content(self, tmp_path) -> None:
+        """Test XmlFile dumps method with string input."""
+        self._setup_with_tmp_path(tmp_path)
+
+        xml_file = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Test with string content (should pass through)
+        xml_string = "<root><item>test</item></root>"
+        result = xml_file.dumps(xml_string)
+
+        assert result == xml_string, "String content should pass through unchanged"
+
     def test_xml_file_roundtrip_simple(self, tmp_path) -> None:
         """Test XmlFile can parse and serialize simple XML consistently."""
         self._setup_with_tmp_path(tmp_path)
@@ -112,3 +72,43 @@ class TestXmlFile(AbstractStructuredFileTest):
         # Should have same structure (exact format may differ)
         assert isinstance(reparsed, dict), "Reparsed should be dict"
         assert "root" in reparsed, "Should preserve root structure"
+
+    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
+        """Assert XML roundtrip equality - XML may not preserve exact structure."""
+        # XML roundtrip may not preserve exact structure due to conversion complexities
+        # Just ensure we get some structured data back
+        assert isinstance(roundtrip, dict), "XML roundtrip should return dict"
+
+    def _get_expected_extension(self) -> str:
+        """Get the expected file extension."""
+        return "xml"
+
+    def _get_extension_constant_name(self) -> str:
+        """Get the extension constant name."""
+        return "EXTENSION_XML"
+
+    def _get_file_class(self) -> type[XmlFile]:
+        """Get the XmlFile class."""
+        return XmlFile
+
+    def _get_file_type_name(self) -> str:
+        """Get the file type name for messages."""
+        return "XmlFile"
+
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name."""
+        return "sample.xml"
+
+    def _validate_parsed_content(self, parsed: dict) -> None:
+        """Validate the structure of parsed XML content."""
+        # XML has different structure - no name/version at root
+        # Custom validation for XML
+        assert "project" in parsed, "Should parse root element"
+
+        # Test project structure
+        project = parsed["project"]
+        assert isinstance(project, dict), "Project should be dict"
+
+        # Basic smoke test - just ensure parsing works without errors
+        # XML structure can vary based on xmltodict implementation
+        assert len(project) > 0, "Project should have content"

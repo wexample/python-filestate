@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 class TestTextOptionUniqueLines(AbstractTestOperation):
     """Test TextOption with unique_lines only."""
     expected_content: str = "apple\nbanana\ncherry\n"
-
     initial_content: str = "apple\nbanana\napple\ncherry\nbanana\n"
     test_file_name: str = "test-text-unique-lines.txt"
 

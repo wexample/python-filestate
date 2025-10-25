@@ -10,7 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class CaseFormatOption(AbstractNameChildOption):
-
     def apply_correction(self, name: str) -> str:
         """Apply case format correction to name."""
         if self.get_value().is_none():

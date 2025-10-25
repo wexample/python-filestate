@@ -10,7 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class UniqueLinesOption(AbstractTextChildOption):
-
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:

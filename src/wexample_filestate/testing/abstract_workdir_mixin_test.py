@@ -42,7 +42,6 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
     @abstract_method
     def _apply_mixin_to_config(self, mixin_instance, config: DictConfig) -> DictConfig:
         """Apply the mixin method to enhance the config."""
-        pass
 
     @abstract_method
     def _assert_applied(self, tmp_path: Path) -> None:
@@ -83,17 +82,14 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
     @abstract_method
     def _get_expected_files(self) -> list[str]:
         """Return list of files that should be created by the mixin."""
-        pass
 
     @abstract_method
     def _get_mixin_config(self) -> DictConfig:
         """Return the base configuration for the mixin test."""
-        pass
 
     @abstract_method
     def _get_test_workdir_class(self) -> type:
         """Return the test class that inherits from the mixin being tested."""
-        pass
 
     def _setup_with_tmp_path(self, tmp_path) -> None:
         """Setup test with temporary path."""

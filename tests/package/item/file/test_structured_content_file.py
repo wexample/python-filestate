@@ -1,6 +1,4 @@
 from __future__ import annotations
-
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
@@ -10,6 +8,7 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import StructuredData
+    from pathlib import Path
 
 
 class TestStructuredContentFile(AbstractStateManagerTest):
@@ -199,4 +198,5 @@ class TestStructuredContentFile(AbstractStateManagerTest):
 
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
+        from pathlib import Path
         return Path(__file__).parent / "test_data"

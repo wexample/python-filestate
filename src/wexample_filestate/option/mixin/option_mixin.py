@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_file.enum.local_path_type import LocalPathType
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
@@ -11,6 +9,7 @@ from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_file.enum.local_path_type import LocalPathType
 
 
 @base_class
@@ -49,6 +48,7 @@ class OptionMixin(ItemTreeConfigOptionMixin):
         return None
 
     def get_supported_item_types(self) -> list[LocalPathType]:
+        from wexample_file.enum.local_path_type import LocalPathType
         return [
             LocalPathType.FILE,
             LocalPathType.DIRECTORY,

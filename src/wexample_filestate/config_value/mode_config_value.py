@@ -25,6 +25,7 @@ class ModeConfigValue(ConfigValue):
     def to_option_raw_value(self) -> ConfigDict:
         from wexample_filestate.option.mode.permissions_option import PermissionsOption
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
+
         return {
             PermissionsOption.get_name(): self.permissions,
             RecursiveOption.get_name(): self.recursive,

@@ -33,9 +33,15 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         """Create FileCreateOperation or FileRemoveOperation based on should_exist value and current state."""
-        from wexample_filestate.option.default_content_option import DefaultContentOption
-        from wexample_filestate.operation.file_create_operation import FileCreateOperation
-        from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+        from wexample_filestate.option.default_content_option import (
+            DefaultContentOption,
+        )
+        from wexample_filestate.operation.file_create_operation import (
+            FileCreateOperation,
+        )
+        from wexample_filestate.operation.file_remove_operation import (
+            FileRemoveOperation,
+        )
 
         # Get the should_exist value
         should_exist_value = self.get_value()

@@ -14,133 +14,6 @@ if TYPE_CHECKING:
 class TestSuffixOption(AbstractStateManagerTest):
     """Test SuffixOption functionality."""
 
-    def test_suffix_option_creation(self, tmp_path) -> None:
-        """Test SuffixOption can be created."""
-        self._setup_with_tmp_path(tmp_path)
-
-        option = SuffixOption()
-        assert option is not None, "SuffixOption should be created"
-        assert option.get_description() == "Enforce suffix requirement for file names"
-
-    def test_suffix_option_validate_name_with_none_value(self, tmp_path) -> None:
-        """Test SuffixOption validation with None value (should always return True)."""
-        self._setup_with_tmp_path(tmp_path)
-
-        option = SuffixOption()
-        option.set_value(None)
-
-        # Should return True for any name when value is None
-        assert (
-            option.validate_name("test.txt") is True
-        ), "Should validate any name when value is None"
-        assert (
-            option.validate_name("file123.py") is True
-        ), "Should validate any name when value is None"
-        assert (
-            option.validate_name("invalid-name") is True
-        ), "Should validate any name when value is None"
-        assert (
-            option.validate_name("") is True
-        ), "Should validate empty string when value is None"
-
-    def test_suffix_option_validate_name_file_extension(self, tmp_path) -> None:
-        """Test SuffixOption validation with file extension suffixes."""
-        self._setup_with_tmp_path(tmp_path)
-
-        # Test .txt suffix
-        option = SuffixOption()
-        option.set_value(".txt")
-
-        # Should match names ending with .txt
-        assert option.validate_name("file.txt") is True, "Should match file.txt"
-        assert (
-            option.validate_name("test_file.txt") is True
-        ), "Should match test_file.txt"
-        assert option.validate_name("document.txt") is True, "Should match document.txt"
-        assert option.validate_name(".txt") is True, "Should match .txt"
-
-        # Should not match names not ending with .txt
-        assert option.validate_name("file.py") is False, "Should not match file.py"
-        assert (
-            option.validate_name("file.txt.bak") is False
-        ), "Should not match file.txt.bak"
-        assert option.validate_name("txt") is False, "Should not match txt (no dot)"
-        assert (
-            option.validate_name("file") is False
-        ), "Should not match file (no extension)"
-
-    def test_suffix_option_validate_name_custom_suffix(self, tmp_path) -> None:
-        """Test SuffixOption validation with custom suffixes."""
-        self._setup_with_tmp_path(tmp_path)
-
-        # Test _backup suffix
-        option = SuffixOption()
-        option.set_value("_backup")
-
-        # Should match names ending with _backup
-        assert option.validate_name("file_backup") is True, "Should match file_backup"
-        assert option.validate_name("data_backup") is True, "Should match data_backup"
-        assert option.validate_name("test_backup") is True, "Should match test_backup"
-        assert option.validate_name("_backup") is True, "Should match _backup"
-
-        # Should not match names not ending with _backup
-        assert (
-            option.validate_name("backup_file") is False
-        ), "Should not match backup_file"
-        assert (
-            option.validate_name("file_backup_old") is False
-        ), "Should not match file_backup_old"
-        assert (
-            option.validate_name("backup") is False
-        ), "Should not match backup (no underscore)"
-
-    def test_suffix_option_validate_name_case_sensitive(self, tmp_path) -> None:
-        """Test SuffixOption validation is case-sensitive."""
-        self._setup_with_tmp_path(tmp_path)
-
-        # Test .TXT suffix (uppercase)
-        option = SuffixOption()
-        option.set_value(".TXT")
-
-        # Should match exact case
-        assert option.validate_name("file.TXT") is True, "Should match file.TXT"
-        assert option.validate_name("document.TXT") is True, "Should match document.TXT"
-
-        # Should not match different case
-        assert (
-            option.validate_name("file.txt") is False
-        ), "Should not match file.txt (lowercase)"
-        assert (
-            option.validate_name("file.Txt") is False
-        ), "Should not match file.Txt (mixed case)"
-
-    def test_suffix_option_validate_name_empty_suffix(self, tmp_path) -> None:
-        """Test SuffixOption validation with empty suffix."""
-        self._setup_with_tmp_path(tmp_path)
-
-        option = SuffixOption()
-        option.set_value("")
-
-        # Empty suffix should match all names (all strings end with empty string)
-        assert option.validate_name("") is True, "Should match empty string"
-        assert option.validate_name("file.txt") is True, "Should match file.txt"
-        assert option.validate_name("any_name") is True, "Should match any_name"
-
-    def test_suffix_option_apply_correction_with_none_value(self, tmp_path) -> None:
-        """Test SuffixOption apply_correction with None value."""
-        self._setup_with_tmp_path(tmp_path)
-
-        option = SuffixOption()
-        option.set_value(None)
-
-        # Should return name unchanged when value is None
-        assert (
-            option.apply_correction("any_name.txt") == "any_name.txt"
-        ), "Should return name unchanged when None"
-        assert (
-            option.apply_correction("") == ""
-        ), "Should return empty string unchanged when None"
-
     def test_suffix_option_apply_correction_add_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction adds missing suffix."""
         self._setup_with_tmp_path(tmp_path)
@@ -168,6 +41,27 @@ class TestSuffixOption(AbstractStateManagerTest):
         ), "Should not modify document.txt"
         assert option.apply_correction(".txt") == ".txt", "Should not modify .txt"
 
+    def test_suffix_option_apply_correction_case_sensitive(self, tmp_path) -> None:
+        """Test SuffixOption apply_correction is case-sensitive."""
+        self._setup_with_tmp_path(tmp_path)
+
+        # Test .TXT suffix (uppercase)
+        option = SuffixOption()
+        option.set_value(".TXT")
+
+        # Should add suffix even if similar case exists
+        assert (
+            option.apply_correction("file.txt") == "file.txt.TXT"
+        ), "Should add .TXT even if .txt exists"
+        assert (
+            option.apply_correction("file.Txt") == "file.Txt.TXT"
+        ), "Should add .TXT even if .Txt exists"
+
+        # Should not modify names that already have the exact suffix
+        assert (
+            option.apply_correction("file.TXT") == "file.TXT"
+        ), "Should not modify file.TXT"
+
     def test_suffix_option_apply_correction_custom_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction with custom suffixes."""
         self._setup_with_tmp_path(tmp_path)
@@ -194,27 +88,6 @@ class TestSuffixOption(AbstractStateManagerTest):
         assert (
             option.apply_correction("data_backup") == "data_backup"
         ), "Should not modify data_backup"
-
-    def test_suffix_option_apply_correction_case_sensitive(self, tmp_path) -> None:
-        """Test SuffixOption apply_correction is case-sensitive."""
-        self._setup_with_tmp_path(tmp_path)
-
-        # Test .TXT suffix (uppercase)
-        option = SuffixOption()
-        option.set_value(".TXT")
-
-        # Should add suffix even if similar case exists
-        assert (
-            option.apply_correction("file.txt") == "file.txt.TXT"
-        ), "Should add .TXT even if .txt exists"
-        assert (
-            option.apply_correction("file.Txt") == "file.Txt.TXT"
-        ), "Should add .TXT even if .Txt exists"
-
-        # Should not modify names that already have the exact suffix
-        assert (
-            option.apply_correction("file.TXT") == "file.TXT"
-        ), "Should not modify file.TXT"
 
     def test_suffix_option_apply_correction_empty_suffix(self, tmp_path) -> None:
         """Test SuffixOption apply_correction with empty suffix."""
@@ -255,6 +128,29 @@ class TestSuffixOption(AbstractStateManagerTest):
         assert (
             option.apply_correction("file.txt.bak") == "file.txt.bak"
         ), "Should not modify file.txt.bak"
+
+    def test_suffix_option_apply_correction_with_none_value(self, tmp_path) -> None:
+        """Test SuffixOption apply_correction with None value."""
+        self._setup_with_tmp_path(tmp_path)
+
+        option = SuffixOption()
+        option.set_value(None)
+
+        # Should return name unchanged when value is None
+        assert (
+            option.apply_correction("any_name.txt") == "any_name.txt"
+        ), "Should return name unchanged when None"
+        assert (
+            option.apply_correction("") == ""
+        ), "Should return empty string unchanged when None"
+
+    def test_suffix_option_creation(self, tmp_path) -> None:
+        """Test SuffixOption can be created."""
+        self._setup_with_tmp_path(tmp_path)
+
+        option = SuffixOption()
+        assert option is not None, "SuffixOption should be created"
+        assert option.get_description() == "Enforce suffix requirement for file names"
 
     def test_suffix_option_roundtrip_validation_correction(self, tmp_path) -> None:
         """Test that apply_correction produces names that validate successfully."""
@@ -301,3 +197,107 @@ class TestSuffixOption(AbstractStateManagerTest):
         assert (
             option.apply_correction("lib") == "lib_v1.0-final"
         ), "Should add special suffix to lib"
+
+    def test_suffix_option_validate_name_case_sensitive(self, tmp_path) -> None:
+        """Test SuffixOption validation is case-sensitive."""
+        self._setup_with_tmp_path(tmp_path)
+
+        # Test .TXT suffix (uppercase)
+        option = SuffixOption()
+        option.set_value(".TXT")
+
+        # Should match exact case
+        assert option.validate_name("file.TXT") is True, "Should match file.TXT"
+        assert option.validate_name("document.TXT") is True, "Should match document.TXT"
+
+        # Should not match different case
+        assert (
+            option.validate_name("file.txt") is False
+        ), "Should not match file.txt (lowercase)"
+        assert (
+            option.validate_name("file.Txt") is False
+        ), "Should not match file.Txt (mixed case)"
+
+    def test_suffix_option_validate_name_custom_suffix(self, tmp_path) -> None:
+        """Test SuffixOption validation with custom suffixes."""
+        self._setup_with_tmp_path(tmp_path)
+
+        # Test _backup suffix
+        option = SuffixOption()
+        option.set_value("_backup")
+
+        # Should match names ending with _backup
+        assert option.validate_name("file_backup") is True, "Should match file_backup"
+        assert option.validate_name("data_backup") is True, "Should match data_backup"
+        assert option.validate_name("test_backup") is True, "Should match test_backup"
+        assert option.validate_name("_backup") is True, "Should match _backup"
+
+        # Should not match names not ending with _backup
+        assert (
+            option.validate_name("backup_file") is False
+        ), "Should not match backup_file"
+        assert (
+            option.validate_name("file_backup_old") is False
+        ), "Should not match file_backup_old"
+        assert (
+            option.validate_name("backup") is False
+        ), "Should not match backup (no underscore)"
+
+    def test_suffix_option_validate_name_empty_suffix(self, tmp_path) -> None:
+        """Test SuffixOption validation with empty suffix."""
+        self._setup_with_tmp_path(tmp_path)
+
+        option = SuffixOption()
+        option.set_value("")
+
+        # Empty suffix should match all names (all strings end with empty string)
+        assert option.validate_name("") is True, "Should match empty string"
+        assert option.validate_name("file.txt") is True, "Should match file.txt"
+        assert option.validate_name("any_name") is True, "Should match any_name"
+
+    def test_suffix_option_validate_name_file_extension(self, tmp_path) -> None:
+        """Test SuffixOption validation with file extension suffixes."""
+        self._setup_with_tmp_path(tmp_path)
+
+        # Test .txt suffix
+        option = SuffixOption()
+        option.set_value(".txt")
+
+        # Should match names ending with .txt
+        assert option.validate_name("file.txt") is True, "Should match file.txt"
+        assert (
+            option.validate_name("test_file.txt") is True
+        ), "Should match test_file.txt"
+        assert option.validate_name("document.txt") is True, "Should match document.txt"
+        assert option.validate_name(".txt") is True, "Should match .txt"
+
+        # Should not match names not ending with .txt
+        assert option.validate_name("file.py") is False, "Should not match file.py"
+        assert (
+            option.validate_name("file.txt.bak") is False
+        ), "Should not match file.txt.bak"
+        assert option.validate_name("txt") is False, "Should not match txt (no dot)"
+        assert (
+            option.validate_name("file") is False
+        ), "Should not match file (no extension)"
+
+    def test_suffix_option_validate_name_with_none_value(self, tmp_path) -> None:
+        """Test SuffixOption validation with None value (should always return True)."""
+        self._setup_with_tmp_path(tmp_path)
+
+        option = SuffixOption()
+        option.set_value(None)
+
+        # Should return True for any name when value is None
+        assert (
+            option.validate_name("test.txt") is True
+        ), "Should validate any name when value is None"
+        assert (
+            option.validate_name("file123.py") is True
+        ), "Should validate any name when value is None"
+        assert (
+            option.validate_name("invalid-name") is True
+        ), "Should validate any name when value is None"
+        assert (
+            option.validate_name("") is True
+        ), "Should validate empty string when value is None"

@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 class TestTextOptionSortLines(AbstractTestOperation):
     """Test TextOption with sort_lines only."""
     expected_content: str = "apple\napple\nbanana\nbanana\ncherry\nzebra\n"
-
     initial_content: str = "zebra\napple\nbanana\napple\ncherry\nbanana\n"
     test_file_name: str = "test-text-sort-lines.txt"
 

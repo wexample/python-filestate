@@ -27,6 +27,7 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from pathlib import PosixPath
+
         return str | PosixPath
 
     def prepare_value(self, raw_value: Any) -> Any:

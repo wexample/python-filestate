@@ -8,7 +8,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class SuffixOption(AbstractNameChildOption):
-
     def apply_correction(self, name: str) -> str:
         """Apply suffix correction to name."""
         if self.get_value().is_none():

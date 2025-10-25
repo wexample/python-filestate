@@ -21,7 +21,7 @@ class TestWithWorkdirMixin(AbstractWorkdirMixinTest):
         self._setup_with_tmp_path(tmp_path)
 
         # Create workdir manager with workdir mixin
-        manager = self._create_test_workdir_manager(tmp_path)
+        self._create_test_workdir_manager(tmp_path)
 
         # Test that the mixin provides workdir functionality
         # This is more about testing the mixin's properties and methods
@@ -50,12 +50,10 @@ class TestWithWorkdirMixin(AbstractWorkdirMixinTest):
     def _assert_applied(self, tmp_path) -> None:
         """Assert applied state - no specific files expected."""
         # WithWorkdirMixin doesn't create specific files
-        pass
 
     def _assert_not_applied(self, tmp_path) -> None:
         """Assert initial state - no specific files expected."""
         # WithWorkdirMixin doesn't create specific files
-        pass
 
     def _get_apply_count(self) -> int:
         """Workdir mixin doesn't create operations directly."""
@@ -77,6 +75,5 @@ class TestWithWorkdirMixin(AbstractWorkdirMixinTest):
         class WorkdirTest(WithWorkdirMixin, BaseClass):
             """Test class that inherits from WithWorkdirMixin."""
 
-            pass
 
         return WorkdirTest

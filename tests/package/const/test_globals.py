@@ -13,6 +13,7 @@ class TestGlobals(AbstractStateManagerTest):
     def test_name_pattern_any_item(self, tmp_path) -> None:
         """Test NAME_PATTERN_ANY_ITEM pattern."""
         from wexample_filestate.const.globals import NAME_PATTERN_ANY_ITEM
+
         self._setup_with_tmp_path(tmp_path)
 
         pattern = re.compile(NAME_PATTERN_ANY_ITEM)
@@ -35,6 +36,7 @@ class TestGlobals(AbstractStateManagerTest):
     def test_name_pattern_no_leading_dot(self, tmp_path) -> None:
         """Test NAME_PATTERN_NO_LEADING_DOT pattern."""
         from wexample_filestate.const.globals import NAME_PATTERN_NO_LEADING_DOT
+
         self._setup_with_tmp_path(tmp_path)
 
         pattern = re.compile(NAME_PATTERN_NO_LEADING_DOT)
@@ -54,7 +56,11 @@ class TestGlobals(AbstractStateManagerTest):
 
     def test_patterns_with_real_files(self, tmp_path) -> None:
         """Test patterns with real file system entries."""
-        from wexample_filestate.const.globals import NAME_PATTERN_ANY_ITEM, NAME_PATTERN_NO_LEADING_DOT
+        from wexample_filestate.const.globals import (
+            NAME_PATTERN_ANY_ITEM,
+            NAME_PATTERN_NO_LEADING_DOT,
+        )
+
         self._setup_with_tmp_path(tmp_path)
 
         # Create test files and directories

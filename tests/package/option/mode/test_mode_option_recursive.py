@@ -24,6 +24,7 @@ class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
             .get_dict()
             .get("permissions")
         )
+
     def _get_target(self) -> TargetFileOrDirectoryType | None:
         from wexample_filestate.const.test import TEST_DIR_NAME_RECURSIVE
 

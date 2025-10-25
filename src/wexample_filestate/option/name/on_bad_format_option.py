@@ -17,9 +17,6 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return str
 
-    def get_description(self) -> str:
-        return "Action to take when name format validation fails (delete, rename, ignore, error)"
-
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
@@ -75,6 +72,9 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         # "ignore" action returns None (no operation)
 
         return None
+
+    def get_description(self) -> str:
+        return "Action to take when name format validation fails (delete, rename, ignore, error)"
 
     def _generate_corrected_name(self, current_name: str) -> str | None:
         """Generate a corrected name based on format rules using child options."""

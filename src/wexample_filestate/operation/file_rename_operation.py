@@ -9,6 +9,7 @@ from wexample_filestate.operation.abstract_file_manipulation_operation import (
 from wexample_helpers.classes.field import public_field
 
 from wexample_helpers.decorator.base_class import base_class
+
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 

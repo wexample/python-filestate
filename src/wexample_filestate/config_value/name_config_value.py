@@ -40,6 +40,7 @@ class NameConfigValue(ConfigValue):
         from wexample_filestate.option.name.regex_option import RegexOption
         from wexample_filestate.option.name.suffix_option import SuffixOption
         from wexample_filestate.option.name.value_option import ValueOption
+
         return {
             ValueOption.get_name(): self.value,
             CaseFormatOption.get_name(): self.case_format,

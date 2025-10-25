@@ -10,7 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class RegexOption(AbstractNameChildOption):
-
     def apply_correction(self, name: str) -> str:
         """Apply regex correction to name (no automatic correction possible)."""
         # Regex patterns can't be automatically corrected, return name as-is

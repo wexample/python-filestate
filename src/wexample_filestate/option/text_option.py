@@ -25,6 +25,29 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         # Accept both list form ["trim", "end_new_line"] and dict form {"trim": true, "end_new_line": true}
         return Union[list[str], dict, StringKeysDict, TextConfigValue]
 
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
+        """Create FileWriteOperation if text processing is needed."""
+        return self._create_child_required_operation(target=target)
+
+    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
+        from wexample_filestate.option.text.trim_option import TrimOption
+        from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
+        from wexample_filestate.option.text.sort_lines_option import SortLinesOption
+        from wexample_filestate.option.text.unique_lines_option import UniqueLinesOption
+
+        return [
+            TrimOption,
+            EndNewLineOption,
+            SortLinesOption,
+            UniqueLinesOption,
+        ]
+
+    @abstract_method
+    def get_description(self) -> str:
+        return "Apply rules to text content"
+
     def set_value(self, raw_value: Any) -> None:
         # Convert list form to dict form for consistency
         if isinstance(raw_value, list):
@@ -46,26 +69,3 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
             }
 
         super().set_value(raw_value=raw_value)
-
-    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.option.text.trim_option import TrimOption
-        from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
-        from wexample_filestate.option.text.sort_lines_option import SortLinesOption
-        from wexample_filestate.option.text.unique_lines_option import UniqueLinesOption
-
-        return [
-            TrimOption,
-            EndNewLineOption,
-            SortLinesOption,
-            UniqueLinesOption,
-        ]
-
-    @abstract_method
-    def get_description(self) -> str:
-        return "Apply rules to text content"
-
-    def create_required_operation(
-        self, target: TargetFileOrDirectoryType
-    ) -> AbstractOperation | None:
-        """Create FileWriteOperation if text processing is needed."""
-        return self._create_child_required_operation(target=target)

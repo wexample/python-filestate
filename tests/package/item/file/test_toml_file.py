@@ -14,9 +14,26 @@ if TYPE_CHECKING:
 class TestTomlFile(AbstractStructuredFileTest):
     """Test TomlFile functionality - smoke tests for TOML file handling."""
 
-    def _get_file_class(self) -> type[TomlFile]:
-        """Get the TomlFile class."""
-        return TomlFile
+    # TOML-specific tests that are not covered by the abstract class
+    def test_toml_file_formatting(self, tmp_path) -> None:
+        """Test TomlFile produces properly formatted TOML output."""
+        self._setup_with_tmp_path(tmp_path)
+
+        toml_file = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Test data
+        test_data = {
+            "app": {"name": "test-app"},
+            "database": {"host": "localhost", "port": 5432},
+        }
+
+        # Serialize to TOML format
+        toml_content = toml_file.dumps(test_data)
+
+        # Test TOML formatting characteristics
+        assert "[app]" in toml_content, "Should contain section headers"
+        assert "[database]" in toml_content, "Should contain section headers"
+        assert "name = " in toml_content, "Should contain key-value assignments"
 
     def _get_expected_extension(self) -> str:
         """Get the expected file extension."""
@@ -26,13 +43,17 @@ class TestTomlFile(AbstractStructuredFileTest):
         """Get the extension constant name."""
         return "EXTENSION_TOML"
 
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name."""
-        return "sample.toml"
+    def _get_file_class(self) -> type[TomlFile]:
+        """Get the TomlFile class."""
+        return TomlFile
 
     def _get_file_type_name(self) -> str:
         """Get the file type name for messages."""
         return "TomlFile"
+
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name."""
+        return "sample.toml"
 
     def _validate_parsed_content(self, parsed: dict) -> None:
         """Validate the structure of parsed TOML content."""
@@ -61,24 +82,3 @@ class TestTomlFile(AbstractStructuredFileTest):
         config = parsed["config"]
         assert config["debug"] is True, "Boolean values should be parsed correctly"
         assert config["port"] == 8000, "Integer values should be parsed correctly"
-
-    # TOML-specific tests that are not covered by the abstract class
-    def test_toml_file_formatting(self, tmp_path) -> None:
-        """Test TomlFile produces properly formatted TOML output."""
-        self._setup_with_tmp_path(tmp_path)
-
-        toml_file = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Test data
-        test_data = {
-            "app": {"name": "test-app"},
-            "database": {"host": "localhost", "port": 5432},
-        }
-
-        # Serialize to TOML format
-        toml_content = toml_file.dumps(test_data)
-
-        # Test TOML formatting characteristics
-        assert "[app]" in toml_content, "Should contain section headers"
-        assert "[database]" in toml_content, "Should contain section headers"
-        assert "name = " in toml_content, "Should contain key-value assignments"

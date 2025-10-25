@@ -26,6 +26,7 @@ class TextConfigValue(ConfigValue):
     def to_option_raw_value(self) -> ConfigDict:
         from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
         from wexample_filestate.option.text.trim_option import TrimOption
+
         return {
             TrimOption.get_name(): self.trim,
             EndNewLineOption.get_name(): self.end_new_line,

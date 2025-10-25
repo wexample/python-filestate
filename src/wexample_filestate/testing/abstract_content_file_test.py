@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
@@ -11,6 +10,7 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 
 if TYPE_CHECKING:
     pass
+    from pathlib import Path
 
 # Type variable for the specific file type (HtmlFile, EnvFile, etc.)
 FileType = TypeVar("FileType", bound=StructuredContentFile)
@@ -108,6 +108,7 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
 
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
+        from pathlib import Path
         # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
         return (
             Path(__file__).parent.parent.parent.parent

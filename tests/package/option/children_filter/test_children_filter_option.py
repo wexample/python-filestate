@@ -17,210 +17,6 @@ if TYPE_CHECKING:
 class TestChildrenFilterOption(AbstractStateManagerTest):
     """Test ChildrenFilterOption functionality - filtering children based on patterns and callbacks."""
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        return Path(__file__).parent / "test_data"
-
-    def _copy_directory_structure(self, source: Path, target: Path) -> None:
-        """Recursively copy directory structure for testing."""
-        import shutil
-
-        if source.exists():
-            if target.exists():
-                shutil.rmtree(target)
-            shutil.copytree(source, target)
-
-    def test_children_filter_option_creation(self, tmp_path) -> None:
-        """Test ChildrenFilterOption can be created."""
-        self._setup_with_tmp_path(tmp_path)
-
-        option = ChildrenFilterOption(pattern={"type": "file"}, name_pattern="*.txt")
-
-        assert option is not None, "ChildrenFilterOption should be created"
-        assert option.pattern is not None, "Pattern should be set"
-        assert option.recursive is False, "Default recursive should be False"
-        assert option.filter is None, "Default filter should be None"
-        assert option.name_pattern == "*.txt", "Name pattern should be set correctly"
-
-    def test_children_filter_option_name_pattern_files(self, tmp_path) -> None:
-        """Test ChildrenFilterOption with name pattern for files."""
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API with name_pattern as direct argument
-        config = {
-            "children": [
-                ChildrenFilterOption(
-                    pattern={"type": DiskItemType.FILE}, name_pattern=r".*\.txt$"
-                )
-            ]
-        }
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children
-        children = parent_directory.get_children_list()
-
-        # Should only find .txt files
-        txt_files = [
-            child
-            for child in children
-            if child.is_file() and child.get_item_name().endswith(".txt")
-        ]
-        non_txt_files = [
-            child
-            for child in children
-            if child.is_file() and not child.get_item_name().endswith(".txt")
-        ]
-
-        assert (
-            len(txt_files) > 0
-        ), f"Should find some .txt files. Found {len(children)} children total, files in dir: {list(tmp_path.glob('*.txt'))}"
-        assert len(non_txt_files) == 0, "Should not find non-.txt files"
-
-    def test_children_filter_option_name_pattern_directories(self, tmp_path) -> None:
-        """Test ChildrenFilterOption with name pattern for directories."""
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API with name_pattern as direct argument
-        config = {
-            "children": [
-                ChildrenFilterOption(
-                    pattern={"type": DiskItemType.DIRECTORY}, name_pattern=r"^test-.*"
-                )
-            ]
-        }
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children
-        children = parent_directory.get_children_list()
-
-        # Should only find directories starting with "test-"
-        test_dirs = [
-            child
-            for child in children
-            if child.is_directory() and child.get_item_name().startswith("test-")
-        ]
-        other_dirs = [
-            child
-            for child in children
-            if child.is_directory() and not child.get_item_name().startswith("test-")
-        ]
-
-        assert len(test_dirs) > 0, "Should find some test- directories"
-        assert len(other_dirs) == 0, "Should not find other directories"
-
-    def test_children_filter_option_recursive_false(self, tmp_path) -> None:
-        """Test ChildrenFilterOption with recursive=False (default)."""
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API with name_pattern as direct argument
-        config = {
-            "children": [
-                ChildrenFilterOption(
-                    pattern={"type": DiskItemType.FILE},
-                    name_pattern=r".*",
-                    recursive=False,
-                )
-            ]
-        }
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children
-        children = parent_directory.get_children_list()
-        files = [child for child in children if child.is_file()]
-
-        # Should only find files in the root directory, not in subdirectories
-        # Based on our test data structure, we should find root level files
-        assert len(files) > 0, "Should find root level files"
-
-    def test_children_filter_option_recursive_true(self, tmp_path) -> None:
-        """Test ChildrenFilterOption with recursive=True."""
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API with name_pattern as direct argument
-        config = {
-            "children": [
-                ChildrenFilterOption(
-                    pattern={"type": DiskItemType.FILE},
-                    name_pattern=r".*\.txt$",
-                    recursive=True,
-                )
-            ]
-        }
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children - this should include nested structure
-        children = parent_directory.get_children_list()
-
-        # With recursive=True, we should get a nested structure preserving directories
-        # that contain matching files
-        assert len(children) > 0, "Should find children with recursive filtering"
-
-        # Check that we have directories in the result (preserving hierarchy)
-        directories = [child for child in children if child.is_directory()]
-        assert (
-            len(directories) > 0
-        ), "Should preserve directory hierarchy when recursive"
-
     def test_children_filter_option_callable_filter(self, tmp_path) -> None:
         """Test ChildrenFilterOption with callable filter."""
         from wexample_filestate.const.disk import DiskItemType
@@ -311,75 +107,6 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
         # Should find no files due to exception handling (returns False)
         assert len(files) == 0, "Should find no files when filter raises exception"
 
-    def test_children_filter_option_type_filtering(self, tmp_path) -> None:
-        """Test ChildrenFilterOption respects type filtering."""
-        from wexample_filestate.const.disk import DiskItemType
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API - filter that only matches directories but with a file pattern
-        config = {
-            "children": [
-                ChildrenFilterOption(
-                    pattern={"type": DiskItemType.DIRECTORY},  # But only directories
-                    name_pattern=r".*\.txt$",  # File pattern
-                )
-            ]
-        }
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children
-        children = parent_directory.get_children_list()
-        files = [child for child in children if child.is_file()]
-        directories = [child for child in children if child.is_directory()]
-
-        # Should find no files (type mismatch) and no directories (name pattern mismatch)
-        assert len(files) == 0, "Should find no files when type is DIRECTORY"
-        assert len(directories) == 0, "Should find no directories with .txt pattern"
-
-    def test_children_filter_option_no_pattern_no_filter(self, tmp_path) -> None:
-        """Test ChildrenFilterOption with no pattern and no filter."""
-        from wexample_prompt.common.io_manager import IoManager
-
-        self._setup_with_tmp_path(tmp_path)
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create a parent directory item and configure it properly
-        io = IoManager()
-        parent_directory = ItemTargetDirectory.create_from_path(
-            path=str(tmp_path), io=io
-        )
-
-        # Use the new API with empty pattern and no filter
-        config = {"children": [ChildrenFilterOption(pattern={})]}
-
-        parent_directory.set_value(config)
-        parent_directory.build_item_tree()
-
-        # Get filtered children
-        children = parent_directory.get_children_list()
-
-        # Should find no children when no pattern or filter is provided
-        assert (
-            len(children) == 0
-        ), "Should find no children when no pattern or filter provided"
-
     def test_children_filter_option_complex_pattern(self, tmp_path) -> None:
         """Test ChildrenFilterOption with complex regex pattern."""
         from wexample_filestate.const.disk import DiskItemType
@@ -435,14 +162,265 @@ class TestChildrenFilterOption(AbstractStateManagerTest):
         # that some structure was created
         assert len(children) > 0, "Should create filtered structure"
 
+    def test_children_filter_option_creation(self, tmp_path) -> None:
+        """Test ChildrenFilterOption can be created."""
+        self._setup_with_tmp_path(tmp_path)
 
-# Keep the original operation test as well for backward compatibility
-class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
-    """Original test for map config operation - kept for backward compatibility."""
+        option = ChildrenFilterOption(pattern={"type": "file"}, name_pattern="*.txt")
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        return Path(__file__).parent / "test_data"
+        assert option is not None, "ChildrenFilterOption should be created"
+        assert option.pattern is not None, "Pattern should be set"
+        assert option.recursive is False, "Default recursive should be False"
+        assert option.filter is None, "Default filter should be None"
+        assert option.name_pattern == "*.txt", "Name pattern should be set correctly"
+
+    def test_children_filter_option_name_pattern_directories(self, tmp_path) -> None:
+        """Test ChildrenFilterOption with name pattern for directories."""
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API with name_pattern as direct argument
+        config = {
+            "children": [
+                ChildrenFilterOption(
+                    pattern={"type": DiskItemType.DIRECTORY}, name_pattern=r"^test-.*"
+                )
+            ]
+        }
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children
+        children = parent_directory.get_children_list()
+
+        # Should only find directories starting with "test-"
+        test_dirs = [
+            child
+            for child in children
+            if child.is_directory() and child.get_item_name().startswith("test-")
+        ]
+        other_dirs = [
+            child
+            for child in children
+            if child.is_directory() and not child.get_item_name().startswith("test-")
+        ]
+
+        assert len(test_dirs) > 0, "Should find some test- directories"
+        assert len(other_dirs) == 0, "Should not find other directories"
+
+    def test_children_filter_option_name_pattern_files(self, tmp_path) -> None:
+        """Test ChildrenFilterOption with name pattern for files."""
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API with name_pattern as direct argument
+        config = {
+            "children": [
+                ChildrenFilterOption(
+                    pattern={"type": DiskItemType.FILE}, name_pattern=r".*\.txt$"
+                )
+            ]
+        }
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children
+        children = parent_directory.get_children_list()
+
+        # Should only find .txt files
+        txt_files = [
+            child
+            for child in children
+            if child.is_file() and child.get_item_name().endswith(".txt")
+        ]
+        non_txt_files = [
+            child
+            for child in children
+            if child.is_file() and not child.get_item_name().endswith(".txt")
+        ]
+
+        assert (
+            len(txt_files) > 0
+        ), f"Should find some .txt files. Found {len(children)} children total, files in dir: {list(tmp_path.glob('*.txt'))}"
+        assert len(non_txt_files) == 0, "Should not find non-.txt files"
+
+    def test_children_filter_option_no_pattern_no_filter(self, tmp_path) -> None:
+        """Test ChildrenFilterOption with no pattern and no filter."""
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API with empty pattern and no filter
+        config = {"children": [ChildrenFilterOption(pattern={})]}
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children
+        children = parent_directory.get_children_list()
+
+        # Should find no children when no pattern or filter is provided
+        assert (
+            len(children) == 0
+        ), "Should find no children when no pattern or filter provided"
+
+    def test_children_filter_option_recursive_false(self, tmp_path) -> None:
+        """Test ChildrenFilterOption with recursive=False (default)."""
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API with name_pattern as direct argument
+        config = {
+            "children": [
+                ChildrenFilterOption(
+                    pattern={"type": DiskItemType.FILE},
+                    name_pattern=r".*",
+                    recursive=False,
+                )
+            ]
+        }
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children
+        children = parent_directory.get_children_list()
+        files = [child for child in children if child.is_file()]
+
+        # Should only find files in the root directory, not in subdirectories
+        # Based on our test data structure, we should find root level files
+        assert len(files) > 0, "Should find root level files"
+
+    def test_children_filter_option_recursive_true(self, tmp_path) -> None:
+        """Test ChildrenFilterOption with recursive=True."""
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API with name_pattern as direct argument
+        config = {
+            "children": [
+                ChildrenFilterOption(
+                    pattern={"type": DiskItemType.FILE},
+                    name_pattern=r".*\.txt$",
+                    recursive=True,
+                )
+            ]
+        }
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children - this should include nested structure
+        children = parent_directory.get_children_list()
+
+        # With recursive=True, we should get a nested structure preserving directories
+        # that contain matching files
+        assert len(children) > 0, "Should find children with recursive filtering"
+
+        # Check that we have directories in the result (preserving hierarchy)
+        directories = [child for child in children if child.is_directory()]
+        assert (
+            len(directories) > 0
+        ), "Should preserve directory hierarchy when recursive"
+
+    def test_children_filter_option_type_filtering(self, tmp_path) -> None:
+        """Test ChildrenFilterOption respects type filtering."""
+        from wexample_filestate.const.disk import DiskItemType
+        from wexample_prompt.common.io_manager import IoManager
+
+        self._setup_with_tmp_path(tmp_path)
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create a parent directory item and configure it properly
+        io = IoManager()
+        parent_directory = ItemTargetDirectory.create_from_path(
+            path=str(tmp_path), io=io
+        )
+
+        # Use the new API - filter that only matches directories but with a file pattern
+        config = {
+            "children": [
+                ChildrenFilterOption(
+                    pattern={"type": DiskItemType.DIRECTORY},  # But only directories
+                    name_pattern=r".*\.txt$",  # File pattern
+                )
+            ]
+        }
+
+        parent_directory.set_value(config)
+        parent_directory.build_item_tree()
+
+        # Get filtered children
+        children = parent_directory.get_children_list()
+        files = [child for child in children if child.is_file()]
+        directories = [child for child in children if child.is_directory()]
+
+        # Should find no files (type mismatch) and no directories (name pattern mismatch)
+        assert len(files) == 0, "Should find no files when type is DIRECTORY"
+        assert len(directories) == 0, "Should find no directories with .txt pattern"
 
     def _copy_directory_structure(self, source: Path, target: Path) -> None:
         """Recursively copy directory structure for testing."""
@@ -452,6 +430,15 @@ class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
             if target.exists():
                 shutil.rmtree(target)
             shutil.copytree(source, target)
+
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        return Path(__file__).parent / "test_data"
+
+
+# Keep the original operation test as well for backward compatibility
+class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
+    """Original test for map config operation - kept for backward compatibility."""
 
     def test_file_create_from_map_config_operation(self, tmp_path) -> None:
         """Test file creation from map config with ChildrenFilterOption."""
@@ -532,3 +519,16 @@ class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
         # Test that the filter worked by checking if we can find the test files
         target_file = directory.find_by_name_recursive("test-collection-one-one.txt")
         assert target_file is not None, "Should find filtered target file"
+
+    def _copy_directory_structure(self, source: Path, target: Path) -> None:
+        """Recursively copy directory structure for testing."""
+        import shutil
+
+        if source.exists():
+            if target.exists():
+                shutil.rmtree(target)
+            shutil.copytree(source, target)
+
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        return Path(__file__).parent / "test_data"

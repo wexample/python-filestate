@@ -14,9 +14,26 @@ if TYPE_CHECKING:
 class TestYamlFile(AbstractStructuredFileTest):
     """Test YamlFile functionality - smoke tests for YAML file handling."""
 
-    def _get_file_class(self) -> type[YamlFile]:
-        """Get the YamlFile class."""
-        return YamlFile
+    # YAML-specific tests that are not covered by the abstract class
+    def test_yaml_file_formatting(self, tmp_path) -> None:
+        """Test YamlFile produces properly formatted YAML output."""
+        self._setup_with_tmp_path(tmp_path)
+
+        yaml_file = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Test data
+        test_data = {
+            "name": "test-app",
+            "config": {"debug": True},
+            "items": ["item1", "item2"],
+        }
+
+        # Serialize to YAML format
+        yaml_content = yaml_file.dumps(test_data)
+
+        # Test YAML formatting characteristics
+        assert "name: test-app" in yaml_content, "Should contain key-value pairs"
+        assert "- item1" in yaml_content, "Should format lists with dashes"
 
     def _get_expected_extension(self) -> str:
         """Get the expected file extension."""
@@ -26,13 +43,17 @@ class TestYamlFile(AbstractStructuredFileTest):
         """Get the extension constant name."""
         return "EXTENSION_YML"
 
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name."""
-        return "sample.yaml"
+    def _get_file_class(self) -> type[YamlFile]:
+        """Get the YamlFile class."""
+        return YamlFile
 
     def _get_file_type_name(self) -> str:
         """Get the file type name for messages."""
         return "YamlFile"
+
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name."""
+        return "sample.yaml"
 
     def _validate_parsed_content(self, parsed: dict) -> None:
         """Validate the structure of parsed YAML content."""
@@ -64,24 +85,3 @@ class TestYamlFile(AbstractStructuredFileTest):
         assert (
             parsed["config"]["port"] == 8000
         ), "Integer values should be parsed correctly"
-
-    # YAML-specific tests that are not covered by the abstract class
-    def test_yaml_file_formatting(self, tmp_path) -> None:
-        """Test YamlFile produces properly formatted YAML output."""
-        self._setup_with_tmp_path(tmp_path)
-
-        yaml_file = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Test data
-        test_data = {
-            "name": "test-app",
-            "config": {"debug": True},
-            "items": ["item1", "item2"],
-        }
-
-        # Serialize to YAML format
-        yaml_content = yaml_file.dumps(test_data)
-
-        # Test YAML formatting characteristics
-        assert "name: test-app" in yaml_content, "Should contain key-value pairs"
-        assert "- item1" in yaml_content, "Should format lists with dashes"

@@ -16,97 +16,6 @@ if TYPE_CHECKING:
 class TestItemTargetDirectory(AbstractStateManagerTest):
     """Test ItemTargetDirectory functionality - directory navigation and traversal."""
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        return Path(__file__).parent / "test_data" / "directory_test"
-
-    def _create_directory_item(self, tmp_path: Path) -> ItemTargetDirectory:
-        """Create an ItemTargetDirectory from test data."""
-        from wexample_prompt.common.io_manager import IoManager
-        from wexample_filestate.option.children_option import ChildrenOption
-        from wexample_filestate.item.item_target_file import ItemTargetFile
-
-        # Copy test data structure to tmp_path
-        test_data_path = self._get_test_data_path()
-        self._copy_directory_structure(test_data_path, tmp_path)
-
-        # Create ItemTargetDirectory
-        io = IoManager()
-        directory = ItemTargetDirectory.create_from_path(path=str(tmp_path), io=io)
-
-        # Manually create children for testing
-        children_configs = []
-
-        # Scan directory and create child configurations
-        for item_path in tmp_path.iterdir():
-            if item_path.is_file():
-                children_configs.append(
-                    {"name": item_path.name, "type": "file", "should_exist": True}
-                )
-            elif item_path.is_dir():
-                children_configs.append(
-                    {"name": item_path.name, "type": "directory", "should_exist": True}
-                )
-
-        # Set children configuration
-        if children_configs:
-            directory.set_value({ChildrenOption.get_name(): children_configs})
-
-        # Build item tree first
-        directory.build_item_tree()
-
-        # Then configure subdirectories recursively
-        self._configure_subdirectories_recursively(directory)
-
-        return directory
-
-    def _configure_subdirectories_recursively(
-        self, directory: ItemTargetDirectory
-    ) -> None:
-        """Recursively configure subdirectories to have their children."""
-        from wexample_filestate.option.children_option import ChildrenOption
-
-        for child in directory.get_children_list():
-            if child.is_directory() and isinstance(child, ItemTargetDirectory):
-                child_path = child.get_path()
-                children_configs = []
-
-                # Scan subdirectory and create child configurations
-                for item_path in child_path.iterdir():
-                    if item_path.is_file():
-                        children_configs.append(
-                            {
-                                "name": item_path.name,
-                                "type": "file",
-                                "should_exist": True,
-                            }
-                        )
-                    elif item_path.is_dir():
-                        children_configs.append(
-                            {
-                                "name": item_path.name,
-                                "type": "directory",
-                                "should_exist": True,
-                            }
-                        )
-
-                # Set children configuration for subdirectory
-                if children_configs:
-                    child.set_value({ChildrenOption.get_name(): children_configs})
-                    child.build_item_tree()
-
-                    # Recurse into subdirectories
-                    self._configure_subdirectories_recursively(child)
-
-    def _copy_directory_structure(self, source: Path, target: Path) -> None:
-        """Recursively copy directory structure for testing."""
-        import shutil
-
-        if source.exists():
-            if target.exists():
-                shutil.rmtree(target)
-            shutil.copytree(source, target)
-
     def test_directory_creation(self, tmp_path) -> None:
         """Test ItemTargetDirectory can be created and basic properties work."""
         self._setup_with_tmp_path(tmp_path)
@@ -118,32 +27,6 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         assert directory.is_directory(), "Should be identified as directory"
         assert not directory.is_file(), "Should not be identified as file"
         assert directory.get_path() == tmp_path, "Path should match"
-
-    def test_get_children_list(self, tmp_path) -> None:
-        """Test get_children_list() method."""
-        self._setup_with_tmp_path(tmp_path)
-
-        directory = self._create_directory_item(tmp_path)
-
-        # Get children
-        children = directory.get_children_list()
-
-        # Should have children (files and subdirectories)
-        assert len(children) > 0, "Should have children"
-
-        # Check that we have the expected files and directories
-        child_names = [child.get_item_name() for child in children]
-        assert "file1.txt" in child_names, "Should find file1.txt"
-        assert "file2.json" in child_names, "Should find file2.json"
-        assert "subdir1" in child_names, "Should find subdir1"
-        assert "subdir2" in child_names, "Should find subdir2"
-
-        # Check types
-        files = [child for child in children if child.is_file()]
-        directories = [child for child in children if child.is_directory()]
-
-        assert len(files) >= 2, "Should have at least 2 files"
-        assert len(directories) >= 2, "Should have at least 2 subdirectories"
 
     def test_find_by_path(self, tmp_path) -> None:
         """Test find_by_path() method."""
@@ -197,6 +80,36 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         non_existent_path = "subdir1/non_existent.txt"
         found_none = directory.find_by_path_recursive(non_existent_path)
         assert found_none is None, "Should not find non-existent file recursively"
+
+    def test_for_each_child_file_recursive(self, tmp_path) -> None:
+        """Test for_each_child_file_recursive() method."""
+        self._setup_with_tmp_path(tmp_path)
+
+        directory = self._create_directory_item(tmp_path)
+
+        # Collect all files using the convenience method
+        files_found = []
+
+        def collect_files(item) -> None:
+            files_found.append(item)
+
+        directory.for_each_child_file_recursive(collect_files)
+
+        # Should find all files recursively
+        assert len(files_found) >= 5, "Should find at least 5 files recursively"
+
+        # All items should be files
+        for item in files_found:
+            assert item.is_file(), "All items should be files"
+            assert isinstance(
+                item, ItemTargetFile
+            ), "All items should be ItemTargetFile"
+
+        # Check file extensions variety
+        extensions = [item.get_path().suffix for item in files_found]
+        assert ".txt" in extensions, "Should find .txt files"
+        assert ".json" in extensions, "Should find .json files"
+        assert ".yaml" in extensions, "Should find .yaml files"
 
     def test_for_each_child_of_type(self, tmp_path) -> None:
         """Test for_each_child_of_type() method."""
@@ -270,36 +183,6 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
                 item, ItemTargetFile
             ), "All items should be ItemTargetFile"
 
-    def test_for_each_child_file_recursive(self, tmp_path) -> None:
-        """Test for_each_child_file_recursive() method."""
-        self._setup_with_tmp_path(tmp_path)
-
-        directory = self._create_directory_item(tmp_path)
-
-        # Collect all files using the convenience method
-        files_found = []
-
-        def collect_files(item) -> None:
-            files_found.append(item)
-
-        directory.for_each_child_file_recursive(collect_files)
-
-        # Should find all files recursively
-        assert len(files_found) >= 5, "Should find at least 5 files recursively"
-
-        # All items should be files
-        for item in files_found:
-            assert item.is_file(), "All items should be files"
-            assert isinstance(
-                item, ItemTargetFile
-            ), "All items should be ItemTargetFile"
-
-        # Check file extensions variety
-        extensions = [item.get_path().suffix for item in files_found]
-        assert ".txt" in extensions, "Should find .txt files"
-        assert ".json" in extensions, "Should find .json files"
-        assert ".yaml" in extensions, "Should find .yaml files"
-
     def test_for_each_child_recursive(self, tmp_path) -> None:
         """Test for_each_child_recursive() method."""
         self._setup_with_tmp_path(tmp_path)
@@ -331,3 +214,120 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         assert any(
             "subsubdir" in path for path in item_paths
         ), "Should traverse subsubdir"
+
+    def test_get_children_list(self, tmp_path) -> None:
+        """Test get_children_list() method."""
+        self._setup_with_tmp_path(tmp_path)
+
+        directory = self._create_directory_item(tmp_path)
+
+        # Get children
+        children = directory.get_children_list()
+
+        # Should have children (files and subdirectories)
+        assert len(children) > 0, "Should have children"
+
+        # Check that we have the expected files and directories
+        child_names = [child.get_item_name() for child in children]
+        assert "file1.txt" in child_names, "Should find file1.txt"
+        assert "file2.json" in child_names, "Should find file2.json"
+        assert "subdir1" in child_names, "Should find subdir1"
+        assert "subdir2" in child_names, "Should find subdir2"
+
+        # Check types
+        files = [child for child in children if child.is_file()]
+        directories = [child for child in children if child.is_directory()]
+
+        assert len(files) >= 2, "Should have at least 2 files"
+        assert len(directories) >= 2, "Should have at least 2 subdirectories"
+
+    def _configure_subdirectories_recursively(
+        self, directory: ItemTargetDirectory
+    ) -> None:
+        """Recursively configure subdirectories to have their children."""
+        from wexample_filestate.option.children_option import ChildrenOption
+
+        for child in directory.get_children_list():
+            if child.is_directory() and isinstance(child, ItemTargetDirectory):
+                child_path = child.get_path()
+                children_configs = []
+
+                # Scan subdirectory and create child configurations
+                for item_path in child_path.iterdir():
+                    if item_path.is_file():
+                        children_configs.append(
+                            {
+                                "name": item_path.name,
+                                "type": "file",
+                                "should_exist": True,
+                            }
+                        )
+                    elif item_path.is_dir():
+                        children_configs.append(
+                            {
+                                "name": item_path.name,
+                                "type": "directory",
+                                "should_exist": True,
+                            }
+                        )
+
+                # Set children configuration for subdirectory
+                if children_configs:
+                    child.set_value({ChildrenOption.get_name(): children_configs})
+                    child.build_item_tree()
+
+                    # Recurse into subdirectories
+                    self._configure_subdirectories_recursively(child)
+
+    def _copy_directory_structure(self, source: Path, target: Path) -> None:
+        """Recursively copy directory structure for testing."""
+        import shutil
+
+        if source.exists():
+            if target.exists():
+                shutil.rmtree(target)
+            shutil.copytree(source, target)
+
+    def _create_directory_item(self, tmp_path: Path) -> ItemTargetDirectory:
+        """Create an ItemTargetDirectory from test data."""
+        from wexample_prompt.common.io_manager import IoManager
+        from wexample_filestate.option.children_option import ChildrenOption
+        from wexample_filestate.item.item_target_file import ItemTargetFile
+
+        # Copy test data structure to tmp_path
+        test_data_path = self._get_test_data_path()
+        self._copy_directory_structure(test_data_path, tmp_path)
+
+        # Create ItemTargetDirectory
+        io = IoManager()
+        directory = ItemTargetDirectory.create_from_path(path=str(tmp_path), io=io)
+
+        # Manually create children for testing
+        children_configs = []
+
+        # Scan directory and create child configurations
+        for item_path in tmp_path.iterdir():
+            if item_path.is_file():
+                children_configs.append(
+                    {"name": item_path.name, "type": "file", "should_exist": True}
+                )
+            elif item_path.is_dir():
+                children_configs.append(
+                    {"name": item_path.name, "type": "directory", "should_exist": True}
+                )
+
+        # Set children configuration
+        if children_configs:
+            directory.set_value({ChildrenOption.get_name(): children_configs})
+
+        # Build item tree first
+        directory.build_item_tree()
+
+        # Then configure subdirectories recursively
+        self._configure_subdirectories_recursively(directory)
+
+        return directory
+
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        return Path(__file__).parent / "test_data" / "directory_test"

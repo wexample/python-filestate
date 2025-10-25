@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 from abc import ABC
-from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
@@ -11,6 +10,7 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.utils.file_state_manager import FileStateManager
     from wexample_helpers.const.types import PathOrString
+    from pathlib import Path
 
 
 class AbstractStateManagerTest(ABC):
@@ -63,6 +63,7 @@ class AbstractStateManagerTest(ABC):
     def _get_test_state_manager_path(
         self, package_root_path: str | None = None
     ) -> Path:
+        from pathlib import Path
         return (
             Path(package_root_path or self._get_package_root_path())
             / "tests"

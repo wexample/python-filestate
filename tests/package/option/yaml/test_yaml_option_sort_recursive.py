@@ -17,8 +17,11 @@ class TestYamlSortRecursiveOperation(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         from wexample_filestate.option.name_option import NameOption
-        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
+        from wexample_filestate.option.yaml.sort_recursive_option import (
+            SortRecursiveOption,
+        )
         from wexample_filestate.option.yaml_option import YamlOption
+
         return {
             "children": [
                 {
