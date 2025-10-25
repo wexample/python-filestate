@@ -18,6 +18,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_for_all_matches_literal(self, tmp_path) -> None:
         """Test literal string search with multiple matches."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("simple.txt", tmp_path)
@@ -49,6 +50,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_for_all_matches_regex(self, tmp_path) -> None:
         """Test regex search with case-insensitive flag."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("multiline.txt", tmp_path)
@@ -70,6 +72,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_for_all_matches_word_boundary(self, tmp_path) -> None:
         """Test regex search with word boundaries."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("code.py", tmp_path)
@@ -94,6 +97,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_one_if_match_found(self, tmp_path) -> None:
         """Test finding first match only."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("simple.txt", tmp_path)
@@ -107,6 +111,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_one_if_match_not_found(self, tmp_path) -> None:
         """Test when no match is found."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("simple.txt", tmp_path)
@@ -117,6 +122,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_create_one_if_match_regex(self, tmp_path) -> None:
         """Test regex search for first match."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("code.py", tmp_path)
@@ -133,6 +139,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_deprecated_create_if_match(self, tmp_path) -> None:
         """Test backward compatibility method."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("simple.txt", tmp_path)
@@ -155,6 +162,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_empty_search_string(self, tmp_path) -> None:
         """Test behavior with empty search string."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("simple.txt", tmp_path)
@@ -170,6 +178,7 @@ class TestSearchResult(AbstractStateManagerTest):
     def test_line_column_calculation(self, tmp_path) -> None:
         """Test accurate line and column calculation."""
         from wexample_filestate.utils.search_result import SearchResult
+
         self._setup_with_tmp_path(tmp_path)
 
         item = self._create_item_target_file("multiline.txt", tmp_path)
@@ -219,4 +228,5 @@ class TestSearchResult(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"

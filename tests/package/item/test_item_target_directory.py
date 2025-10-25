@@ -1,16 +1,13 @@
 from __future__ import annotations
-
-from pathlib import Path
 from typing import TYPE_CHECKING
-
-from wexample_filestate.item.item_target_directory import ItemTargetDirectory
-from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+    from pathlib import Path
 
 
 class TestItemTargetDirectory(AbstractStateManagerTest):
@@ -83,6 +80,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def test_for_each_child_file_recursive(self, tmp_path) -> None:
         """Test for_each_child_file_recursive() method."""
+        from wexample_filestate.item.item_target_file import ItemTargetFile
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -113,6 +111,8 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def test_for_each_child_of_type(self, tmp_path) -> None:
         """Test for_each_child_of_type() method."""
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+        from wexample_filestate.item.item_target_file import ItemTargetFile
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -155,6 +155,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def test_for_each_child_of_type_recursive(self, tmp_path) -> None:
         """Test for_each_child_of_type_recursive() method."""
+        from wexample_filestate.item.item_target_file import ItemTargetFile
         self._setup_with_tmp_path(tmp_path)
 
         directory = self._create_directory_item(tmp_path)
@@ -245,6 +246,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         self, directory: ItemTargetDirectory
     ) -> None:
         """Recursively configure subdirectories to have their children."""
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.option.children_option import ChildrenOption
 
         for child in directory.get_children_list():
@@ -290,6 +292,7 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def _create_directory_item(self, tmp_path: Path) -> ItemTargetDirectory:
         """Create an ItemTargetDirectory from test data."""
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_prompt.common.io_manager import IoManager
         from wexample_filestate.option.children_option import ChildrenOption
         from wexample_filestate.item.item_target_file import ItemTargetFile
@@ -330,4 +333,5 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
+        from pathlib import Path
         return Path(__file__).parent / "test_data" / "directory_test"
