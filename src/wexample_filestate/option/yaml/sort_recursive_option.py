@@ -33,6 +33,7 @@ class SortRecursiveOption(AbstractYamlChildOption):
             )
 
         return None
+
     def get_description(self) -> str:
         return "Sort YAML file content recursively by keys"
 

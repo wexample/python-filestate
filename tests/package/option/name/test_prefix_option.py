@@ -15,6 +15,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_add_prefix(self, tmp_path) -> None:
         """Test PrefixOption apply_correction adds missing prefix."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test test_ prefix
@@ -47,6 +48,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_case_sensitive(self, tmp_path) -> None:
         """Test PrefixOption apply_correction is case-sensitive."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test TEMP_ prefix (uppercase)
@@ -69,6 +71,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_custom_prefix(self, tmp_path) -> None:
         """Test PrefixOption apply_correction with custom prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test draft- prefix
@@ -97,6 +100,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_empty_prefix(self, tmp_path) -> None:
         """Test PrefixOption apply_correction with empty prefix."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = PrefixOption()
@@ -114,6 +118,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_multiple_prefixes(self, tmp_path) -> None:
         """Test PrefixOption behavior with names that could have multiple prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test new_ prefix
@@ -139,6 +144,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_apply_correction_with_none_value(self, tmp_path) -> None:
         """Test PrefixOption apply_correction with None value."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = PrefixOption()
@@ -155,6 +161,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_creation(self, tmp_path) -> None:
         """Test PrefixOption can be created."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = PrefixOption()
@@ -164,6 +171,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_numeric_prefix(self, tmp_path) -> None:
         """Test PrefixOption with numeric prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test numeric prefix
@@ -192,6 +200,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_path_separator_prefix(self, tmp_path) -> None:
         """Test PrefixOption with path-like prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test path-like prefix
@@ -216,6 +225,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_roundtrip_validation_correction(self, tmp_path) -> None:
         """Test that apply_correction produces names that validate successfully."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test v1_ prefix
@@ -240,6 +250,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_special_characters_in_prefix(self, tmp_path) -> None:
         """Test PrefixOption with special characters in prefix."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test prefix with special characters
@@ -273,6 +284,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_unicode_prefix(self, tmp_path) -> None:
         """Test PrefixOption with Unicode characters in prefix."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test Unicode prefix
@@ -294,6 +306,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_validate_name_case_sensitive(self, tmp_path) -> None:
         """Test PrefixOption validation is case-sensitive."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test TEMP_ prefix (uppercase)
@@ -319,6 +332,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_validate_name_custom_prefix(self, tmp_path) -> None:
         """Test PrefixOption validation with custom prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test draft- prefix
@@ -351,6 +365,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_validate_name_empty_prefix(self, tmp_path) -> None:
         """Test PrefixOption validation with empty prefix."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = PrefixOption()
@@ -364,6 +379,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_validate_name_file_prefix(self, tmp_path) -> None:
         """Test PrefixOption validation with file prefixes."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test test_ prefix
@@ -399,6 +415,7 @@ class TestPrefixOption(AbstractStateManagerTest):
     def test_prefix_option_validate_name_with_none_value(self, tmp_path) -> None:
         """Test PrefixOption validation with None value (should always return True)."""
         from wexample_filestate.option.name.prefix_option import PrefixOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = PrefixOption()

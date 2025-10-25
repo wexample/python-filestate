@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.env_file import EnvFile
 from wexample_filestate.testing.abstract_content_file_test import (
     AbstractContentFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.env_file import EnvFile
 
 
 class TestEnvFile(AbstractContentFileTest):
@@ -43,6 +42,7 @@ class TestEnvFile(AbstractContentFileTest):
 
     def _get_file_class(self) -> type[EnvFile]:
         """Get the EnvFile class."""
+        from wexample_filestate.item.file.env_file import EnvFile
         return EnvFile
 
     def _get_file_type_name(self) -> str:

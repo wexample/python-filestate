@@ -6,6 +6,7 @@ from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.classes.private_field import private_field
 
 from wexample_helpers.decorator.base_class import base_class
+
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_helpers.const.types import PathOrString

@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.toml_file import TomlFile
 from wexample_filestate.testing.abstract_structured_file_test import (
     AbstractStructuredFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.toml_file import TomlFile
 
 
 class TestTomlFile(AbstractStructuredFileTest):
@@ -45,6 +44,7 @@ class TestTomlFile(AbstractStructuredFileTest):
 
     def _get_file_class(self) -> type[TomlFile]:
         """Get the TomlFile class."""
+        from wexample_filestate.item.file.toml_file import TomlFile
         return TomlFile
 
     def _get_file_type_name(self) -> str:

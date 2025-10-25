@@ -18,14 +18,11 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.active_option import (
             ActiveOption,
         )
-        from wexample_filestate.option.name_option import (
-            NameOption,
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
         )
         from wexample_filestate.option.children_option import (
             ChildrenOption,
-        )
-        from wexample_filestate.option.children_file_factory_option import (
-            ChildrenFileFactoryOption,
         )
         from wexample_filestate.option.class_option import (
             ClassOption,
@@ -37,6 +34,12 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             DefaultContentOption,
         )
         from wexample_filestate.option.mode_option import ModeOption
+        from wexample_filestate.option.name.on_bad_format_option import (
+            OnBadFormatOption,
+        )
+        from wexample_filestate.option.name_option import (
+            NameOption,
+        )
         from wexample_filestate.option.remove_backup_max_file_size_option import (
             RemoveBackupMaxFileSizeOption,
         )
@@ -61,9 +64,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.type_option import TypeOption
         from wexample_filestate.option.yaml_option import (
             YamlOption,
-        )
-        from wexample_filestate.option.name.on_bad_format_option import (
-            OnBadFormatOption,
         )
 
         return [

@@ -29,6 +29,7 @@ class UniqueLinesOption(AbstractTextChildOption):
                     )
 
         return None
+
     def get_description(self) -> str:
         return "Remove duplicate lines from file content"
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )

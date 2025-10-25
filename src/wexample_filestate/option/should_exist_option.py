@@ -3,13 +3,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+
 if TYPE_CHECKING:
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
@@ -33,14 +34,14 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         """Create FileCreateOperation or FileRemoveOperation based on should_exist value and current state."""
-        from wexample_filestate.option.default_content_option import (
-            DefaultContentOption,
-        )
         from wexample_filestate.operation.file_create_operation import (
             FileCreateOperation,
         )
         from wexample_filestate.operation.file_remove_operation import (
             FileRemoveOperation,
+        )
+        from wexample_filestate.option.default_content_option import (
+            DefaultContentOption,
         )
 
         # Get the should_exist value

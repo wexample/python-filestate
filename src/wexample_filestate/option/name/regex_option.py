@@ -15,6 +15,7 @@ class RegexOption(AbstractNameChildOption):
         # Regex patterns can't be automatically corrected, return name as-is
         # This would require domain-specific logic or user intervention
         return name
+
     def get_description(self) -> str:
         return "Enforce regex pattern matching for file names"
 

@@ -17,6 +17,7 @@ class SuffixOption(AbstractNameChildOption):
         if not name.endswith(suffix):
             return name + suffix
         return name
+
     def get_description(self) -> str:
         return "Enforce suffix requirement for file names"
 

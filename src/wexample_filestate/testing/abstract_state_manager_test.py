@@ -64,6 +64,7 @@ class AbstractStateManagerTest(ABC):
         self, package_root_path: str | None = None
     ) -> Path:
         from pathlib import Path
+
         return (
             Path(package_root_path or self._get_package_root_path())
             / "tests"

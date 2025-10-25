@@ -49,6 +49,7 @@ class OptionMixin(ItemTreeConfigOptionMixin):
 
     def get_supported_item_types(self) -> list[LocalPathType]:
         from wexample_file.enum.local_path_type import LocalPathType
+
         return [
             LocalPathType.FILE,
             LocalPathType.DIRECTORY,

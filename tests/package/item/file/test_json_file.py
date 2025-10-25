@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import json
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.json_file import JsonFile
 from wexample_filestate.testing.abstract_structured_file_test import (
     AbstractStructuredFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.json_file import JsonFile
 
 
 class TestJsonFile(AbstractStructuredFileTest):
@@ -104,6 +103,7 @@ class TestJsonFile(AbstractStructuredFileTest):
 
     def _get_file_class(self) -> type[JsonFile]:
         """Get the JsonFile class."""
+        from wexample_filestate.item.file.json_file import JsonFile
         return JsonFile
 
     def _get_file_type_name(self) -> str:

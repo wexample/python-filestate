@@ -15,6 +15,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_apply_correction_camel_case(self, tmp_path) -> None:
         """Test CaseFormatOption apply_correction converts to camelCase."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -61,6 +62,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_apply_correction_kebab_case(self, tmp_path) -> None:
         """Test CaseFormatOption apply_correction converts to kebab-case."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -105,6 +107,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_apply_correction_lowercase(self, tmp_path) -> None:
         """Test CaseFormatOption apply_correction converts to lowercase."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -141,6 +144,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_apply_correction_snake_case(self, tmp_path) -> None:
         """Test CaseFormatOption apply_correction converts to snake_case."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -185,6 +189,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_apply_correction_uppercase(self, tmp_path) -> None:
         """Test CaseFormatOption apply_correction converts to uppercase."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -223,6 +228,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     ) -> None:
         """Test CaseFormatOption apply_correction with None value."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -242,6 +248,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_creation(self, tmp_path) -> None:
         """Test CaseFormatOption can be created."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -254,6 +261,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_edge_cases(self, tmp_path) -> None:
         """Test CaseFormatOption with edge cases."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test empty string
@@ -283,6 +291,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_invalid_format(self, tmp_path) -> None:
         """Test CaseFormatOption with invalid format values."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -301,6 +310,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_numbers_and_special_chars(self, tmp_path) -> None:
         """Test CaseFormatOption with numbers and special characters."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test with numbers
@@ -341,6 +351,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_roundtrip_validation_correction(self, tmp_path) -> None:
         """Test that apply_correction produces names that validate successfully."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         test_names = [
@@ -372,6 +383,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_camel_case(self, tmp_path) -> None:
         """Test CaseFormatOption validation with camelCase format."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -409,6 +421,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_kebab_case(self, tmp_path) -> None:
         """Test CaseFormatOption validation with kebab-case format."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -457,6 +470,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_lowercase(self, tmp_path) -> None:
         """Test CaseFormatOption validation with lowercase format."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -486,6 +500,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_snake_case(self, tmp_path) -> None:
         """Test CaseFormatOption validation with snake_case format."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -534,6 +549,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_uppercase(self, tmp_path) -> None:
         """Test CaseFormatOption validation with uppercase format."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()
@@ -562,6 +578,7 @@ class TestCaseFormatOption(AbstractStateManagerTest):
     def test_case_format_option_validate_name_with_none_value(self, tmp_path) -> None:
         """Test CaseFormatOption validation with None value (should always return True)."""
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
+
         self._setup_with_tmp_path(tmp_path)
 
         option = CaseFormatOption()

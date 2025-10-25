@@ -50,6 +50,7 @@ class CaseFormatOption(AbstractNameChildOption):
             )
 
         return name
+
     def get_description(self) -> str:
         return "Enforce case format (uppercase, lowercase, camelCase, snake_case, kebab-case)"
 

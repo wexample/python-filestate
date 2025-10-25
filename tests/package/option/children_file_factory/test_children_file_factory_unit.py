@@ -14,8 +14,11 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_creation(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption can be created."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
+
         self._setup_with_tmp_path(tmp_path)
 
         option = ChildrenFileFactoryOption(
@@ -34,8 +37,11 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_pattern_matching(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption pattern matching logic."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
+
         self._setup_with_tmp_path(tmp_path)
 
         # Create the option with specific pattern
@@ -75,8 +81,11 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
         self, tmp_path
     ) -> None:
         """Test _path_match_patterns with no pattern (should match all)."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
+
         self._setup_with_tmp_path(tmp_path)
 
         # Create the option without name pattern
@@ -102,8 +111,11 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_recursive_property(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption recursive property."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
+
         self._setup_with_tmp_path(tmp_path)
 
         # Test recursive=True
@@ -131,6 +143,7 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"
 
     def _setup_test_data(self, tmp_path: Path) -> None:

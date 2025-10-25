@@ -1,6 +1,4 @@
 from __future__ import annotations
-
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Union
 from collections.abc import Callable
 
@@ -20,6 +18,7 @@ if TYPE_CHECKING:
 class NameOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
+        from pathlib import Path
         from wexample_filestate.config_value.name_config_value import NameConfigValue
 
         return Union[str, Path, dict, NameConfigValue, Callable]
@@ -79,6 +78,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         return None
 
     def set_value(self, raw_value: Any) -> None:
+        from pathlib import Path
         from wexample_filestate.option.name.value_option import ValueOption
 
         if isinstance(raw_value, Path):

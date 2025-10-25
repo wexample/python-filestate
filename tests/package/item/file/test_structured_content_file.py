@@ -199,4 +199,5 @@ class TestStructuredContentFile(AbstractStateManagerTest):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"

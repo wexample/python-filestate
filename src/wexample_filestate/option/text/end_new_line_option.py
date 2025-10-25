@@ -28,5 +28,6 @@ class EndNewLineOption(AbstractTextChildOption):
                 )
 
         return None
+
     def get_description(self) -> str:
         return "Ensure file ends with a newline character"

@@ -17,6 +17,7 @@ class PrefixOption(AbstractNameChildOption):
         if not name.startswith(prefix):
             return prefix + name
         return name
+
     def get_description(self) -> str:
         return "Enforce prefix requirement for file names"
 

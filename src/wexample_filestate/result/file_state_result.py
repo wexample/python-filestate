@@ -20,7 +20,6 @@ class FileStateResult(AbstractResult):
         )
 
         if interactive:
-            import os.path
             from wexample_helpers.helpers.cli import cli_make_clickable_path
 
             if self.state_manager.io.confirm(

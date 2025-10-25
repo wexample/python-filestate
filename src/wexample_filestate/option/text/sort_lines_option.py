@@ -29,6 +29,7 @@ class SortLinesOption(AbstractTextChildOption):
                     )
 
         return None
+
     def get_description(self) -> str:
         return "Sort file content lines alphabetically"
 

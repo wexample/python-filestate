@@ -14,6 +14,7 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         return Path(__file__).parent / "test_data"
 
     def _operation_get_count(self) -> int:
@@ -22,7 +23,10 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
 
     def _operation_test_assert_applied(self) -> None:
         """Assert state after applying operations."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
+
         # Since ChildrenFileFactoryOption generates children configurations
         # but doesn't directly create files, we test that the option
         # has been processed without errors
@@ -92,7 +96,9 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         """Setup configuration for testing ChildrenFileFactoryOption."""
-        from wexample_filestate.option.children_file_factory_option import ChildrenFileFactoryOption
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
+        )
         from wexample_filestate.const.disk import DiskItemType
 
         return {

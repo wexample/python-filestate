@@ -28,5 +28,6 @@ class TrimOption(AbstractTextChildOption):
                     )
 
         return None
+
     def get_description(self) -> str:
         return "Trim whitespace from the beginning and end of file content"

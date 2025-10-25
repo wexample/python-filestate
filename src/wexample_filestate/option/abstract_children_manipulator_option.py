@@ -2,26 +2,28 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
-)
-from wexample_filestate.config_option.mixin.item_config_option_mixin import (
-    ItemTreeConfigOptionMixin,
 )
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+    ItemTreeConfigOptionMixin,
+)
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
+
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from wexample_config.const.types import DictConfig
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_helpers.const.types import PathOrString
-    from wexample_config.const.types import DictConfig
+
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 @base_class

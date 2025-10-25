@@ -109,6 +109,7 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
     def _get_test_data_path(self) -> Path:
         """Get the path to test data directory."""
         from pathlib import Path
+
         # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
         return (
             Path(__file__).parent.parent.parent.parent

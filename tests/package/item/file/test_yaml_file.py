@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.yaml_file import YamlFile
 from wexample_filestate.testing.abstract_structured_file_test import (
     AbstractStructuredFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.yaml_file import YamlFile
 
 
 class TestYamlFile(AbstractStructuredFileTest):
@@ -45,6 +44,7 @@ class TestYamlFile(AbstractStructuredFileTest):
 
     def _get_file_class(self) -> type[YamlFile]:
         """Get the YamlFile class."""
+        from wexample_filestate.item.file.yaml_file import YamlFile
         return YamlFile
 
     def _get_file_type_name(self) -> str:

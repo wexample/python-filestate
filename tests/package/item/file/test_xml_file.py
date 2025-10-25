@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_filestate.item.file.xml_file import XmlFile
 from wexample_filestate.testing.abstract_structured_file_test import (
     AbstractStructuredFileTest,
 )
 
 if TYPE_CHECKING:
     pass
+    from wexample_filestate.item.file.xml_file import XmlFile
 
 
 class TestXmlFile(AbstractStructuredFileTest):
@@ -89,6 +88,7 @@ class TestXmlFile(AbstractStructuredFileTest):
 
     def _get_file_class(self) -> type[XmlFile]:
         """Get the XmlFile class."""
+        from wexample_filestate.item.file.xml_file import XmlFile
         return XmlFile
 
     def _get_file_type_name(self) -> str:
