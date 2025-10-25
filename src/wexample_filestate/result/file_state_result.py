@@ -22,6 +22,7 @@ class FileStateResult(AbstractResult):
             if self.state_manager.io.confirm(
                 question=f"Do you want to apply this change:\n"
                 f"    {operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                f"    Option: {operation.option.get_name()} - {operation.option.get_description()}\n"
                 f"  → {operation.description}\n",
                 choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
                 default="yes",
