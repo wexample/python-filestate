@@ -46,7 +46,7 @@ class AbstractResult(PrintableMixin, BaseClass):
                 operation.applied = False
                 self._executed_operations.append(operation)
             else:
-                self.state_manager.title(
+                self.state_manager.subtitle(
                     f"OPERATION: {operation.get_snake_short_class_name().upper()}"
                 )
                 applied = self._apply_single_operation(
