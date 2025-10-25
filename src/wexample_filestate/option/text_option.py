@@ -29,14 +29,18 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
         # Convert list form to dict form for consistency
         if isinstance(raw_value, list):
             from wexample_filestate.option.text.trim_option import TrimOption
-            from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
+            from wexample_filestate.option.text.end_new_line_option import (
+                EndNewLineOption,
+            )
             from wexample_filestate.option.text.sort_lines_option import SortLinesOption
-            from wexample_filestate.option.text.unique_lines_option import UniqueLinesOption
-            
+            from wexample_filestate.option.text.unique_lines_option import (
+                UniqueLinesOption,
+            )
+
             raw_value = {
                 TrimOption.get_name(): "trim" in raw_value,
                 EndNewLineOption.get_name(): "ensure_newline" in raw_value
-                                             or "end_new_line" in raw_value,
+                or "end_new_line" in raw_value,
                 SortLinesOption.get_name(): "sort_lines" in raw_value,
                 UniqueLinesOption.get_name(): "unique_lines" in raw_value,
             }

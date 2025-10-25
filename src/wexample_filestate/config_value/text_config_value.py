@@ -5,8 +5,6 @@ from typing import Any
 from pydantic import ConfigDict
 
 from wexample_config.config_value.config_value import ConfigValue
-from wexample_filestate.option.text.trim_option import TrimOption
-from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
@@ -26,6 +24,8 @@ class TextConfigValue(ConfigValue):
     )
 
     def to_option_raw_value(self) -> ConfigDict:
+        from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
+        from wexample_filestate.option.text.trim_option import TrimOption
         return {
             TrimOption.get_name(): self.trim,
             EndNewLineOption.get_name(): self.end_new_line,

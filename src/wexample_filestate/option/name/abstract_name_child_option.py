@@ -14,10 +14,10 @@ class AbstractNameChildOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return str
 
-    def validate_name(self, name: str) -> bool:
-        """Validate if a name matches this format rule."""
-        raise NotImplementedError("Subclasses must implement validate_name")
-
     def apply_correction(self, name: str) -> str:
         """Apply correction to make the name comply with this format rule."""
         raise NotImplementedError("Subclasses must implement apply_correction")
+
+    def validate_name(self, name: str) -> bool:
+        """Validate if a name matches this format rule."""
+        raise NotImplementedError("Subclasses must implement validate_name")

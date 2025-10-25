@@ -44,13 +44,6 @@ class WithWorkdirMixin(BaseClass):
     def workdir(self, value: FileStateManager | None) -> None:
         self._workdir = value
 
-    def _get_workdir_state_manager_class(
-        self,
-    ) -> type[FileStateManager]:
-        from wexample_filestate.utils.file_state_manager import FileStateManager
-
-        return FileStateManager
-
     def _create_workdir_state_manager(
         self,
         entrypoint_path: str,
@@ -60,6 +53,13 @@ class WithWorkdirMixin(BaseClass):
         return self._get_workdir_state_manager_class().create_from_path(
             path=entrypoint_path, config=config or {}, io=io
         )
+
+    def _get_workdir_state_manager_class(
+        self,
+    ) -> type[FileStateManager]:
+        from wexample_filestate.utils.file_state_manager import FileStateManager
+
+        return FileStateManager
 
     def _init_workdir(
         self,

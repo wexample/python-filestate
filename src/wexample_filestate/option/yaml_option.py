@@ -29,10 +29,11 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
     def applicable_on_missing(self) -> bool:
         return False
 
-    def get_supported_item_types(self) -> list[LocalPathType]:
-        return [
-            LocalPathType.FILE,
-        ]
+    def create_required_operation(
+        self, target: TargetFileOrDirectoryType
+    ) -> AbstractOperation | None:
+        """Create operation using child options."""
+        return self._create_child_required_operation(target=target)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.option.yaml.sort_recursive_option import (
@@ -43,8 +44,7 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
             SortRecursiveOption,
         ]
 
-    def create_required_operation(
-        self, target: TargetFileOrDirectoryType
-    ) -> AbstractOperation | None:
-        """Create operation using child options."""
-        return self._create_child_required_operation(target=target)
+    def get_supported_item_types(self) -> list[LocalPathType]:
+        return [
+            LocalPathType.FILE,
+        ]

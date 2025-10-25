@@ -16,9 +16,41 @@ if TYPE_CHECKING:
 class AbstractWorkdirMixinTest(AbstractStateManagerTest):
     """Base class for testing workdir mixins."""
 
-    def _setup_with_tmp_path(self, tmp_path) -> None:
-        """Setup test with temporary path."""
-        super()._setup_with_tmp_path(tmp_path)
+    def test_mixin_apply_and_rollback(self, tmp_path) -> None:
+        """Test that mixin creates files on apply and removes them on rollback."""
+        self._setup_with_tmp_path(tmp_path)
+
+        # Create workdir manager with mixin
+        manager = self._create_test_workdir_manager(tmp_path)
+
+        # Initially files should not exist
+        self._assert_not_applied(tmp_path)
+
+        # Apply multiple times if needed (Single Operation Per Pass principle)
+        apply_count = self._get_apply_count()
+        for i in range(apply_count):
+            manager.apply()
+
+        self._assert_applied(tmp_path)
+
+        # Rollback same number of times to fully undo
+        for i in range(apply_count):
+            manager.rollback()
+
+        self._assert_not_applied(tmp_path)
+
+    @abstract_method
+    def _apply_mixin_to_config(self, mixin_instance, config: DictConfig) -> DictConfig:
+        """Apply the mixin method to enhance the config."""
+        pass
+
+    @abstract_method
+    def _assert_applied(self, tmp_path: Path) -> None:
+        pass
+
+    @abstract_method
+    def _assert_not_applied(self, tmp_path: Path) -> None:
+        pass
 
     def _create_test_workdir_manager(self, tmp_path: Path) -> FileStateManager:
         """Create a test workdir manager that uses the mixin."""
@@ -44,9 +76,13 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
 
         return manager
 
+    def _get_apply_count(self) -> int:
+        """Return number of apply() calls needed for complete setup. Override if needed."""
+        return 1
+
     @abstract_method
-    def _get_test_workdir_class(self) -> type:
-        """Return the test class that inherits from the mixin being tested."""
+    def _get_expected_files(self) -> list[str]:
+        """Return list of files that should be created by the mixin."""
         pass
 
     @abstract_method
@@ -55,46 +91,10 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
         pass
 
     @abstract_method
-    def _apply_mixin_to_config(self, mixin_instance, config: DictConfig) -> DictConfig:
-        """Apply the mixin method to enhance the config."""
+    def _get_test_workdir_class(self) -> type:
+        """Return the test class that inherits from the mixin being tested."""
         pass
 
-    @abstract_method
-    def _get_expected_files(self) -> list[str]:
-        """Return list of files that should be created by the mixin."""
-        pass
-
-    def _get_apply_count(self) -> int:
-        """Return number of apply() calls needed for complete setup. Override if needed."""
-        return 1
-
-    @abstract_method
-    def _assert_not_applied(self, tmp_path: Path) -> None:
-        pass
-
-    @abstract_method
-    def _assert_applied(self, tmp_path: Path) -> None:
-        pass
-
-    def test_mixin_apply_and_rollback(self, tmp_path) -> None:
-        """Test that mixin creates files on apply and removes them on rollback."""
-        self._setup_with_tmp_path(tmp_path)
-
-        # Create workdir manager with mixin
-        manager = self._create_test_workdir_manager(tmp_path)
-
-        # Initially files should not exist
-        self._assert_not_applied(tmp_path)
-
-        # Apply multiple times if needed (Single Operation Per Pass principle)
-        apply_count = self._get_apply_count()
-        for i in range(apply_count):
-            manager.apply()
-
-        self._assert_applied(tmp_path)
-
-        # Rollback same number of times to fully undo
-        for i in range(apply_count):
-            manager.rollback()
-
-        self._assert_not_applied(tmp_path)
+    def _setup_with_tmp_path(self, tmp_path) -> None:
+        """Setup test with temporary path."""
+        super()._setup_with_tmp_path(tmp_path)

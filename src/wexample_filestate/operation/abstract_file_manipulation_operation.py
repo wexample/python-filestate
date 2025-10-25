@@ -10,14 +10,22 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import PathOrString
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class AbstractFileManipulationOperation(AbstractOperation):
-    _original_file_content: str = private_field(description="Cached original file content for undo")
-    _original_file_mode: int = private_field(description="Cached original file mode for undo")
-    _original_path: PathOrString = private_field(description="Cached original file path for undo")
+    _original_file_content: str = private_field(
+        description="Cached original file content for undo"
+    )
+    _original_file_mode: int = private_field(
+        description="Cached original file mode for undo"
+    )
+    _original_path: PathOrString = private_field(
+        description="Cached original file path for undo"
+    )
 
     def _backup_file_content(
-            self, target: TargetFileOrDirectoryType, file_path: PathOrString
+        self, target: TargetFileOrDirectoryType, file_path: PathOrString
     ) -> bool:
         import os
 
@@ -31,10 +39,10 @@ class AbstractFileManipulationOperation(AbstractOperation):
 
         # Save content if not too large.
         if size < int(
-                target.get_option_value(
-                    RemoveBackupMaxFileSizeOption,
-                    default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
-                ).get_int()
+            target.get_option_value(
+                RemoveBackupMaxFileSizeOption,
+                default=REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
+            ).get_int()
         ):
             self._original_file_content = file_read(file_path)
 

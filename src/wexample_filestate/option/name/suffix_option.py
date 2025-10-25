@@ -8,16 +8,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class SuffixOption(AbstractNameChildOption):
-    def get_description(self) -> str:
-        return "Enforce suffix requirement for file names"
-
-    def validate_name(self, name: str) -> bool:
-        """Validate if name ends with the required suffix."""
-        if self.get_value().is_none():
-            return True
-
-        suffix = self.get_value().get_str()
-        return name.endswith(suffix)
 
     def apply_correction(self, name: str) -> str:
         """Apply suffix correction to name."""
@@ -28,3 +18,13 @@ class SuffixOption(AbstractNameChildOption):
         if not name.endswith(suffix):
             return name + suffix
         return name
+    def get_description(self) -> str:
+        return "Enforce suffix requirement for file names"
+
+    def validate_name(self, name: str) -> bool:
+        """Validate if name ends with the required suffix."""
+        if self.get_value().is_none():
+            return True
+
+        suffix = self.get_value().get_str()
+        return name.endswith(suffix)

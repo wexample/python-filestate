@@ -23,60 +23,6 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
     text content with specific parsing/processing requirements.
     """
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
-        return (
-            Path(__file__).parent.parent.parent.parent
-            / "tests"
-            / "package"
-            / "item"
-            / "file"
-            / "test_data"
-        )
-
-    @abstractmethod
-    def _get_file_class(self) -> type[FileType]:
-        """Get the file class to test (e.g., HtmlFile, EnvFile)."""
-        pass
-
-    @abstractmethod
-    def _get_expected_extension(self) -> str:
-        """Get the expected file extension (e.g., 'html', 'env')."""
-        pass
-
-    @abstractmethod
-    def _get_extension_constants(self) -> dict[str, str]:
-        """Get the extension constants as name->value mapping.
-
-        Example: {'EXTENSION_HTML': 'html', 'EXTENSION_HTM': 'htm'}
-        """
-        pass
-
-    @abstractmethod
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name (e.g., 'sample.html')."""
-        pass
-
-    @abstractmethod
-    def _get_file_type_name(self) -> str:
-        """Get the file type name for messages (e.g., 'HtmlFile', 'EnvFile')."""
-        pass
-
-    def _create_file(self, filename: str, tmp_path: Path) -> FileType:
-        """Create a file instance from a test data file."""
-        from wexample_prompt.common.io_manager import IoManager
-
-        # Copy test data file to tmp_path
-        test_file = self._get_test_data_path() / filename
-        target_file = tmp_path / filename
-        target_file.write_text(test_file.read_text())
-
-        # Create file instance
-        io = IoManager()
-        file_class = self._get_file_class()
-        return file_class.create_from_path(path=str(target_file), io=io)
-
     def test_file_creation(self, tmp_path) -> None:
         """Test file can be created and basic properties work."""
         self._setup_with_tmp_path(tmp_path)
@@ -117,6 +63,60 @@ class AbstractContentFileTest(AbstractStateManagerTest, ABC):
 
         # Validate loaded content
         self._validate_loaded_content(raw_content, loaded_content)
+
+    def _create_file(self, filename: str, tmp_path: Path) -> FileType:
+        """Create a file instance from a test data file."""
+        from wexample_prompt.common.io_manager import IoManager
+
+        # Copy test data file to tmp_path
+        test_file = self._get_test_data_path() / filename
+        target_file = tmp_path / filename
+        target_file.write_text(test_file.read_text())
+
+        # Create file instance
+        io = IoManager()
+        file_class = self._get_file_class()
+        return file_class.create_from_path(path=str(target_file), io=io)
+
+    @abstractmethod
+    def _get_expected_extension(self) -> str:
+        """Get the expected file extension (e.g., 'html', 'env')."""
+        pass
+
+    @abstractmethod
+    def _get_extension_constants(self) -> dict[str, str]:
+        """Get the extension constants as name->value mapping.
+
+        Example: {'EXTENSION_HTML': 'html', 'EXTENSION_HTM': 'htm'}
+        """
+        pass
+
+    @abstractmethod
+    def _get_file_class(self) -> type[FileType]:
+        """Get the file class to test (e.g., HtmlFile, EnvFile)."""
+        pass
+
+    @abstractmethod
+    def _get_file_type_name(self) -> str:
+        """Get the file type name for messages (e.g., 'HtmlFile', 'EnvFile')."""
+        pass
+
+    @abstractmethod
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name (e.g., 'sample.html')."""
+        pass
+
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
+        return (
+            Path(__file__).parent.parent.parent.parent
+            / "tests"
+            / "package"
+            / "item"
+            / "file"
+            / "test_data"
+        )
 
     @abstractmethod
     def _validate_loaded_content(self, raw_content: str, loaded_content: Any) -> None:

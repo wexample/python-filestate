@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 from wexample_helpers.decorator.base_class import base_class
+
+from wexample_filestate.item.file.structured_content_file import StructuredContentFile
 
 if TYPE_CHECKING:
     from tomlkit import TOMLDocument
@@ -14,8 +15,9 @@ class TomlFile(StructuredContentFile):
     EXTENSION_TOML: ClassVar[str] = "toml"
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
-        from tomlkit import TOMLDocument, document, toml_dumps
+        from tomlkit import TOMLDocument, document
         from tomlkit import dumps as toml_dumps
+        from tomlkit import toml_dumps
 
         if content is None:
             return toml_dumps(document())

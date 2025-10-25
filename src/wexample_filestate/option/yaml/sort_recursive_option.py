@@ -10,8 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class SortRecursiveOption(AbstractYamlChildOption):
-    def get_description(self) -> str:
-        return "Sort YAML file content recursively by keys"
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
@@ -36,14 +34,8 @@ class SortRecursiveOption(AbstractYamlChildOption):
             )
 
         return None
-
-    def _sort_recursive(self, obj):
-        """Recursively sort dictionary keys and process lists."""
-        if isinstance(obj, dict):
-            return {k: self._sort_recursive(obj[k]) for k in sorted(obj.keys())}
-        if isinstance(obj, list):
-            return [self._sort_recursive(v) for v in obj]
-        return obj
+    def get_description(self) -> str:
+        return "Sort YAML file content recursively by keys"
 
     def _is_yaml_sorted(self, target: TargetFileOrDirectoryType) -> bool:
         """Check if YAML file is already recursively sorted."""
@@ -54,3 +46,11 @@ class SortRecursiveOption(AbstractYamlChildOption):
         sorted_dump = self._dump_yaml_content(sorted_data)
 
         return current_dump == sorted_dump
+
+    def _sort_recursive(self, obj):
+        """Recursively sort dictionary keys and process lists."""
+        if isinstance(obj, dict):
+            return {k: self._sort_recursive(obj[k]) for k in sorted(obj.keys())}
+        if isinstance(obj, list):
+            return [self._sort_recursive(v) for v in obj]
+        return obj

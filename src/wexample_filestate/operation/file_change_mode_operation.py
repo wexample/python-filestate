@@ -13,14 +13,14 @@ if TYPE_CHECKING:
 
 @base_class
 class FileChangeModeOperation(AbstractOperation):
-    _original_octal_mode: str | None = private_field(
-        description="Cached mode to provide undo"
-    )
     recursive: bool = public_field(
         description="Apply mode to child list",
     )
     target_mode: bool = public_field(
         description="The permissions mode to apply",
+    )
+    _original_octal_mode: str | None = private_field(
+        description="Cached mode to provide undo"
     )
 
     @classmethod

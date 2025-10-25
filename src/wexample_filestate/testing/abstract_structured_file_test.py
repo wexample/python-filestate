@@ -23,139 +23,6 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
     into structured data (dicts, lists) and serialized back to text format.
     """
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
-        return (
-            Path(__file__).parent.parent.parent.parent
-            / "tests"
-            / "package"
-            / "item"
-            / "file"
-            / "test_data"
-        )
-
-    @abstractmethod
-    def _get_file_class(self) -> type[FileType]:
-        """Get the file class to test (e.g., JsonFile, YamlFile)."""
-        pass
-
-    @abstractmethod
-    def _get_expected_extension(self) -> str:
-        """Get the expected file extension (e.g., 'json', 'yml')."""
-        pass
-
-    @abstractmethod
-    def _get_extension_constant_name(self) -> str:
-        """Get the extension constant name (e.g., 'EXTENSION_JSON')."""
-        pass
-
-    @abstractmethod
-    def _get_sample_filename(self) -> str:
-        """Get the sample test file name (e.g., 'sample.json')."""
-        pass
-
-    @abstractmethod
-    def _get_file_type_name(self) -> str:
-        """Get the file type name for messages (e.g., 'JsonFile', 'YamlFile')."""
-        pass
-
-    def _create_file(self, filename: str, tmp_path: Path) -> FileType:
-        """Create a file instance from a test data file."""
-        from wexample_prompt.common.io_manager import IoManager
-
-        # Copy test data file to tmp_path
-        test_file = self._get_test_data_path() / filename
-        target_file = tmp_path / filename
-        target_file.write_text(test_file.read_text())
-
-        # Create file instance
-        io = IoManager()
-        file_class = self._get_file_class()
-        return file_class.create_from_path(path=str(target_file), io=io)
-
-    def test_file_creation(self, tmp_path) -> None:
-        """Test file can be created and basic properties work."""
-        self._setup_with_tmp_path(tmp_path)
-
-        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Test basic properties
-        file_type_name = self._get_file_type_name()
-        assert (
-            file_instance is not None
-        ), f"{file_type_name} should be created successfully"
-
-        expected_ext = self._get_expected_extension()
-        assert (
-            file_instance._expected_file_name_extension() == expected_ext
-        ), f"Extension should be '{expected_ext}'"
-
-        # Test extension constant
-        constant_name = self._get_extension_constant_name()
-        assert hasattr(
-            file_instance, constant_name
-        ), f"Should have {constant_name} constant"
-        constant_value = getattr(file_instance, constant_name)
-        assert (
-            constant_value == expected_ext
-        ), f"Class constant should be '{expected_ext}'"
-
-    def test_file_loads(self, tmp_path) -> None:
-        """Test file can parse content into structured data."""
-        self._setup_with_tmp_path(tmp_path)
-
-        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Read and parse content
-        content = file_instance.read_text()
-        parsed = file_instance.loads(content)
-
-        # Test parsed content structure
-        assert isinstance(parsed, dict), "Parsed content should be a dict"
-
-        # Validate common structure expected in test files
-        self._validate_parsed_content(parsed)
-
-    def test_file_dumps(self, tmp_path) -> None:
-        """Test file can serialize structured data to text format."""
-        self._setup_with_tmp_path(tmp_path)
-
-        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Test data
-        test_data = self._get_test_data_for_dumps()
-
-        # Serialize to text format
-        serialized_content = file_instance.dumps(test_data)
-
-        # Test output format
-        assert isinstance(serialized_content, str), "Output should be string"
-        assert len(serialized_content) > 0, "Output should not be empty"
-
-        # Test round-trip: serialize then parse should give back original data
-        parsed_back = file_instance.loads(serialized_content)
-        self._assert_roundtrip_equality(test_data, parsed_back)
-
-    def test_file_roundtrip_consistency(self, tmp_path) -> None:
-        """Test file can parse and serialize consistently."""
-        self._setup_with_tmp_path(tmp_path)
-
-        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Read original content
-        original_content = file_instance.read_text()
-
-        # Parse and serialize back
-        parsed = file_instance.loads(original_content)
-        serialized = file_instance.dumps(parsed)
-
-        # Parse again to compare
-        reparsed = file_instance.loads(serialized)
-
-        # Assert equality using the customizable method
-        self._assert_roundtrip_equality(parsed, reparsed)
-
     def test_file_cache_and_clear(self, tmp_path) -> None:
         """Test file caching mechanisms and clear() method."""
         self._setup_with_tmp_path(tmp_path)
@@ -179,27 +46,6 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
 
         # Validate content is still correct
         self._validate_parsed_content(parsed3)
-
-    def test_file_preview_write(self, tmp_path) -> None:
-        """Test preview_write() method without actual I/O."""
-        self._setup_with_tmp_path(tmp_path)
-
-        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
-
-        # Preview with current content
-        preview1 = file_instance.preview_write()
-        assert isinstance(preview1, str), "Preview should return string"
-        assert len(preview1) > 0, "Preview should not be empty"
-
-        # Preview with custom content
-        test_data = self._get_test_data_for_dumps()
-        preview2 = file_instance.preview_write(test_data)
-        assert isinstance(preview2, str), "Preview with data should return string"
-
-        # Preview with string content (should parse then dump)
-        original_text = file_instance.read_text()
-        preview3 = file_instance.preview_write(original_text)
-        assert isinstance(preview3, str), "Preview with string should return string"
 
     def test_file_config_operations(self, tmp_path) -> None:
         """Test configuration-based operations."""
@@ -247,14 +93,154 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
             # Some file formats may not support arbitrary key setting or config operations
             pass
 
-    def _validate_parsed_content(self, parsed: dict) -> None:
-        """Validate the structure of parsed content from sample file.
+    def test_file_creation(self, tmp_path) -> None:
+        """Test file can be created and basic properties work."""
+        self._setup_with_tmp_path(tmp_path)
 
-        Override this method to add specific validations for your file type.
+        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Test basic properties
+        file_type_name = self._get_file_type_name()
+        assert (
+            file_instance is not None
+        ), f"{file_type_name} should be created successfully"
+
+        expected_ext = self._get_expected_extension()
+        assert (
+            file_instance._expected_file_name_extension() == expected_ext
+        ), f"Extension should be '{expected_ext}'"
+
+        # Test extension constant
+        constant_name = self._get_extension_constant_name()
+        assert hasattr(
+            file_instance, constant_name
+        ), f"Should have {constant_name} constant"
+        constant_value = getattr(file_instance, constant_name)
+        assert (
+            constant_value == expected_ext
+        ), f"Class constant should be '{expected_ext}'"
+
+    def test_file_dumps(self, tmp_path) -> None:
+        """Test file can serialize structured data to text format."""
+        self._setup_with_tmp_path(tmp_path)
+
+        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Test data
+        test_data = self._get_test_data_for_dumps()
+
+        # Serialize to text format
+        serialized_content = file_instance.dumps(test_data)
+
+        # Test output format
+        assert isinstance(serialized_content, str), "Output should be string"
+        assert len(serialized_content) > 0, "Output should not be empty"
+
+        # Test round-trip: serialize then parse should give back original data
+        parsed_back = file_instance.loads(serialized_content)
+        self._assert_roundtrip_equality(test_data, parsed_back)
+
+    def test_file_loads(self, tmp_path) -> None:
+        """Test file can parse content into structured data."""
+        self._setup_with_tmp_path(tmp_path)
+
+        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Read and parse content
+        content = file_instance.read_text()
+        parsed = file_instance.loads(content)
+
+        # Test parsed content structure
+        assert isinstance(parsed, dict), "Parsed content should be a dict"
+
+        # Validate common structure expected in test files
+        self._validate_parsed_content(parsed)
+
+    def test_file_preview_write(self, tmp_path) -> None:
+        """Test preview_write() method without actual I/O."""
+        self._setup_with_tmp_path(tmp_path)
+
+        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Preview with current content
+        preview1 = file_instance.preview_write()
+        assert isinstance(preview1, str), "Preview should return string"
+        assert len(preview1) > 0, "Preview should not be empty"
+
+        # Preview with custom content
+        test_data = self._get_test_data_for_dumps()
+        preview2 = file_instance.preview_write(test_data)
+        assert isinstance(preview2, str), "Preview with data should return string"
+
+        # Preview with string content (should parse then dump)
+        original_text = file_instance.read_text()
+        preview3 = file_instance.preview_write(original_text)
+        assert isinstance(preview3, str), "Preview with string should return string"
+
+    def test_file_roundtrip_consistency(self, tmp_path) -> None:
+        """Test file can parse and serialize consistently."""
+        self._setup_with_tmp_path(tmp_path)
+
+        file_instance = self._create_file(self._get_sample_filename(), tmp_path)
+
+        # Read original content
+        original_content = file_instance.read_text()
+
+        # Parse and serialize back
+        parsed = file_instance.loads(original_content)
+        serialized = file_instance.dumps(parsed)
+
+        # Parse again to compare
+        reparsed = file_instance.loads(serialized)
+
+        # Assert equality using the customizable method
+        self._assert_roundtrip_equality(parsed, reparsed)
+
+    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
+        """Assert that original and roundtrip data are equal.
+
+        Override this method if your file format has specific equality requirements.
         """
-        # Default validation - can be overridden by subclasses
-        assert "name" in parsed, "Should parse name field"
-        assert "version" in parsed, "Should parse version field"
+        assert original == roundtrip, "Roundtrip should preserve data exactly"
+
+    def _create_file(self, filename: str, tmp_path: Path) -> FileType:
+        """Create a file instance from a test data file."""
+        from wexample_prompt.common.io_manager import IoManager
+
+        # Copy test data file to tmp_path
+        test_file = self._get_test_data_path() / filename
+        target_file = tmp_path / filename
+        target_file.write_text(test_file.read_text())
+
+        # Create file instance
+        io = IoManager()
+        file_class = self._get_file_class()
+        return file_class.create_from_path(path=str(target_file), io=io)
+
+    @abstractmethod
+    def _get_expected_extension(self) -> str:
+        """Get the expected file extension (e.g., 'json', 'yml')."""
+        pass
+
+    @abstractmethod
+    def _get_extension_constant_name(self) -> str:
+        """Get the extension constant name (e.g., 'EXTENSION_JSON')."""
+        pass
+
+    @abstractmethod
+    def _get_file_class(self) -> type[FileType]:
+        """Get the file class to test (e.g., JsonFile, YamlFile)."""
+        pass
+
+    @abstractmethod
+    def _get_file_type_name(self) -> str:
+        """Get the file type name for messages (e.g., 'JsonFile', 'YamlFile')."""
+        pass
+
+    @abstractmethod
+    def _get_sample_filename(self) -> str:
+        """Get the sample test file name (e.g., 'sample.json')."""
+        pass
 
     def _get_test_data_for_dumps(self) -> dict[str, Any]:
         """Get test data for dumps test.
@@ -268,9 +254,23 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
             "items": ["item1", "item2", "item3"],
         }
 
-    def _assert_roundtrip_equality(self, original: Any, roundtrip: Any) -> None:
-        """Assert that original and roundtrip data are equal.
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        # Navigate from src/wexample_filestate/testing/ to tests/package/item/test_data/
+        return (
+            Path(__file__).parent.parent.parent.parent
+            / "tests"
+            / "package"
+            / "item"
+            / "file"
+            / "test_data"
+        )
 
-        Override this method if your file format has specific equality requirements.
+    def _validate_parsed_content(self, parsed: dict) -> None:
+        """Validate the structure of parsed content from sample file.
+
+        Override this method to add specific validations for your file type.
         """
-        assert original == roundtrip, "Roundtrip should preserve data exactly"
+        # Default validation - can be overridden by subclasses
+        assert "name" in parsed, "Should parse name field"
+        assert "version" in parsed, "Should parse version field"

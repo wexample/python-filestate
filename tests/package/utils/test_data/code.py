@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-def hello_function():
+def hello_function() -> str:
     """A simple hello function."""
     print("Hello, world!")
     return "hello"
 
 class HelloClass:
-    def __init__(self):
+    def __init__(self) -> None:
         self.greeting = "hello"
     
     def say_hello(self):

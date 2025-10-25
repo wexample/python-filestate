@@ -1,6 +1,4 @@
 from __future__ import annotations
-
-from pathlib import PosixPath
 from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
@@ -28,6 +26,7 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
+        from pathlib import PosixPath
         return str | PosixPath
 
     def prepare_value(self, raw_value: Any) -> Any:

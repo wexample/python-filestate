@@ -54,14 +54,14 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
 
         return None
 
-    def _remove_forbidden_lines(self, lines: list[str], content: str) -> str:
-        """Remove specified lines from content."""
-        current_lines = content.splitlines()
-        filtered_lines = [line for line in current_lines if line not in lines]
-        return "\n".join(filtered_lines)
-
     def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content, return None if file doesn't exist."""
         if not target.source or not target.source.get_path().exists():
             return None
         return target.get_local_file().read() or ""
+
+    def _remove_forbidden_lines(self, lines: list[str], content: str) -> str:
+        """Remove specified lines from content."""
+        current_lines = content.splitlines()
+        filtered_lines = [line for line in current_lines if line not in lines]
+        return "\n".join(filtered_lines)

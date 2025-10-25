@@ -10,8 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class EndNewLineOption(AbstractTextChildOption):
-    def get_description(self) -> str:
-        return "Ensure file ends with a newline character"
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
@@ -31,3 +29,5 @@ class EndNewLineOption(AbstractTextChildOption):
                 )
 
         return None
+    def get_description(self) -> str:
+        return "Ensure file ends with a newline character"

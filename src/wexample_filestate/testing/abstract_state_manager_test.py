@@ -20,29 +20,6 @@ class AbstractStateManagerTest(ABC):
         # State manager will be initialized in _setup_with_tmp_path
         pass
 
-    def _setup_with_tmp_path(self, tmp_path) -> None:
-        from wexample_filestate.utils.file_state_manager import FileStateManager
-        from wexample_prompt.common.io_manager import IoManager
-        import shutil
-
-        # Copy test data from resources to tmp_path
-        resources_path = self._get_test_state_manager_path()
-        if resources_path.exists():
-            for item in resources_path.iterdir():
-                if item.is_file():
-                    shutil.copy2(item, tmp_path)
-                elif item.is_dir():
-                    shutil.copytree(item, tmp_path / item.name)
-
-        self.state_manager = cast(
-            FileStateManager,
-            self._get_test_manager_class().create_from_path(
-                io=IoManager(),
-                path=tmp_path,
-                options_providers=self._get_test_options_providers(),
-            ),
-        )
-
     def _assert_dir_exists(self, dir_path: PathOrString, positive: bool = True) -> None:
         assert (os.path.isdir(dir_path)) == positive
 
@@ -90,4 +67,27 @@ class AbstractStateManagerTest(ABC):
             Path(package_root_path or self._get_package_root_path())
             / "tests"
             / "resources"
+        )
+
+    def _setup_with_tmp_path(self, tmp_path) -> None:
+        from wexample_filestate.utils.file_state_manager import FileStateManager
+        from wexample_prompt.common.io_manager import IoManager
+        import shutil
+
+        # Copy test data from resources to tmp_path
+        resources_path = self._get_test_state_manager_path()
+        if resources_path.exists():
+            for item in resources_path.iterdir():
+                if item.is_file():
+                    shutil.copy2(item, tmp_path)
+                elif item.is_dir():
+                    shutil.copytree(item, tmp_path / item.name)
+
+        self.state_manager = cast(
+            FileStateManager,
+            self._get_test_manager_class().create_from_path(
+                io=IoManager(),
+                path=tmp_path,
+                options_providers=self._get_test_options_providers(),
+            ),
         )

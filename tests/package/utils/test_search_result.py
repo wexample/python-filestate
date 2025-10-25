@@ -16,24 +16,6 @@ if TYPE_CHECKING:
 class TestSearchResult(AbstractStateManagerTest):
     """Test SearchResult functionality with various search scenarios."""
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        return Path(__file__).parent / "test_data"
-
-    def _create_item_target_file(self, filename: str, tmp_path: Path) -> ItemTargetFile:
-        """Create an ItemTargetFile from a test data file."""
-        from wexample_filestate.item.item_target_file import ItemTargetFile
-        from wexample_prompt.common.io_manager import IoManager
-
-        # Copy test data file to tmp_path
-        test_file = self._get_test_data_path() / filename
-        target_file = tmp_path / filename
-        target_file.write_text(test_file.read_text())
-
-        # Create ItemTargetFile
-        io = IoManager()
-        return ItemTargetFile.create_from_path(path=str(target_file), io=io)
-
     def test_create_for_all_matches_literal(self, tmp_path) -> None:
         """Test literal string search with multiple matches."""
         self._setup_with_tmp_path(tmp_path)
@@ -143,6 +125,27 @@ class TestSearchResult(AbstractStateManagerTest):
             "def hello_function" in item.read_text().split("\n")[0]
         ), "Should match the function definition line"
 
+    def test_deprecated_create_if_match(self, tmp_path) -> None:
+        """Test backward compatibility method."""
+        self._setup_with_tmp_path(tmp_path)
+
+        item = self._create_item_target_file("simple.txt", tmp_path)
+
+        # Test deprecated method still works
+        result = SearchResult.create_if_match("Hello", item)
+
+        assert result is not None, "Deprecated method should still work"
+        assert result.line == 1, "Should return same result as create_one_if_match"
+
+        # Should be equivalent to create_one_if_match
+        new_result = SearchResult.create_one_if_match("Hello", item)
+        assert (
+            result.line == new_result.line
+        ), "Deprecated method should match new method"
+        assert (
+            result.column == new_result.column
+        ), "Deprecated method should match new method"
+
     def test_empty_search_string(self, tmp_path) -> None:
         """Test behavior with empty search string."""
         self._setup_with_tmp_path(tmp_path)
@@ -191,23 +194,20 @@ class TestSearchResult(AbstractStateManagerTest):
             # Column should be > 1 for middle match
             assert middle_match.column > 1, "Pattern in middle should have column > 1"
 
-    def test_deprecated_create_if_match(self, tmp_path) -> None:
-        """Test backward compatibility method."""
-        self._setup_with_tmp_path(tmp_path)
+    def _create_item_target_file(self, filename: str, tmp_path: Path) -> ItemTargetFile:
+        """Create an ItemTargetFile from a test data file."""
+        from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_prompt.common.io_manager import IoManager
 
-        item = self._create_item_target_file("simple.txt", tmp_path)
+        # Copy test data file to tmp_path
+        test_file = self._get_test_data_path() / filename
+        target_file = tmp_path / filename
+        target_file.write_text(test_file.read_text())
 
-        # Test deprecated method still works
-        result = SearchResult.create_if_match("Hello", item)
+        # Create ItemTargetFile
+        io = IoManager()
+        return ItemTargetFile.create_from_path(path=str(target_file), io=io)
 
-        assert result is not None, "Deprecated method should still work"
-        assert result.line == 1, "Should return same result as create_one_if_match"
-
-        # Should be equivalent to create_one_if_match
-        new_result = SearchResult.create_one_if_match("Hello", item)
-        assert (
-            result.line == new_result.line
-        ), "Deprecated method should match new method"
-        assert (
-            result.column == new_result.column
-        ), "Deprecated method should match new method"
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        return Path(__file__).parent / "test_data"

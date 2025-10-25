@@ -20,7 +20,10 @@ class YamlConfigValue(ConfigValue):
     )
 
     def to_option_raw_value(self) -> ConfigDict:
-        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
+        from wexample_filestate.option.yaml.sort_recursive_option import (
+            SortRecursiveOption,
+        )
+
         return {
             SortRecursiveOption.get_name(): self.sort_recursive,
         }

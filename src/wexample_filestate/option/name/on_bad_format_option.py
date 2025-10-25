@@ -28,40 +28,50 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         parent_option = self.get_parent()
         if not parent_option:
             return None
-            
+
         # Get the current name
         current_name = target.get_item_name()
-        
+
         # Validate name using parent NameOption
         if parent_option.validate_name(current_name):
             return None  # Name is valid, no action needed
-            
+
         # Name is invalid, take action based on configuration
         action = self.get_value().get_str()
-        
+
         if action == "delete":
-            from wexample_filestate.operation.file_remove_operation import FileRemoveOperation
+            from wexample_filestate.operation.file_remove_operation import (
+                FileRemoveOperation,
+            )
 
             return FileRemoveOperation(
                 option=self,
                 target=target,
-                description=f"Delete file with invalid name format: {current_name}"
+                description=f"Delete file with invalid name format: {current_name}",
             )
         elif action == "rename":
             # Generate new name based on format rules
             new_name = self._generate_corrected_name(current_name)
             if new_name and new_name != current_name:
-                from wexample_filestate.operation.file_rename_operation import FileRenameOperation
+                from wexample_filestate.operation.file_rename_operation import (
+                    FileRenameOperation,
+                )
+
                 return FileRenameOperation(
                     option=self,
                     target=target,
                     new_name=new_name,
-                    description=f"Rename file from '{current_name}' to '{new_name}' to match format rules"
+                    description=f"Rename file from '{current_name}' to '{new_name}' to match format rules",
                 )
             return None
         elif action == "error":
-            from wexample_filestate.exception.name_format_exception import NameFormatException
-            raise NameFormatException(f"File name '{current_name}' does not match required format")
+            from wexample_filestate.exception.name_format_exception import (
+                NameFormatException,
+            )
+
+            raise NameFormatException(
+                f"File name '{current_name}' does not match required format"
+            )
         # "ignore" action returns None (no operation)
 
         return None
@@ -73,23 +83,23 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
         from wexample_filestate.option.name.suffix_option import SuffixOption
         from wexample_filestate.option.name.regex_option import RegexOption
         import os
-        
+
         # Get parent NameOption that contains the format rules
         parent_option = self.get_parent()
         if not parent_option:
             return None
-            
+
         # Split name and extension
         name_part, ext = os.path.splitext(current_name)
         corrected_name = name_part
-        
+
         # Apply corrections in order: case format, prefix, suffix
         # Each child option handles its own correction logic
         for option_class in [CaseFormatOption, PrefixOption, SuffixOption]:
             option = parent_option.get_option(option_class)
             if option:
                 corrected_name = option.apply_correction(corrected_name)
-        
+
         # Note: RegexOption doesn't provide automatic correction
         # Reconstruct full name with extension
         return corrected_name + ext

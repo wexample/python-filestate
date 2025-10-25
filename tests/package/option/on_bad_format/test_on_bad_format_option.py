@@ -43,6 +43,7 @@ class TestOnBadFormatOptionDelete(AbstractTestOperation):
 
 class TestOnBadFormatOptionRename(AbstractTestOperation):
     """Test OnBadFormatOption with rename action."""
+
     expected_name: str = "invalid_case.txt"
     test_name: str = "INVALID_case.txt"
 
@@ -83,8 +84,8 @@ class TestOnBadFormatOptionIgnore(AbstractTestOperation):
     test_name: str = "INVALID_case.txt"
 
     def _operation_get_count(self) -> int:
-        return 0  # No operations should be created for ignore action 
-    
+        return 0  # No operations should be created for ignore action
+
     def _operation_test_assert_applied(self) -> None:
         # Verify the file still exists (ignored the format violation)
         file_path = self._get_absolute_path_from_state_manager(self.test_name)

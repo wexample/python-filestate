@@ -42,6 +42,12 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
     def get_scope(cls) -> Scope:
         pass
 
+    @classmethod
+    def matches_filter(cls, filter_name: str) -> bool:
+        import fnmatch
+
+        return fnmatch.fnmatch(cls.get_name(), filter_name)
+
     @abstract_method
     def apply(self) -> None:
         pass
@@ -87,9 +93,3 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
             value = value(self.target)
 
         return value
-
-    @classmethod
-    def matches_filter(cls, filter_name: str) -> bool:
-        import fnmatch
-
-        return fnmatch.fnmatch(cls.get_name(), filter_name)

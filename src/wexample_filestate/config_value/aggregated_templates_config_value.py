@@ -27,9 +27,6 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
     def get_raw_value_allowed_type() -> Any:
         return Any
 
-    def to_option_raw_value(self) -> Any:
-        return self
-
     def get_str(self, type_check: bool = True) -> str | None:
         from wexample_helpers.helpers.string import string_replace_params
 
@@ -47,3 +44,6 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
 
     def get_templates(self) -> list[str] | None:
         return self.templates
+
+    def to_option_raw_value(self) -> Any:
+        return self

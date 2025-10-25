@@ -10,7 +10,7 @@ class TestShouldExistOptionCreate(AbstractTestOperation):
 
     def _operation_get_count(self) -> int:
         return 2  # Creates directory + file
-    
+
     def _operation_test_assert_applied(self) -> None:
         target_dir = self.state_manager.find_by_name_or_fail(self.missing_dir_name)
         target_file = self.state_manager.find_by_name_or_fail(self.missing_file_name)
@@ -43,7 +43,7 @@ class TestShouldExistOptionCreate(AbstractTestOperation):
                     "name": self.missing_file_name,
                     "should_exist": True,
                     "type": DiskItemType.FILE,
-                    "default_content": "This is a test"
+                    "default_content": "This is a test",
                 },
             ]
         }

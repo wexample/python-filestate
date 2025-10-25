@@ -17,23 +17,6 @@ if TYPE_CHECKING:
 class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
     """Unit tests for ChildrenFileFactoryOption functionality."""
 
-    def _get_test_data_path(self) -> Path:
-        """Get the path to test data directory."""
-        return Path(__file__).parent / "test_data"
-
-    def _setup_test_data(self, tmp_path: Path) -> None:
-        """Setup test data directories."""
-        import shutil
-
-        test_data_path = self._get_test_data_path()
-
-        # Copy all test data directories
-        for item in test_data_path.iterdir():
-            if item.is_dir():
-                shutil.copytree(item, tmp_path / item.name)
-            else:
-                shutil.copy2(item, tmp_path / item.name)
-
     def test_children_file_factory_option_creation(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption can be created."""
         self._setup_with_tmp_path(tmp_path)
@@ -149,3 +132,20 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
         )
 
         assert option_non_recursive.recursive is False, "recursive should be False"
+
+    def _get_test_data_path(self) -> Path:
+        """Get the path to test data directory."""
+        return Path(__file__).parent / "test_data"
+
+    def _setup_test_data(self, tmp_path: Path) -> None:
+        """Setup test data directories."""
+        import shutil
+
+        test_data_path = self._get_test_data_path()
+
+        # Copy all test data directories
+        for item in test_data_path.iterdir():
+            if item.is_dir():
+                shutil.copytree(item, tmp_path / item.name)
+            else:
+                shutil.copy2(item, tmp_path / item.name)

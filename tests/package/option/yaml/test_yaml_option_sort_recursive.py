@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 from wexample_config.const.types import DictConfig
-from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-from wexample_filestate.option.name_option import NameOption
-from wexample_filestate.option.yaml_option import YamlOption
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 
@@ -19,6 +16,9 @@ class TestYamlSortRecursiveOperation(AbstractTestOperation):
         assert self._read_test_file().startswith("x_key")
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
+        from wexample_filestate.option.name_option import NameOption
+        from wexample_filestate.option.yaml.sort_recursive_option import SortRecursiveOption
+        from wexample_filestate.option.yaml_option import YamlOption
         return {
             "children": [
                 {

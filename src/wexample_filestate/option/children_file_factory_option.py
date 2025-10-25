@@ -2,16 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.option.abstract_children_manipulator_option import (
     AbstractChildrenManipulationOption,
 )
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from wexample_config.const.types import DictConfig
+
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
@@ -55,10 +57,10 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
         path: Path,
     ) -> DictConfig:
         from wexample_filestate.const.disk import DiskItemType
-        from wexample_filestate.option.name_option import NameOption
-        from wexample_filestate.option.type_option import TypeOption
         from wexample_filestate.option.children_option import ChildrenOption
+        from wexample_filestate.option.name_option import NameOption
         from wexample_filestate.option.should_exist_option import ShouldExistOption
+        from wexample_filestate.option.type_option import TypeOption
 
         dir_config = {
             NameOption.get_name(): path.name,

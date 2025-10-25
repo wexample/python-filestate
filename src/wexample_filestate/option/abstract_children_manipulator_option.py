@@ -6,7 +6,6 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_config.const.types import DictConfig
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
@@ -22,6 +21,7 @@ if TYPE_CHECKING:
     )
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_helpers.const.types import PathOrString
+    from wexample_config.const.types import DictConfig
 
 
 @base_class
@@ -41,6 +41,7 @@ class AbstractChildrenManipulationOption(
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
+        from wexample_config.const.types import DictConfig
         return DictConfig
 
     @abstract_method

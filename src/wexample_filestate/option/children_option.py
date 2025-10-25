@@ -3,13 +3,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union, cast
 
 from wexample_config.config_option.children_config_option import ChildrenConfigOption
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.decorator.base_class import base_class
+
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_prompt.common.io_manager import IoManager
+
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
 @base_class
@@ -33,10 +35,6 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None
     ) -> TargetFileOrDirectoryType:
-        from wexample_filestate.option.name_option import NameOption
-        from wexample_filestate.option.class_option import (
-            ClassOption,
-        )
         from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.exception.bad_configuration_class_type_exception import (
             BadConfigurationClassTypeException,
@@ -44,6 +42,10 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
         from wexample_filestate.helpers.config_helper import config_is_item_type
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_filestate.option.class_option import (
+            ClassOption,
+        )
+        from wexample_filestate.option.name_option import NameOption
 
         option_name = ClassOption.get_name()
         if option_name in child_config:

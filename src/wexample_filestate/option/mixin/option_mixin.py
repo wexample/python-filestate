@@ -19,6 +19,18 @@ class OptionMixin(ItemTreeConfigOptionMixin):
     def get_class_name_suffix(cls) -> str | None:
         return "Option"
 
+    def applicable_on_directory(self) -> bool:
+        return True
+
+    def applicable_on_empty_content_file(self) -> bool:
+        return True
+
+    def applicable_on_file(self) -> bool:
+        return True
+
+    def applicable_on_missing(self) -> bool:
+        return True
+
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
@@ -41,18 +53,6 @@ class OptionMixin(ItemTreeConfigOptionMixin):
             LocalPathType.FILE,
             LocalPathType.DIRECTORY,
         ]
-
-    def applicable_on_file(self) -> bool:
-        return True
-
-    def applicable_on_empty_content_file(self) -> bool:
-        return True
-
-    def applicable_on_directory(self) -> bool:
-        return True
-
-    def applicable_on_missing(self) -> bool:
-        return True
 
     def _create_child_required_operation(
         self, target: TargetFileOrDirectoryType

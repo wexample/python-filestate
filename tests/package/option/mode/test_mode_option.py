@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class TestItemChangeModeOperation(AbstractTestOperation):
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
-        
+
         return (
             self._get_target()
             .get_option_value(ModeOption)

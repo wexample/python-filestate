@@ -10,8 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class TrimOption(AbstractTextChildOption):
-    def get_description(self) -> str:
-        return "Trim whitespace from the beginning and end of file content"
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
@@ -31,3 +29,5 @@ class TrimOption(AbstractTextChildOption):
                     )
 
         return None
+    def get_description(self) -> str:
+        return "Trim whitespace from the beginning and end of file content"

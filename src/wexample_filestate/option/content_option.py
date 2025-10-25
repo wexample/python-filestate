@@ -19,9 +19,6 @@ class ContentOption(OptionMixin, AbstractConfigOption):
 
         return Union[str, ConfigValue]
 
-    def get_description(self) -> str:
-        return "Set file content to the specified value"
-
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
@@ -47,6 +44,9 @@ class ContentOption(OptionMixin, AbstractConfigOption):
                     )
 
         return None
+
+    def get_description(self) -> str:
+        return "Set file content to the specified value"
 
     def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
         """Read current file content, return None if file doesn't exist."""

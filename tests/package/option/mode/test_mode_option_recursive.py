@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class TestItemChangeModeRecursiveOperation(TestItemChangeModeOperation):
-
     def _get_expected_mode(self) -> str:
         from wexample_filestate.option.mode_option import ModeOption
 

@@ -13,7 +13,7 @@ class TestFileCreateFromClassOperation(AbstractTestOperation):
 
     def _operation_get_count(self) -> int:
         return 2  # Creates directory + file
-    
+
     def _operation_test_assert_applied(self) -> None:
         target_file = self.state_manager.find_by_name_or_fail("test_class_handler")
         assert (

@@ -49,7 +49,6 @@ class TestHtmlFile(AbstractContentFileTest):
         assert "Welcome to Test Project" in loaded_content, "Should preserve content"
     
     # HTML-specific tests that are not covered by the abstract class
-    
     def test_html_file_dumps_string_content(self, tmp_path) -> None:
         """Test HtmlFile dumps method with string input."""
         self._setup_with_tmp_path(tmp_path)

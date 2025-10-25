@@ -10,8 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class SortLinesOption(AbstractTextChildOption):
-    def get_description(self) -> str:
-        return "Sort file content lines alphabetically"
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
@@ -32,6 +30,8 @@ class SortLinesOption(AbstractTextChildOption):
                     )
 
         return None
+    def get_description(self) -> str:
+        return "Sort file content lines alphabetically"
 
     def _sort_lines_content(self, content: str) -> str:
         """Sort file content lines alphabetically (lexicographic order)."""

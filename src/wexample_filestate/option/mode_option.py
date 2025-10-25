@@ -22,29 +22,6 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
 
         return Union[str, int, dict, ModeConfigValue]
 
-    def get_octal(self) -> str:
-        from wexample_filestate.option.mode.permissions_option import PermissionsOption
-
-        return self.get_value().get_dict().get(PermissionsOption.get_name())
-
-    def prepare_value(self, raw_value: Any) -> Any:
-        from wexample_filestate.option.mode.permissions_option import PermissionsOption
-
-        # Always work with a dict.
-        if isinstance(raw_value, str) or isinstance(raw_value, int):
-            raw_value = {PermissionsOption.get_name(): str(raw_value)}
-
-        return super().prepare_value(raw_value=raw_value)
-
-    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
-        from wexample_filestate.option.mode.recursive_option import RecursiveOption
-        from wexample_filestate.option.mode.permissions_option import PermissionsOption
-
-        return [
-            PermissionsOption,
-            RecursiveOption,
-        ]
-
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
@@ -89,3 +66,26 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
             )
 
         return None
+
+    def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
+        from wexample_filestate.option.mode.recursive_option import RecursiveOption
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
+
+        return [
+            PermissionsOption,
+            RecursiveOption,
+        ]
+
+    def get_octal(self) -> str:
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
+
+        return self.get_value().get_dict().get(PermissionsOption.get_name())
+
+    def prepare_value(self, raw_value: Any) -> Any:
+        from wexample_filestate.option.mode.permissions_option import PermissionsOption
+
+        # Always work with a dict.
+        if isinstance(raw_value, str) or isinstance(raw_value, int):
+            raw_value = {PermissionsOption.get_name(): str(raw_value)}
+
+        return super().prepare_value(raw_value=raw_value)

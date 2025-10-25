@@ -10,8 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class UniqueLinesOption(AbstractTextChildOption):
-    def get_description(self) -> str:
-        return "Remove duplicate lines from file content"
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
@@ -32,6 +30,8 @@ class UniqueLinesOption(AbstractTextChildOption):
                     )
 
         return None
+    def get_description(self) -> str:
+        return "Remove duplicate lines from file content"
 
     def _unique_lines_content(self, content: str) -> str:
         """Ensure each line of the file content is unique (remove duplicates preserving order)."""

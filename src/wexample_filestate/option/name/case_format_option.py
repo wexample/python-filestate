@@ -10,39 +10,6 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class CaseFormatOption(AbstractNameChildOption):
-    def get_description(self) -> str:
-        return "Enforce case format (uppercase, lowercase, camelCase, snake_case, kebab-case)"
-
-    def validate_name(self, name: str) -> bool:
-        """Validate case format of the name."""
-        if self.get_value().is_none():
-            return True
-
-        case_format = self.get_value().get_str()
-
-        if case_format == "uppercase":
-            return name.isupper()
-        elif case_format == "lowercase":
-            return name.islower()
-        elif case_format == "camelCase":
-            return self._is_camel_case(name)
-        elif case_format == "snake_case":
-            return self._is_snake_case(name)
-        elif case_format == "kebab-case":
-            return self._is_kebab_case(name)
-        return True
-
-    def _is_camel_case(self, name: str) -> bool:
-        """Check if name is in camelCase format."""
-        return re.match(r"^[a-z][a-zA-Z0-9]*$", name) is not None
-
-    def _is_snake_case(self, name: str) -> bool:
-        """Check if name is in snake_case format."""
-        return re.match(r"^[a-z0-9]+(_[a-z0-9]+)*$", name) is not None
-
-    def _is_kebab_case(self, name: str) -> bool:
-        """Check if name is in kebab-case format."""
-        return re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", name) is not None
 
     def apply_correction(self, name: str) -> str:
         """Apply case format correction to name."""
@@ -84,3 +51,36 @@ class CaseFormatOption(AbstractNameChildOption):
             )
 
         return name
+    def get_description(self) -> str:
+        return "Enforce case format (uppercase, lowercase, camelCase, snake_case, kebab-case)"
+
+    def validate_name(self, name: str) -> bool:
+        """Validate case format of the name."""
+        if self.get_value().is_none():
+            return True
+
+        case_format = self.get_value().get_str()
+
+        if case_format == "uppercase":
+            return name.isupper()
+        elif case_format == "lowercase":
+            return name.islower()
+        elif case_format == "camelCase":
+            return self._is_camel_case(name)
+        elif case_format == "snake_case":
+            return self._is_snake_case(name)
+        elif case_format == "kebab-case":
+            return self._is_kebab_case(name)
+        return True
+
+    def _is_camel_case(self, name: str) -> bool:
+        """Check if name is in camelCase format."""
+        return re.match(r"^[a-z][a-zA-Z0-9]*$", name) is not None
+
+    def _is_kebab_case(self, name: str) -> bool:
+        """Check if name is in kebab-case format."""
+        return re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", name) is not None
+
+    def _is_snake_case(self, name: str) -> bool:
+        """Check if name is in snake_case format."""
+        return re.match(r"^[a-z0-9]+(_[a-z0-9]+)*$", name) is not None
