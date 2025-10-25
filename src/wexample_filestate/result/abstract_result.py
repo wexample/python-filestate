@@ -46,7 +46,7 @@ class AbstractResult(PrintableMixin, BaseClass):
                 operation.applied = False
                 self._executed_operations.append(operation)
             else:
-                self.state_manager.io.title(
+                self.state_manager.title(
                     f"OPERATION: {operation.get_snake_short_class_name().upper()}"
                 )
                 applied = self._apply_single_operation(
@@ -57,12 +57,12 @@ class AbstractResult(PrintableMixin, BaseClass):
                     operation.applied = True
                     self._executed_operations.append(operation)
 
-                    self.state_manager.io.task(
+                    self.state_manager.task(
                         message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
                         f"    → {operation.description}\n"
                     )
                 else:
-                    self.state_manager.io.log(
+                    self.state_manager.log(
                         message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
                         f"    → {operation.description}\n"
                         f"    ⋮ Operation aborted"
