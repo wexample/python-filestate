@@ -1,12 +1,15 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
 
 if TYPE_CHECKING:
-    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from pathlib import Path
+
+    from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 
 
 class TestItemTargetDirectory(AbstractStateManagerTest):
@@ -294,8 +297,9 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def _create_directory_item(self, tmp_path: Path) -> ItemTargetDirectory:
         """Create an ItemTargetDirectory from test data."""
-        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_prompt.common.io_manager import IoManager
+
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.option.children_option import ChildrenOption
 
         # Copy test data structure to tmp_path

@@ -6,7 +6,6 @@ from wexample_filestate.testing.abstract_content_file_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from wexample_filestate.item.file.html_file import HtmlFile
 
 
