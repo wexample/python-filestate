@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 if TYPE_CHECKING:
-    from wexample_config.const.types import DictConfig
     from pathlib import Path
+
+    from wexample_config.const.types import DictConfig
 
 
 class TestChildrenFileFactoryOption(AbstractTestOperation):
@@ -95,10 +98,10 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
 
     def _operation_test_setup_configuration(self) -> DictConfig | None:
         """Setup configuration for testing ChildrenFileFactoryOption."""
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_file_factory_option import (
             ChildrenFileFactoryOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         return {
             "name": "test_root",

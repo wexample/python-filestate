@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 from wexample_filestate.testing.abstract_structured_file_test import (
     AbstractStructuredFileTest,
 )
 
 if TYPE_CHECKING:
-    pass
     from wexample_filestate.item.file.toml_file import TomlFile
 
 

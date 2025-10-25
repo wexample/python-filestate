@@ -5,7 +5,6 @@ from wexample_filestate.testing.abstract_state_manager_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from wexample_filestate.item.item_target_directory import ItemTargetDirectory
     from pathlib import Path
 
@@ -298,7 +297,6 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_prompt.common.io_manager import IoManager
         from wexample_filestate.option.children_option import ChildrenOption
-        from wexample_filestate.item.item_target_file import ItemTargetFile
 
         # Copy test data structure to tmp_path
         test_data_path = self._get_test_data_path()

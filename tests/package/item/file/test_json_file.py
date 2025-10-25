@@ -7,7 +7,6 @@ from wexample_filestate.testing.abstract_structured_file_test import (
 )
 
 if TYPE_CHECKING:
-    pass
     from wexample_filestate.item.file.json_file import JsonFile
 
 

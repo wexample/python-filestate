@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
@@ -13,10 +15,10 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_creation(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption can be created."""
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_file_factory_option import (
             ChildrenFileFactoryOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         self._setup_with_tmp_path(tmp_path)
 
@@ -36,10 +38,10 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_pattern_matching(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption pattern matching logic."""
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_file_factory_option import (
             ChildrenFileFactoryOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         self._setup_with_tmp_path(tmp_path)
 
@@ -80,10 +82,10 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
         self, tmp_path
     ) -> None:
         """Test _path_match_patterns with no pattern (should match all)."""
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_file_factory_option import (
             ChildrenFileFactoryOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         self._setup_with_tmp_path(tmp_path)
 
@@ -110,10 +112,10 @@ class TestChildrenFileFactoryOptionUnit(AbstractStateManagerTest):
 
     def test_children_file_factory_option_recursive_property(self, tmp_path) -> None:
         """Test ChildrenFileFactoryOption recursive property."""
+        from wexample_filestate.const.disk import DiskItemType
         from wexample_filestate.option.children_file_factory_option import (
             ChildrenFileFactoryOption,
         )
-        from wexample_filestate.const.disk import DiskItemType
 
         self._setup_with_tmp_path(tmp_path)
 

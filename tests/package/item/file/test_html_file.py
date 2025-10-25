@@ -55,6 +55,7 @@ class TestHtmlFile(AbstractContentFileTest):
     def _get_file_class(self) -> type[HtmlFile]:
         """Get the HtmlFile class."""
         from wexample_filestate.item.file.html_file import HtmlFile
+
         return HtmlFile
 
     def _get_file_type_name(self) -> str:
