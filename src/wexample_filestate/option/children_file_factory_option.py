@@ -81,7 +81,7 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
         if self.recursive:
             # Iterate safely over child entries using Path API
             for entry in path.iterdir():
-                if entry.is_dir():
+                if entry.is_dir() and self._path_match_patterns(entry.name):
                     dir_config[ChildrenOption.get_name()].append(
                         self._generate_children_recursive(
                             path=entry,
