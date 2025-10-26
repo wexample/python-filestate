@@ -116,7 +116,7 @@ class AbstractItemTarget(
                     self.operations_history.append(applied_operations)
             else:
                 self.log(
-                    message=f"No operation to execute on: {cli_make_clickable_path(self.get_path())} ",
+                    message=f"All configuration checks passed.",
                 )
         except KeyboardInterrupt:
             self.log("Canceled by user")
