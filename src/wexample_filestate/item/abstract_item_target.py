@@ -91,8 +91,6 @@ class AbstractItemTarget(
         filter_operation: str | None = None,
         max: int = None,
     ) -> FileStateResult:
-        from wexample_helpers.helpers.cli import cli_make_clickable_path
-
         from wexample_filestate.result.file_state_result import FileStateResult
 
         result = FileStateResult(state_manager=self)
