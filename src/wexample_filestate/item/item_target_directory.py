@@ -61,30 +61,38 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     ) -> bool:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
+        # Stop early if max is already reached before processing this item
+        if max is not None and len(result.operations) >= max:
+            return False
+
+        # Process current item (don't pass max to super, it doesn't use it)
         has_task = super().build_operations(
             result,
             scopes=scopes,
             filter_path=filter_path,
             filter_operation=filter_operation,
-            max=max,
         )
-        count = 1 if has_task is True else 0
 
+        # Stop if max is reached after processing current item
+        if max is not None and len(result.operations) >= max:
+            return has_task
+
+        # Process children - pass the same absolute max limit to all
         for item in self.get_children_list():
+            # Stop if max is already reached
+            if max is not None and len(result.operations) >= max:
+                return has_task
+
             has_task_child = cast(TargetFileOrDirectory, item).build_operations(
                 result=result,
                 scopes=scopes,
                 filter_path=filter_path,
                 filter_operation=filter_operation,
-                max=((max - count) if (max is not None) else None),
+                max=max,
             )
 
             if has_task_child:
-                count += 1
                 has_task = True
-
-            if max is not None and count == max:
-                return has_task
 
         return has_task
 
