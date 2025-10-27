@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -22,9 +21,8 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         """Create FileWriteOperation if required lines are missing from file."""
-        from wexample_helpers.helpers.string import string_append_missing_lines
-
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
+        from wexample_helpers.helpers.string import string_append_missing_lines
 
         # Get the required lines
         required_lines_value = self.get_value()

@@ -4,15 +4,13 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-    from wexample_helpers.const.types import FileStringOrPath
-
     from wexample_filestate.const.disk import DiskItemType
+    from wexample_helpers.const.types import FileStringOrPath
 
 
 def config_has_same_type_as_path(config: DictConfig, path: FileStringOrPath) -> bool:
-    from wexample_helpers.helpers.file import file_resolve_path
-
     from wexample_filestate.const.disk import DiskItemType
+    from wexample_helpers.helpers.file import file_resolve_path
 
     resolved_path = file_resolve_path(path)
 

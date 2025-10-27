@@ -2,24 +2,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.enum.scopes import Scope
+    from wexample_filestate.result.abstract_result import AbstractResult
     from wexample_helpers.const.types import (
         FileStringOrPath,
         PathOrString,
         StringKeysDict,
     )
-
-    from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.enum.scopes import Scope
-    from wexample_filestate.result.abstract_result import AbstractResult
 
 
 @base_class

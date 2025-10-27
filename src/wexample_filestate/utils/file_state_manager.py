@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
