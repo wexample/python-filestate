@@ -3,15 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Union, cast
 
 from wexample_config.config_option.children_config_option import ChildrenConfigOption
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-    from wexample_prompt.common.io_manager import IoManager
-
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_prompt.common.io_manager import IoManager
 
 
 @base_class

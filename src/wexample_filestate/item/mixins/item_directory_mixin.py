@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_file.mixin.with_local_directory_mixin import WithLocalDirectoryMixin
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     pass

@@ -74,9 +74,7 @@ class AbstractItemTarget(
         config = config or {}
 
         item_target = cls(
-            base_path=path.parent,
-            base_name=config.get("name", path.name),
-            **kwargs
+            base_path=path.parent, base_name=config.get("name", path.name), **kwargs
         )
 
         item_target.configure(config=config)
@@ -170,9 +168,7 @@ class AbstractItemTarget(
         self.set_value(raw_value=config)
 
         # Name is allways here, as an option and as an argument.
-        config["name"] = (
-            config["name"] if config.get("name") else self.base_name
-        )
+        config["name"] = config["name"] if config.get("name") else self.base_name
 
         if not self.base_name:
             self.base_name = str(config.get("name"))

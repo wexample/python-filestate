@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.item.file.structured_content_file import StructuredContentFile
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from tomlkit import TOMLDocument

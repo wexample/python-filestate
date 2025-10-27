@@ -3,15 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.abstract_method import abstract_method
-
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
+from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-
     from wexample_filestate.utils.file_state_manager import FileStateManager
 
 
@@ -55,9 +53,8 @@ class AbstractWorkdirMixinTest(AbstractStateManagerTest):
 
     def _create_test_workdir_manager(self, tmp_path: Path) -> FileStateManager:
         """Create a test workdir manager that uses the mixin."""
-        from wexample_prompt.common.io_manager import IoManager
-
         from wexample_filestate.utils.file_state_manager import FileStateManager
+        from wexample_prompt.common.io_manager import IoManager
 
         # Create the test class that inherits from the mixin
         TestWorkdirClass = self._get_test_workdir_class()

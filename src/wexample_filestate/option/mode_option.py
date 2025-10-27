@@ -6,9 +6,8 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -26,12 +25,11 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
     def create_required_operation(
         self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
-        from wexample_helpers.helpers.file import file_mode_octal_to_num
-
         from wexample_filestate.operation.file_change_mode_operation import (
             FileChangeModeOperation,
         )
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
+        from wexample_helpers.helpers.file import file_mode_octal_to_num
 
         """Create ItemChangeModeOperation if current mode differs from target mode."""
         from wexample_helpers.helpers.file import (

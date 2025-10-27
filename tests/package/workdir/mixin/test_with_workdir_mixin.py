@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.base_class import BaseClass
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.testing.abstract_workdir_mixin_test import (
     AbstractWorkdirMixinTest,
 )
 from wexample_filestate.workdir.mixin.with_workdir_mixin import WithWorkdirMixin
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig

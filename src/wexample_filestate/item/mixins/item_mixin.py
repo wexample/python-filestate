@@ -14,12 +14,10 @@ if TYPE_CHECKING:
 @base_class
 class ItemMixin(WithPathMixin):
     base_name: FileStringOrPath | None = public_field(
-        description="The name of the item (filename, basename)",
-        default=None
+        description="The name of the item (filename, basename)", default=None
     )
     base_path: FileStringOrPath | None = public_field(
-        description="The parent path of the item",
-        default=None
+        description="The parent path of the item", default=None
     )
 
     @abstract_method

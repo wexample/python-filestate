@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from wexample_file.mixin.with_local_file_mixin import WithLocalFileMixin
+from wexample_filestate.config_value.content_config_value import ContentConfigValue
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-
-from wexample_filestate.config_value.content_config_value import ContentConfigValue
 
 
 @base_class

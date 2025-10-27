@@ -2,15 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-
 if TYPE_CHECKING:
-    from wexample_helpers.const.types import PathOrString
-
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_helpers.const.types import PathOrString
 
 
 @base_class
@@ -30,12 +28,11 @@ class AbstractFileManipulationOperation(AbstractOperation):
     ) -> bool:
         import os
 
-        from wexample_helpers.helpers.file import file_read
-
         from wexample_filestate.option.remove_backup_max_file_size_option import (
             REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT,
             RemoveBackupMaxFileSizeOption,
         )
+        from wexample_helpers.helpers.file import file_read
 
         size = os.path.getsize(file_path)
 

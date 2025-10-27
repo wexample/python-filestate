@@ -297,10 +297,9 @@ class TestItemTargetDirectory(AbstractStateManagerTest):
 
     def _create_directory_item(self, tmp_path: Path) -> ItemTargetDirectory:
         """Create an ItemTargetDirectory from test data."""
-        from wexample_prompt.common.io_manager import IoManager
-
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
         from wexample_filestate.option.children_option import ChildrenOption
+        from wexample_prompt.common.io_manager import IoManager
 
         # Copy test data structure to tmp_path
         test_data_path = self._get_test_data_path()
