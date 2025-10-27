@@ -6,6 +6,7 @@ from tests.package.option.mode.test_mode_option import TestItemChangeModeOperati
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
+
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
 
 
