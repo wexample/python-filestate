@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_config.const.types import DictConfig
+from wexample_helpers.classes.field import public_field
+
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_file_mixin import ItemFileMixin
-from wexample_helpers.classes.field import public_field
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig

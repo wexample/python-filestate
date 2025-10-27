@@ -102,6 +102,25 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
+    def find_all_by_type(
+        self, class_type: type[AbstractItemTarget], recursive: bool = False
+    ) -> list[AbstractItemTarget]:
+        results = []
+
+        if recursive:
+
+            def collector(item: AbstractItemTarget) -> None:
+                if isinstance(item, class_type):
+                    results.append(item)
+
+            self.for_each_child_recursive(collector)
+        else:
+            for child in self.get_children_list():
+                if isinstance(child, class_type):
+                    results.append(child)
+
+        return results
+
     def find_by_name(
         self, item_name: str, recursive: bool = False
     ) -> TargetFileOrDirectoryType | None:
@@ -195,25 +214,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                         return result
 
         return None
-
-    def find_all_by_type(
-        self, class_type: type[AbstractItemTarget], recursive: bool = False
-    ) -> list[AbstractItemTarget]:
-        results = []
-
-        if recursive:
-
-            def collector(item: AbstractItemTarget) -> None:
-                if isinstance(item, class_type):
-                    results.append(item)
-
-            self.for_each_child_recursive(collector)
-        else:
-            for child in self.get_children_list():
-                if isinstance(child, class_type):
-                    results.append(child)
-
-        return results
 
     def for_each_child_file_recursive(self, callback: Callable) -> None:
         from wexample_filestate.item.item_target_file import ItemTargetFile
