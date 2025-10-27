@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from wexample_file.mixin.with_path_mixin import WithPathMixin
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
-from wexample_helpers.const.types import FileStringOrPath
 from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
@@ -14,8 +13,13 @@ if TYPE_CHECKING:
 
 @base_class
 class ItemMixin(WithPathMixin):
+    base_name: FileStringOrPath | None = public_field(
+        description="The name of the item (filename, basename)",
+        default=None
+    )
     base_path: FileStringOrPath | None = public_field(
-        description="The original path that will be converted to path", default=None
+        description="The parent path of the item",
+        default=None
     )
 
     @abstract_method

@@ -68,20 +68,20 @@ class AbstractItemTarget(
     def create_from_path(
         cls, path: PathOrString, config: DictConfig | None = None, **kwargs
     ) -> AbstractItemTarget:
-        from wexample_helpers.helpers.directory import (
-            directory_get_base_name,
-            directory_get_parent_path,
-        )
+        from pathlib import Path
 
+        path = Path(path)
         config = config or {}
 
-        manager = cls(base_path=directory_get_parent_path(path), **kwargs)
-
-        config["name"] = (
-            config["name"] if config.get("name") else directory_get_base_name(path)
+        item_target = cls(
+            base_path=path.parent,
+            base_name=config.get("name", path.name),
+            **kwargs
         )
-        manager.configure(config=config)
-        return manager
+
+        item_target.configure(config=config)
+
+        return item_target
 
     def apply(
         self,
@@ -168,6 +168,15 @@ class AbstractItemTarget(
 
     def configure(self, config: DictConfig) -> None:
         self.set_value(raw_value=config)
+
+        # Name is allways here, as an option and as an argument.
+        config["name"] = (
+            config["name"] if config.get("name") else self.base_name
+        )
+
+        if not self.base_name:
+            self.base_name = str(config.get("name"))
+
         self.locate_source(self.get_path())
 
     def dry_run(
@@ -234,10 +243,8 @@ class AbstractItemTarget(
         return default
 
     def get_item_name(self) -> str:
-        from wexample_filestate.option.name_option import NameOption
-
-        name_option = self.get_option(NameOption)
-        return name_option.get_name_value()
+        # Mey be refactored soon.
+        return self.base_name
 
     def get_options_providers(self) -> list[type[AbstractOptionsProvider]]:
         from wexample_filestate.options_provider.default_options_provider import (
@@ -261,7 +268,7 @@ class AbstractItemTarget(
         else:
             base_path = self.get_parent_item().get_path()
 
-        return base_path / self.get_item_name()
+        return base_path / Path(self.get_item_name())
 
     def get_relative_path(self) -> Path | None:
         root = self.get_root()

@@ -567,7 +567,7 @@ class TestFileCreateFromMapConfigOperation(AbstractStateManagerTest):
         assert one_dir.is_directory(), "One should be a directory"
 
         # Test that the filter worked by checking if we can find the test files
-        target_file = directory.find_by_name_recursive("test-collection-one-one.txt")
+        target_file = directory.find_by_name("test-collection-one-one.txt", recursive=True)
         assert target_file is not None, "Should find filtered target file"
 
     def _copy_directory_structure(self, source: Path, target: Path) -> None:

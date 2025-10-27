@@ -102,42 +102,34 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
-    def find_by_name(self, item_name: str) -> TargetFileOrDirectoryType | None:
+    def find_by_name(self, item_name: str, recursive: bool = False) -> TargetFileOrDirectoryType | None:
+        # Check direct children first
         for child in self.get_children_list():
             if child.get_item_name() == item_name:
                 return child
+        
+        # Search in subdirectories if recursive
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_name(item_name, recursive=True)
+                    if result:
+                        return result
 
         return None
 
-    def find_by_name_or_fail(self, item_name: str) -> TargetFileOrDirectoryType:
+    def find_by_name_or_fail(self, item_name: str, recursive: bool = False) -> TargetFileOrDirectoryType:
         from wexample_filestate.exception.child_not_found_exception import (
             ChildNotFoundException,
         )
 
-        child = self.find_by_name(item_name)
+        child = self.find_by_name(item_name, recursive=recursive)
         if child is None:
             raise ChildNotFoundException(child=item_name, root_item=self)
 
         return child
 
-    def find_by_name_recursive(
-        self, item_name: str
-    ) -> TargetFileOrDirectoryType | None:
-        found = self.find_by_name(item_name)
-        if found:
-            return found
-
-        for child in self.get_children_list():
-            if child.is_directory():
-                result = cast(ItemTargetDirectory, child).find_by_name_recursive(
-                    item_name
-                )
-                if result:
-                    return result
-
-        return None
-
-    def find_by_path(self, path: FileStringOrPath) -> TargetFileOrDirectoryType | None:
+    def find_by_path(self, path: FileStringOrPath, recursive: bool = False) -> TargetFileOrDirectoryType | None:
         from pathlib import Path
 
         target = Path(path)
@@ -153,33 +145,56 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             for child in self.get_children_list():
                 if child.get_item_name() == first_part and child.is_directory():
                     # Continue the search in the subfolder
-                    return cast(ItemTargetDirectory, child).find_by_path(remaining_path)
+                    return cast(ItemTargetDirectory, child).find_by_path(remaining_path, recursive=recursive)
             return None
 
-        # Simple search in direct children (original behavior)
+        # Simple search in direct children
         for child in self.get_children_list():
             # Compare by name if target is just a filename, otherwise compare full paths
             if child.get_item_name() == str(target) or child.get_path() == target:
                 return child
+        
+        # If recursive, search in subdirectories
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_path(target, recursive=True)
+                    if result:
+                        return result
+        
         return None
 
-    def find_by_path_recursive(
-        self, path: FileStringOrPath
-    ) -> TargetFileOrDirectoryType | None:
-        from pathlib import Path
-
-        path = Path(path)
-        found = self.find_by_path(path)
-        if found:
-            return found
-
+    def find_by_type(self, class_type: type[AbstractItemTarget], recursive: bool = False) -> AbstractItemTarget | None:
+        # Check direct children first
         for child in self.get_children_list():
-            if child.is_directory():
-                result = cast(ItemTargetDirectory, child).find_by_path_recursive(path)
-                if result:
-                    return result
-
+            if isinstance(child, class_type):
+                return child
+        
+        # Search in subdirectories if recursive
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_type(class_type, recursive=True)
+                    if result:
+                        return result
+        
         return None
+    
+    def find_all_by_type(self, class_type: type[AbstractItemTarget], recursive: bool = False) -> list[AbstractItemTarget]:
+        results = []
+        
+        if recursive:
+            def collector(item: AbstractItemTarget) -> None:
+                if isinstance(item, class_type):
+                    results.append(item)
+            
+            self.for_each_child_recursive(collector)
+        else:
+            for child in self.get_children_list():
+                if isinstance(child, class_type):
+                    results.append(child)
+        
+        return results
 
     def for_each_child_file_recursive(self, callback: Callable) -> None:
         from wexample_filestate.item.item_target_file import ItemTargetFile
