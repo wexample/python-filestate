@@ -23,7 +23,7 @@ dependencies = [
     "wexample-config==0.0.54",
     "wexample-file==0.0.9",
     "wexample-helpers-yaml==0.0.70",
-    "wexample-prompt==0.0.52",
+    "wexample-prompt==0.0.53",
     "xmltodict",
 ]
 
@@ -40,11 +40,11 @@ homepage = "https://github.com/wexample/python-filestate"
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-cov",
 ]
 [tool.setuptools.packages.find]
-include = [
-    "*",
-]
+include = ["*"]
+exclude = ["wexample_filestate.testing*"]
 
 [tool.pdm]
 distribution = true
@@ -55,7 +55,6 @@ package-dir = "src"
 [[tool.pdm.build.packages]]
 include = "wexample_filestate"
 from = "src"
-
 [tool.coverage.run]
 source = ["src"]
 
