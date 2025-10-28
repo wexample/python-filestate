@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
@@ -10,8 +11,6 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
 )
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
-
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.state_items import TargetFileOrDirectory

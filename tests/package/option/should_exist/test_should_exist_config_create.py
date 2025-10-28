@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_config.const.types import DictConfig
-
 from wexample_filestate.testing.abstract_test_operation import AbstractTestOperation
 
 

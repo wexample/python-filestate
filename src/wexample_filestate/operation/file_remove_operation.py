@@ -4,11 +4,10 @@ import os
 import shutil
 from typing import TYPE_CHECKING
 
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_filestate.operation.abstract_file_manipulation_operation import (
     AbstractFileManipulationOperation,
 )
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope

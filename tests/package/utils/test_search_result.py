@@ -214,9 +214,8 @@ class TestSearchResult(AbstractStateManagerTest):
 
     def _create_item_target_file(self, filename: str, tmp_path: Path) -> ItemTargetFile:
         """Create an ItemTargetFile from a test data file."""
-        from wexample_prompt.common.io_manager import IoManager
-
         from wexample_filestate.item.item_target_file import ItemTargetFile
+        from wexample_prompt.common.io_manager import IoManager
 
         # Copy test data file to tmp_path
         test_file = self._get_test_data_path() / filename
