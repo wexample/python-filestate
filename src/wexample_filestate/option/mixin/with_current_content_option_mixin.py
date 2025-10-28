@@ -23,7 +23,8 @@ class WithCurrentContentOptionMixin(ItemTreeConfigOptionMixin):
     def _create_write_operation_if_content_changed(
             self,
             target: TargetFileOrDirectoryType,
-            target_content: str
+            target_content: str,
+            description: str | None = None
     ) -> None | FileWriteOperation:
         """Create FileWriteOperation if content is different."""
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
@@ -40,7 +41,7 @@ class WithCurrentContentOptionMixin(ItemTreeConfigOptionMixin):
                     option=self,
                     target=target,
                     content=target_content,
-                    description=self.get_description(),
-                    )
+                    description=description or self.get_description(),
+                )
 
         return None

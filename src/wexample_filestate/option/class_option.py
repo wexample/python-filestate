@@ -30,7 +30,8 @@ class ClassOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOpti
 
         return self._create_write_operation_if_content_changed(
             target=target,
-            target_content=item.preview_write()
+            target_content=item.preview_write(),
+            description=f"Rewrite content according de {item.__class__.__name__} rules"
         )
 
     def get_description(self) -> str:
