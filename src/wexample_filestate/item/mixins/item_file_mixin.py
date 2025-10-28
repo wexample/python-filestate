@@ -50,29 +50,32 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
     def preview_write_text(self, content: str | None = None) -> str:
         """Return the exact text that would be written, without performing I/O."""
         # Choose source text: explicit content, cached text, or current file text
-        source = (
-            content
-            if content is not None
-            else (
-                self._text_cache
-                if self._text_cache is not None
-                else self.read_text(reload=False)
-            )
-        )
-        return source
+        if content is not None:
+            return content
+        if self._text_cache is not None:
+            return self._text_cache
+        # Try to read from file, return empty string if file doesn't exist
+        try:
+            return self.read_text(reload=False)
+        except (FileNotFoundError, AttributeError):
+            return ""
 
-    def read_bytes(self, reload: bool = False) -> bytes:
+    def read_bytes(self, reload: bool = False) -> bytes | None:
         if reload or self._bytes_cache is None:
             data = self.get_local_file().read()
-            # LocalFile.read() is assumed to return str or bytes. Normalize to bytes.
-            if isinstance(data, str):
+            # LocalFile.read() can return str, bytes, or None if file doesn't exist
+            if data is None:
+                self._bytes_cache = None
+            elif isinstance(data, str):
                 # If LocalFile returns text, re-encode using default encoding.
                 data = self.encode_text(data)
-            self._bytes_cache = data
+                self._bytes_cache = data
+            else:
+                self._bytes_cache = data
             # Invalidate text cache if we reloaded from disk.
             if reload:
                 self._text_cache = None
-        return self._bytes_cache  # type: ignore[return-value]
+        return self._bytes_cache
 
     def read_text(self, reload: bool = False, encoding: str | None = None) -> str:
         if reload or self._text_cache is None:

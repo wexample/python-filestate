@@ -56,12 +56,15 @@ class StructuredContentFile(ItemTargetFile):
     def preview_write(self, content: Any | None = None) -> str:
         """Return the exact text that would be written, accepting either raw text or parsed content, without I/O."""
         if content is None:
-            # Use current parsed cache or read from disk without reload
-            content = (
-                self._parsed_cache
-                if self._parsed_cache is not None
-                else self.read_parsed(reload=False)
-            )
+            # Use current parsed cache or try to read from disk without reload
+            if self._parsed_cache is not None:
+                content = self._parsed_cache
+            else:
+                try:
+                    content = self.read_parsed(reload=False)
+                except (FileNotFoundError, AttributeError):
+                    # File doesn't exist yet, return empty content
+                    return ""
         # If a raw textual payload is provided, parse it first to apply subclass rules/defaults
         if isinstance(content, str):
             content = self.loads(content, strict=False)
