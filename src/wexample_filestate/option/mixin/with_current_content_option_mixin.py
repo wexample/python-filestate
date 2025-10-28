@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
-from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -14,17 +15,11 @@ if TYPE_CHECKING:
 
 @base_class
 class WithCurrentContentOptionMixin(ItemTreeConfigOptionMixin):
-    def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
-        """Read current file content, return None if file doesn't exist."""
-        if not target.source or not target.source.get_path().exists():
-            return None
-        return target.get_local_file().read()
-
     def _create_write_operation_if_content_changed(
-            self,
-            target: TargetFileOrDirectoryType,
-            target_content: str,
-            description: str | None = None
+        self,
+        target: TargetFileOrDirectoryType,
+        target_content: str,
+        description: str | None = None,
     ) -> None | FileWriteOperation:
         """Create FileWriteOperation if content is different."""
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
@@ -45,3 +40,9 @@ class WithCurrentContentOptionMixin(ItemTreeConfigOptionMixin):
                 )
 
         return None
+
+    def _read_current_content(self, target: TargetFileOrDirectoryType) -> str | None:
+        """Read current file content, return None if file doesn't exist."""
+        if not target.source or not target.source.get_path().exists():
+            return None
+        return target.get_local_file().read()

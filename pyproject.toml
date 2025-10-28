@@ -6,15 +6,9 @@ build-backend = "pdm.backend"
 name = "wexample-filestate"
 version = "0.0.55"
 description = "Package that allows you to manage the state of files and directories using YAML configuration files."
-authors = [
-    { name = "weeger", email = "contact@wexample.com" },
-]
+authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent"]
 dependencies = [
     "attrs>=23.1.0",
     "cattrs>=23.1.0",
@@ -42,6 +36,7 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+
 [tool.setuptools.packages.find]
 include = ["*"]
 exclude = ["wexample_filestate.testing*"]
