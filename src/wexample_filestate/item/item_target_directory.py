@@ -112,8 +112,10 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         return results
 
     def find_by_name(
-        self, item_name: str, recursive: bool = False
+        self, item_name: PathOrString, recursive: bool = False
     ) -> TargetFileOrDirectoryType | None:
+        item_name = str(item_name)
+
         # Check direct children first
         for child in self.get_children_list():
             if child.get_item_name() == item_name:
