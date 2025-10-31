@@ -63,8 +63,9 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         """Get the name value, supporting both legacy string, nested dict, and callable formats."""
         from wexample_filestate.option.name.value_option import ValueOption
 
+        value = self.get_value()
         # Check if we have a callable value stored
-        if hasattr(self, "_callable_value") and callable(self._callable_value):
+        if callable(value):
             try:
                 # Execute the callable with self as parameter
                 result = self._callable_value(self)
@@ -89,9 +90,8 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
 
         # Store callable directly without conversion
         if callable(raw_value):
-            self._callable_value = raw_value
             # Create a placeholder dict to satisfy the nested config structure
-            raw_value = {ValueOption.get_name(): None}
+            raw_value = {ValueOption.get_name(): raw_value}
         # Convert string form to dict form for consistency
         elif isinstance(raw_value, str):
             raw_value = {ValueOption.get_name(): raw_value}
