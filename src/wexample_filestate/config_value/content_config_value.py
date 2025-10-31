@@ -20,7 +20,7 @@ class ContentConfigValue(ConfigValue):
     def build_content(self) -> str | None:
         return self.text
 
-    def to_option_raw_value(self) -> str:
+    def to_option_raw_value(self) -> Any:
         return self.text
 
     def _create_default_raw(self, raw: Any) -> str:

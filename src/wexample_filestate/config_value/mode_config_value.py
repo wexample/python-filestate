@@ -21,7 +21,7 @@ class ModeConfigValue(ConfigValue):
         description="Apply to sub items if origin is a directory",
     )
 
-    def to_option_raw_value(self) -> ConfigDict:
+    def to_option_raw_value(self) -> Any:
         from wexample_filestate.option.mode.permissions_option import PermissionsOption
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
 

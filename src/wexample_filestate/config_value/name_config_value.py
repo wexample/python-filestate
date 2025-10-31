@@ -33,7 +33,7 @@ class NameConfigValue(ConfigValue):
         description="The name value",
     )
 
-    def to_option_raw_value(self) -> ConfigDict:
+    def to_option_raw_value(self) -> Any:
         from wexample_filestate.option.name.case_format_option import CaseFormatOption
         from wexample_filestate.option.name.prefix_option import PrefixOption
         from wexample_filestate.option.name.regex_option import RegexOption

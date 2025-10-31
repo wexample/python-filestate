@@ -22,7 +22,7 @@ class TextConfigValue(ConfigValue):
         description="Ask to trim leading and trailing whitespace from file content",
     )
 
-    def to_option_raw_value(self) -> ConfigDict:
+    def to_option_raw_value(self) -> Any:
         from wexample_filestate.option.text.end_new_line_option import EndNewLineOption
         from wexample_filestate.option.text.trim_option import TrimOption
 

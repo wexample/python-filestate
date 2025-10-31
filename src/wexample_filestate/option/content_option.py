@@ -23,7 +23,7 @@ class ContentOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOp
         return Union[str, ConfigValue]
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+            self, target: TargetFileOrDirectoryType
     ) -> AbstractOperation | None:
         if not self.get_value().is_none():
             return self._create_write_operation_if_content_changed(
