@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )

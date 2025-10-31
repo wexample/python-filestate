@@ -5,14 +5,15 @@ from typing import TYPE_CHECKING, Any
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
+
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -21,6 +22,8 @@ if TYPE_CHECKING:
     from wexample_config.options_provider.abstract_options_provider import (
         AbstractOptionsProvider,
     )
+    from wexample_helpers.const.types import PathOrString
+
     from wexample_filestate.const.state_items import SourceFileOrDirectory
     from wexample_filestate.const.types_state_items import (
         SourceFileOrDirectoryType,
@@ -33,7 +36,6 @@ if TYPE_CHECKING:
         FileStateDryRunResult,
     )
     from wexample_filestate.result.file_state_result import FileStateResult
-    from wexample_helpers.const.types import PathOrString
 
 
 @base_class
@@ -125,11 +127,12 @@ class AbstractItemTarget(
         filter_operation: str | None = None,
         max: int = None,
     ) -> bool:
+        from wexample_prompt.common.spinner_pool import SpinnerPool
+        from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
         from wexample_filestate.option.active_option import (
             ActiveOption,
         )
-        from wexample_prompt.common.spinner_pool import SpinnerPool
-        from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
         if filter_path is not None and not self._path_matches(filter_path=filter_path):
             return False

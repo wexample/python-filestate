@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from wexample_filestate.item.item_target_file import ItemTargetFile
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
+
+from wexample_filestate.item.item_target_file import ItemTargetFile
 
 if TYPE_CHECKING:
     from wexample_config.config_value.nested_config_value import NestedConfigValue

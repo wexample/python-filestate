@@ -6,9 +6,10 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.decorator.base_class import base_class
+
+from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -19,8 +20,9 @@ if TYPE_CHECKING:
 class TextOption(OptionMixin, AbstractNestedConfigOption):
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_filestate.config_value.text_config_value import TextConfigValue
         from wexample_helpers.const.types import StringKeysDict
+
+        from wexample_filestate.config_value.text_config_value import TextConfigValue
 
         # Accept both list form ["trim", "end_new_line"] and dict form {"trim": true, "end_new_line": true}
         return Union[list[str], dict, StringKeysDict, TextConfigValue]
