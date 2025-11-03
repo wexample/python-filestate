@@ -386,4 +386,9 @@ class AbstractItemTarget(
     def _path_matches(self, filter_path: str) -> bool:
         import fnmatch
 
+        if not filter_path.startswith('*'):
+            filter_path = '*' + filter_path
+        if not filter_path.endswith('*'):
+            filter_path = filter_path + '*'
+
         return fnmatch.fnmatch(str(self.get_path()), filter_path)
