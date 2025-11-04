@@ -1,6 +1,6 @@
 # wexample-filestate
 
-Version: 0.0.56
+Version: 0.0.61
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
