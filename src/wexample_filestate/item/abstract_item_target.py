@@ -143,8 +143,8 @@ class AbstractItemTarget(
 
         # Allow to set active to false
         if not active_option or ActiveOption.is_active(active_option.get_value().raw):
-            loading_log = self.io.log(
-                message=f"{SpinnerPool.next()} {self.get_display_path()}",
+            loading_log = self.log(
+                message=f"{SpinnerPool.next()} @path{{{self.get_display_path()}}}",
             )
 
             has_task: bool = False
