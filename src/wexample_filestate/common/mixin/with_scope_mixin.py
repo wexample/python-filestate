@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class WithScopeMixin:
     @classmethod
-    def get_scopes(cls) -> None | list["Scope"]:
+    def get_scopes(cls) -> None | list[Scope]:
         return None
 
     @classmethod
-    def matches_scope_filter(cls, scopes: Iterable["Scope"]) -> bool:
+    def matches_scope_filter(cls, scopes: Iterable[Scope]) -> bool:
         """
         Return True when the provided scope filter should allow instances of this class.
 

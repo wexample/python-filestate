@@ -329,6 +329,9 @@ class AbstractItemTarget(
 
         Returns None if no operation is needed or if the option doesn't support the new interface.
         """
+        if not type(option).matches_scope_filter(scopes):
+            return None
+
         if self.is_file() and not option.applicable_on_file():
             return None
 

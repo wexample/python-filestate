@@ -9,6 +9,8 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 from wexample_filestate.enum.scopes import Scope
 
+from wexample_filestate.common.mixin.with_scope_mixin import WithScopeMixin
+
 if TYPE_CHECKING:
     from wexample_file.enum.local_path_type import LocalPathType
 
@@ -17,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class OptionMixin(ItemTreeConfigOptionMixin):
+class OptionMixin(WithScopeMixin, ItemTreeConfigOptionMixin):
     @classmethod
     def get_class_name_suffix(cls) -> str | None:
         return "Option"
