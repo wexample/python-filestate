@@ -14,6 +14,7 @@ from wexample_filestate.config_option.mixin.item_config_option_mixin import (
 )
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -94,6 +95,9 @@ class AbstractItemTarget(
         result = FileStateResult(state_manager=self)
 
         try:
+            if scopes is None:
+                scopes = set(Scope)
+
             self.last_result = result
             self.build_operations(
                 result=result,
@@ -122,7 +126,7 @@ class AbstractItemTarget(
     def build_operations(
         self: TargetFileOrDirectoryType,
         result: AbstractResult,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_path: str | None = None,
         filter_operation: str | None = None,
         max: int = None,
@@ -177,7 +181,7 @@ class AbstractItemTarget(
 
     def dry_run(
         self,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_path: str | None = None,
         filter_operation: str | None = None,
         max: int = None,
@@ -318,7 +322,7 @@ class AbstractItemTarget(
     def try_create_operation_from_option(
         self: TargetFileOrDirectoryType,
         option: OptionMixin,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_operation: str | None = None,
     ) -> AbstractOperation | None:
         """Try to create an operation from an option.
@@ -351,7 +355,7 @@ class AbstractItemTarget(
 
     def _find_first_operation(
         self: TargetFileOrDirectoryType,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_operation: str | None = None,
     ) -> AbstractOperation | None:
         """Find the first option that requires an operation and return it.
@@ -369,7 +373,7 @@ class AbstractItemTarget(
     def _operation_passes_filters(
         self,
         operation: AbstractOperation,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_operation: str | None = None,
     ) -> bool:
         """Check if operation passes the provided filters."""
@@ -378,7 +382,7 @@ class AbstractItemTarget(
         ):
             return False
 
-        if scopes is not None and operation.get_scope() not in scopes:
+        if operation.get_scope() not in scopes:
             return False
 
         return True

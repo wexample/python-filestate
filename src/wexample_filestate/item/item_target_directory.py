@@ -54,7 +54,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def build_operations(
         self,
         result: AbstractResult,
-        scopes: set[Scope] | None = None,
+        scopes: set[Scope],
         filter_path: str | None = None,
         filter_operation: str | None = None,
         max: int = None,

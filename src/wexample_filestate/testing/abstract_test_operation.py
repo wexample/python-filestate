@@ -8,6 +8,7 @@ from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
@@ -29,7 +30,7 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
         self._operation_test_assert_rollback()
 
     def _dry_run_and_count_operations(self) -> FileStateDryRunResult:
-        result = self.state_manager.dry_run()
+        result = self.state_manager.dry_run(scopes=set(Scope))
         operations_count = len(result.operations)
         expected_count = self._operation_get_count()
         assert (
@@ -61,7 +62,7 @@ class AbstractTestOperation(AbstractStateManagerTest, ABC):
             self._dry_run_and_count_operations()
         else:
             # For tests expecting 0 operations, just verify no operations are created
-            result = self.state_manager.dry_run()
+            result = self.state_manager.dry_run(scopes=set(Scope))
             operations_count = len(result.operations)
             assert (
                 operations_count == 0
