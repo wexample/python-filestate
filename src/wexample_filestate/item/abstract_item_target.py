@@ -382,7 +382,7 @@ class AbstractItemTarget(
         ):
             return False
 
-        if operation.get_scope() not in scopes:
+        if not type(operation).matches_scope_filter(scopes):
             return False
 
         return True

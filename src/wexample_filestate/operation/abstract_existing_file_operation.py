@@ -33,10 +33,10 @@ class AbstractExistingFileOperation(AbstractFileManipulationOperation):
     )
 
     @classmethod
-    def get_scope(cls) -> Scope:
+    def get_scopes(cls) -> [Scope]:
         from wexample_filestate.enum.scopes import Scope
 
-        return Scope.CONTENT
+        return [Scope.CONTENT]
 
     @classmethod
     @abstract_method

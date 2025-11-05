@@ -22,10 +22,10 @@ class FileRenameOperation(AbstractFileManipulationOperation):
     )
 
     @classmethod
-    def get_scope(cls) -> Scope:
+    def get_scopes(cls) -> [Scope]:
         from wexample_filestate.enum.scopes import Scope
 
-        return Scope.LOCATION
+        return [Scope.LOCATION]
 
     def apply(self) -> None:
         self._backup_target_file()

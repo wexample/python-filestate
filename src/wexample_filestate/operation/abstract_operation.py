@@ -11,6 +11,7 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.common.mixin.with_scope_mixin import WithScopeMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
+class AbstractOperation(WithScopeMixin, HasSnakeShortClassNameClassMixin, BaseClass):
     applied: bool = public_field(
         description="Flag indicating whether the operation has already been applied",
         default=False,
@@ -37,11 +38,6 @@ class AbstractOperation(HasSnakeShortClassNameClassMixin, BaseClass):
         description="The terminal width in characters used for display formatting",
         default=80,
     )
-
-    @classmethod
-    @abstract_method
-    def get_scope(cls) -> Scope:
-        pass
 
     @classmethod
     def matches_filter(cls, filter_name: str) -> bool:

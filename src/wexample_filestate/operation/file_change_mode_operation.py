@@ -25,10 +25,10 @@ class FileChangeModeOperation(AbstractOperation):
     )
 
     @classmethod
-    def get_scope(cls) -> Scope:
+    def get_scopes(cls) -> [Scope]:
         from wexample_filestate.enum.scopes import Scope
 
-        return Scope.PERMISSIONS
+        return [Scope.PERMISSIONS]
 
     def apply(self) -> None:
         from wexample_helpers.helpers.file import (
