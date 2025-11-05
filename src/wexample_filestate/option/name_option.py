@@ -14,6 +14,7 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class
@@ -27,7 +28,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         return Union[str, Path, dict, NameConfigValue, Callable]
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         """Create operation via OnBadFormatOption if name format validation fails."""
         from wexample_filestate.option.name.on_bad_format_option import (
@@ -37,7 +38,9 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         # Check if OnBadFormatOption is configured
         on_bad_format_option = self.get_option(OnBadFormatOption)
         if on_bad_format_option:
-            return on_bad_format_option.create_required_operation(target)
+            return on_bad_format_option.create_required_operation(
+                target=target, scopes=scopes
+            )
 
         return None
 

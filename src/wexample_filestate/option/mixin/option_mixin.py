@@ -7,6 +7,7 @@ from wexample_helpers.decorator.base_class import base_class
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_file.enum.local_path_type import LocalPathType
@@ -34,7 +35,7 @@ class OptionMixin(ItemTreeConfigOptionMixin):
         return True
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         """Create and configure an operation instance if this option requires action.
 
@@ -59,13 +60,15 @@ class OptionMixin(ItemTreeConfigOptionMixin):
         ]
 
     def _create_child_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         """Create operation by iterating through all enabled sub-options."""
         for option_class in self.get_allowed_options():
             option = self.get_option(option_class)
             if option:
-                operation = target.try_create_operation_from_option(option=option)
+                operation = target.try_create_operation_from_option(
+                    option=option, scopes=scopes
+                )
                 if operation:
                     # Return the first operation found
                     return operation

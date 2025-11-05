@@ -343,7 +343,7 @@ class AbstractItemTarget(
                 return None
 
         # Create the required operation (returns None if satisfied/not applicable)
-        operation = option.create_required_operation(target=self)
+        operation = option.create_required_operation(target=self, scopes=scopes)
         if operation is None:
             return None
 

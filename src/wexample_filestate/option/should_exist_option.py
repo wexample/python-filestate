@@ -11,6 +11,7 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class
@@ -31,7 +32,7 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
         return bool
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         """Create FileCreateOperation or FileRemoveOperation based on should_exist value and current state."""
         from wexample_filestate.operation.file_create_operation import (

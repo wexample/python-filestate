@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -8,11 +10,14 @@ from wexample_filestate.option.yaml.abstract_yaml_child_option import (
     AbstractYamlChildOption,
 )
 
+if TYPE_CHECKING:
+    from wexample_filestate.enum.scopes import Scope
+
 
 @base_class
 class SortRecursiveOption(AbstractYamlChildOption):
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 

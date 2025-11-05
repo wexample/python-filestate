@@ -10,6 +10,7 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class
@@ -19,7 +20,7 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
         return list[str]
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 

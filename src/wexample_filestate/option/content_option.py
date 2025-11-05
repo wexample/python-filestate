@@ -13,6 +13,7 @@ from wexample_filestate.option.mixin.with_current_content_option_mixin import (
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.operation.abstract_operation import AbstractOperation
+    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class
@@ -24,7 +25,7 @@ class ContentOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOp
         return Union[str, ConfigValue]
 
     def create_required_operation(
-        self, target: TargetFileOrDirectoryType
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         if not self.get_value().is_none():
             return self._create_write_operation_if_content_changed(
