@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 @base_class
 class WithCurrentContentOptionMixin(ItemTreeConfigOptionMixin):
     def _create_write_operation_if_content_changed(
-            self,
-            target: TargetFileOrDirectoryType,
-            target_content: str,
-            description: str | None = None,
+        self,
+        target: TargetFileOrDirectoryType,
+        target_content: str,
+        description: str | None = None,
     ) -> None | FileWriteOperation:
         """Create FileWriteOperation if content is different."""
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
