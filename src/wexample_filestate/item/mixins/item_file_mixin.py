@@ -113,11 +113,10 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
         self._text_cache = text
         self._bytes_cache = self.encode_text(text, encoding=encoding)
 
-    def get_extension(self) -> str | None:
-        return None
+    @classmethod
+    def get_extension(cls) -> str:
+        return ""
 
-    def get_dotted_extension(self) -> str | None:
-        extension = self.get_extension()
-        if extension:
-            return f".{extension}"
-        return None
+    @classmethod
+    def get_dotted_extension(cls) -> str | None:
+        return f".{cls.get_extension()}"
