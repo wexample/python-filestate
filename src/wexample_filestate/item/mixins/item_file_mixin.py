@@ -112,3 +112,12 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
         # Update caches: keep text, refresh bytes from text
         self._text_cache = text
         self._bytes_cache = self.encode_text(text, encoding=encoding)
+
+    def get_extension(self) -> str | None:
+        return None
+
+    def get_dotted_extension(self) -> str | None:
+        extension = self.get_extension()
+        if extension:
+            return f".{extension}"
+        return None
