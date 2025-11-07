@@ -20,10 +20,9 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
 
         # If no parent, root might be a file as it returns itself.
         root = self.parent.get_root()
-        assert isinstance(root, AbstractItemTarget)
 
         # Register shortcuts only in root directories.
-        if root != self.parent and root.is_directory():
+        if root:
             root.set_shortcut(self.get_value().get_str(), self.parent)
 
     @staticmethod
