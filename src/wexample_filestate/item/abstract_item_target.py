@@ -67,7 +67,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_path(
-        cls, path: PathOrString, config: DictConfig | None = None, **kwargs
+        cls, path: PathOrString, config: DictConfig | None = None, configure:bool = True, **kwargs
     ) -> AbstractItemTarget:
         from pathlib import Path
 
@@ -78,7 +78,8 @@ class AbstractItemTarget(
             base_path=path.parent, base_name=config.get("name", path.name), **kwargs
         )
 
-        item_target.configure(config=config)
+        if configure:
+            item_target.configure(config=config)
 
         return item_target
 
