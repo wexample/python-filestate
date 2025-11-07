@@ -60,7 +60,7 @@ class AbstractChildrenManipulationOption(
             DefaultOptionsProvider,
         ]
 
-    def _create_children_from_config(
+    def _create_child_from_config(
         self, path: Path, config: dict
     ) -> TargetFileOrDirectoryType:
         import copy

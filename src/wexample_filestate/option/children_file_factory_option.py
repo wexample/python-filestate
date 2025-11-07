@@ -44,7 +44,7 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
                 )
 
                 children.append(
-                    self._create_children_from_config(
+                    self._create_child_from_config(
                         path=directory_path,
                         config=dir_config,
                     )

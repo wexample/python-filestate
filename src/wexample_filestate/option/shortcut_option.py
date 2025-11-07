@@ -22,7 +22,7 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
         root = self.parent.get_root()
 
         # Register shortcuts only in root directories.
-        if root:
+        if root and root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
 
     @staticmethod

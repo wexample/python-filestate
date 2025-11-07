@@ -60,7 +60,7 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
                             tree = self._build_dir_tree(entry, config, entry_filter)
                             if tree is not None:
                                 children.append(
-                                    self._create_children_from_config(
+                                    self._create_child_from_config(
                                         path=entry,
                                         config=tree,
                                     )
@@ -72,7 +72,7 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
                             file_cfg["name"] = entry.name
                             file_cfg.setdefault("type", DiskItemType.FILE)
                             children.append(
-                                self._create_children_from_config(
+                                self._create_child_from_config(
                                     path=entry,
                                     config=file_cfg,
                                 )
@@ -83,7 +83,7 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
                         entry_path: Path = entry
                         if self._include_entry(entry_path, config, entry_filter):
                             children.append(
-                                self._create_children_from_config(
+                                self._create_child_from_config(
                                     path=entry_path,
                                     config=config,
                                 )
