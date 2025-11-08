@@ -22,7 +22,7 @@ class FileRemoveOperation(AbstractFileManipulationOperation):
 
         return [Scope.LOCATION]
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         self._backup_target_file()
 
         if self.target.is_file():

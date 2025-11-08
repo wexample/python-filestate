@@ -27,7 +27,7 @@ class FileCreateOperation(AbstractFileManipulationOperation):
 
         return [Scope.LOCATION]
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         self._original_path = self.target.get_path()
 
         if self.target.is_file():

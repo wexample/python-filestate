@@ -16,7 +16,6 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.state_items import TargetFileOrDirectory
-    from wexample_filestate.enum.scopes import Scope
 
 
 @base_class
@@ -45,8 +44,15 @@ class AbstractOperation(WithScopeMixin, HasSnakeShortClassNameClassMixin, BaseCl
 
         return fnmatch.fnmatch(cls.get_name(), filter_name)
 
+    @classmethod
+    def get_event_name(cls, suffix: str | None = None) -> str:
+        return ".".join([
+                            "operation",
+                            cls.get_name(),
+                        ] + ([suffix] if suffix else []))
+
     @abstract_method
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         pass
 
     @abstract_method

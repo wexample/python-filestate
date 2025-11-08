@@ -14,5 +14,5 @@ class FileWriteOperation(AbstractExistingFileOperation):
         description="The content to write",
     )
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         self._target_file_write(content=self.content)

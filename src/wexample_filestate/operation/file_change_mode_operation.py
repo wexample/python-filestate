@@ -30,7 +30,7 @@ class FileChangeModeOperation(AbstractOperation):
 
         return [Scope.PERMISSIONS]
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         from wexample_helpers.helpers.file import (
             file_change_mode,
             file_change_mode_recursive,

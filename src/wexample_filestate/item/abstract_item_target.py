@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Mapping
 
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
+from wexample_event.common.dispatcher import EventDispatcherMixin
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.item.mixins.item_mixin import ItemMixin
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
-from wexample_filestate.enum.scopes import Scope
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,6 +45,7 @@ class AbstractItemTarget(
     ItemMixin,
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
+    EventDispatcherMixin
 ):
     last_result: AbstractResult | None = public_field(
         default=None, description="The last applied result of state operation"
@@ -55,6 +56,34 @@ class AbstractItemTarget(
     source: SourceFileOrDirectory | None = public_field(
         default=None, description="The original existing file or directory"
     )
+    _enable_bubbling = True
+
+    def _get_bubbling_parent(self):
+        return self.get_parent_item_or_none()
+
+    def __attrs_post_init__(self) -> None:
+        super().__attrs_post_init__()
+        self._init_listeners()
+
+    def _init_listeners(self) -> None:
+        """Add event listeners"""
+
+    def operation_dispatch_event(
+            self,
+            operation: AbstractOperation | type[AbstractOperation],
+            suffix: str | None = None,
+            payload: Mapping[str, Any] | None = None,
+            **kwargs
+    ):
+        if payload is None:
+            payload = {}
+        payload["operation"] = operation
+
+        self.dispatch(
+            event=operation.get_event_name(suffix=suffix),
+            payload=payload,
+            **kwargs
+        )
 
     @classmethod
     def create_from_config(cls, **kwargs) -> AbstractItemTarget:

@@ -27,7 +27,7 @@ class FileRenameOperation(AbstractFileManipulationOperation):
 
         return [Scope.LOCATION]
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         self._backup_target_file()
 
         old_path = self._original_path

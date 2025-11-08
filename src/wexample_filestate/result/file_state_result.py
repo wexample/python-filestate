@@ -30,13 +30,21 @@ class FileStateResult(AbstractResult):
                 choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
                 default="yes",
             ).is_ok():
-                operation.apply()
+                operation.target.operation_dispatch_event(
+                    operation=operation,
+                    suffix="pre",
+                )
+                operation.apply_operation()
+                operation.target.operation_dispatch_event(
+                    operation=operation,
+                    suffix="post",
+                )
                 return True
 
             return False
 
         # Non interactive.
-        operation.apply()
+        operation.apply_operation()
         return True
 
     def _find_dependency(self, dependency_class) -> AbstractOperation | None:

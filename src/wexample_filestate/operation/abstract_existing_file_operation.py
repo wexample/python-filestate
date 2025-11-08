@@ -67,7 +67,7 @@ class AbstractExistingFileOperation(AbstractFileManipulationOperation):
         """Read current file content if it exists; return None if it does not exist."""
         return target.get_local_file().read()
 
-    def apply(self) -> None:
+    def apply_operation(self) -> None:
         if self._changed_source is not None:
             self._target_file_write(content=self._changed_source)
 
