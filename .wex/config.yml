@@ -1,2 +1,3 @@
-name: filestate
-version: 0.0.47
+global:
+  name: filestate
+  version: 0.0.70

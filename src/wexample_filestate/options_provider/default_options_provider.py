@@ -15,76 +15,75 @@ if TYPE_CHECKING:
 class DefaultOptionsProvider(AbstractOptionsProvider):
     @classmethod
     def get_options(cls) -> list[type[AbstractConfigOption]]:
-        from wexample_config.config_option.name_config_option import NameConfigOption
-        from wexample_filestate.config_option.children_config_option import (
-            ChildrenConfigOption,
+        from wexample_filestate.option.active_option import (
+            ActiveOption,
         )
-        from wexample_filestate.config_option.children_file_factory_config_option import (
-            ChildrenFileFactoryConfigOption,
+        from wexample_filestate.option.children_file_factory_option import (
+            ChildrenFileFactoryOption,
         )
-        from wexample_filestate.config_option.class_config_option import (
-            ClassConfigOption,
+        from wexample_filestate.option.children_option import (
+            ChildrenOption,
         )
-        from wexample_filestate.config_option.content_config_option import (
-            ContentConfigOption,
+        from wexample_filestate.option.class_option import (
+            ClassOption,
         )
-        from wexample_filestate.config_option.content_options_config_option import (
-            ContentOptionsConfigOption,
+        from wexample_filestate.option.content_option import (
+            ContentOption,
         )
-        from wexample_filestate.config_option.default_content_config_option import (
-            DefaultContentConfigOption,
+        from wexample_filestate.option.default_content_option import (
+            DefaultContentOption,
         )
-        from wexample_filestate.config_option.mode_config_option import ModeConfigOption
-        from wexample_filestate.config_option.mode_recursive_config_option import (
-            ModeRecursiveConfigOption,
+        from wexample_filestate.option.mode_option import ModeOption
+        from wexample_filestate.option.name.on_bad_format_option import (
+            OnBadFormatOption,
         )
-        from wexample_filestate.config_option.name_pattern_config_option import (
-            NamePatternConfigOption,
+        from wexample_filestate.option.name_option import (
+            NameOption,
         )
-        from wexample_filestate.config_option.remove_backup_max_file_size_config_option import (
-            RemoveBackupMaxFileSizeConfigOption,
+        from wexample_filestate.option.remove_backup_max_file_size_option import (
+            RemoveBackupMaxFileSizeOption,
         )
-        from wexample_filestate.config_option.shortcut_config_option import (
-            ShortcutConfigOption,
+        from wexample_filestate.option.shortcut_option import (
+            ShortcutOption,
         )
-        from wexample_filestate.config_option.should_contain_lines_config_option import (
-            ShouldContainLinesConfigOption,
+        from wexample_filestate.option.should_contain_lines_option import (
+            ShouldContainLinesOption,
         )
-        from wexample_filestate.config_option.should_exist_config_option import (
-            ShouldExistConfigOption,
+        from wexample_filestate.option.should_exist_option import (
+            ShouldExistOption,
         )
-        from wexample_filestate.config_option.should_have_extension_config_option import (
-            ShouldHaveExtensionConfigOption,
+        from wexample_filestate.option.should_have_extension_option import (
+            ShouldHaveExtensionOption,
         )
-        from wexample_filestate.config_option.should_not_contain_lines_config_option import (
-            ShouldNotContainLinesConfigOption,
+        from wexample_filestate.option.should_not_contain_lines_option import (
+            ShouldNotContainLinesOption,
         )
-        from wexample_filestate.config_option.text_filter_config_option import (
-            TextFilterConfigOption,
+        from wexample_filestate.option.text_option import (
+            TextOption,
         )
-        from wexample_filestate.config_option.type_config_option import TypeConfigOption
-        from wexample_filestate.config_option.yaml_filter_config_option import (
-            YamlFilterConfigOption,
+        from wexample_filestate.option.type_option import TypeOption
+        from wexample_filestate.option.yaml_option import (
+            YamlOption,
         )
 
         return [
-            ChildrenConfigOption,
-            ChildrenFileFactoryConfigOption,
-            ClassConfigOption,
-            ContentConfigOption,
-            ContentOptionsConfigOption,
-            DefaultContentConfigOption,
-            ModeConfigOption,
-            ModeRecursiveConfigOption,
-            NameConfigOption,
-            NamePatternConfigOption,
-            RemoveBackupMaxFileSizeConfigOption,
-            ShortcutConfigOption,
-            ShouldContainLinesConfigOption,
-            ShouldNotContainLinesConfigOption,
-            ShouldExistConfigOption,
-            ShouldHaveExtensionConfigOption,
-            TextFilterConfigOption,
-            TypeConfigOption,
-            YamlFilterConfigOption,
+            # filestate: python-iterable-sort
+            ActiveOption,
+            ChildrenFileFactoryOption,
+            ChildrenOption,
+            ClassOption,
+            ContentOption,
+            DefaultContentOption,
+            ModeOption,
+            NameOption,
+            OnBadFormatOption,
+            RemoveBackupMaxFileSizeOption,
+            ShortcutOption,
+            ShouldContainLinesOption,
+            ShouldExistOption,
+            ShouldHaveExtensionOption,
+            ShouldNotContainLinesOption,
+            TextOption,
+            TypeOption,
+            YamlOption,
         ]

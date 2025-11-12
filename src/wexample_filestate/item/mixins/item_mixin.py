@@ -1,26 +1,27 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel
-from wexample_helpers.const.types import FileStringOrPath
+from wexample_helpers.classes.abstract_method import abstract_method
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+from wexample_helpers.mixin.with_path_mixin import WithPathMixin
+
+if TYPE_CHECKING:
+    from wexample_helpers.const.types import FileStringOrPath
 
 
-class ItemMixin(BaseModel):
-    base_path: FileStringOrPath | None = None
-    path: Path | None = None
+@base_class
+class ItemMixin(WithPathMixin):
+    base_name: FileStringOrPath | None = public_field(
+        description="The name of the item (filename, basename)", default=None
+    )
+    base_path: FileStringOrPath | None = public_field(
+        description="The parent path of the item", default=None
+    )
 
-    @abstractmethod
+    @abstract_method
     def get_item_title(self) -> str:
-        pass
-
-    @abstractmethod
-    def is_file(self) -> bool:
-        pass
-
-    @abstractmethod
-    def is_directory(self) -> bool:
         pass
 
     def get_octal_mode(self: ItemMixin) -> str:
@@ -28,17 +29,10 @@ class ItemMixin(BaseModel):
 
         return file_path_get_octal_mode(self.get_path())
 
-    def get_path(self) -> Path:
-        assert self.path is not None
-        return self.path
+    @abstract_method
+    def is_directory(self) -> bool:
+        pass
 
-    def get_path_str(self) -> str:
-        return str(self.get_path())
-
-    def get_resolved(self) -> str:
-        return str(self.get_path().resolve())
-
-    def get_resolved_target(self, file_path: str) -> str:
-        from wexample_helpers.helpers.path import path_resolve_from
-
-        return path_resolve_from(file_path, self.get_resolved())
+    @abstract_method
+    def is_file(self) -> bool:
+        pass

@@ -1,40 +1,92 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
-from pydantic import Field
-from wexample_filestate.config_option.mixin.item_config_option_mixin import (
-    ItemTreeConfigOptionMixin,
-)
-from wexample_filestate.enum.scopes import Scope
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 from wexample_filestate.item.mixins.item_directory_mixin import ItemDirectoryMixin
-from wexample_helpers.const.types import FileStringOrPath, PathOrString, StringKeysDict
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from wexample_helpers.const.types import (
+        FileStringOrPath,
+        PathOrString,
+        StringKeysDict,
+    )
+
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.result.abstract_result import AbstractResult
 
 
+@base_class
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    shortcuts: StringKeysDict = Field(default_factory=dict)
+    shortcuts: StringKeysDict = public_field(
+        factory=dict,
+        description="The list of referenced shortcuts pointing to items anywhere in the tree",
+    )
 
-    def __init__(self, **kwargs) -> None:
-        # Initialize ItemDirectoryMixin first to prevent Pydantic from resetting
-        # attributes during AbstractItemTarget initialization.
-        # The order matters here because Pydantic's model initialization
-        # can override attributes set by previous parent classes.
-        ItemDirectoryMixin.__init__(self, **kwargs)
-        AbstractItemTarget.__init__(self, **kwargs)
+    @classmethod
+    def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
+        from pathlib import Path
+
+        # If path is a file, ignore file name a keep parent directory.
+        path = Path(path)
+        if path.is_file():
+            path = path.parent
+
+        return super().create_from_path(path=path, **kwargs)
 
     def build_item_tree(self) -> None:
+        from wexample_filestate.config_option.mixin.item_config_option_mixin import (
+            ItemTreeConfigOptionMixin,
+        )
+
         super().build_item_tree()
 
         for option in self.options.values():
             if isinstance(option, ItemTreeConfigOptionMixin):
                 option.build_item_tree()
+
+    def build_operations(
+        self,
+        result: AbstractResult,
+        scopes: set[Scope],
+        filter_path: str | None = None,
+        filter_operation: str | None = None,
+        max: int = None,
+    ) -> bool:
+        from wexample_filestate.const.state_items import TargetFileOrDirectory
+
+        has_task = super().build_operations(
+            result,
+            scopes=scopes,
+            filter_path=filter_path,
+            filter_operation=filter_operation,
+            max=max,
+        )
+        count = 1 if has_task is True else 0
+
+        for item in self.get_children_list():
+            has_task_child = cast(TargetFileOrDirectory, item).build_operations(
+                result=result,
+                scopes=scopes,
+                filter_path=filter_path,
+                filter_operation=filter_operation,
+                max=((max - count) if (max is not None) else None),
+            )
+
+            if has_task_child:
+                count += 1
+                has_task = True
+
+            if max is not None and count == max:
+                return has_task
+
+        return has_task
 
     def configure_from_file(self, path: FileStringOrPath) -> None:
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
@@ -42,60 +94,120 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if yaml_read is not None:
             self.set_value(raw_value=yaml_read(str(path)))
 
-    def get_children_list(self) -> list[TargetFileOrDirectoryType]:
-        from wexample_filestate.config_option.children_config_option import (
-            ChildrenConfigOption,
-        )
+    def find_all_by_type(
+        self, class_type: type[AbstractItemTarget], recursive: bool = False
+    ) -> list[AbstractItemTarget]:
+        results = []
 
-        option = cast(ChildrenConfigOption, self.get_option(ChildrenConfigOption))
-        if option is not None:
-            return option.get_children()
+        if recursive:
 
-        return []
+            def collector(item: AbstractItemTarget) -> None:
+                if isinstance(item, class_type):
+                    results.append(item)
 
-    def build_operations(
-        self, result: AbstractResult, scopes: set[Scope] | None = None
-    ) -> None:
-        from wexample_filestate.const.state_items import TargetFileOrDirectory
+            self.for_each_child_recursive(collector)
+        else:
+            for child in self.get_children_list():
+                if isinstance(child, class_type):
+                    results.append(child)
 
-        super().build_operations(result, scopes=scopes)
+        return results
 
-        for item in self.get_children_list():
-            cast(TargetFileOrDirectory, item).build_operations(
-                result=result, scopes=scopes
-            )
-
-    def find_by_path_recursive(
-        self, path: FileStringOrPath
+    def find_by_name(
+        self, item_name: PathOrString, recursive: bool = False
     ) -> TargetFileOrDirectoryType | None:
-        path = Path(path)
-        found = self.find_by_path(path)
-        if found:
-            return found
+        item_name = str(item_name)
 
+        # Check direct children first
         for child in self.get_children_list():
-            if child.is_directory():
-                result = cast(ItemTargetDirectory, child).find_by_path_recursive(path)
-                if result:
-                    return result
-
-        return None
-
-    def find_by_path(self, path: FileStringOrPath) -> TargetFileOrDirectoryType | None:
-        path_str = str(Path(path).resolve())
-
-        for child in self.get_children_list():
-            if child.get_resolved() == path_str:
+            if child.get_item_name() == item_name:
                 return child
 
+        # Search in subdirectories if recursive
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_name(
+                        item_name, recursive=True
+                    )
+                    if result:
+                        return result
+
         return None
 
-    def for_each_child_recursive(self, callback: Callable) -> None:
-        for child in self.get_children_list():
-            if isinstance(child, ItemTargetDirectory):
-                child.for_each_child_recursive(callback)
+    def find_by_name_or_fail(
+        self, item_name: str, recursive: bool = False
+    ) -> TargetFileOrDirectoryType:
+        from wexample_filestate.exception.child_not_found_exception import (
+            ChildNotFoundException,
+        )
 
-            callback(child)
+        child = self.find_by_name(item_name, recursive=recursive)
+        if child is None:
+            raise ChildNotFoundException(child=item_name, root_item=self)
+
+        return child
+
+    def find_by_path(
+        self, path: FileStringOrPath, recursive: bool = False
+    ) -> TargetFileOrDirectoryType | None:
+        from pathlib import Path
+
+        target = Path(path)
+
+        # If the path contains multiple parts (e.g., "subfolder/file.txt")
+        parts = target.parts
+        if len(parts) > 1:
+            # Search for the first element of the path (the subfolder)
+            first_part = parts[0]
+            remaining_path = Path(*parts[1:])
+
+            # Find the corresponding subfolder
+            for child in self.get_children_list():
+                if child.get_item_name() == first_part and child.is_directory():
+                    # Continue the search in the subfolder
+                    return cast(ItemTargetDirectory, child).find_by_path(
+                        remaining_path, recursive=recursive
+                    )
+            return None
+
+        # Simple search in direct children
+        for child in self.get_children_list():
+            # Compare by name if target is just a filename, otherwise compare full paths
+            if child.get_item_name() == str(target) or child.get_path() == target:
+                return child
+
+        # If recursive, search in subdirectories
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_path(
+                        target, recursive=True
+                    )
+                    if result:
+                        return result
+
+        return None
+
+    def find_by_type(
+        self, class_type: type[AbstractItemTarget], recursive: bool = False
+    ) -> AbstractItemTarget | None:
+        # Check direct children first
+        for child in self.get_children_list():
+            if isinstance(child, class_type):
+                return child
+
+        # Search in subdirectories if recursive
+        if recursive:
+            for child in self.get_children_list():
+                if child.is_directory():
+                    result = cast(ItemTargetDirectory, child).find_by_type(
+                        class_type, recursive=True
+                    )
+                    if result:
+                        return result
+
+        return None
 
     def for_each_child_file_recursive(self, callback: Callable) -> None:
         from wexample_filestate.item.item_target_file import ItemTargetFile
@@ -104,15 +216,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             class_type=ItemTargetFile,
             callback=callback,
         )
-
-    def for_each_child_of_type_recursive(
-        self, class_type: type[AbstractItemTarget], callback: Callable
-    ) -> None:
-        def _only_type(item: AbstractItemTarget) -> None:
-            if isinstance(item, class_type):
-                callback(item)
-
-        self.for_each_child_recursive(_only_type)
 
     def for_each_child_of_type(
         self,
@@ -123,60 +226,63 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             if isinstance(child, class_type):
                 callback(child)
 
-    def find_by_name_recursive(
-        self, item_name: str
-    ) -> TargetFileOrDirectoryType | None:
-        found = self.find_by_name(item_name)
-        if found:
-            return found
+    def for_each_child_of_type_recursive(
+        self, class_type: type[AbstractItemTarget], callback: Callable
+    ) -> None:
+        def _only_type(item: AbstractItemTarget) -> None:
+            if isinstance(item, class_type):
+                callback(item)
 
+        self.for_each_child_recursive(_only_type)
+
+    def for_each_child_recursive(self, callback: Callable) -> None:
         for child in self.get_children_list():
-            if child.is_directory():
-                result = cast(ItemTargetDirectory, child).find_by_name_recursive(
-                    item_name
-                )
-                if result:
-                    return result
+            if isinstance(child, ItemTargetDirectory):
+                child.for_each_child_recursive(callback)
 
-        return None
+            callback(child)
 
-    def find_by_name(self, item_name: str) -> TargetFileOrDirectoryType | None:
-        for child in self.get_children_list():
-            if child.get_item_name() == item_name:
-                return child
+    def get_children_list(self) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.option.children_option import (
+            ChildrenOption,
+        )
 
-        return None
+        option = cast(ChildrenOption, self.get_option(ChildrenOption))
+        if option is not None:
+            return option.get_children()
 
-    def find_by_name_or_fail(self, item_name: str) -> TargetFileOrDirectoryType:
-        child = self.find_by_name(item_name)
-        if child is None:
-            from wexample_filestate.exception.child_not_found_exception import (
-                ChildNotFoundException,
-            )
-
-            raise ChildNotFoundException(child=item_name, root_item=self)
-
-        return child
+        return []
 
     def get_shortcut(self, name: str) -> AbstractItemTarget | None:
         return self.shortcuts[name] if name in self.shortcuts else None
 
     def get_shortcut_or_fail(self, name: str) -> AbstractItemTarget | None:
+        from wexample_filestate.exception.undefined_shortcut_exception import (
+            UndefinedShortcutException,
+        )
+
         shortcut = self.get_shortcut(name=name)
 
         if shortcut is None:
-            from wexample_filestate.exception.undefined_shortcut_exception import (
-                UndefinedShortcutException,
-            )
-
             raise UndefinedShortcutException(shortcut=name, root_item=self)
 
-    def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
-        if name in self.shortcuts:
-            from wexample_filestate.exception.existing_shortcut_exception import (
-                ExistingShortcutException,
-            )
+    def prepare_value(self, raw_value: Any) -> Any:
+        from wexample_filestate.option.children_option import (
+            ChildrenOption,
+        )
 
+        key = ChildrenOption.get_name()
+        if not key in raw_value:
+            raw_value[key] = []
+
+        return raw_value
+
+    def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
+        from wexample_filestate.exception.existing_shortcut_exception import (
+            ExistingShortcutException,
+        )
+
+        if name in self.shortcuts:
             raise ExistingShortcutException(
                 shortcut=name,
                 new_item=children,
@@ -185,12 +291,3 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             )
 
         self.shortcuts[name] = children
-
-    @classmethod
-    def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
-        # If path is a file, ignore file name a keep parent directory.
-        path = Path(path)
-        if path.is_file():
-            path = path.parent
-
-        return super().create_from_path(path=path, **kwargs)

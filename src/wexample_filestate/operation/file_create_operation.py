@@ -1,73 +1,46 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
-from wexample_config.config_option.abstract_config_option import AbstractConfigOption
-from wexample_filestate.config_option.default_content_config_option import (
-    DefaultContentConfigOption,
-)
-from wexample_filestate.enum.scopes import Scope
-from wexample_filestate.operation.abstract_operation import AbstractOperation
-from wexample_filestate.operation.mixin.file_manipulation_operation_mixin import (
-    FileManipulationOperationMixin,
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
+from wexample_filestate.operation.abstract_file_manipulation_operation import (
+    AbstractFileManipulationOperation,
 )
 
 if TYPE_CHECKING:
-    pass
+    from wexample_filestate.enum.scopes import Scope
 
 
-class FileCreateOperation(FileManipulationOperationMixin, AbstractOperation):
-    _original_path_str: str
+@base_class
+class FileCreateOperation(AbstractFileManipulationOperation):
+    default_content: str | None = public_field(
+        description="Flag indicating whether the operation has already been applied",
+        default=None,
+    )
 
     @classmethod
-    def get_scope(cls) -> Scope:
-        return Scope.LOCATION
+    def get_scopes(cls) -> [Scope]:
+        from wexample_filestate.enum.scopes import Scope
 
-    def applicable_for_option(self, option: AbstractConfigOption) -> bool:
-        return (
-            self.target.source is None
-            and FileManipulationOperationMixin.option_should_exist_is_true(self.target)
-        )
+        return [Scope.LOCATION]
 
-    def describe_before(self) -> str:
-        return f"The file or directory does not exists on the system."
-
-    def describe_after(self) -> str:
-        return f"The file or directory has been created."
-
-    def description(self) -> str:
-        return "Create missing file"
-
-    def apply(self) -> None:
-        self._original_path_str = self.target.get_resolved()
+    def apply_operation(self) -> None:
+        self._original_path = self.target.get_path()
 
         if self.target.is_file():
-            local_file = self.target.get_local_file()
-
-            default_content = cast(
-                DefaultContentConfigOption,
-                self.target.get_option(DefaultContentConfigOption),
-            )
-
-            if default_content:
-                default_content_option = self.target.get_option_value(
-                    DefaultContentConfigOption
-                )
-
-                if default_content_option:
-                    local_file.write(default_content_option.get_str())
-                else:
-                    local_file.touch()
-            else:
-                local_file.touch()
+            self.target.get_local_file().touch()
+            if self.default_content:
+                self.target.get_local_file().write(content=self.default_content)
 
         elif self.target.is_directory():
-            os.mkdir(self._original_path_str)
+            os.mkdir(self._original_path)
 
     def undo(self) -> None:
         if self.target.is_file():
-            os.remove(self._original_path_str)
+            os.remove(self._original_path)
         elif self.target.is_directory():
             # Do not remove recursively, as for now it only can be created empty with mkdir.
-            os.rmdir(self._original_path_str)
+            os.rmdir(self._original_path)
