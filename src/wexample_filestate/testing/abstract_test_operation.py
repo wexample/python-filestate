@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.testing.abstract_state_manager_test import (
     AbstractStateManagerTest,
 )
-from wexample_filestate.enum.scopes import Scope
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig

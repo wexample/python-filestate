@@ -12,8 +12,8 @@ from wexample_filestate.option.mixin.with_current_content_option_mixin import (
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.enum.scopes import Scope
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class

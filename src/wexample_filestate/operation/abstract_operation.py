@@ -39,17 +39,20 @@ class AbstractOperation(WithScopeMixin, HasSnakeShortClassNameClassMixin, BaseCl
     )
 
     @classmethod
+    def get_event_name(cls, suffix: str | None = None) -> str:
+        return ".".join(
+            [
+                "operation",
+                cls.get_name(),
+            ]
+            + ([suffix] if suffix else [])
+        )
+
+    @classmethod
     def matches_filter(cls, filter_name: str) -> bool:
         import fnmatch
 
         return fnmatch.fnmatch(cls.get_name(), filter_name)
-
-    @classmethod
-    def get_event_name(cls, suffix: str | None = None) -> str:
-        return ".".join([
-                            "operation",
-                            cls.get_name(),
-                        ] + ([suffix] if suffix else []))
 
     @abstract_method
     def apply_operation(self) -> None:

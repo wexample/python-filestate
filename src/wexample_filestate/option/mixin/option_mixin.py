@@ -4,12 +4,11 @@ from typing import TYPE_CHECKING
 
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.common.mixin.with_scope_mixin import WithScopeMixin
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
 from wexample_filestate.enum.scopes import Scope
-
-from wexample_filestate.common.mixin.with_scope_mixin import WithScopeMixin
 
 if TYPE_CHECKING:
     from wexample_file.enum.local_path_type import LocalPathType

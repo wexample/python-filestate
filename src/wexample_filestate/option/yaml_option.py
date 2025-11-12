@@ -14,8 +14,8 @@ if TYPE_CHECKING:
     from wexample_file.enum.local_path_type import LocalPathType
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.enum.scopes import Scope
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
@@ -36,9 +36,7 @@ class YamlOption(OptionMixin, AbstractNestedConfigOption):
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         """Create operation using child options."""
-        return self._create_child_required_operation(
-            target=target, scopes=scopes
-        )
+        return self._create_child_required_operation(target=target, scopes=scopes)
 
     def get_allowed_options(self) -> list[type[AbstractConfigOption]]:
         from wexample_filestate.option.yaml.sort_recursive_option import (
