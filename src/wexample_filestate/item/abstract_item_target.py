@@ -121,6 +121,7 @@ class AbstractItemTarget(
         max: int = None,
     ) -> FileStateResult:
         from wexample_filestate.result.file_state_result import FileStateResult
+        from wexample_filestate.enum.scopes import Scope
 
         result = FileStateResult(state_manager=self)
 
