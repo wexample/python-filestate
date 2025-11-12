@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-filestate"
-version = "0.0.69"
+version = "0.0.70"
 description = "Package that allows you to manage the state of files and directories using YAML configuration files."
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
