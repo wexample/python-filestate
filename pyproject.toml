@@ -14,11 +14,11 @@ dependencies = [
     "cattrs>=23.1.0",
     "python-dotenv",
     "tomlkit",
-    "wexample-config==0.0.92",
-    "wexample-event==0.0.74",
-    "wexample-file==0.0.47",
-    "wexample-helpers-yaml==0.0.108",
-    "wexample-prompt==0.0.92",
+    "wexample-config==0.0.93",
+    "wexample-event==0.0.75",
+    "wexample-file==0.0.48",
+    "wexample-helpers-yaml==0.0.109",
+    "wexample-prompt==0.0.93",
     "xmltodict",
 ]
 
