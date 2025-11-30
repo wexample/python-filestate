@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
     def get_templates(self) -> list[str] | None:
         """Generate README content from templates.
-        
+
         This method orchestrates the entire README generation process.
         """
         context = self._get_template_context()
@@ -46,12 +46,92 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
         return [rendered_content]
 
+    def _format_dependencies_list(self, dependencies: list[str]) -> str:
+        """Format dependencies as a Markdown list.
+
+        Args:
+            dependencies: List of dependency strings
+
+        Returns:
+            Formatted Markdown list
+        """
+        return "\n".join([f"- {dep}" for dep in dependencies])
+
+    def _get_bundled_templates_path(self) -> Path:
+        """Return the path to bundled default templates.
+
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement _get_bundled_templates_path()"
+        )
+
+    def _get_project_dependencies(self) -> list[str]:
+        doc = self.workdir.get_project_config()
+        project = doc.get("project", {}) if isinstance(doc, dict) else {}
+        return project.get("dependencies", [])
+
+    def _get_project_description(self) -> str:
+        """Return the project description.
+
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement _get_project_description()"
+        )
+
+    def _get_project_homepage(self) -> str:
+        """Return the project homepage URL.
+
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_homepage()")
+
+    def _get_project_license(self) -> str:
+        """Return the project license information.
+
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_license()")
+
+    def _get_readme_search_paths(self) -> list[Path]:
+        """Return list of paths to search for README templates.
+
+        Generic implementation that searches in:
+        1. Workdir-specific templates
+        2. Suite-level templates (if available)
+        3. Bundled default templates
+
+        Returns:
+            List of paths to search for templates
+        """
+        from wexample_app.const.globals import WORKDIR_SETUP_DIR
+
+        workdir_path = self.workdir.get_path()
+        search_paths = [
+            workdir_path / WORKDIR_SETUP_DIR / "knowledge" / "readme",
+        ]
+
+        # Suite-level templates
+        suite_path = self.workdir.find_suite_workdir_path()
+        if suite_path is not None:
+            search_paths.append(
+                suite_path / WORKDIR_SETUP_DIR / "knowledge" / "package-readme"
+            )
+
+        # Default templates (bundled)
+        bundled_path = self._get_bundled_templates_path()
+        if bundled_path is not None:
+            search_paths.append(bundled_path)
+
+        return search_paths
+
     def _get_section_names(self) -> list[str]:
         """Return the list of section names to include in the README.
-        
+
         Default sections common to all packages. Subclasses can override
         to add language-specific sections.
-        
+
         Returns:
             List of section names in order
         """
@@ -89,161 +169,47 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             "suite-signature",
         ]
 
-    def _get_workdir_path(self) -> Path:
-        """Return the workdir path.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_workdir_path()")
-
     def _get_suite_workdir_path(self) -> Path | None:
         """Return the suite workdir path if available.
-        
+
         Must be implemented by subclasses.
         """
-        raise NotImplementedError(
-            "Subclasses must implement _get_suite_workdir_path()"
-        )
-
-    def _get_bundled_templates_path(self) -> Path:
-        """Return the path to bundled default templates.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError(
-            "Subclasses must implement _get_bundled_templates_path()"
-        )
-
-    def _get_readme_search_paths(self) -> list[Path]:
-        """Return list of paths to search for README templates.
-        
-        Generic implementation that searches in:
-        1. Workdir-specific templates
-        2. Suite-level templates (if available)
-        3. Bundled default templates
-        
-        Returns:
-            List of paths to search for templates
-        """
-        from pathlib import Path
-
-        from wexample_app.const.globals import WORKDIR_SETUP_DIR
-
-        workdir_path = self._get_workdir_path()
-        search_paths = [
-            workdir_path / WORKDIR_SETUP_DIR / "knowledge" / "readme",
-        ]
-
-        # Suite-level templates
-        suite_path = self._get_suite_workdir_path()
-        if suite_path is not None:
-            search_paths.append(
-                suite_path / WORKDIR_SETUP_DIR / "knowledge" / "package-readme"
-            )
-
-        # Default templates (bundled)
-        bundled_path = self._get_bundled_templates_path()
-        if bundled_path is not None:
-            search_paths.append(bundled_path)
-
-        return search_paths
+        raise NotImplementedError("Subclasses must implement _get_suite_workdir_path()")
 
     def _get_template_context(self) -> dict:
         """Build the template context with all variables.
-        
+
         Generic implementation with common variables. Subclasses should
         override and call super() to add language-specific variables.
-        
+
         Returns:
             Dictionary of template variables
         """
         return {
-            "package_name": self._get_package_name(),
-            "project_name": self._get_project_name(),
-            "version": self._get_project_version(),
-            "description": self._get_project_description(),
-            "homepage": self._get_project_homepage(),
-            "license_info": self._get_project_license(),
+            # filestate: python-iterable-sort
             "dependencies": self._get_project_dependencies(),
+            "description": self._get_project_description(),
             "deps_list": self._format_dependencies_list(
                 self._get_project_dependencies()
             ),
+            "license_info": self._get_project_license(),
+            "homepage": self._get_project_homepage(),
+            "package_name": self.workdir.get_package_name(),
+            "project_name": self.workdir.get_project_name(),
+            "version": self.workdir.get_project_version(),
+            "workdir": self.workdir,
         }
-
-    def _get_package_name(self) -> str:
-        """Return the package name.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_package_name()")
-
-    def _get_project_name(self) -> str:
-        """Return the project name.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_project_name()")
-
-    def _get_project_version(self) -> str:
-        """Return the project version.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_project_version()")
-
-    def _get_project_description(self) -> str:
-        """Return the project description.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError(
-            "Subclasses must implement _get_project_description()"
-        )
-
-    def _get_project_homepage(self) -> str:
-        """Return the project homepage URL.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_project_homepage()")
-
-    def _get_project_license(self) -> str:
-        """Return the project license information.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError("Subclasses must implement _get_project_license()")
-
-    def _get_project_dependencies(self) -> list[str]:
-        """Return the list of project dependencies.
-        
-        Must be implemented by subclasses.
-        """
-        raise NotImplementedError(
-            "Subclasses must implement _get_project_dependencies()"
-        )
-
-    def _format_dependencies_list(self, dependencies: list[str]) -> str:
-        """Format dependencies as a Markdown list.
-        
-        Args:
-            dependencies: List of dependency strings
-            
-        Returns:
-            Formatted Markdown list
-        """
-        return "\n".join([f"- {dep}" for dep in dependencies])
 
     def _render_readme_section(self, section_name: str, context: dict) -> str | None:
         """Render a README section from template files.
-        
+
         Searches for section_name.md.j2 (Jinja2 template) first,
         then falls back to section_name.md (plain Markdown with Jinja2 variables).
-        
+
         Args:
             section_name: Name of the section to render
             context: Template context variables
-            
+
         Returns:
             Rendered section content or None if not found
         """
@@ -276,10 +242,10 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
     def _section_exists(self, section_name: str) -> bool:
         """Check if a README section template exists.
-        
+
         Args:
             section_name: Name of the section to check
-            
+
         Returns:
             True if section template exists, False otherwise
         """
@@ -292,10 +258,10 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
     def _section_name_to_title(self, section_name: str) -> str:
         """Convert a section name to a human-readable title.
-        
+
         Args:
             section_name: Section name with dashes or underscores
-            
+
         Returns:
             Title-cased string with spaces
         """
