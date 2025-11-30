@@ -1,25 +1,238 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.config_value.aggregated_templates_config_value import (
     AggregatedTemplatesConfigValue,
 )
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 @base_class
 class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
     def get_templates(self) -> list[str] | None:
-        return []
+        """Generate README content from templates.
+        
+        This method orchestrates the entire README generation process.
+        """
+        context = self._get_template_context()
+        section_names = self._get_section_names()
 
-    def _get_readme_search_paths(self) -> list:
-        """Return list of paths to search for README templates.
+        # Collect available sections
+        available_sections = []
+        for section_name in section_names:
+            if section_name not in ["title", "table-of-contents"]:
+                if self._section_exists(section_name):
+                    available_sections.append(
+                        {
+                            "name": section_name,
+                            "title": self._section_name_to_title(section_name),
+                            "anchor": section_name.replace("_", "-"),
+                        }
+                    )
+
+        context["available_sections"] = available_sections
+
+        # Render in order
+        rendered_content = ""
+        for section_name in section_names:
+            section_content = self._render_readme_section(section_name, context)
+            if section_content:
+                rendered_content += f"{section_content}\n\n"
+
+        return [rendered_content]
+
+    def _get_section_names(self) -> list[str]:
+        """Return the list of section names to include in the README.
+        
+        Default sections common to all packages. Subclasses can override
+        to add language-specific sections.
+        
+        Returns:
+            List of section names in order
+        """
+        return [
+            "title",
+            "table-of-contents",
+            "status-compatibility",
+            "prerequisites",
+            "installation",
+            "quickstart",
+            "basic-usage",
+            "configuration",
+            "logging",
+            "api-reference",
+            "examples",
+            "tests",
+            "code-quality",
+            "versioning",
+            "changelog",
+            "migration-notes",
+            "roadmap",
+            "troubleshooting",
+            "security",
+            "privacy",
+            "support",
+            "contribution-guidelines",
+            "maintainers",
+            "license",
+            "useful-links",
+            "suite-integration",
+            "compatibility-matrix",
+            "requirements",
+            "dependencies",
+            "links",
+            "suite-signature",
+        ]
+
+    def _get_workdir_path(self) -> Path:
+        """Return the workdir path.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_workdir_path()")
+
+    def _get_suite_workdir_path(self) -> Path | None:
+        """Return the suite workdir path if available.
         
         Must be implemented by subclasses.
         """
         raise NotImplementedError(
-            "Subclasses must implement _get_readme_search_paths()"
+            "Subclasses must implement _get_suite_workdir_path()"
         )
+
+    def _get_bundled_templates_path(self) -> Path:
+        """Return the path to bundled default templates.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement _get_bundled_templates_path()"
+        )
+
+    def _get_readme_search_paths(self) -> list[Path]:
+        """Return list of paths to search for README templates.
+        
+        Generic implementation that searches in:
+        1. Workdir-specific templates
+        2. Suite-level templates (if available)
+        3. Bundled default templates
+        
+        Returns:
+            List of paths to search for templates
+        """
+        from pathlib import Path
+
+        from wexample_app.const.globals import WORKDIR_SETUP_DIR
+
+        workdir_path = self._get_workdir_path()
+        search_paths = [
+            workdir_path / WORKDIR_SETUP_DIR / "knowledge" / "readme",
+        ]
+
+        # Suite-level templates
+        suite_path = self._get_suite_workdir_path()
+        if suite_path is not None:
+            search_paths.append(
+                suite_path / WORKDIR_SETUP_DIR / "knowledge" / "package-readme"
+            )
+
+        # Default templates (bundled)
+        bundled_path = self._get_bundled_templates_path()
+        if bundled_path is not None:
+            search_paths.append(bundled_path)
+
+        return search_paths
+
+    def _get_template_context(self) -> dict:
+        """Build the template context with all variables.
+        
+        Generic implementation with common variables. Subclasses should
+        override and call super() to add language-specific variables.
+        
+        Returns:
+            Dictionary of template variables
+        """
+        return {
+            "package_name": self._get_package_name(),
+            "project_name": self._get_project_name(),
+            "version": self._get_project_version(),
+            "description": self._get_project_description(),
+            "homepage": self._get_project_homepage(),
+            "license_info": self._get_project_license(),
+            "dependencies": self._get_project_dependencies(),
+            "deps_list": self._format_dependencies_list(
+                self._get_project_dependencies()
+            ),
+        }
+
+    def _get_package_name(self) -> str:
+        """Return the package name.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_package_name()")
+
+    def _get_project_name(self) -> str:
+        """Return the project name.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_name()")
+
+    def _get_project_version(self) -> str:
+        """Return the project version.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_version()")
+
+    def _get_project_description(self) -> str:
+        """Return the project description.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement _get_project_description()"
+        )
+
+    def _get_project_homepage(self) -> str:
+        """Return the project homepage URL.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_homepage()")
+
+    def _get_project_license(self) -> str:
+        """Return the project license information.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement _get_project_license()")
+
+    def _get_project_dependencies(self) -> list[str]:
+        """Return the list of project dependencies.
+        
+        Must be implemented by subclasses.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement _get_project_dependencies()"
+        )
+
+    def _format_dependencies_list(self, dependencies: list[str]) -> str:
+        """Format dependencies as a Markdown list.
+        
+        Args:
+            dependencies: List of dependency strings
+            
+        Returns:
+            Formatted Markdown list
+        """
+        return "\n".join([f"- {dep}" for dep in dependencies])
 
     def _render_readme_section(self, section_name: str, context: dict) -> str | None:
         """Render a README section from template files.
