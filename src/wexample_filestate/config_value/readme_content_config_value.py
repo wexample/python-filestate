@@ -32,14 +32,16 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         # Collect available sections
         available_sections = []
         for section_name in section_names:
-            if self._section_exists(section_name):
-                available_sections.append(
-                    {
-                        "name": section_name,
-                        "title": self._section_name_to_title(section_name),
-                        "anchor": section_name.replace("_", "-"),
-                    }
-                )
+            # Exclude these sections from table of content.
+            if section_name not in ["title", "table-of-contents"]:
+                if self._section_exists(section_name):
+                    available_sections.append(
+                        {
+                            "name": section_name,
+                            "title": self._section_name_to_title(section_name),
+                            "anchor": section_name.replace("_", "-"),
+                        }
+                    )
 
         context["available_sections"] = available_sections
 
