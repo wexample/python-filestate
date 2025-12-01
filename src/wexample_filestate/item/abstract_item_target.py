@@ -136,13 +136,6 @@ class AbstractItemTarget(
 
         return result
 
-    def is_active(self) -> bool:
-        from wexample_filestate.option.active_option import (
-            ActiveOption,
-        )
-        active_option = self.get_option(ActiveOption)
-        return not active_option or ActiveOption.is_active(active_option.get_value().raw)
-
     def build_operations(
         self: TargetFileOrDirectoryType,
         result: AbstractResult,
@@ -295,6 +288,16 @@ class AbstractItemTarget(
     def get_source(self) -> SourceFileOrDirectory:
         assert self.source is not None
         return self.source
+
+    def is_active(self) -> bool:
+        from wexample_filestate.option.active_option import (
+            ActiveOption,
+        )
+
+        active_option = self.get_option(ActiveOption)
+        return not active_option or ActiveOption.is_active(
+            active_option.get_value().raw
+        )
 
     def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
         from wexample_filestate.item.item_source_directory import ItemSourceDirectory

@@ -16,10 +16,22 @@ if TYPE_CHECKING:
 @base_class
 class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
     """Base class for README content generation.
-    
+
     Handles pure template rendering logic without any knowledge of workdir or suite.
     Subclasses must implement template search paths and context building.
     """
+
+    @staticmethod
+    def _format_dependencies_list(dependencies: list[str]) -> str:
+        """Format dependencies as a Markdown list.
+
+        Args:
+            dependencies: List of dependency strings
+
+        Returns:
+            Formatted Markdown list
+        """
+        return "\n".join([f"- {dep}" for dep in dependencies])
 
     def get_templates(self) -> list[str] | None:
         """Generate README content from templates.
@@ -164,15 +176,3 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             Title-cased string with spaces
         """
         return section_name.replace("-", " ").replace("_", " ").title()
-
-    @staticmethod
-    def _format_dependencies_list(dependencies: list[str]) -> str:
-        """Format dependencies as a Markdown list.
-
-        Args:
-            dependencies: List of dependency strings
-
-        Returns:
-            Formatted Markdown list
-        """
-        return "\n".join([f"- {dep}" for dep in dependencies])
