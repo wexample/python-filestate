@@ -147,6 +147,8 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         Returns:
             True if section template exists, False otherwise
         """
+        print(self._get_readme_search_paths())
+
         for search_path in self._get_readme_search_paths():
             if (search_path / f"{section_name}.md.j2").exists():
                 return True
