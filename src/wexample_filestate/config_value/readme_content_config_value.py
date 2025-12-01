@@ -92,7 +92,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
         # Register each filter into Jinja
         for key, func in filters.items():
-            env.filters[key] = func
+            env.filters[f"to_{key}"] = func
 
     def _render_readme_section(self, section_name: str, context: dict) -> str | None:
         """Render a README section from template files.
