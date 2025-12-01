@@ -32,15 +32,14 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         # Collect available sections
         available_sections = []
         for section_name in section_names:
-            if section_name not in ["title", "table-of-contents"]:
-                if self._section_exists(section_name):
-                    available_sections.append(
-                        {
-                            "name": section_name,
-                            "title": self._section_name_to_title(section_name),
-                            "anchor": section_name.replace("_", "-"),
-                        }
-                    )
+            if self._section_exists(section_name):
+                available_sections.append(
+                    {
+                        "name": section_name,
+                        "title": self._section_name_to_title(section_name),
+                        "anchor": section_name.replace("_", "-"),
+                    }
+                )
 
         context["available_sections"] = available_sections
 
@@ -61,9 +60,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         Returns:
             List of paths to search for templates
         """
-        raise NotImplementedError(
-            "Subclasses must implement _get_readme_search_paths()"
-        )
+        return []
 
     def _get_section_names(self) -> list[str]:
         """Return the list of section names to include in the README.
@@ -73,7 +70,10 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         Returns:
             List of section names in order
         """
-        raise NotImplementedError("Subclasses must implement _get_section_names()")
+        return [
+            "title",
+            "table-of-contents",
+        ]
 
     def _get_template_context(self) -> dict:
         """Build the template context with all variables.
@@ -83,7 +83,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         Returns:
             Dictionary of template variables
         """
-        raise NotImplementedError("Subclasses must implement _get_template_context()")
+        return {}
 
     def _register_jinja_filters(self, env: Environment) -> None:
         from wexample_helpers.helpers.string import string_convert_case_map
