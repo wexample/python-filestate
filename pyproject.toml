@@ -20,6 +20,7 @@ dependencies = [
     "wexample-helpers-yaml==0.0.110",
     "wexample-prompt==0.0.94",
     "xmltodict",
+    "jinja2",
 ]
 
 [project.readme]
