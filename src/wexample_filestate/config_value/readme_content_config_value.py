@@ -10,6 +10,7 @@ from wexample_filestate.config_value.aggregated_templates_config_value import (
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from jinja2 import Environment
 
 
 @base_class
@@ -84,6 +85,15 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         """
         raise NotImplementedError("Subclasses must implement _get_template_context()")
 
+    def _register_jinja_filters(self, env: Environment) -> None:
+        from wexample_helpers.helpers.string import string_convert_case_map
+
+        filters = string_convert_case_map()
+
+        # Register each filter into Jinja
+        for key, func in filters.items():
+            env.filters[key] = func
+
     def _render_readme_section(self, section_name: str, context: dict) -> str | None:
         """Render a README section from template files.
 
@@ -107,6 +117,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
                 continue
 
             env = Environment(loader=FileSystemLoader(str(search_path)))
+            self._register_jinja_filters(env)
             try:
                 template = env.get_template(f"{section_name}.md.j2")
                 return template.render(context)
@@ -119,6 +130,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             if md_path.exists():
                 content = md_path.read_text(encoding="utf-8")
                 env = Environment(loader=FileSystemLoader(str(search_path)))
+                self._register_jinja_filters(env)
                 template = env.from_string(content)
                 return template.render(context)
 
