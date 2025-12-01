@@ -136,6 +136,13 @@ class AbstractItemTarget(
 
         return result
 
+    def is_active(self) -> bool:
+        from wexample_filestate.option.active_option import (
+            ActiveOption,
+        )
+        active_option = self.get_option(ActiveOption)
+        return not active_option or ActiveOption.is_active(active_option.get_value().raw)
+
     def build_operations(
         self: TargetFileOrDirectoryType,
         result: AbstractResult,
@@ -147,20 +154,14 @@ class AbstractItemTarget(
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-        from wexample_filestate.option.active_option import (
-            ActiveOption,
-        )
-
         if filter_path is not None and not self._path_matches(filter_path=filter_path):
             return False
 
         self.io.indentation_up()
 
-        active_option = self.get_option(ActiveOption)
         has_any_task: bool = False
-
         # Allow to set active to false
-        if not active_option or ActiveOption.is_active(active_option.get_value().raw):
+        if self.is_active():
             loading_log = self.log(
                 message=f"{SpinnerPool.next()} @path{{{self.get_display_path()}}}",
             )
