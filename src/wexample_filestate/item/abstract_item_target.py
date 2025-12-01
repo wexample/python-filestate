@@ -157,6 +157,7 @@ class AbstractItemTarget(
         self.io.indentation_up()
 
         active_option = self.get_option(ActiveOption)
+        has_any_task: bool = False
 
         # Allow to set active to false
         if not active_option or ActiveOption.is_active(active_option.get_value().raw):
@@ -165,6 +166,7 @@ class AbstractItemTarget(
             )
 
             has_task: bool = False
+            has_any_task: bool = False
 
             operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
@@ -179,7 +181,7 @@ class AbstractItemTarget(
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
-        return has_task
+        return has_any_task
 
     def configure(self, config: DictConfig) -> None:
         self.set_value(raw_value=config)
