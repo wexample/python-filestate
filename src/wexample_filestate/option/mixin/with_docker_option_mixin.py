@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
+from wexample_helpers.helpers.docker import docker_image_exists, docker_build_image, docker_container_exists, \
+    docker_container_is_running, docker_start_container, docker_run_container, docker_exec
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -35,10 +37,10 @@ class WithDockerOptionMixin:
 
     def _get_container_file_path(self, target: TargetFileOrDirectoryType) -> str:
         """Get the file path as it appears inside the Docker container.
-        
+
         Args:
             target: The file target
-            
+
         Returns:
             The absolute path of the file inside the container (e.g., /var/www/html/src/file.php)
         """
@@ -48,88 +50,31 @@ class WithDockerOptionMixin:
         return f"/var/www/html/{relative_path}"
 
     def _ensure_docker_image(self) -> None:
-        """Build Docker image if it doesn't exist."""
-        from wexample_helpers.helpers.shell import shell_run
-
         image_name = self._get_docker_image_name()
-        
-        # Check if image exists
-        result = shell_run(
-            cmd=["docker", "images", "-q", image_name],
-            capture=True
-        )
 
-        # Build image if it doesn't exist
-        if not result.stdout.strip():
-            dockerfile_path = self._get_dockerfile_path()
-            build_context = dockerfile_path.parent
-            
-            shell_run(
-                cmd=[
-                    "docker", "build",
-                    "-t", image_name,
-                    "-f", str(dockerfile_path),
-                    str(build_context)
-                ],
-                inherit_stdio=True
-            )
+        if not docker_image_exists(image_name):
+            docker_build_image(image_name, self._get_dockerfile_path())
 
     def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
-        """Ensure Docker container is running."""
-        from wexample_helpers.helpers.shell import shell_run
-
-        # Ensure image exists
         self._ensure_docker_image()
 
         container_name = self._get_container_name(target)
-        app_root = target.get_root().get_path()
-        
-        # Check if container exists
-        result = shell_run(
-            cmd=["docker", "ps", "-a", "-q", "-f", f"name={container_name}"],
-            capture=True
-        )
+        app_root = str(target.get_root().get_path())
 
-        if result.stdout.strip():
-            # Container exists, check if it's running
-            result = shell_run(
-                cmd=["docker", "ps", "-q", "-f", f"name={container_name}"],
-                capture=True
-            )
-            
-            if not result.stdout.strip():
-                # Container exists but not running, start it
-                shell_run(
-                    cmd=["docker", "start", container_name],
-                    inherit_stdio=True
-                )
+        if docker_container_exists(container_name):
+            if not docker_container_is_running(container_name):
+                docker_start_container(container_name)
         else:
-            # Container doesn't exist, create and run it
-            shell_run(
-                cmd=[
-                    "docker", "run",
-                    "-d",
-                    "--name", container_name,
-                    "-v", f"{app_root}:/var/www/html",
-                    self._get_docker_image_name()
-                ],
-                inherit_stdio=True
+            docker_run_container(
+                container_name,
+                self._get_docker_image_name(),
+                volumes={app_root: "/var/www/html"},
             )
 
     def _execute_in_docker(
-        self, 
-        target: TargetFileOrDirectoryType, 
-        command: list[str]
+            self,
+            target: TargetFileOrDirectoryType,
+            command: list[str]
     ) -> str:
-        """Execute a command in the Docker container and return output."""
-        from wexample_helpers.helpers.shell import shell_run
-
         self._ensure_docker_container(target)
-        container_name = self._get_container_name(target)
-
-        result = shell_run(
-            cmd=["docker", "exec", container_name] + command,
-            capture=True
-        )
-
-        return result.stdout
+        return docker_exec(self._get_container_name(target), command)
