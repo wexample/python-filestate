@@ -1,6 +1,6 @@
 # wexample-filestate
 
-Version: 0.0.71
+Version: 0.0.72
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
@@ -135,7 +135,7 @@ See the [project roadmap](https://github.com/wexample/python-filestate/issues) f
 
 ### Reporting Vulnerabilities
 
-If you discover a security vulnerability, please email security@wexample.com.
+If you discover a security vulnerability, please email contact@wexample.com.
 
 **Do not** open public issues for security vulnerabilities.
 
@@ -211,17 +211,17 @@ Refer to each package's documentation for specific version compatibility require
 - jinja2: 
 - python-dotenv: 
 - tomlkit: 
-- wexample-config: ==0.0.94
-- wexample-event: ==0.0.76
-- wexample-file: ==0.0.49
-- wexample-helpers-yaml: ==0.0.110
-- wexample-prompt: ==0.0.94
+- wexample-config: ==0.0.95
+- wexample-event: ==0.0.77
+- wexample-file: ==0.0.50
+- wexample-helpers-yaml: ==0.0.111
+- wexample-prompt: ==0.0.95
 - xmltodict: 
 
 
 # About us
 
-Wexample stands as a cornerstone of the digital ecosystem — a collective of seasoned engineers, researchers, and creators driven by a relentless pursuit of technological excellence. More than a media platform, it has grown into a vibrant community where innovation meets craftsmanship, and where every line of code reflects a commitment to clarity, durability, and shared intelligence.
+[Wexample](https://wexample.com) stands as a cornerstone of the digital ecosystem — a collective of seasoned engineers, researchers, and creators driven by a relentless pursuit of technological excellence. More than a media platform, it has grown into a vibrant community where innovation meets craftsmanship, and where every line of code reflects a commitment to clarity, durability, and shared intelligence.
 
 This packages suite embodies this spirit. Trusted by professionals and enthusiasts alike, it delivers a consistent, high-quality foundation for modern development — open, elegant, and battle-tested. Its reputation is built on years of collaboration, refinement, and rigorous attention to detail, making it a natural choice for those who demand both robustness and beauty in their tools.
 

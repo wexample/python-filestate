@@ -16,6 +16,7 @@ class TomlFile(StructuredContentFile):
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
         from tomlkit import TOMLDocument, document
+
         # from tomlkit import dumps as toml_dumps
         from tomlkit import dumps
 
