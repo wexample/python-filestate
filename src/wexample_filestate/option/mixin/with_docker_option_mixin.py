@@ -13,6 +13,9 @@ if TYPE_CHECKING:
 
 
 class WithDockerOptionMixin:
+    # Set to True to force rebuild of Docker image and container
+    _docker_rebuild: bool = False
+
     @abstract_method
     def _get_docker_image_name(self) -> str:
         """Return the Docker image name to use."""
@@ -40,16 +43,30 @@ class WithDockerOptionMixin:
         )
 
     def _ensure_docker_image(self) -> None:
+        from wexample_helpers.helpers.docker import docker_remove_image
+        
         image_name = self._get_docker_image_name()
+
+        # Force rebuild if requested
+        if self._docker_rebuild and docker_image_exists(image_name):
+            docker_remove_image(image_name)
 
         if not docker_image_exists(image_name):
             docker_build_image(image_name, self._get_dockerfile_path())
 
     def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
+        from wexample_helpers.helpers.docker import docker_stop_container, docker_remove_container
+        
         self._ensure_docker_image()
 
         container_name = self._get_container_name(target)
         app_root = str(target.get_root().get_path())
+
+        # Force rebuild if requested
+        if self._docker_rebuild and docker_container_exists(container_name):
+            if docker_container_is_running(container_name):
+                docker_stop_container(container_name)
+            docker_remove_container(container_name)
 
         if docker_container_exists(container_name):
             if not docker_container_is_running(container_name):
