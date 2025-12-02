@@ -42,8 +42,8 @@ class WithDockerOptionMixin:
         Returns:
             The absolute path of the file inside the container (e.g., /var/www/html/src/file.php)
         """
-        app_root = target.get_root().get_path()
-        file_path = target.get_path()
+        app_root = str(target.get_root().get_path())
+        file_path = str(target.get_path())
         relative_path = file_path.replace(app_root, "").lstrip("/")
         return f"/var/www/html/{relative_path}"
 
