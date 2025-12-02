@@ -16,17 +16,17 @@ class TomlFile(StructuredContentFile):
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
         from tomlkit import TOMLDocument, document
-        from tomlkit import dumps as toml_dumps
-        from tomlkit import toml_dumps
+        # from tomlkit import dumps as toml_dumps
+        from tomlkit import dumps
 
         if content is None:
-            return toml_dumps(document())
+            return dumps(document())
 
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
 
             if isinstance(content, TOMLDocument):
-                return toml_dumps(content)
+                return dumps(content)
         except Exception:
             pass
 
@@ -35,7 +35,7 @@ class TomlFile(StructuredContentFile):
             doc = document()
             for k, v in content.items():
                 doc[k] = v
-            return toml_dumps(doc)
+            return dumps(doc)
 
         # Fallback: stringify
         return str(content)
