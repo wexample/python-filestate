@@ -27,7 +27,7 @@ class WithDockerOptionMixin:
     def _get_container_name(self, target: TargetFileOrDirectoryType) -> str:
         """Generate a unique container name based on app root path."""
         if self._container_name is None:
-            app_root = target.get_root().get_path()
+            app_root = str(target.get_root().get_path().resolve())
             # Create a hash of the path for uniqueness
             path_hash = hashlib.md5(app_root.encode()).hexdigest()[:8]
             self._container_name = f"wex-{self._get_docker_image_name()}-{path_hash}"
@@ -56,7 +56,7 @@ class WithDockerOptionMixin:
         # Check if image exists
         result = shell_run(
             cmd=["docker", "images", "-q", image_name],
-            capture_output=True
+            capture=True
         )
 
         # Build image if it doesn't exist
@@ -64,7 +64,6 @@ class WithDockerOptionMixin:
             dockerfile_path = self._get_dockerfile_path()
             build_context = dockerfile_path.parent
             
-            print(f"Building Docker image '{image_name}'...")
             shell_run(
                 cmd=[
                     "docker", "build",
@@ -88,26 +87,24 @@ class WithDockerOptionMixin:
         # Check if container exists
         result = shell_run(
             cmd=["docker", "ps", "-a", "-q", "-f", f"name={container_name}"],
-            capture_output=True
+            capture=True
         )
 
         if result.stdout.strip():
             # Container exists, check if it's running
             result = shell_run(
                 cmd=["docker", "ps", "-q", "-f", f"name={container_name}"],
-                capture_output=True
+                capture=True
             )
             
             if not result.stdout.strip():
                 # Container exists but not running, start it
-                print(f"Starting Docker container '{container_name}'...")
                 shell_run(
                     cmd=["docker", "start", container_name],
                     inherit_stdio=True
                 )
         else:
             # Container doesn't exist, create and run it
-            print(f"Creating Docker container '{container_name}'...")
             shell_run(
                 cmd=[
                     "docker", "run",
@@ -132,7 +129,7 @@ class WithDockerOptionMixin:
 
         result = shell_run(
             cmd=["docker", "exec", container_name] + command,
-            capture_output=True
+            capture=True
         )
 
         return result.stdout
