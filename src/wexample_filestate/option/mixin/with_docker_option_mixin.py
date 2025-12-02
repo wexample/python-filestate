@@ -33,6 +33,20 @@ class WithDockerOptionMixin:
             self._container_name = f"wex-{self._get_docker_image_name()}-{path_hash}"
         return self._container_name
 
+    def _get_container_file_path(self, target: TargetFileOrDirectoryType) -> str:
+        """Get the file path as it appears inside the Docker container.
+        
+        Args:
+            target: The file target
+            
+        Returns:
+            The absolute path of the file inside the container (e.g., /var/www/html/src/file.php)
+        """
+        app_root = target.get_root().get_path()
+        file_path = target.get_path()
+        relative_path = file_path.replace(app_root, "").lstrip("/")
+        return f"/var/www/html/{relative_path}"
+
     def _ensure_docker_image(self) -> None:
         """Build Docker image if it doesn't exist."""
         from wexample_helpers.helpers.shell import shell_run
