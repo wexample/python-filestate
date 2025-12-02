@@ -70,21 +70,22 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         )
         count = 1 if has_task is True else 0
 
-        for item in self.get_children_list():
-            has_task_child = cast(TargetFileOrDirectory, item).build_operations(
-                result=result,
-                scopes=scopes,
-                filter_path=filter_path,
-                filter_operation=filter_operation,
-                max=((max - count) if (max is not None) else None),
-            )
+        if self.is_active():
+            for item in self.get_children_list():
+                has_task_child = cast(TargetFileOrDirectory, item).build_operations(
+                    result=result,
+                    scopes=scopes,
+                    filter_path=filter_path,
+                    filter_operation=filter_operation,
+                    max=((max - count) if (max is not None) else None),
+                )
 
-            if has_task_child:
-                count += 1
-                has_task = True
+                if has_task_child:
+                    count += 1
+                    has_task = True
 
-            if max is not None and count == max:
-                return has_task
+                if max is not None and count == max:
+                    return has_task
 
         return has_task
 

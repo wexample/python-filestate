@@ -147,24 +147,20 @@ class AbstractItemTarget(
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-        from wexample_filestate.option.active_option import (
-            ActiveOption,
-        )
-
         if filter_path is not None and not self._path_matches(filter_path=filter_path):
             return False
 
         self.io.indentation_up()
 
-        active_option = self.get_option(ActiveOption)
-
+        has_any_task: bool = False
         # Allow to set active to false
-        if not active_option or ActiveOption.is_active(active_option.get_value().raw):
+        if self.is_active():
             loading_log = self.log(
                 message=f"{SpinnerPool.next()} @path{{{self.get_display_path()}}}",
             )
 
             has_task: bool = False
+            has_any_task: bool = False
 
             operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
@@ -179,7 +175,7 @@ class AbstractItemTarget(
                 self.io.erase_response(loading_log)
 
         self.io.indentation_down()
-        return has_task
+        return has_any_task
 
     def configure(self, config: DictConfig) -> None:
         self.set_value(raw_value=config)
@@ -292,6 +288,16 @@ class AbstractItemTarget(
     def get_source(self) -> SourceFileOrDirectory:
         assert self.source is not None
         return self.source
+
+    def is_active(self) -> bool:
+        from wexample_filestate.option.active_option import (
+            ActiveOption,
+        )
+
+        active_option = self.get_option(ActiveOption)
+        return not active_option or ActiveOption.is_active(
+            active_option.get_value().raw
+        )
 
     def locate_source(self, path: Path) -> SourceFileOrDirectoryType:
         from wexample_filestate.item.item_source_directory import ItemSourceDirectory
