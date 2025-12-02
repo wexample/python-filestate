@@ -43,38 +43,41 @@ class WithDockerOptionMixin:
         )
 
     def _ensure_docker_image(self) -> None:
-        from wexample_helpers.helpers.docker import docker_remove_image
-        
         image_name = self._get_docker_image_name()
-
-        # Force rebuild if requested
-        if self._docker_rebuild and docker_image_exists(image_name):
-            docker_remove_image(image_name)
 
         if not docker_image_exists(image_name):
             docker_build_image(image_name, self._get_dockerfile_path())
 
     def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
-        from wexample_helpers.helpers.docker import docker_stop_container, docker_remove_container
+        from wexample_helpers.helpers.docker import docker_stop_container, docker_remove_container, docker_remove_image
         
-        self._ensure_docker_image()
-
         container_name = self._get_container_name(target)
         app_root = str(target.get_root().get_path())
+        image_name = self._get_docker_image_name()
 
-        # Force rebuild if requested
-        if self._docker_rebuild and docker_container_exists(container_name):
-            if docker_container_is_running(container_name):
-                docker_stop_container(container_name)
-            docker_remove_container(container_name)
+        # Force rebuild if requested - must be done BEFORE ensuring image
+        if self._docker_rebuild:
+            # 1. Stop and remove container first
+            if docker_container_exists(container_name):
+                if docker_container_is_running(container_name):
+                    docker_stop_container(container_name)
+                docker_remove_container(container_name)
+            
+            # 2. Then remove image
+            if docker_image_exists(image_name):
+                docker_remove_image(image_name)
 
+        # Now ensure image exists (will rebuild if removed)
+        self._ensure_docker_image()
+
+        # Finally ensure container exists and is running
         if docker_container_exists(container_name):
             if not docker_container_is_running(container_name):
                 docker_start_container(container_name)
         else:
             docker_run_container(
                 container_name,
-                self._get_docker_image_name(),
+                image_name,
                 volumes={app_root: "/var/www/html"},
             )
 
