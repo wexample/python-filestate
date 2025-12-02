@@ -4,8 +4,16 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
-from wexample_helpers.helpers.docker import docker_image_exists, docker_build_image, docker_container_exists, \
-    docker_container_is_running, docker_start_container, docker_run_container, docker_exec, docker_build_name_from_path
+from wexample_helpers.helpers.docker import (
+    docker_build_image,
+    docker_build_name_from_path,
+    docker_container_exists,
+    docker_container_is_running,
+    docker_exec,
+    docker_image_exists,
+    docker_run_container,
+    docker_start_container,
+)
 from wexample_helpers.helpers.path import path_rebase
 from wexample_helpers.helpers.shell import shell_run
 
@@ -14,45 +22,17 @@ if TYPE_CHECKING:
 
 
 class WithDockerOptionMixin:
-    # Set to True to force rebuild of Docker image and container
-    _docker_rebuild: bool = False
     # Run a dry run version sharing the stdio to help seeing error from container.
     _debug: bool = False
-
-    @abstract_method
-    def _get_docker_image_name(self) -> str:
-        """Return the Docker image name to use."""
-        pass
-
-    @abstract_method
-    def _get_dockerfile_path(self) -> Path:
-        """Return the path to the Dockerfile."""
-        pass
-
-    def _get_container_name(self, target):
-        return docker_build_name_from_path(
-            root_path=target.get_root().get_path(),
-            image_name=self._get_docker_image_name(),
-        )
-
-    def _get_container_file_path(self, target):
-        app_root = target.get_root().get_path()
-        file_path = target.get_path()
-
-        return path_rebase(
-            root_src=app_root,
-            path_src=file_path,
-            root_dest="/var/www/html",
-        )
-
-    def _ensure_docker_image(self) -> None:
-        image_name = self._get_docker_image_name()
-
-        if not docker_image_exists(image_name):
-            docker_build_image(image_name, self._get_dockerfile_path())
+    # Set to True to force rebuild of Docker image and container
+    _docker_rebuild: bool = False
 
     def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
-        from wexample_helpers.helpers.docker import docker_stop_container, docker_remove_container, docker_remove_image
+        from wexample_helpers.helpers.docker import (
+            docker_remove_container,
+            docker_remove_image,
+            docker_stop_container,
+        )
 
         container_name = self._get_container_name(target)
         app_root = str(target.get_root().get_path())
@@ -84,18 +64,45 @@ class WithDockerOptionMixin:
                 volumes={app_root: "/var/www/html"},
             )
 
+    def _ensure_docker_image(self) -> None:
+        image_name = self._get_docker_image_name()
+
+        if not docker_image_exists(image_name):
+            docker_build_image(image_name, self._get_dockerfile_path())
+
     def _execute_in_docker(
-            self,
-            target: TargetFileOrDirectoryType,
-            command: list[str]
+        self, target: TargetFileOrDirectoryType, command: list[str]
     ) -> str:
         self._ensure_docker_container(target)
         container_name = self._get_container_name(target)
 
         if self._debug:
             shell_run(
-                cmd=["docker", "exec", container_name] + command,
-                inherit_stdio=True
+                cmd=["docker", "exec", container_name] + command, inherit_stdio=True
             )
 
         return docker_exec(container_name, command)
+
+    def _get_container_file_path(self, target):
+        app_root = target.get_root().get_path()
+        file_path = target.get_path()
+
+        return path_rebase(
+            root_src=app_root,
+            path_src=file_path,
+            root_dest="/var/www/html",
+        )
+
+    def _get_container_name(self, target):
+        return docker_build_name_from_path(
+            root_path=target.get_root().get_path(),
+            image_name=self._get_docker_image_name(),
+        )
+
+    @abstract_method
+    def _get_docker_image_name(self) -> str:
+        """Return the Docker image name to use."""
+
+    @abstract_method
+    def _get_dockerfile_path(self) -> Path:
+        """Return the path to the Dockerfile."""
