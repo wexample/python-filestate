@@ -7,6 +7,7 @@ from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.helpers.docker import docker_image_exists, docker_build_image, docker_container_exists, \
     docker_container_is_running, docker_start_container, docker_run_container, docker_exec, docker_build_name_from_path
 from wexample_helpers.helpers.path import path_rebase
+from wexample_helpers.helpers.shell import shell_run
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -15,6 +16,8 @@ if TYPE_CHECKING:
 class WithDockerOptionMixin:
     # Set to True to force rebuild of Docker image and container
     _docker_rebuild: bool = False
+    # Run a dry run version sharing the stdio to help seeing error from container.
+    _debug: bool = False
 
     @abstract_method
     def _get_docker_image_name(self) -> str:
@@ -50,7 +53,7 @@ class WithDockerOptionMixin:
 
     def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
         from wexample_helpers.helpers.docker import docker_stop_container, docker_remove_container, docker_remove_image
-        
+
         container_name = self._get_container_name(target)
         app_root = str(target.get_root().get_path())
         image_name = self._get_docker_image_name()
@@ -62,7 +65,7 @@ class WithDockerOptionMixin:
                 if docker_container_is_running(container_name):
                     docker_stop_container(container_name)
                 docker_remove_container(container_name)
-            
+
             # 2. Then remove image
             if docker_image_exists(image_name):
                 docker_remove_image(image_name)
@@ -87,4 +90,12 @@ class WithDockerOptionMixin:
             command: list[str]
     ) -> str:
         self._ensure_docker_container(target)
-        return docker_exec(self._get_container_name(target), command)
+        container_name = self._get_container_name(target)
+
+        if self._debug:
+            shell_run(
+                cmd=["docker", "exec", container_name] + command,
+                inherit_stdio=True
+            )
+
+        return docker_exec(container_name, command)
