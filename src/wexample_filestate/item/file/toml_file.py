@@ -25,7 +25,6 @@ class TomlFile(StructuredContentFile):
 
         # If it's already a TOMLDocument, dump as-is to preserve formatting
         try:
-
             if isinstance(content, TOMLDocument):
                 return dumps(content)
         except Exception:
@@ -45,16 +44,10 @@ class TomlFile(StructuredContentFile):
     def loads(self, text: str, strict: bool = False) -> TOMLDocument:  # type: ignore[name-defined]
         from tomlkit import document, parse
 
-        try:
-            if text is None or text == "":
-                # Return an empty TOMLDocument to keep types consistent
-                return document()
-            return parse(text)
-        except Exception as e:
-            if strict:
-                raise e
-            # On parse error, return an empty TOMLDocument instead of a dict
+        if text is None or text == "":
+            # Return an empty TOMLDocument to keep types consistent
             return document()
+        return parse(text)
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_TOML

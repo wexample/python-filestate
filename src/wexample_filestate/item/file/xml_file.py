@@ -26,13 +26,8 @@ class XmlFile(StructuredContentFile):
     def loads(self, text: str, strict: bool = False) -> StructuredData:
         import xmltodict
 
-        try:
-            parsed = xmltodict.parse(text)
-            return parsed or {}
-        except Exception as e:
-            if strict:
-                raise e
-            return {}
+        parsed = xmltodict.parse(text)
+        return parsed or {}
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_XML
