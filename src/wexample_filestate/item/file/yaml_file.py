@@ -37,14 +37,9 @@ class YamlFile(StructuredContentFile):
     def loads(self, text: str, strict: bool = False) -> YamlContent:
         import yaml
 
-        try:
-            value = yaml.safe_load(text)
-            # Normalize None to empty dict for convenience
-            return value if value is not None else {}
-        except Exception as e:
-            if strict:
-                raise e
-            return {}
+        value = yaml.safe_load(text)
+        # Normalize None to empty dict for convenience
+        return value if value is not None else {}
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_YML

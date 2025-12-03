@@ -63,7 +63,7 @@ class StructuredContentFile(ItemTargetFile):
             else:
                 try:
                     content = self.read_parsed(reload=False)
-                except (FileNotFoundError, AttributeError):
+                except:
                     # File doesn't exist yet, return empty content
                     return ""
         # If a raw textual payload is provided, parse it first to apply subclass rules/defaults

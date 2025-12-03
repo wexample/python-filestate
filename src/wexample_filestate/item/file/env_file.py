@@ -31,12 +31,7 @@ class EnvFile(StructuredContentFile):
 
         from dotenv import dotenv_values
 
-        try:
-            return dict(dotenv_values(stream=StringIO(text)))
-        except Exception as e:
-            if strict:
-                raise e
-            return {}
+        return dict(dotenv_values(stream=StringIO(text)))
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_ENV

@@ -18,16 +18,10 @@ class JsonFile(StructuredContentFile):
 
         return json.dumps(content or {}, ensure_ascii=False, indent=2)
 
-    # ---------- Parsing / Serialization ----------
     def loads(self, text: str, strict: bool = False) -> JsonContent:  # type: ignore[name-defined]
         import json
 
-        try:
-            return json.loads(text)
-        except Exception as e:
-            if strict:
-                raise e
-            return {}
+        return json.loads(text)
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_JSON
