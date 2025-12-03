@@ -34,7 +34,7 @@ class StructuredContentFile(ItemTargetFile):
         # Default fallback: stringify. Subclasses should override for structured formats.
         return str(content)
 
-    def loads(self, text: str, strict: bool = False) -> Any:
+    def loads(self, text: str, strict: bool = True) -> Any:
         # Default fallback: return as-is (no parsing). Subclasses should override.
         return text
 

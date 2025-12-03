@@ -25,13 +25,17 @@ class EnvFile(StructuredContentFile):
             + "\n"
         )
 
-    # ---------- Parsing / Serialization ----------
-    def loads(self, text: str, strict: bool = False) -> StructuredData:
+    def loads(self, text: str, strict: bool = True) -> StructuredData:
         from io import StringIO
 
         from dotenv import dotenv_values
 
-        return dict(dotenv_values(stream=StringIO(text)))
+        try:
+            return dict(dotenv_values(stream=StringIO(text)))
+        except Exception as e:
+            if strict:
+                raise e
+            return {}
 
     def _expected_file_name_extension(self) -> str:
         return self.EXTENSION_ENV

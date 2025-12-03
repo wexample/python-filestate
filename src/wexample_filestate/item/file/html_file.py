@@ -20,8 +20,7 @@ class HtmlFile(StructuredContentFile):
             return content
         return str(content or "")
 
-    # ---------- Parsing / Serialization ----------
-    def loads(self, text: str, strict: bool = False) -> str:
+    def loads(self, text: str, strict: bool = True) -> str:
         # Keep HTML as raw string. If callers need a parsed tree, they can
         # operate on the returned text externally.
         return text
