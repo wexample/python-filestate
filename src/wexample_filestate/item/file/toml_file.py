@@ -15,10 +15,8 @@ class TomlFile(StructuredContentFile):
     EXTENSION_TOML: ClassVar[str] = "toml"
 
     def dumps(self, content: TOMLDocument | dict | None) -> str:  # type: ignore[name-defined]
-        from tomlkit import TOMLDocument, document
-
         # from tomlkit import dumps as toml_dumps
-        from tomlkit import dumps
+        from tomlkit import TOMLDocument, document, dumps
 
         if content is None:
             return dumps(document())

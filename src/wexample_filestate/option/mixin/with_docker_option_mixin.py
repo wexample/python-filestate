@@ -59,6 +59,7 @@ class WithDockerOptionMixin:
                 docker_start_container(container_name)
         else:
             import os
+
             # Get current user UID/GID to avoid creating root-owned files
             user = f"{os.getuid()}:{os.getgid()}"
             docker_run_container(
@@ -78,7 +79,7 @@ class WithDockerOptionMixin:
         self, target: TargetFileOrDirectoryType, command: list[str]
     ) -> str:
         import os
-        
+
         self._ensure_docker_container(target)
         container_name = self._get_container_name(target)
         # Get current user UID/GID to avoid creating root-owned files
@@ -86,7 +87,8 @@ class WithDockerOptionMixin:
 
         if self._debug:
             shell_run(
-                cmd=["docker", "exec", "--user", user, container_name] + command, inherit_stdio=True
+                cmd=["docker", "exec", "--user", user, container_name] + command,
+                inherit_stdio=True,
             )
 
         return docker_exec(container_name, command, user=user)

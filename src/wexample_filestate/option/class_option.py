@@ -25,7 +25,7 @@ class ClassOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOpti
         return type[ItemTargetDirectory] | type[ItemTargetFile]
 
     def create_required_operation(
-            self, target: TargetFileOrDirectoryType, scopes: set[Scope]
+        self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
         from wexample_filestate.item.mixins.item_file_mixin import ItemFileMixin
 
