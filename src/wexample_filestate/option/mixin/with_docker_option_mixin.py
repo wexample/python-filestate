@@ -58,10 +58,14 @@ class WithDockerOptionMixin:
             if not docker_container_is_running(container_name):
                 docker_start_container(container_name)
         else:
+            import os
+            # Get current user UID/GID to avoid creating root-owned files
+            user = f"{os.getuid()}:{os.getgid()}"
             docker_run_container(
                 container_name,
                 image_name,
                 volumes={app_root: "/var/www/html"},
+                user=user,
             )
 
     def _ensure_docker_image(self) -> None:
@@ -73,15 +77,19 @@ class WithDockerOptionMixin:
     def _execute_in_docker(
         self, target: TargetFileOrDirectoryType, command: list[str]
     ) -> str:
+        import os
+        
         self._ensure_docker_container(target)
         container_name = self._get_container_name(target)
+        # Get current user UID/GID to avoid creating root-owned files
+        user = f"{os.getuid()}:{os.getgid()}"
 
         if self._debug:
             shell_run(
-                cmd=["docker", "exec", container_name] + command, inherit_stdio=True
+                cmd=["docker", "exec", "--user", user, container_name] + command, inherit_stdio=True
             )
 
-        return docker_exec(container_name, command)
+        return docker_exec(container_name, command, user=user)
 
     def _get_container_file_path(self, target):
         app_root = target.get_root().get_path()
