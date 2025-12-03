@@ -1,6 +1,6 @@
 # wexample-filestate
 
-Version: 0.0.73
+Version: 0.0.74
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
@@ -211,11 +211,11 @@ Refer to each package's documentation for specific version compatibility require
 - jinja2: 
 - python-dotenv: 
 - tomlkit: 
-- wexample-config: ==0.0.96
-- wexample-event: ==0.0.78
-- wexample-file: ==0.0.51
-- wexample-helpers-yaml: ==0.0.112
-- wexample-prompt: ==0.0.96
+- wexample-config: ==0.0.97
+- wexample-event: ==0.0.79
+- wexample-file: ==0.0.52
+- wexample-helpers-yaml: ==0.0.113
+- wexample-prompt: ==0.0.97
 - xmltodict: 
 
 
