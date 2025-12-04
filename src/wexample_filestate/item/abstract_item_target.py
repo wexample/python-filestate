@@ -165,7 +165,7 @@ class AbstractItemTarget(
             operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
                 has_task = True
-                self.io.task(f"[{operation.get_name()}] {operation.description}")
+                self.task(f"[{operation.get_name()}] {operation.description}")
                 result.operations.append(operation)
 
             if (
