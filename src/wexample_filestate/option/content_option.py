@@ -25,6 +25,12 @@ class ContentOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOp
 
         return Union[str, ConfigValue, Callable]
 
+    @classmethod
+    def get_scopes(cls) -> list:
+        from wexample_filestate.enum.scopes import Scope
+
+        return [Scope.CONTENT]
+
     def create_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
