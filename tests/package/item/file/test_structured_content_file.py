@@ -82,7 +82,7 @@ class TestStructuredContentFile(AbstractStateManagerTest):
                     raise ValueError("Test error")
                 return str(content or "")
 
-            def loads(self, text: str, strict: bool = False) -> StructuredData:
+            def loads(self, text: str, strict: bool = True) -> StructuredData:
                 if text == "error":
                     if strict:
                         raise ValueError("Test error")
@@ -175,7 +175,7 @@ class TestStructuredContentFile(AbstractStateManagerTest):
                     return ""
                 return str(content)
 
-            def loads(self, text: str, strict: bool = False) -> StructuredData:
+            def loads(self, text: str, strict: bool = True) -> StructuredData:
                 if not text.strip():
                     return {}
                 try:

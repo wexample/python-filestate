@@ -101,17 +101,19 @@ class AbstractItemTarget(
         filter_path: str | None = None,
         filter_operation: str | None = None,
         max: int = None,
+        result: FileStateResult | None = None,
     ) -> FileStateResult:
         from wexample_filestate.enum.scopes import Scope
         from wexample_filestate.result.file_state_result import FileStateResult
 
-        result = FileStateResult(state_manager=self)
+        result = result or FileStateResult(state_manager=self)
+
+        if scopes is None:
+            scopes = set(Scope)
+
+        self.last_result = result
 
         try:
-            if scopes is None:
-                scopes = set(Scope)
-
-            self.last_result = result
             self.build_operations(
                 result=result,
                 scopes=scopes,
@@ -165,7 +167,7 @@ class AbstractItemTarget(
             operation = self._find_first_operation(scopes, filter_operation)
             if operation is not None:
                 has_task = True
-                self.io.task(f"[{operation.get_name()}] {operation.description}")
+                self.task(f"[{operation.get_name()}] {operation.description}")
                 result.operations.append(operation)
 
             if (
