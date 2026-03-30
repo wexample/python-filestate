@@ -101,7 +101,7 @@ class AbstractItemTarget(
         filter_path: str | None = None,
         filter_operation: str | None = None,
         max: int = None,
-        result: FileStateResult | None = None
+        result: FileStateResult | None = None,
     ) -> FileStateResult:
         from wexample_filestate.enum.scopes import Scope
         from wexample_filestate.result.file_state_result import FileStateResult
@@ -110,7 +110,6 @@ class AbstractItemTarget(
 
         if scopes is None:
             scopes = set(Scope)
-
 
         self.last_result = result
 
