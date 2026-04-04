@@ -16,6 +16,7 @@ dependencies = [
     "python-dotenv",
     "tomlkit",
     "wexample-config==0.0.98",
+    "wexample-runner>=0.0.1",
     "wexample-event==0.0.80",
     "wexample-file==0.0.53",
     "wexample-helpers-yaml==0.0.114",

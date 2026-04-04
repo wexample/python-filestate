@@ -1,113 +1,68 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.abstract_method import abstract_method
-from wexample_helpers.helpers.docker import (
-    docker_build_image,
-    docker_build_name_from_path,
-    docker_container_exists,
-    docker_container_is_running,
-    docker_exec,
-    docker_image_exists,
-    docker_run_container,
-    docker_start_container,
-)
-from wexample_helpers.helpers.path import path_rebase
-from wexample_helpers.helpers.shell import shell_run
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+    from wexample_runner.runner.docker_runner import DockerRunner
 
 
 class WithDockerOptionMixin:
-    # Run a dry run version sharing the stdio to help seeing error from container.
+    # Set to True to get verbose output from the container
     _debug: bool = False
     # Set to True to force rebuild of Docker image and container
     _docker_rebuild: bool = False
+    # Cache runners by "image_name:app_root" key — shared across all instances
+    _docker_runners: ClassVar[dict[str, "DockerRunner"]] = {}
 
-    def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
-        from wexample_helpers.helpers.docker import (
-            docker_remove_container,
-            docker_remove_image,
-            docker_stop_container,
-        )
+    def _get_or_create_runner(self, target: "TargetFileOrDirectoryType") -> "DockerRunner":
+        from wexample_runner.runner.docker_runner import DockerRunner
 
-        container_name = self._get_container_name(target)
-        app_root = str(target.get_root().get_path())
+        app_root = str(target.get_root().get_path().resolve())
         image_name = self._get_docker_image_name()
+        cache_key = f"{image_name}:{app_root}"
 
-        # Force rebuild if requested - must be done BEFORE ensuring image
-        if self._docker_rebuild:
-            # 1. Stop and remove container first
-            if docker_container_exists(container_name):
-                if docker_container_is_running(container_name):
-                    docker_stop_container(container_name)
-                docker_remove_container(container_name)
-
-            # 2. Then remove image
-            if docker_image_exists(image_name):
-                docker_remove_image(image_name)
-
-        # Now ensure image exists (will rebuild if removed)
-        self._ensure_docker_image()
-
-        # Finally ensure container exists and is running
-        if docker_container_exists(container_name):
-            if not docker_container_is_running(container_name):
-                docker_start_container(container_name)
-        else:
-            import os
-
-            # Get current user UID/GID to avoid creating root-owned files
+        if cache_key not in self._docker_runners:
             user = f"{os.getuid()}:{os.getgid()}"
-            docker_run_container(
-                container_name,
-                image_name,
+            self._docker_runners[cache_key] = DockerRunner(
+                image_name=image_name,
+                dockerfile_path=self._get_dockerfile_path(),
                 volumes={app_root: "/var/www/html"},
+                workdir="/var/www/html",
                 user=user,
             )
 
-    def _ensure_docker_image(self) -> None:
-        image_name = self._get_docker_image_name()
+        return self._docker_runners[cache_key]
 
-        if not docker_image_exists(image_name):
-            docker_build_image(image_name, self._get_dockerfile_path())
+    def _ensure_docker_container(self, target: "TargetFileOrDirectoryType") -> None:
+        app_root = str(target.get_root().get_path().resolve())
+        image_name = self._get_docker_image_name()
+        cache_key = f"{image_name}:{app_root}"
+
+        if self._docker_rebuild and cache_key in self._docker_runners:
+            self._docker_runners[cache_key].destroy()
+            del self._docker_runners[cache_key]
+
+        runner = self._get_or_create_runner(target)
+        runner.ensure_running()
 
     def _execute_in_docker(
-        self, target: TargetFileOrDirectoryType, command: list[str]
+        self, target: "TargetFileOrDirectoryType", command: list[str]
     ) -> str:
-        import os
-
         self._ensure_docker_container(target)
-        container_name = self._get_container_name(target)
-        # Get current user UID/GID to avoid creating root-owned files
-        user = f"{os.getuid()}:{os.getgid()}"
+        runner = self._get_or_create_runner(target)
+        result = runner.execute(cmd=command)
+        return result.stdout
 
-        if self._debug:
-            shell_run(
-                cmd=["docker", "exec", "--user", user, container_name] + command,
-                inherit_stdio=True,
-            )
+    def _get_container_file_path(self, target: "TargetFileOrDirectoryType") -> str:
+        return self._get_or_create_runner(target).rebase_path(target.get_path())
 
-        return docker_exec(container_name, command, user=user)
-
-    def _get_container_file_path(self, target):
-        app_root = target.get_root().get_path()
-        file_path = target.get_path()
-
-        return path_rebase(
-            root_src=app_root,
-            path_src=file_path,
-            root_dest="/var/www/html",
-        )
-
-    def _get_container_name(self, target):
-        return docker_build_name_from_path(
-            root_path=target.get_root().get_path(),
-            image_name=self._get_docker_image_name(),
-        )
+    def _get_container_name(self, target: "TargetFileOrDirectoryType") -> str:
+        return self._get_or_create_runner(target).container_name
 
     @abstract_method
     def _get_docker_image_name(self) -> str:
