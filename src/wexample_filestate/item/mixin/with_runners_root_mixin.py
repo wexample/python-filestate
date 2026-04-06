@@ -14,6 +14,9 @@ class WithRunnersRootMixin:
     _runner_cache: dict[str, "DockerRunner"] = public_field(
         factory=dict, description="Docker runners cache keyed by image name."
     )
+    _rectify_hash_cache: dict[str, str] = public_field(
+        factory=dict, description="MD5 hashes of files after last rectification, keyed by path."
+    )
 
     def get_runner(self, image_name: str) -> "DockerRunner | None":
         return self._runner_cache.get(image_name)
@@ -23,6 +26,12 @@ class WithRunnersRootMixin:
             self._runner_cache.pop(image_name, None)
         else:
             self._runner_cache[image_name] = runner
+
+    def get_rectify_hash(self, path: str) -> str | None:
+        return self._rectify_hash_cache.get(path)
+
+    def set_rectify_hash(self, path: str, hash: str) -> None:
+        self._rectify_hash_cache[path] = hash
 
     def stop_runners(self) -> None:
         """Stop all Docker runners attached to this root."""

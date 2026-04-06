@@ -51,11 +51,29 @@ class WithRunnerOptionMixin:
 
         self._get_or_create_runner(target).ensure_running()
 
+    def _hash(self, content: str) -> str:
+        import hashlib
+        return hashlib.md5(content.encode()).hexdigest()
+
+    def _is_already_rectified(self, target: "TargetFileOrDirectoryType") -> bool:
+        """Return True if the current file content matches the last docker output."""
+        key = str(target.get_path())
+        current_hash = self._hash(target.get_local_file().read())
+        return target.get_root().get_rectify_hash(key) == current_hash
+
+    def _mark_as_rectified(self, target: "TargetFileOrDirectoryType", rectified_content: str) -> None:
+        """Store the hash of the docker output as the rectified baseline."""
+        key = str(target.get_path())
+        target.get_root().set_rectify_hash(key, self._hash(rectified_content))
+
     def _execute_in_docker(
         self, target: "TargetFileOrDirectoryType", command: list[str]
     ) -> str:
+        if self._is_already_rectified(target):
+            return target.get_local_file().read()
         self._ensure_docker_container(target)
         result = self._get_or_create_runner(target).execute(cmd=command)
+        self._mark_as_rectified(target, result.stdout)
         return result.stdout
 
     def _get_container_file_path(self, target: "TargetFileOrDirectoryType") -> str:
