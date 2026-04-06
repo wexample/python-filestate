@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
     """Base class for README content generation.
 
-    Renders README.tpl.j2 found in the search paths. That template controls
+    Renders _README.tpl.j2 found in the search paths. That template controls
     section order via {% include %} directives with bare section names
     (e.g. {% include "installation" ignore missing %}).
 
@@ -31,7 +31,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         return "\n".join([f"- {dep}" for dep in dependencies])
 
     def get_templates(self) -> list[str] | None:
-        """Render README.tpl.j2, building available_sections from its includes."""
+        """Render _README.tpl.j2, building available_sections from its includes."""
         from jinja2 import Environment, TemplateNotFound
 
         search_paths = self._get_readme_search_paths()
@@ -44,7 +44,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         self._register_jinja_filters(env)
 
         try:
-            tpl = env.get_template("README.tpl.j2")
+            tpl = env.get_template("_README.tpl.j2")
         except TemplateNotFound:
             return None
 
@@ -58,7 +58,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
         For a name with no extension (e.g. "installation"), tries:
           installation.md.j2 then installation.md across all search paths.
-        Explicit filenames (README.tpl.j2, title.md.j2) resolve normally.
+        Explicit filenames (_README.tpl.j2, title.md.j2) resolve normally.
         First match across paths wins.
         """
         from pathlib import Path
@@ -91,7 +91,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         return SectionLoader()
 
     def _build_available_sections(self, env) -> list[dict]:
-        """Return TOC metadata for sections declared in README.tpl.j2.
+        """Return TOC metadata for sections declared in _README.tpl.j2.
 
         Reads include directives from the tpl source to preserve order.
         Excludes structural sections (title, table-of-contents).
@@ -106,7 +106,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         seen: set[str] = set()
 
         try:
-            source, _, _ = env.loader.get_source(env, "README.tpl.j2")
+            source, _, _ = env.loader.get_source(env, "_README.tpl.j2")
         except TemplateNotFound:
             return available
 
