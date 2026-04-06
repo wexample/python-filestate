@@ -11,13 +11,13 @@ if TYPE_CHECKING:
     from wexample_runner.runner.docker_runner import DockerRunner
 
 
-class WithDockerOptionMixin:
+class WithRunnerOptionMixin:
     # Set to True to get verbose output from the container
     _debug: bool = False
     # Set to True to force rebuild of Docker image and container
     _docker_rebuild: bool = False
     # Cache runners by "image_name:app_root" key — shared across all instances
-    _docker_runners: ClassVar[dict[str, "DockerRunner"]] = {}
+    _runners: ClassVar[dict[str, "DockerRunner"]] = {}
 
     def _get_or_create_runner(self, target: "TargetFileOrDirectoryType") -> "DockerRunner":
         from wexample_runner.runner.docker_runner import DockerRunner
@@ -26,9 +26,9 @@ class WithDockerOptionMixin:
         image_name = self._get_docker_image_name()
         cache_key = f"{image_name}:{app_root}"
 
-        if cache_key not in self._docker_runners:
+        if cache_key not in self._runners:
             user = f"{os.getuid()}:{os.getgid()}"
-            self._docker_runners[cache_key] = DockerRunner(
+            self._runners[cache_key] = DockerRunner(
                 image_name=image_name,
                 dockerfile_path=self._get_dockerfile_path(),
                 volumes={app_root: "/var/www/html"},
@@ -36,16 +36,16 @@ class WithDockerOptionMixin:
                 user=user,
             )
 
-        return self._docker_runners[cache_key]
+        return self._runners[cache_key]
 
     def _ensure_docker_container(self, target: "TargetFileOrDirectoryType") -> None:
         app_root = str(target.get_root().get_path().resolve())
         image_name = self._get_docker_image_name()
         cache_key = f"{image_name}:{app_root}"
 
-        if self._docker_rebuild and cache_key in self._docker_runners:
-            self._docker_runners[cache_key].destroy()
-            del self._docker_runners[cache_key]
+        if self._docker_rebuild and cache_key in self._runners:
+            self._runners[cache_key].destroy()
+            del self._runners[cache_key]
 
         runner = self._get_or_create_runner(target)
         runner.ensure_running()
@@ -63,6 +63,15 @@ class WithDockerOptionMixin:
 
     def _get_container_name(self, target: "TargetFileOrDirectoryType") -> str:
         return self._get_or_create_runner(target).container_name
+
+    @classmethod
+    def stop_runners_for_root(cls, root_path: Path | str) -> None:
+        """Stop Docker runners associated with a specific app root."""
+        root_str = str(Path(root_path).resolve())
+        to_remove = [key for key in cls._runners if key.endswith(f":{root_str}")]
+        for key in to_remove:
+            cls._runners[key].stop()
+            del cls._runners[key]
 
     @abstract_method
     def _get_docker_image_name(self) -> str:
