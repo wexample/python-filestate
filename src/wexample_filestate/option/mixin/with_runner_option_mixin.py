@@ -17,13 +17,9 @@ class WithRunnerOptionMixin:
     # Set to True to force rebuild of Docker image and container
     _docker_rebuild: bool = False
 
+    @abstract_method
     def _get_docker_image_name(self) -> str:
-        name = getattr(self.__class__, "DOCKER_IMAGE_NAME", None)
-        if name:
-            return name
-        raise NotImplementedError(
-            f"{self.__class__.__name__} must define DOCKER_IMAGE_NAME"
-        )
+        """Return the Docker image name to use."""
 
     def _get_or_create_runner(self, target: "TargetFileOrDirectoryType") -> "DockerRunner":
         from wexample_runner.runner.docker_runner import DockerRunner
