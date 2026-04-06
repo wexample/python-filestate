@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.abstract_method import abstract_method
 
@@ -11,12 +11,19 @@ if TYPE_CHECKING:
     from wexample_filestate.item.mixin.with_runners_root_mixin import WithRunnersRootMixin
     from wexample_runner.runner.docker_runner import DockerRunner
 
-
 class WithRunnerOptionMixin:
     # Set to True to get verbose output from the container
     _debug: bool = False
     # Set to True to force rebuild of Docker image and container
     _docker_rebuild: bool = False
+
+    def _get_docker_image_name(self) -> str:
+        name = getattr(self.__class__, "DOCKER_IMAGE_NAME", None)
+        if name:
+            return name
+        raise NotImplementedError(
+            f"{self.__class__.__name__} must define DOCKER_IMAGE_NAME"
+        )
 
     def _get_or_create_runner(self, target: "TargetFileOrDirectoryType") -> "DockerRunner":
         from wexample_runner.runner.docker_runner import DockerRunner
@@ -56,13 +63,11 @@ class WithRunnerOptionMixin:
         return hashlib.md5(content.encode()).hexdigest()
 
     def _is_already_rectified(self, target: "TargetFileOrDirectoryType") -> bool:
-        """Return True if the current file content matches the last docker output."""
         key = str(target.get_path())
         current_hash = self._hash(target.get_local_file().read())
         return target.get_root().get_rectify_hash(key) == current_hash
 
     def _mark_as_rectified(self, target: "TargetFileOrDirectoryType", rectified_content: str) -> None:
-        """Store the hash of the docker output as the rectified baseline."""
         key = str(target.get_path())
         target.get_root().set_rectify_hash(key, self._hash(rectified_content))
 
@@ -81,10 +86,6 @@ class WithRunnerOptionMixin:
 
     def _get_container_name(self, target: "TargetFileOrDirectoryType") -> str:
         return self._get_or_create_runner(target).container_name
-
-    @abstract_method
-    def _get_docker_image_name(self) -> str:
-        """Return the Docker image name to use."""
 
     @abstract_method
     def _get_dockerfile_path(self) -> Path:
