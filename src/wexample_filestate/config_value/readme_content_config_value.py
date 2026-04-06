@@ -18,12 +18,9 @@ if TYPE_CHECKING:
 class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
     """Base class for README content generation.
 
-    Renders _README.tpl.j2 found in the search paths. That template controls
-    section order via {% include %} directives with bare section names
-    (e.g. {% include "installation" ignore missing %}).
-
-    The custom loader resolves bare names to .md.j2 then .md across all
-    search paths in priority order.
+    Sections are discovered automatically from template files across all search
+    paths. Order is controlled via `readme.sections` in the suite config.yml.
+    Each section is rendered independently and joined — no blank line pollution.
     """
 
     @staticmethod
@@ -31,115 +28,35 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         return "\n".join([f"- {dep}" for dep in dependencies])
 
     def get_templates(self) -> list[str] | None:
-        """Render _README.tpl.j2, building available_sections from its includes."""
-        from jinja2 import Environment, TemplateNotFound
-
-        search_paths = self._get_readme_search_paths()
-        existing_paths = [p for p in search_paths if p.exists()]
-
-        if not existing_paths:
-            return None
-
-        env = Environment(loader=self._make_section_loader(existing_paths))
-        self._register_jinja_filters(env)
-
-        try:
-            tpl = env.get_template("_README.tpl.j2")
-        except TemplateNotFound:
-            return None
-
+        """Render each section independently and join with double newlines."""
         context = self._get_template_context()
-        context["available_sections"] = self._build_available_sections(env)
+        section_names = self._get_section_names()
 
-        return [tpl.render(context)]
-
-    def _make_section_loader(self, search_paths: list):
-        """Jinja2 loader that resolves bare section names to .md.j2 or .md.
-
-        For a name with no extension (e.g. "installation"), tries:
-          installation.md.j2 then installation.md across all search paths.
-        Explicit filenames (_README.tpl.j2, title.md.j2) resolve normally.
-        First match across paths wins.
-        """
-        from pathlib import Path
-
-        from jinja2 import BaseLoader, TemplateNotFound
-
-        paths = [Path(p) for p in search_paths]
-
-        class SectionLoader(BaseLoader):
-            def get_source(self, environment, template):
-                has_ext = "." in template
-                candidates = (
-                    [template]
-                    if has_ext
-                    else [f"{template}.md.j2", f"{template}.md"]
-                )
-                for path in paths:
-                    for candidate in candidates:
-                        full = path / candidate
-                        if full.exists():
-                            source = full.read_text(encoding="utf-8")
-                            mtime = full.stat().st_mtime
-                            return (
-                                source,
-                                str(full),
-                                lambda: full.stat().st_mtime == mtime,
-                            )
-                raise TemplateNotFound(template)
-
-        return SectionLoader()
-
-    def _build_available_sections(self, env) -> list[dict]:
-        """Return TOC metadata for sections declared in _README.tpl.j2.
-
-        Reads include directives from the tpl source to preserve order.
-        Excludes structural sections (title, table-of-contents).
-        Only includes sections whose template actually resolves.
-        """
-        import re
-
-        from jinja2 import TemplateNotFound
-
-        exclude = {"title", "table-of-contents"}
-        available = []
-        seen: set[str] = set()
-
-        try:
-            source, _, _ = env.loader.get_source(env, "_README.tpl.j2")
-        except TemplateNotFound:
-            return available
-
-        for match in re.finditer(
-            r"""{%-?\s*include\s+['"]([^'"]+)['"]\s*""", source
-        ):
-            name = match.group(1)
-            if name.endswith(".md.j2"):
-                section = name[: -len(".md.j2")]
-            elif name.endswith(".md"):
-                section = name[: -len(".md")]
-            else:
-                section = name
-
-            if section in exclude or section in seen:
-                continue
-
-            try:
-                env.get_template(section)
-                seen.add(section)
-                available.append(
+        exclude_from_toc = {"title", "table-of-contents"}
+        available_sections = []
+        for name in section_names:
+            if name not in exclude_from_toc and self._section_exists(name):
+                available_sections.append(
                     {
-                        "name": section,
-                        "title": self._section_name_to_title(section),
-                        "anchor": section.replace("_", "-"),
+                        "name": name,
+                        "title": self._section_name_to_title(name),
+                        "anchor": name.replace("_", "-"),
                     }
                 )
-            except TemplateNotFound:
-                pass
+        context["available_sections"] = available_sections
 
-        return available
+        parts = []
+        for name in section_names:
+            rendered = self._render_section(name, context)
+            if rendered and rendered.strip():
+                parts.append(rendered.strip())
+
+        return ["\n\n".join(parts)]
 
     def _get_readme_search_paths(self) -> list[Path]:
+        return []
+
+    def _get_section_names(self) -> list[str]:
         return []
 
     def _get_template_context(self) -> dict:
@@ -150,6 +67,37 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
         for key, func in string_convert_case_map().items():
             env.filters[f"to_{key}"] = func
+
+    def _render_section(self, section_name: str, context: dict) -> str | None:
+        """Render a single section. Tries .md.j2 then .md across all search paths."""
+        from jinja2 import Environment, FileSystemLoader, TemplateNotFound
+
+        for search_path in self._get_readme_search_paths():
+            if not search_path.exists():
+                continue
+            env = Environment(loader=FileSystemLoader(str(search_path)))
+            self._register_jinja_filters(env)
+            try:
+                return env.get_template(f"{section_name}.md.j2").render(context)
+            except TemplateNotFound:
+                pass
+
+        for search_path in self._get_readme_search_paths():
+            md_path = search_path / f"{section_name}.md"
+            if md_path.exists():
+                env = Environment(loader=FileSystemLoader(str(search_path)))
+                self._register_jinja_filters(env)
+                return env.from_string(md_path.read_text(encoding="utf-8")).render(context)
+
+        return None
+
+    def _section_exists(self, section_name: str) -> bool:
+        for search_path in self._get_readme_search_paths():
+            if (search_path / f"{section_name}.md.j2").exists():
+                return True
+            if (search_path / f"{section_name}.md").exists():
+                return True
+        return False
 
     def _section_name_to_title(self, section_name: str) -> str:
         return section_name.replace("-", " ").replace("_", " ").title()
