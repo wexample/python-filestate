@@ -29,6 +29,8 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
     def get_templates(self) -> list[str] | None:
         """Render each section independently and join with double newlines."""
+        from wexample_helpers.helpers.string import string_ensure_end_with_new_line
+
         context = self._get_template_context()
         section_names = self._get_section_names()
 
@@ -51,7 +53,11 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             if rendered and rendered.strip():
                 parts.append(rendered.strip())
 
-        return ["\n\n".join(parts)]
+        content = "\n\n".join(parts)
+        if content:
+            content = string_ensure_end_with_new_line(content)
+
+        return [content]
 
     def _get_readme_search_paths(self) -> list[Path]:
         return []
