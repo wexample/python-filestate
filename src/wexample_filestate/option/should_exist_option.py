@@ -7,16 +7,20 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
 class ShouldExistOption(OptionMixin, AbstractConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
+
     value: Any = public_field(
         default=None,
         description="Boolean flag or callable(target) -> bool indicating whether the item must exist",

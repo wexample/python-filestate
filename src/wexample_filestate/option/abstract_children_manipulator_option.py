@@ -12,6 +12,7 @@ from wexample_helpers.decorator.base_class import base_class
 from wexample_filestate.config_option.mixin.item_config_option_mixin import (
     ItemTreeConfigOptionMixin,
 )
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
@@ -32,6 +33,10 @@ class AbstractChildrenManipulationOption(
     ItemTreeConfigOptionMixin,
     AbstractNestedConfigOption,
 ):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
+
     # Name pattern(s) to match against file/directory names
     name_pattern: str | list[str] | None = public_field(
         default=None,

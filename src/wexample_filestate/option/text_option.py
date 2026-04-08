@@ -9,16 +9,20 @@ from wexample_config.config_option.abstract_nested_config_option import (
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
 class TextOption(OptionMixin, AbstractNestedConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.CONTENT]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_helpers.const.types import StringKeysDict

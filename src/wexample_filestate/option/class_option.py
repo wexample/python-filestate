@@ -6,18 +6,20 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.operation.abstract_operation import AbstractOperation
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 from wexample_filestate.option.mixin.with_current_content_option_mixin import (
     WithCurrentContentOptionMixin,
 )
 
-if TYPE_CHECKING:
-    from wexample_filestate.enum.scopes import Scope
-
 
 @base_class
 class ClassOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.CONTENT]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory

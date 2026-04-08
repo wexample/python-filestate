@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_filestate.enum.scopes import Scope
 
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
@@ -11,6 +12,10 @@ if TYPE_CHECKING:
 
 
 class AbstractNameChildOption(OptionMixin, AbstractConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.NAME]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return str
