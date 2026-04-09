@@ -31,37 +31,35 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
     def create_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
-        from wexample_helpers.helpers.file import file_mode_octal_to_num
+        """Create ItemChangeModeOperation if current mode differs from target mode."""
+        from wexample_helpers.helpers.file import (
+            file_mode_apply_notation,
+            file_mode_is_notation,
+            file_mode_num_to_octal,
+            file_mode_octal_to_num,
+            file_path_get_mode_num,
+            file_validate_mode_octal_or_fail,
+        )
 
         from wexample_filestate.operation.file_change_mode_operation import (
             FileChangeModeOperation,
         )
         from wexample_filestate.option.mode.recursive_option import RecursiveOption
 
-        """Create ItemChangeModeOperation if current mode differs from target mode."""
-        from wexample_helpers.helpers.file import (
-            file_path_get_mode_num,
-            file_validate_mode_octal_or_fail,
-        )
-
         # Check if target has a source (file/directory exists)
         if not target.source:
             return None
 
-        # Validate the configured mode
-        file_validate_mode_octal_or_fail(self.get_octal())
-
-        # Get current mode and compare with target mode
         current_mode = file_path_get_mode_num(target.get_source().get_path())
-        target_mode = file_mode_octal_to_num(self.get_octal())
+        permissions = self.get_octal()
 
-        # If modes are different, create the operation
+        if file_mode_is_notation(permissions):
+            target_mode = file_mode_apply_notation(current_mode, permissions)
+        else:
+            file_validate_mode_octal_or_fail(permissions)
+            target_mode = file_mode_octal_to_num(permissions)
+
         if current_mode != target_mode:
-            from wexample_helpers.helpers.file import file_mode_num_to_octal
-
-            current_octal = file_mode_num_to_octal(current_mode)
-            target_octal = file_mode_num_to_octal(target_mode)
-
             return FileChangeModeOperation(
                 option=self,
                 target=target,
@@ -69,7 +67,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
                 recursive=self.get_option_value(
                     RecursiveOption, default=False
                 ).is_true(),
-                description=f"Update file permissions from {current_octal} to {target_octal}",
+                description=f"Update file permissions from {file_mode_num_to_octal(current_mode)} to {file_mode_num_to_octal(target_mode)}",
             )
 
         return None
