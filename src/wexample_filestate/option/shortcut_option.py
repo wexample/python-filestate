@@ -11,10 +11,6 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 @base_class
 class ShortcutOption(OptionMixin, AbstractConfigOption):
-    @classmethod
-    def get_scopes(cls) -> list[Scope]:
-        return [Scope.LOCATION]
-
     def __attrs_post_init__(self) -> None:
         from wexample_filestate.item.abstract_item_target import AbstractItemTarget
 
@@ -29,6 +25,10 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
         # Register shortcuts only in root directories.
         if root and root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
+
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

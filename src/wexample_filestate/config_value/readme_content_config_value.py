@@ -93,7 +93,9 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             if md_path.exists():
                 env = Environment(loader=FileSystemLoader(str(search_path)))
                 self._register_jinja_filters(env)
-                return env.from_string(md_path.read_text(encoding="utf-8")).render(context)
+                return env.from_string(md_path.read_text(encoding="utf-8")).render(
+                    context
+                )
 
         return None
 

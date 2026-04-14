@@ -19,6 +19,10 @@ class FileChangeModeOperation(AbstractOperation):
     recursive: bool = public_field(
         description="Apply mode to child list",
     )
+    target_gid: int | None = public_field(
+        description="Target group ID to apply alongside chmod (None = no chown)",
+        default=None,
+    )
     target_mode: bool = public_field(
         description="The permissions mode to apply",
     )
@@ -26,18 +30,14 @@ class FileChangeModeOperation(AbstractOperation):
         description="Target user ID to apply alongside chmod (None = no chown)",
         default=None,
     )
-    target_gid: int | None = public_field(
-        description="Target group ID to apply alongside chmod (None = no chown)",
-        default=None,
+    _original_gid: int | None = private_field(
+        description="Cached gid to provide undo",
     )
     _original_octal_mode: str | None = private_field(
         description="Cached mode to provide undo"
     )
     _original_uid: int | None = private_field(
         description="Cached uid to provide undo",
-    )
-    _original_gid: int | None = private_field(
-        description="Cached gid to provide undo",
     )
 
     @classmethod
@@ -55,6 +55,9 @@ class FileChangeModeOperation(AbstractOperation):
         source = self.target.get_source()
         path = source.get_path()
 
+        if path.is_symlink():
+            return
+
         self._original_octal_mode = source.get_octal_mode()
 
         if self.recursive:
@@ -68,7 +71,9 @@ class FileChangeModeOperation(AbstractOperation):
             self._original_gid = stat.st_gid
             uid = self.target_uid if self.target_uid is not None else self._original_uid
             gid = self.target_gid if self.target_gid is not None else self._original_gid
-            FileChownOperation._run_chown(path=path, uid=uid, gid=gid, recursive=self.recursive)
+            FileChownOperation._run_chown(
+                path=path, uid=uid, gid=gid, recursive=self.recursive
+            )
 
     def undo(self) -> None:
         from wexample_helpers.helpers.file import (

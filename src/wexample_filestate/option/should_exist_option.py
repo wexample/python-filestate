@@ -17,20 +17,20 @@ if TYPE_CHECKING:
 
 @base_class
 class ShouldExistOption(OptionMixin, AbstractConfigOption):
-    @classmethod
-    def get_scopes(cls) -> list[Scope]:
-        return [Scope.LOCATION]
+    def __attrs_post_init__(self) -> None:
+        super().__attrs_post_init__()
+        # Replace None with True (preserves existing values)
+        if self.value is None:
+            self.value = True
 
     value: Any = public_field(
         default=None,
         description="Boolean flag or callable(target) -> bool indicating whether the item must exist",
     )
 
-    def __attrs_post_init__(self) -> None:
-        super().__attrs_post_init__()
-        # Replace None with True (preserves existing values)
-        if self.value is None:
-            self.value = True
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

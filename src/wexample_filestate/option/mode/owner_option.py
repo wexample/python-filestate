@@ -19,12 +19,6 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
     def get_raw_value_allowed_type() -> Any:
         return str
 
-    def get_description(self) -> str:
-        return (
-            "File owner in 'uid:gid', 'user:group', or 'uid' format. "
-            "Both numeric IDs and symbolic names are accepted."
-        )
-
     @staticmethod
     def resolve(raw: str) -> tuple[int | None, int | None]:
         """Resolve an owner string to a (uid, gid) tuple.
@@ -58,3 +52,9 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
                 gid = grp.getgrnam(group_part).gr_gid
 
         return uid, gid
+
+    def get_description(self) -> str:
+        return (
+            "File owner in 'uid:gid', 'user:group', or 'uid' format. "
+            "Both numeric IDs and symbolic names are accepted."
+        )

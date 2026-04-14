@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+
 from wexample_filestate.enum.scopes import Scope
 
 REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT: int = 1000

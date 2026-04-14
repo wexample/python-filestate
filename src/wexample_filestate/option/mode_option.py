@@ -53,6 +53,9 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
             return None
 
         source_path = target.get_source().get_path()
+
+        if source_path.is_symlink():
+            return None
         recursive = self.get_option_value(RecursiveOption, default=False).is_true()
 
         # --- Permissions ---
@@ -79,9 +82,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         if owner_raw is not None:
             target_uid, target_gid = OwnerOption.resolve(owner_raw)
             stat = os.stat(source_path)
-            needs_chown = (
-                target_uid is not None and stat.st_uid != target_uid
-            ) or (
+            needs_chown = (target_uid is not None and stat.st_uid != target_uid) or (
                 target_gid is not None and stat.st_gid != target_gid
             )
 

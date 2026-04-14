@@ -20,19 +20,19 @@ class FileChownOperation(AbstractOperation):
         description="Apply ownership change recursively",
         default=False,
     )
-    target_uid: int | None = public_field(
-        description="Target user ID (None = unchanged)",
-        default=None,
-    )
     target_gid: int | None = public_field(
         description="Target group ID (None = unchanged)",
         default=None,
     )
-    _original_uid: int | None = private_field(
-        description="Original user ID saved for undo",
+    target_uid: int | None = public_field(
+        description="Target user ID (None = unchanged)",
+        default=None,
     )
     _original_gid: int | None = private_field(
         description="Original group ID saved for undo",
+    )
+    _original_uid: int | None = private_field(
+        description="Original user ID saved for undo",
     )
 
     @classmethod
@@ -40,6 +40,14 @@ class FileChownOperation(AbstractOperation):
         from wexample_filestate.enum.scopes import Scope
 
         return [Scope.OWNERSHIP]
+
+    @staticmethod
+    def _run_chown(path: os.PathLike, uid: int, gid: int, recursive: bool) -> None:
+        cmd = ["sudo", "chown"]
+        if recursive:
+            cmd.append("-R")
+        cmd += [f"{uid}:{gid}", str(path)]
+        subprocess.run(cmd, check=True)
 
     def apply_operation(self) -> None:
         path = self.target.get_source().get_path()
@@ -62,11 +70,3 @@ class FileChownOperation(AbstractOperation):
             gid=self._original_gid,
             recursive=self.recursive,
         )
-
-    @staticmethod
-    def _run_chown(path: os.PathLike, uid: int, gid: int, recursive: bool) -> None:
-        cmd = ["sudo", "chown"]
-        if recursive:
-            cmd.append("-R")
-        cmd += [f"{uid}:{gid}", str(path)]
-        subprocess.run(cmd, check=True)
