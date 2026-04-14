@@ -15,7 +15,7 @@ dependencies = [
     "jinja2",
     "python-dotenv",
     "tomlkit",
-    "wexample-config>=0.1.0",
+    "wexample-config>=0.2.0",
     "wexample-event>=0.0.80",
     "wexample-file>=0.0.53",
     "wexample-helpers-yaml>=0.0.114",
