@@ -28,6 +28,8 @@ class FileCreateOperation(AbstractFileManipulationOperation):
         return [Scope.LOCATION]
 
     def apply_operation(self) -> None:
+        from wexample_helpers.helpers.file import file_chown_as_real_user_if_sudo
+
         self._original_path = self.target.get_path()
 
         if self.target.is_file():
@@ -37,6 +39,8 @@ class FileCreateOperation(AbstractFileManipulationOperation):
 
         elif self.target.is_directory():
             os.mkdir(self._original_path)
+
+        file_chown_as_real_user_if_sudo(self._original_path)
 
     def undo(self) -> None:
         if self.target.is_file():

@@ -72,5 +72,9 @@ class AbstractFileManipulationOperation(AbstractOperation):
             os.mkdir(self._original_path)
 
     def _target_file_write(self, content: str) -> None:
+        from wexample_helpers.helpers.file import file_chown_as_real_user_if_sudo
+
         self._backup_target_file()
         self.target.get_local_file().write(content=content)
+
+        file_chown_as_real_user_if_sudo(self._original_path)

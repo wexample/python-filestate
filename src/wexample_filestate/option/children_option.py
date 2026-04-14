@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, Union, cast
 from wexample_config.config_option.children_config_option import ChildrenConfigOption
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
@@ -16,6 +17,10 @@ if TYPE_CHECKING:
 
 @base_class
 class ChildrenOption(OptionMixin, ChildrenConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         from wexample_filestate.option.abstract_children_manipulator_option import (

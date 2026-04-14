@@ -4,6 +4,8 @@ from typing import Any
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 
+from wexample_filestate.enum.scopes import Scope
+
 REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT: int = 1000
 
 from wexample_helpers.decorator.base_class import base_class
@@ -13,6 +15,10 @@ from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 @base_class
 class RemoveBackupMaxFileSizeOption(OptionMixin, AbstractConfigOption):
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.CONTENT]
+
     value: int = REMOVE_BACKUP_MAX_FILE_SIZE_DEFAULT
 
     @staticmethod

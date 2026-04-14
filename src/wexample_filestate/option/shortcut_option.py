@@ -5,6 +5,7 @@ from typing import Any
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 
@@ -24,6 +25,10 @@ class ShortcutOption(OptionMixin, AbstractConfigOption):
         # Register shortcuts only in root directories.
         if root and root != self.parent and root.is_directory():
             root.set_shortcut(self.get_value().get_str(), self.parent)
+
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:

@@ -18,6 +18,10 @@ if TYPE_CHECKING:
 class AbstractFileContentOption(OptionMixin, AbstractConfigOption):
     """Base class for options that modify file content by applying transformations."""
 
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.CONTENT]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
         return bool

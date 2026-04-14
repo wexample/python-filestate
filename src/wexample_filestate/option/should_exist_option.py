@@ -1,35 +1,40 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_filestate.enum.scopes import Scope
 from wexample_filestate.option.mixin.option_mixin import OptionMixin
 
 if TYPE_CHECKING:
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.enum.scopes import Scope
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
 @base_class
 class ShouldExistOption(OptionMixin, AbstractConfigOption):
-    value: Any = public_field(
-        default=None,
-        description="Boolean flag indicating whether the option must exist",
-    )
-
     def __attrs_post_init__(self) -> None:
         super().__attrs_post_init__()
         # Replace None with True (preserves existing values)
         if self.value is None:
             self.value = True
 
+    value: Any = public_field(
+        default=None,
+        description="Boolean flag or callable(target) -> bool indicating whether the item must exist",
+    )
+
+    @classmethod
+    def get_scopes(cls) -> list[Scope]:
+        return [Scope.LOCATION]
+
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        return bool
+        return Union[bool, Callable]
 
     def create_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
@@ -50,11 +55,15 @@ class ShouldExistOption(OptionMixin, AbstractConfigOption):
         if should_exist_value is None:
             return None
 
-        should_exist = (
-            should_exist_value.is_true()
-            if hasattr(should_exist_value, "is_true")
-            else bool(should_exist_value)
-        )
+        raw = should_exist_value.raw
+        if callable(raw):
+            should_exist = bool(raw(target))
+        else:
+            should_exist = (
+                should_exist_value.is_true()
+                if hasattr(should_exist_value, "is_true")
+                else bool(raw)
+            )
 
         # Check current existence state
         exists = target.get_path().exists()
