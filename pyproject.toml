@@ -38,6 +38,7 @@ homepage = "https://github.com/wexample/python-filestate"
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-benchmark>=5.2.3",
 ]
 
 [tool.setuptools.packages.find]

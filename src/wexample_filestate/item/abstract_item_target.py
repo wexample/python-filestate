@@ -360,6 +360,7 @@ class AbstractItemTarget(
         option: OptionMixin,
         scopes: set[Scope],
         filter_operation: str | None = None,
+        _path_exists: bool | None = None,
     ) -> AbstractOperation | None:
         """Try to create an operation from an option.
 
@@ -374,7 +375,9 @@ class AbstractItemTarget(
         if self.is_directory() and not option.applicable_on_directory():
             return None
 
-        if not self.get_path().exists() and not option.applicable_on_missing():
+        if _path_exists is None:
+            _path_exists = self.get_path().exists()
+        if not _path_exists and not option.applicable_on_missing():
             return None
 
         if not option.applicable_on_empty_content_file():
@@ -401,9 +404,10 @@ class AbstractItemTarget(
 
         Returns None if no operation is required.
         """
+        path_exists = self.get_path().exists()
         for option in self.options.values():
             operation = self.try_create_operation_from_option(
-                option, scopes, filter_operation
+                option, scopes, filter_operation, _path_exists=path_exists
             )
             if operation is not None:
                 return operation

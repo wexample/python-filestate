@@ -8,6 +8,8 @@ from wexample_helpers.classes.abstract_method import abstract_method
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
+_DECLARED_SCOPE_SETS: dict[type, frozenset] = {}
+
 
 class WithScopeMixin:
     @classmethod
@@ -22,9 +24,9 @@ class WithScopeMixin:
 
         Classes must declare their scopes explicitly.
         """
-        declared_scopes = cls.get_scopes()
+        declared_set = _DECLARED_SCOPE_SETS.get(cls)
+        if declared_set is None:
+            declared_set = frozenset(cls.get_scopes())
+            _DECLARED_SCOPE_SETS[cls] = declared_set
 
-        declared_set = set(declared_scopes)
-        filter_set = set(scopes)
-
-        return len(declared_set.intersection(filter_set)) > 0
+        return not declared_set.isdisjoint(scopes)
