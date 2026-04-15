@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-filestate"
-version = "1.0.2"
+version = "1.1.0"
 description = "Package that allows you to manage the state of files and directories using YAML configuration files."
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
@@ -15,11 +15,11 @@ dependencies = [
     "jinja2",
     "python-dotenv",
     "tomlkit",
-    "wexample-config>=0.2.0",
+    "wexample-config>=0.3.0",
     "wexample-event>=0.0.80",
     "wexample-file>=0.0.53",
     "wexample-helpers-yaml>=0.0.114",
-    "wexample-prompt>=1.0.0",
+    "wexample-prompt>=2.0.0",
     "wexample-runner>=0.0.1",
     "xmltodict",
 ]
@@ -37,8 +37,8 @@ homepage = "https://github.com/wexample/python-filestate"
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "pytest-cov",
     "pytest-benchmark>=5.2.3",
+    "pytest-cov",
 ]
 
 [tool.setuptools.packages.find]
