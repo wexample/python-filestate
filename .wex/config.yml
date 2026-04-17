@@ -1,3 +1,7 @@
+docker:
+  db: {}
+domains: []
 global:
   name: filestate
-  version: 1.1.7
+  type: app
+  version: 6.0.19
