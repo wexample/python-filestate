@@ -57,6 +57,7 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
         path: Path,
     ) -> DictConfig:
         from wexample_filestate.const.disk import DiskItemType
+        from wexample_filestate.helpers.dir_config import read_dir_config
         from wexample_filestate.option.children_option import ChildrenOption
         from wexample_filestate.option.name_option import NameOption
         from wexample_filestate.option.should_exist_option import ShouldExistOption
@@ -68,6 +69,12 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
             ChildrenOption.get_name(): [],
             ShouldExistOption.get_name(): True,
         }
+
+        wex_config = read_dir_config(path)
+        python_init = wex_config.get("filestate", {}).get("python_init", True)
+
+        if not python_init:
+            return dir_config
 
         if self._path_match_patterns(path.name):
             dir_config[ChildrenOption.get_name()].append(
