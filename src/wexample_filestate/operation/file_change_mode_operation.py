@@ -47,6 +47,8 @@ class FileChangeModeOperation(AbstractOperation):
         return [Scope.PERMISSIONS, Scope.OWNERSHIP]
 
     def apply_operation(self) -> None:
+        import pwd
+
         from wexample_helpers.helpers.file import (
             file_change_mode,
             file_change_mode_recursive,
@@ -60,11 +62,8 @@ class FileChangeModeOperation(AbstractOperation):
 
         self._original_octal_mode = source.get_octal_mode()
 
-        if self.recursive:
-            file_change_mode_recursive(path, self.target_mode)
-        else:
-            file_change_mode(path, self.target_mode)
-
+        # chown first so that if the file is owned by another user, we acquire
+        # ownership before attempting chmod (chmod requires owning the file).
         if self.target_uid is not None or self.target_gid is not None:
             stat = os.stat(path)
             self._original_uid = stat.st_uid
@@ -73,6 +72,21 @@ class FileChangeModeOperation(AbstractOperation):
             gid = self.target_gid if self.target_gid is not None else self._original_gid
             FileChownOperation._run_chown(
                 path=path, uid=uid, gid=gid, recursive=self.recursive
+            )
+
+        try:
+            if self.recursive:
+                file_change_mode_recursive(path, self.target_mode)
+            else:
+                file_change_mode(path, self.target_mode)
+        except PermissionError:
+            try:
+                owner = pwd.getpwuid(path.stat().st_uid).pw_name
+            except Exception:
+                owner = "unknown"
+            raise PermissionError(
+                f"Cannot change permissions on '{path}' (owned by '{owner}'). "
+                f"Fix with: sudo chmod 755 '{path}'"
             )
 
     def undo(self) -> None:
