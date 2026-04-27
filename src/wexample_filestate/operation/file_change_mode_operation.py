@@ -47,6 +47,8 @@ class FileChangeModeOperation(AbstractOperation):
         return [Scope.PERMISSIONS, Scope.OWNERSHIP]
 
     def apply_operation(self) -> None:
+        import pwd
+
         from wexample_helpers.helpers.file import (
             file_change_mode,
             file_change_mode_recursive,
@@ -60,10 +62,20 @@ class FileChangeModeOperation(AbstractOperation):
 
         self._original_octal_mode = source.get_octal_mode()
 
-        if self.recursive:
-            file_change_mode_recursive(path, self.target_mode)
-        else:
-            file_change_mode(path, self.target_mode)
+        try:
+            if self.recursive:
+                file_change_mode_recursive(path, self.target_mode)
+            else:
+                file_change_mode(path, self.target_mode)
+        except PermissionError:
+            try:
+                owner = pwd.getpwuid(path.stat().st_uid).pw_name
+            except Exception:
+                owner = "unknown"
+            raise PermissionError(
+                f"Cannot change permissions on '{path}' (owned by '{owner}'). "
+                f"Fix with: sudo chmod 755 '{path}'"
+            )
 
         if self.target_uid is not None or self.target_gid is not None:
             stat = os.stat(path)
