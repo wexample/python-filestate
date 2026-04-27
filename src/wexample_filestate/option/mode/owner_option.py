@@ -24,6 +24,7 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
         """Resolve an owner string to a (uid, gid) tuple.
 
         Accepted formats:
+          "~"               -> (current user uid, current user primary gid)
           "999:999"         -> (999, 999)
           "mongodb:mongodb" -> (resolved uid, resolved gid)
           "999"             -> (999, None)  -- gid unchanged
@@ -31,7 +32,13 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
           ":999"            -> (None, 999)  -- uid unchanged
         """
         import grp
+        import os
         import pwd
+
+        if raw.strip() == "~":
+            uid = os.getuid()
+            gid = pwd.getpwuid(uid).pw_gid
+            return uid, gid
 
         parts = raw.split(":", 1)
         user_part = parts[0].strip() if parts[0].strip() else None
