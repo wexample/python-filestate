@@ -55,7 +55,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         self,
         result: AbstractResult,
         scopes: set[Scope],
-        filter_path: str | None = None,
+        filter_paths: list[str] | None = None,
         filter_operation: str | None = None,
         max: int = None,
     ) -> bool:
@@ -64,7 +64,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         has_task = super().build_operations(
             result,
             scopes=scopes,
-            filter_path=filter_path,
+            filter_paths=filter_paths,
             filter_operation=filter_operation,
             max=max,
         )
@@ -75,7 +75,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                 has_task_child = cast(TargetFileOrDirectory, item).build_operations(
                     result=result,
                     scopes=scopes,
-                    filter_path=filter_path,
+                    filter_paths=filter_paths,
                     filter_operation=filter_operation,
                     max=((max - count) if (max is not None) else None),
                 )
