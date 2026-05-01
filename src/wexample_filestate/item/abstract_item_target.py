@@ -98,7 +98,7 @@ class AbstractItemTarget(
         self,
         interactive: bool = False,
         scopes: set[Scope] | None = None,
-        filter_path: str | None = None,
+        filter_paths: list[str] | None = None,
         filter_operation: str | None = None,
         max: int = None,
         result: FileStateResult | None = None,
@@ -117,7 +117,7 @@ class AbstractItemTarget(
             self.build_operations(
                 result=result,
                 scopes=scopes,
-                filter_path=filter_path,
+                filter_paths=filter_paths,
                 filter_operation=filter_operation,
                 max=max,
             )
@@ -142,15 +142,16 @@ class AbstractItemTarget(
         self: TargetFileOrDirectoryType,
         result: AbstractResult,
         scopes: set[Scope],
-        filter_path: str | None = None,
+        filter_paths: list[str] | None = None,
         filter_operation: str | None = None,
         max: int = None,
     ) -> bool:
         from wexample_prompt.common.spinner_pool import SpinnerPool
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-        if filter_path is not None and not self._path_matches(filter_path=filter_path):
-            return False
+        if filter_paths is not None and self.get_path().exists():
+            if not any(self._path_matches(p) for p in filter_paths):
+                return False
 
         self.io.indentation_up()
 
@@ -193,7 +194,7 @@ class AbstractItemTarget(
     def dry_run(
         self,
         scopes: set[Scope],
-        filter_path: str | None = None,
+        filter_paths: list[str] | None = None,
         filter_operation: str | None = None,
         max: int = None,
     ) -> FileStateDryRunResult:
@@ -207,7 +208,7 @@ class AbstractItemTarget(
             self.build_operations(
                 result=result,
                 scopes=scopes,
-                filter_path=filter_path,
+                filter_paths=filter_paths,
                 filter_operation=filter_operation,
                 max=max,
             )
@@ -436,12 +437,18 @@ class AbstractItemTarget(
 
         return True
 
-    def _path_matches(self, filter_path: str) -> bool:
+    def _path_matches(self, pattern: str) -> bool:
         import fnmatch
+        import os
 
-        if not filter_path.startswith("*"):
-            filter_path = "*" + filter_path
-        if not filter_path.endswith("*"):
-            filter_path = filter_path + "*"
+        path_str = str(self.get_path())
 
-        return fnmatch.fnmatch(str(self.get_path()), filter_path)
+        if os.path.isabs(pattern):
+            return path_str == pattern or path_str.startswith(pattern + os.sep)
+
+        if not pattern.startswith("*"):
+            pattern = "*" + pattern
+        if not pattern.endswith("*"):
+            pattern = pattern + "*"
+
+        return fnmatch.fnmatch(path_str, pattern)
