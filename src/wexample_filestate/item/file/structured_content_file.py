@@ -123,7 +123,7 @@ class StructuredContentFile(ItemTargetFile):
     def write_config_value(self, key: str, value: Scalar) -> None:
         """Set a string value at key in the config and persist in one call."""
         cfg = self.read_config()
-        cfg.search(key).set_str(str(value))
+        cfg.set_by_path(key, str(value))
         self.write_config(cfg)
 
     def write_parsed(self, content: Any | None = None) -> None:
