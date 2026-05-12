@@ -62,6 +62,9 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             TextOption,
         )
         from wexample_filestate.option.type_option import TypeOption
+        from wexample_filestate.option.structured.keys_option import (
+            StructuredKeysOption,
+        )
         from wexample_filestate.option.yaml_option import (
             YamlOption,
         )
@@ -83,6 +86,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldExistOption,
             ShouldHaveExtensionOption,
             ShouldNotContainLinesOption,
+            StructuredKeysOption,
             TextOption,
             TypeOption,
             YamlOption,
