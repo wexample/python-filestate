@@ -62,7 +62,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             TextOption,
         )
         from wexample_filestate.option.type_option import TypeOption
-        from wexample_filestate.option.structured.keys_option import (
+        from wexample_filestate.option.structured_keys_option import (
             StructuredKeysOption,
         )
         from wexample_filestate.option.yaml_option import (

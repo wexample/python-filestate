@@ -47,6 +47,10 @@ class StructuredKeysOption(OptionMixin, AbstractConfigOption):
         mismatches: list[tuple[str, Any]] = []
 
         for key_path, expected_value in expected.items():
+            if callable(expected_value):
+                expected_value = expected_value(target)
+            elif hasattr(expected_value, "raw") and callable(expected_value.raw):
+                expected_value = expected_value.raw(target)
             current = cfg.search(key_path)
             if current.raw != expected_value:
                 mismatches.append((key_path, expected_value))
