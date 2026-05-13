@@ -58,6 +58,9 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.should_not_contain_lines_option import (
             ShouldNotContainLinesOption,
         )
+        from wexample_filestate.option.structured_keys_option import (
+            StructuredKeysOption,
+        )
         from wexample_filestate.option.text_option import (
             TextOption,
         )
@@ -83,6 +86,7 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             ShouldExistOption,
             ShouldHaveExtensionOption,
             ShouldNotContainLinesOption,
+            StructuredKeysOption,
             TextOption,
             TypeOption,
             YamlOption,
