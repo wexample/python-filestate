@@ -31,6 +31,11 @@ class ShouldContainLinesOption(OptionMixin, AbstractConfigOption):
 
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
+        # Let ShouldExistOption create the file first; this option only adds
+        # lines to an existing file.
+        if not target.get_path().exists():
+            return None
+
         # Get the required lines
         required_lines_value = self.get_value()
         if not required_lines_value or required_lines_value.is_none():
