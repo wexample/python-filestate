@@ -79,14 +79,19 @@ class FileChangeModeOperation(AbstractOperation):
                 file_change_mode_recursive(path, self.target_mode)
             else:
                 file_change_mode(path, self.target_mode)
-        except PermissionError:
+        except PermissionError as e:
+            from wexample_filestate.exception.file_state_permission_exception import (
+                FileStatePermissionException,
+            )
+
             try:
                 owner = pwd.getpwuid(path.stat().st_uid).pw_name
             except Exception:
                 owner = "unknown"
-            raise PermissionError(
-                f"Cannot change permissions on '{path}' (owned by '{owner}'). "
-                f"Fix with: sudo chmod 755 '{path}'"
+            raise FileStatePermissionException(
+                message=f"Cannot change permissions on '{path}' (owned by '{owner}'). "
+                f"Fix with: sudo chmod 755 '{path}'",
+                cause=e,
             )
 
     def undo(self) -> None:
