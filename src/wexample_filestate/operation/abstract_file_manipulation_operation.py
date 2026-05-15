@@ -53,6 +53,11 @@ class AbstractFileManipulationOperation(AbstractOperation):
 
     def _backup_target_file(self) -> None:
         self._original_path = self.target.get_path()
+        # The target may have been removed by an earlier operation in the same
+        # rectify pass (e.g. a migration that wipes & regenerates files). The
+        # write will recreate it; nothing to back up.
+        if not self._original_path.exists():
+            return
         self._original_file_mode = self.target.get_path().stat().st_mode
 
         self._backup_file_content(
