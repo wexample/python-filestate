@@ -115,28 +115,61 @@ class WithRunnerOptionMixin:
     def _build_batch_cache(
         self, any_target: TargetFileOrDirectoryType
     ) -> dict[str, str]:
+        """Run the tool once on temp copies of every matched file, never on the
+        originals — so we can compare original vs rectified later without
+        polluting the working tree.
+        """
+        import shutil
+        import uuid
+
         items = self._collect_batch_targets(any_target.get_root())
         if not items:
             return {}
 
-        self._run_batch_on_targets(reference_target=any_target, targets=items)
+        root_path = any_target.get_root().get_path().resolve()
+        temp_root = (
+            root_path
+            / ".wex"
+            / "tmp"
+            / "batch"
+            / self._get_batch_cache_key()
+            / uuid.uuid4().hex
+        )
+        temp_root.mkdir(parents=True, exist_ok=True)
 
-        cache: dict[str, str] = {}
+        temp_pairs: list[tuple[TargetFileOrDirectoryType, Path]] = []
         for item in items:
-            new_content = item.read_text()
-            cache[str(item.get_path())] = new_content
-            self._mark_as_rectified(item, new_content)
-        return cache
+            rel = item.get_path().resolve().relative_to(root_path)
+            temp_path = temp_root / rel
+            temp_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(item.get_path(), temp_path)
+            temp_pairs.append((item, temp_path))
+
+        try:
+            self._run_batch_on_paths(
+                reference_target=any_target,
+                paths=[temp_path for _, temp_path in temp_pairs],
+            )
+
+            cache: dict[str, str] = {}
+            for item, temp_path in temp_pairs:
+                new_content = temp_path.read_text()
+                cache[str(item.get_path())] = new_content
+                self._mark_as_rectified(item, new_content)
+            return cache
+        finally:
+            shutil.rmtree(temp_root, ignore_errors=True)
 
     def _collect_batch_targets(self, root) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 
         items: list[TargetFileOrDirectoryType] = []
+        option_cls = type(self)
 
         def collect(item: TargetFileOrDirectoryType) -> None:
             if not item.get_path().is_file():
                 return
-            if item.get_option(type(self)) is None:
+            if item.get_option_recursive(option_cls) is None:
                 return
             if self._is_already_rectified(item):
                 return
@@ -147,9 +180,11 @@ class WithRunnerOptionMixin:
         return items
 
     @abstract_method
-    def _run_batch_on_targets(
+    def _run_batch_on_paths(
         self,
         reference_target: TargetFileOrDirectoryType,
-        targets: list[TargetFileOrDirectoryType],
+        paths: list[Path],
     ) -> None:
-        """Run the underlying tool once on the whole list of targets (in place)."""
+        """Run the underlying tool once on this list of file paths (modifying
+        them in place). Paths are temp copies, NOT the original project files.
+        """
