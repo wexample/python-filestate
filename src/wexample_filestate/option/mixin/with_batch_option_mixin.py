@@ -26,44 +26,6 @@ class WithBatchOptionMixin:
     isort, etc.) can use it directly without involving DockerRunner.
     """
 
-    # ------------------------------------------------------------------ #
-    # Rectification hash tracking
-    # ------------------------------------------------------------------ #
-
-    def _hash(self, content: str) -> str:
-        import hashlib
-
-        return hashlib.md5(content.encode()).hexdigest()
-
-    def _is_already_rectified(self, target: TargetFileOrDirectoryType) -> bool:
-        key = str(target.get_path())
-        current_hash = self._hash(target.get_local_file().read())
-        return target.get_root().get_rectify_hash(key) == current_hash
-
-    def _mark_as_rectified(
-        self, target: TargetFileOrDirectoryType, rectified_content: str
-    ) -> None:
-        key = str(target.get_path())
-        target.get_root().set_rectify_hash(key, self._hash(rectified_content))
-
-    # ------------------------------------------------------------------ #
-    # Batch cache
-    # ------------------------------------------------------------------ #
-
-    def _get_batch_cache_key(self) -> str:
-        return type(self).__name__
-
-    def _get_or_build_batch_cache(
-        self, target: TargetFileOrDirectoryType
-    ) -> dict[str, str]:
-        root = target.get_root()
-        key = self._get_batch_cache_key()
-        cache = root.get_batch_cache(key)
-        if cache is None:
-            cache = self._build_batch_cache(target)
-            root.set_batch_cache(key, cache)
-        return cache
-
     def prepare(
         self,
         root: TargetFileOrDirectoryType,
@@ -152,6 +114,54 @@ class WithBatchOptionMixin:
             root.for_each_child_recursive(collect)
         return items
 
+    # ------------------------------------------------------------------ #
+    # Batch cache
+    # ------------------------------------------------------------------ #
+    def _get_batch_cache_key(self) -> str:
+        return type(self).__name__
+
+    def _get_or_build_batch_cache(
+        self, target: TargetFileOrDirectoryType
+    ) -> dict[str, str]:
+        root = target.get_root()
+        key = self._get_batch_cache_key()
+        cache = root.get_batch_cache(key)
+        if cache is None:
+            cache = self._build_batch_cache(target)
+            root.set_batch_cache(key, cache)
+        return cache
+
+    # ------------------------------------------------------------------ #
+    # Rectification hash tracking
+    # ------------------------------------------------------------------ #
+    def _hash(self, content: str) -> str:
+        import hashlib
+
+        return hashlib.md5(content.encode()).hexdigest()
+
+    def _is_already_rectified(self, target: TargetFileOrDirectoryType) -> bool:
+        key = str(target.get_path())
+        current_hash = self._hash(target.get_local_file().read())
+        return target.get_root().get_rectify_hash(key) == current_hash
+
+    def _mark_as_rectified(
+        self, target: TargetFileOrDirectoryType, rectified_content: str
+    ) -> None:
+        key = str(target.get_path())
+        target.get_root().set_rectify_hash(key, self._hash(rectified_content))
+
+    @abstract_method
+    def _run_batch_on_paths(
+        self,
+        reference_target: TargetFileOrDirectoryType,
+        paths: list[Path],
+    ) -> None:
+        """Run the underlying tool once on this list of file paths (modifying
+        them in place). Paths are temp copies, NOT the original project files.
+        Return the runner result if any, so its stdout/stderr can be surfaced;
+        return None for in-process tools that don't produce one.
+        """
+
     def _surface_batch_result(self, root, result) -> None:
         """Display the tool's stdout/stderr so silent failures are visible.
         Raise FileStateBatchToolException on non-zero exit code.
@@ -182,15 +192,3 @@ class WithBatchOptionMixin:
                 ),
                 data={"exit_code": exit_code},
             )
-
-    @abstract_method
-    def _run_batch_on_paths(
-        self,
-        reference_target: TargetFileOrDirectoryType,
-        paths: list[Path],
-    ):
-        """Run the underlying tool once on this list of file paths (modifying
-        them in place). Paths are temp copies, NOT the original project files.
-        Return the runner result if any, so its stdout/stderr can be surfaced;
-        return None for in-process tools that don't produce one.
-        """

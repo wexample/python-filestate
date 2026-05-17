@@ -29,16 +29,14 @@ class AbstractFileContentOption(OptionMixin, AbstractConfigOption):
     def create_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
-        from wexample_filestate.helpers import profile
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
         """Create FileWriteOperation if file content needs to be modified."""
         # Get current content
         current_content = target.get_local_file().read()
 
-        # Apply content transformation (profiled per option class)
-        with profile.measure(type(self).__name__):
-            new_content = self._apply_content_change(target=target)
+        # Apply content transformation
+        new_content = self._apply_content_change(target=target)
 
         # If content changed, create FileWriteOperation
         if new_content != current_content:

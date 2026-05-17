@@ -52,6 +52,14 @@ class OptionMixin(WithScopeMixin, ItemTreeConfigOptionMixin):
         """
         return None
 
+    def get_supported_item_types(self) -> list[LocalPathType]:
+        from wexample_file.enum.local_path_type import LocalPathType
+
+        return [
+            LocalPathType.FILE,
+            LocalPathType.DIRECTORY,
+        ]
+
     def prepare(
         self,
         root: TargetFileOrDirectoryType,
@@ -62,14 +70,6 @@ class OptionMixin(WithScopeMixin, ItemTreeConfigOptionMixin):
         scan starts. Default: no-op. Override to do upfront work (batch runs,
         cache warm-up, etc.) with logs surfaced to the user.
         """
-
-    def get_supported_item_types(self) -> list[LocalPathType]:
-        from wexample_file.enum.local_path_type import LocalPathType
-
-        return [
-            LocalPathType.FILE,
-            LocalPathType.DIRECTORY,
-        ]
 
     def _create_child_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
