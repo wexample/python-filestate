@@ -6,6 +6,10 @@ from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
 
+from wexample_filestate.option.mixin.with_batch_option_mixin import (
+    WithBatchOptionMixin,
+)
+
 if TYPE_CHECKING:
     from wexample_runner.runner.docker_runner import DockerRunner
 
@@ -15,7 +19,11 @@ if TYPE_CHECKING:
     )
 
 
-class WithRunnerOptionMixin:
+class WithBatchDockerOptionMixin(WithBatchOptionMixin):
+    """Docker-backed batch option. Adds container management on top of the
+    tool-agnostic batch mechanism from `WithBatchOptionMixin`.
+    """
+
     # Set to True to get verbose output from the container
     _debug: bool = False
     # Set to True to force rebuild of Docker image and container
@@ -77,19 +85,3 @@ class WithRunnerOptionMixin:
             root.set_runner(image_name, runner)
 
         return runner
-
-    def _hash(self, content: str) -> str:
-        import hashlib
-
-        return hashlib.md5(content.encode()).hexdigest()
-
-    def _is_already_rectified(self, target: TargetFileOrDirectoryType) -> bool:
-        key = str(target.get_path())
-        current_hash = self._hash(target.get_local_file().read())
-        return target.get_root().get_rectify_hash(key) == current_hash
-
-    def _mark_as_rectified(
-        self, target: TargetFileOrDirectoryType, rectified_content: str
-    ) -> None:
-        key = str(target.get_path())
-        target.get_root().set_rectify_hash(key, self._hash(rectified_content))

@@ -60,6 +60,17 @@ class OptionMixin(WithScopeMixin, ItemTreeConfigOptionMixin):
             LocalPathType.DIRECTORY,
         ]
 
+    def prepare(
+        self,
+        root: TargetFileOrDirectoryType,
+        scopes: set[Scope],
+        filter_paths: list[str] | None = None,
+    ) -> None:
+        """Hook called once on each unique option type before the rectification
+        scan starts. Default: no-op. Override to do upfront work (batch runs,
+        cache warm-up, etc.) with logs surfaced to the user.
+        """
+
     def _create_child_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:

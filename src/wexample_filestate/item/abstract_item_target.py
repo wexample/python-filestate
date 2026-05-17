@@ -114,6 +114,8 @@ class AbstractItemTarget(
         self.last_result = result
 
         try:
+            self._prepare_options(scopes=scopes, filter_paths=filter_paths)
+
             self.build_operations(
                 result=result,
                 scopes=scopes,
@@ -452,3 +454,29 @@ class AbstractItemTarget(
             pattern = pattern + "*"
 
         return fnmatch.fnmatch(path_str, pattern)
+
+    def _prepare_options(
+        self,
+        scopes: set[Scope],
+        filter_paths: list[str] | None = None,
+    ) -> None:
+        """Walk the tree once and call prepare() on each unique option type.
+        Lets options with expensive upfront work (batch tool runs) do it
+        eagerly with visible logs, instead of lazily during the scan.
+        """
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+
+        prepared: set[type] = set()
+
+        def visit(item) -> None:
+            for option in item.iter_options_recursive():
+                cls = type(option)
+                if cls in prepared:
+                    continue
+                prepared.add(cls)
+                if hasattr(option, "prepare"):
+                    option.prepare(self, scopes, filter_paths)
+
+        visit(self)
+        if isinstance(self, ItemTargetDirectory):
+            self.for_each_child_recursive(visit)

@@ -13,6 +13,25 @@ if TYPE_CHECKING:
     from wexample_filestate.operation.abstract_operation import AbstractOperation
 
 
+def _get_by_path(data: Any, path: str) -> Any:
+    current = data
+    for part in path.split("."):
+        if not isinstance(current, dict) or part not in current:
+            return None
+        current = current[part]
+    return current
+
+
+def _set_by_path(data: Any, path: str, value: Any) -> None:
+    parts = path.split(".")
+    current = data
+    for part in parts[:-1]:
+        if part not in current or not isinstance(current[part], dict):
+            current[part] = {}
+        current = current[part]
+    current[parts[-1]] = value
+
+
 @base_class
 class StructuredKeysOption(OptionMixin, AbstractConfigOption):
     @classmethod
@@ -44,27 +63,42 @@ class StructuredKeysOption(OptionMixin, AbstractConfigOption):
         if not expected:
             return None
 
-        cfg = target.read_config()
-        mismatches: list[tuple[str, Any]] = []
+        # Operate directly on the parsed structure (ruamel CommentedMap for YAML)
+        # to preserve comments, anchors and custom tags. Refuse to operate if
+        # parsing fails — better skip than truncate the file.
+        try:
+            parsed = target.read_parsed(strict=True)
+        except Exception:
+            return None
 
-        for key_path, expected_value in expected.items():
-            if callable(expected_value):
-                expected_value = expected_value(target)
-            elif hasattr(expected_value, "raw") and callable(expected_value.raw):
-                expected_value = expected_value.raw(target)
-            current = cfg.search(key_path)
-            if current.raw != expected_value:
+        if not isinstance(parsed, dict):
+            return None
+
+        # Resolve callable expected values
+        resolved: list[tuple[str, Any]] = []
+        for key_path, value in expected.items():
+            if callable(value):
+                value = value(target)
+            elif hasattr(value, "raw") and callable(value.raw):
+                value = value.raw(target)
+            resolved.append((key_path, value))
+
+        # Find mismatches
+        mismatches: list[tuple[str, Any]] = []
+        for key_path, expected_value in resolved:
+            if _get_by_path(parsed, key_path) != expected_value:
                 mismatches.append((key_path, expected_value))
 
         if not mismatches:
             return None
 
+        # Apply changes in place on the parsed structure (preserves metadata).
         for key_path, value in mismatches:
-            cfg.set_by_path(key_path, value)
+            _set_by_path(parsed, key_path, value)
 
         return FileWriteOperation(
             option=self,
             target=target,
-            content=target.preview_write_config(cfg),
+            content=target.dumps(parsed),
             description=f"Set {len(mismatches)} key(s): {', '.join(k for k, _ in mismatches)}",
         )
