@@ -111,7 +111,10 @@ class AbstractItemTarget(
         if scopes is None:
             scopes = set(Scope)
 
+        from wexample_filestate.helpers import profile
+
         self.last_result = result
+        profile.reset()
 
         try:
             self._prepare_options(scopes=scopes, filter_paths=filter_paths)
@@ -123,6 +126,10 @@ class AbstractItemTarget(
                 filter_operation=filter_operation,
                 max=max,
             )
+
+            summary = profile.format_summary()
+            if summary:
+                self.log(message=summary)
 
             if len(result.operations) > 0:
                 result.apply_operations(interactive=interactive)
