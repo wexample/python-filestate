@@ -1,82 +1,34 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
 
 if TYPE_CHECKING:
-    from wexample_runner.runner.docker_runner import DockerRunner
-
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
-    from wexample_filestate.item.mixin.with_runners_root_mixin import (
-        WithRunnersRootMixin,
-    )
 
 
-class WithRunnerOptionMixin:
-    # Set to True to get verbose output from the container
-    _debug: bool = False
-    # Set to True to force rebuild of Docker image and container
-    _docker_rebuild: bool = False
+class WithBatchOptionMixin:
+    """Tool-agnostic batch rectification mechanism.
 
-    def _ensure_docker_container(self, target: TargetFileOrDirectoryType) -> None:
-        image_name = self._get_docker_image_name()
-        root: WithRunnersRootMixin = target.get_root()
+    Workflow:
+      1. `prepare()` is called once before the rectification scan, builds a
+         per-option cache by copying every matched file into a temp dir.
+      2. The underlying tool (`_run_batch_on_paths`, abstract) runs once on
+         all temp copies, modifying them in place.
+      3. Rectified contents are read back into an in-memory cache.
+      4. Temp dir is cleaned up.
+      5. During the scan, each item's `_apply_content_change` just reads from
+         the cache to decide whether a `FileWriteOperation` is needed.
 
-        if self._docker_rebuild:
-            existing = root.get_runner(image_name)
-            if existing:
-                existing.destroy()
-                root.set_runner(image_name, None)
+    This mixin is intentionally Docker-agnostic; in-process tools (Black,
+    isort, etc.) can use it directly without involving DockerRunner.
+    """
 
-        self._get_or_create_runner(target).ensure_running()
-
-    def _execute_in_docker(
-        self, target: TargetFileOrDirectoryType, command: list[str]
-    ) -> str:
-        if self._is_already_rectified(target):
-            return target.get_local_file().read()
-        self._ensure_docker_container(target)
-        result = self._get_or_create_runner(target).execute(cmd=command)
-        self._mark_as_rectified(target, result.stdout)
-        return result.stdout
-
-    def _get_container_file_path(self, target: TargetFileOrDirectoryType) -> str:
-        return self._get_or_create_runner(target).rebase_path(target.get_path())
-
-    def _get_container_name(self, target: TargetFileOrDirectoryType) -> str:
-        return self._get_or_create_runner(target).container_name
-
-    @abstract_method
-    def _get_docker_image_name(self) -> str:
-        """Return the Docker image name to use."""
-
-    @abstract_method
-    def _get_dockerfile_path(self) -> Path:
-        """Return the path to the Dockerfile."""
-
-    def _get_or_create_runner(self, target: TargetFileOrDirectoryType) -> DockerRunner:
-        from wexample_runner.runner.docker_runner import DockerRunner
-
-        image_name = self._get_docker_image_name()
-        root: WithRunnersRootMixin = target.get_root()
-        runner = root.get_runner(image_name)
-
-        if runner is None:
-            app_root = str(root.get_path().resolve())
-            user = f"{os.getuid()}:{os.getgid()}"
-            runner = DockerRunner(
-                image_name=image_name,
-                dockerfile_path=self._get_dockerfile_path(),
-                volumes={app_root: "/var/www/html"},
-                workdir="/var/www/html",
-                user=user,
-            )
-            root.set_runner(image_name, runner)
-
-        return runner
+    # ------------------------------------------------------------------ #
+    # Rectification hash tracking
+    # ------------------------------------------------------------------ #
 
     def _hash(self, content: str) -> str:
         import hashlib
@@ -95,7 +47,7 @@ class WithRunnerOptionMixin:
         target.get_root().set_rectify_hash(key, self._hash(rectified_content))
 
     # ------------------------------------------------------------------ #
-    # Batch rectification
+    # Batch cache
     # ------------------------------------------------------------------ #
 
     def _get_batch_cache_key(self) -> str:
@@ -135,8 +87,8 @@ class WithRunnerOptionMixin:
     def _build_batch_cache(
         self, any_target: TargetFileOrDirectoryType
     ) -> dict[str, str]:
-        """Run the tool once on temp copies of every matched file, never on the
-        originals — so we can compare original vs rectified later without
+        """Run the tool once on temp copies of every matched file, never on
+        the originals — so we can compare original vs rectified later without
         polluting the working tree.
         """
         import shutil
@@ -181,22 +133,6 @@ class WithRunnerOptionMixin:
         finally:
             shutil.rmtree(temp_root, ignore_errors=True)
 
-    def _surface_batch_result(self, root, result) -> None:
-        """Display the tool's stdout/stderr (truncated) so silent failures are
-        visible. Override in subclasses for tool-specific summarization.
-        """
-        if result is None:
-            return
-        stdout = (getattr(result, "stdout", "") or "").strip()
-        stderr = (getattr(result, "stderr", "") or "").strip()
-        exit_code = getattr(result, "exit_code", 0)
-
-        if stdout:
-            root.io.log(stdout)
-        if stderr:
-            io_fn = root.io.warning if exit_code == 0 else root.io.error
-            io_fn(stderr)
-
     def _collect_batch_targets(self, root) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
 
@@ -216,6 +152,37 @@ class WithRunnerOptionMixin:
             root.for_each_child_recursive(collect)
         return items
 
+    def _surface_batch_result(self, root, result) -> None:
+        """Display the tool's stdout/stderr so silent failures are visible.
+        Raise FileStateBatchToolException on non-zero exit code.
+        In-process tools that don't produce a result can return None — this
+        method just no-ops.
+        """
+        if result is None:
+            return
+        stdout = (getattr(result, "stdout", "") or "").strip()
+        stderr = (getattr(result, "stderr", "") or "").strip()
+        exit_code = getattr(result, "exit_code", 0)
+
+        if stdout:
+            root.io.log(stdout)
+        if stderr:
+            io_fn = root.io.warning if exit_code == 0 else root.io.error
+            io_fn(stderr)
+
+        if exit_code != 0:
+            from wexample_filestate.exception.file_state_batch_tool_exception import (
+                FileStateBatchToolException,
+            )
+
+            raise FileStateBatchToolException(
+                message=(
+                    f"Batch tool '{self._get_batch_cache_key()}' exited with "
+                    f"code {exit_code}. See output above."
+                ),
+                data={"exit_code": exit_code},
+            )
+
     @abstract_method
     def _run_batch_on_paths(
         self,
@@ -224,5 +191,6 @@ class WithRunnerOptionMixin:
     ):
         """Run the underlying tool once on this list of file paths (modifying
         them in place). Paths are temp copies, NOT the original project files.
-        Return the runner result so its stdout/stderr can be surfaced.
+        Return the runner result if any, so its stdout/stderr can be surfaced;
+        return None for in-process tools that don't produce one.
         """
