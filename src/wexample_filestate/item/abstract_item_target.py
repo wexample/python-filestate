@@ -411,24 +411,18 @@ class AbstractItemTarget(
 
         prepared: set[type] = set()
 
-        def walk_options(holder) -> None:
-            options = getattr(holder, "options", None)
-            if not options:
-                return
-            for option in options.values():
+        def visit(item) -> None:
+            for option in item.iter_options_recursive():
                 cls = type(option)
-                if cls not in prepared and hasattr(option, "prepare"):
-                    prepared.add(cls)
+                if cls in prepared:
+                    continue
+                prepared.add(cls)
+                if hasattr(option, "prepare"):
                     option.prepare(self, scopes, filter_paths)
-                walk_options(option)
 
-        def walk_items(item) -> None:
-            walk_options(item)
-            if isinstance(item, ItemTargetDirectory):
-                for child in item.get_children_list():
-                    walk_items(child)
-
-        walk_items(self)
+        visit(self)
+        if isinstance(self, ItemTargetDirectory):
+            self.for_each_child_recursive(visit)
 
     def _find_first_operation(
         self: TargetFileOrDirectoryType,
