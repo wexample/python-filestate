@@ -112,6 +112,26 @@ class WithRunnerOptionMixin:
             root.set_batch_cache(key, cache)
         return cache
 
+    def prepare(
+        self,
+        root: TargetFileOrDirectoryType,
+        scopes,
+        filter_paths: list[str] | None = None,
+    ) -> None:
+        """Eagerly build the batch cache and surface the tool's output."""
+        key = self._get_batch_cache_key()
+        if root.get_batch_cache(key) is not None:
+            return  # Already prepared
+
+        items = self._collect_batch_targets(root)
+        if not items:
+            return
+
+        root.io.log(f"[prepare] {key}: running on {len(items)} file(s)…")
+        cache = self._build_batch_cache(root)
+        root.set_batch_cache(key, cache)
+        root.io.log(f"[prepare] {key}: done ({len(cache)} files cached).")
+
     def _build_batch_cache(
         self, any_target: TargetFileOrDirectoryType
     ) -> dict[str, str]:
@@ -146,10 +166,11 @@ class WithRunnerOptionMixin:
             temp_pairs.append((item, temp_path))
 
         try:
-            self._run_batch_on_paths(
+            result = self._run_batch_on_paths(
                 reference_target=any_target,
                 paths=[temp_path for _, temp_path in temp_pairs],
             )
+            self._surface_batch_result(any_target.get_root(), result)
 
             cache: dict[str, str] = {}
             for item, temp_path in temp_pairs:
@@ -159,6 +180,22 @@ class WithRunnerOptionMixin:
             return cache
         finally:
             shutil.rmtree(temp_root, ignore_errors=True)
+
+    def _surface_batch_result(self, root, result) -> None:
+        """Display the tool's stdout/stderr (truncated) so silent failures are
+        visible. Override in subclasses for tool-specific summarization.
+        """
+        if result is None:
+            return
+        stdout = (getattr(result, "stdout", "") or "").strip()
+        stderr = (getattr(result, "stderr", "") or "").strip()
+        exit_code = getattr(result, "exit_code", 0)
+
+        if stdout:
+            root.io.log(stdout)
+        if stderr:
+            io_fn = root.io.warning if exit_code == 0 else root.io.error
+            io_fn(stderr)
 
     def _collect_batch_targets(self, root) -> list[TargetFileOrDirectoryType]:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory
@@ -184,7 +221,8 @@ class WithRunnerOptionMixin:
         self,
         reference_target: TargetFileOrDirectoryType,
         paths: list[Path],
-    ) -> None:
+    ):
         """Run the underlying tool once on this list of file paths (modifying
         them in place). Paths are temp copies, NOT the original project files.
+        Return the runner result so its stdout/stderr can be surfaced.
         """

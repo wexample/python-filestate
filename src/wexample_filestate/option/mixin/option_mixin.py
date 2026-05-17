@@ -52,6 +52,17 @@ class OptionMixin(WithScopeMixin, ItemTreeConfigOptionMixin):
         """
         return None
 
+    def prepare(
+        self,
+        root: TargetFileOrDirectoryType,
+        scopes: set[Scope],
+        filter_paths: list[str] | None = None,
+    ) -> None:
+        """Hook called once on each unique option type before the rectification
+        scan starts. Default: no-op. Override to do upfront work (batch runs,
+        cache warm-up, etc.) with logs surfaced to the user.
+        """
+
     def get_supported_item_types(self) -> list[LocalPathType]:
         from wexample_file.enum.local_path_type import LocalPathType
 
