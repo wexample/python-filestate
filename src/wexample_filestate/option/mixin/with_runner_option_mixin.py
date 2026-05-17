@@ -93,3 +93,63 @@ class WithRunnerOptionMixin:
     ) -> None:
         key = str(target.get_path())
         target.get_root().set_rectify_hash(key, self._hash(rectified_content))
+
+    # ------------------------------------------------------------------ #
+    # Batch rectification
+    # ------------------------------------------------------------------ #
+
+    def _get_batch_cache_key(self) -> str:
+        return type(self).__name__
+
+    def _get_or_build_batch_cache(
+        self, target: TargetFileOrDirectoryType
+    ) -> dict[str, str]:
+        root = target.get_root()
+        key = self._get_batch_cache_key()
+        cache = root.get_batch_cache(key)
+        if cache is None:
+            cache = self._build_batch_cache(target)
+            root.set_batch_cache(key, cache)
+        return cache
+
+    def _build_batch_cache(
+        self, any_target: TargetFileOrDirectoryType
+    ) -> dict[str, str]:
+        items = self._collect_batch_targets(any_target.get_root())
+        if not items:
+            return {}
+
+        self._run_batch_on_targets(reference_target=any_target, targets=items)
+
+        cache: dict[str, str] = {}
+        for item in items:
+            new_content = item.read_text()
+            cache[str(item.get_path())] = new_content
+            self._mark_as_rectified(item, new_content)
+        return cache
+
+    def _collect_batch_targets(self, root) -> list[TargetFileOrDirectoryType]:
+        from wexample_filestate.item.item_target_directory import ItemTargetDirectory
+
+        items: list[TargetFileOrDirectoryType] = []
+
+        def collect(item: TargetFileOrDirectoryType) -> None:
+            if not item.get_path().is_file():
+                return
+            if item.get_option(type(self)) is None:
+                return
+            if self._is_already_rectified(item):
+                return
+            items.append(item)
+
+        if isinstance(root, ItemTargetDirectory):
+            root.for_each_child_recursive(collect)
+        return items
+
+    @abstract_method
+    def _run_batch_on_targets(
+        self,
+        reference_target: TargetFileOrDirectoryType,
+        targets: list[TargetFileOrDirectoryType],
+    ) -> None:
+        """Run the underlying tool once on the whole list of targets (in place)."""

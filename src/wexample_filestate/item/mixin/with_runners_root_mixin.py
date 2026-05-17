@@ -11,6 +11,10 @@ if TYPE_CHECKING:
 
 @base_class
 class WithRunnersRootMixin:
+    _batch_content_cache: dict[str, dict[str, str]] = public_field(
+        factory=dict,
+        description="Per-option batch content caches: {option_name: {path: new_content}}.",
+    )
     _rectify_hash_cache: dict[str, str] = public_field(
         factory=dict,
         description="MD5 hashes of files after last rectification, keyed by path.",
@@ -19,11 +23,17 @@ class WithRunnersRootMixin:
         factory=dict, description="Docker runners cache keyed by image name."
     )
 
+    def get_batch_cache(self, key: str) -> dict[str, str] | None:
+        return self._batch_content_cache.get(key)
+
     def get_rectify_hash(self, path: str) -> str | None:
         return self._rectify_hash_cache.get(path)
 
     def get_runner(self, image_name: str) -> DockerRunner | None:
         return self._runner_cache.get(image_name)
+
+    def set_batch_cache(self, key: str, cache: dict[str, str]) -> None:
+        self._batch_content_cache[key] = cache
 
     def set_rectify_hash(self, path: str, hash: str) -> None:
         self._rectify_hash_cache[path] = hash
