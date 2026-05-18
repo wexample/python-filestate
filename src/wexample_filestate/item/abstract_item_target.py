@@ -161,7 +161,7 @@ class AbstractItemTarget(
         # Allow to set active to false
         if self.is_active():
             loading_log = self.log(
-                message=f"{SpinnerPool.next()} @path{{{self.get_display_path()}}}",
+                message=f"{SpinnerPool.shared().next()} @path{{{self.get_display_path()}}}",
             )
 
             has_task: bool = False
