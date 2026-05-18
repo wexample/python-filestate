@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
-from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
@@ -14,7 +13,6 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import (
         FileStringOrPath,
         PathOrString,
-        StringKeysDict,
     )
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -24,11 +22,6 @@ if TYPE_CHECKING:
 
 @base_class
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    shortcuts: StringKeysDict = public_field(
-        factory=dict,
-        description="The list of referenced shortcuts pointing to items anywhere in the tree",
-    )
-
     @classmethod
     def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
         from pathlib import Path
@@ -254,19 +247,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return []
 
-    def get_shortcut(self, name: str) -> AbstractItemTarget | None:
-        return self.shortcuts[name] if name in self.shortcuts else None
-
-    def get_shortcut_or_fail(self, name: str) -> AbstractItemTarget | None:
-        from wexample_filestate.exception.undefined_shortcut_exception import (
-            UndefinedShortcutException,
-        )
-
-        shortcut = self.get_shortcut(name=name)
-
-        if shortcut is None:
-            raise UndefinedShortcutException(shortcut=name, root_item=self)
-
     def prepare_value(self, raw_value: Any) -> Any:
         from wexample_filestate.option.children_option import (
             ChildrenOption,
@@ -277,18 +257,3 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             raw_value[key] = []
 
         return raw_value
-
-    def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
-        from wexample_filestate.exception.existing_shortcut_exception import (
-            ExistingShortcutException,
-        )
-
-        if name in self.shortcuts:
-            raise ExistingShortcutException(
-                shortcut=name,
-                new_item=children,
-                existing_item=self.shortcuts[name],
-                root_item=self,
-            )
-
-        self.shortcuts[name] = children

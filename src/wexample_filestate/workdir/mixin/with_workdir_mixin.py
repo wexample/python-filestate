@@ -76,8 +76,8 @@ class WithWorkdirMixin(BaseClass):
         from wexample_filestate.utils.file_state_manager import FileStateManager
 
         # Defer expensive option-tree construction (135ms+ for WexWorkdir).
-        # Call self.workdir.configure(config) before operations that need shortcuts
-        # or option lookups (apply, dry_run, find_by_path, get_option, get_shortcut).
+        # Call self.workdir.configure(config) before operations that need
+        # option lookups (apply, dry_run, find_by_path, get_option).
         self.workdir = self._create_workdir_state_manager(
             entrypoint_path=entrypoint_path,
             io=io,
