@@ -49,9 +49,13 @@ class WithWorkdirMixin(BaseClass):
         entrypoint_path: str,
         io: IoManager,
         config: DictConfig | None = None,
+        configure: bool = True,
     ) -> FileStateManager:
         return self._get_workdir_state_manager_class().create_from_path(
-            path=entrypoint_path, config=config or {}, io=io
+            path=entrypoint_path,
+            config=config or {},
+            io=io,
+            configure=configure,
         )
 
     def _get_workdir_state_manager_class(
