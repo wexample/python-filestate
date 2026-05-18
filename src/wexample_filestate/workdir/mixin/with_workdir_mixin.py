@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
@@ -70,7 +69,6 @@ class WithWorkdirMixin(BaseClass):
     ) -> None:
         import os
 
-        from wexample_filestate.enum.scopes import Scope
         from wexample_filestate.utils.file_state_manager import FileStateManager
 
         self.workdir = self._create_workdir_state_manager(
@@ -78,23 +76,6 @@ class WithWorkdirMixin(BaseClass):
             io=io,
             config=config,
         )
-
-        # Hide core config logs
-        original_verbosity = io.default_response_verbosity
-        io.default_response_verbosity = VerbosityLevel.MAXIMUM
-
-        # Ensure files state, but not content at this point.
-        self.workdir.apply(
-            scopes={
-                Scope.LOCATION,
-                Scope.NAME,
-                Scope.OWNERSHIP,
-                Scope.PERMISSIONS,
-                Scope.TIMESTAMPS,
-            },
-        )
-
-        io.default_response_verbosity = original_verbosity
 
         # The calling workdir may be in a virtual env host system.
         self.host_workdir = FileStateManager.create_from_path(path=os.getcwd(), io=io)
