@@ -33,10 +33,16 @@ class AbstractResult(PrintableMixin, BaseClass):
     def apply_operations(self, interactive: bool = False) -> None:
         self._executed_operations = []
 
-        # Define order of operations based on rollback mode
+        # Interactive (user confirms each op) and rollback (reverse order) stay sequential.
+        if interactive or self.rollback:
+            self._apply_operations_sequential(interactive=interactive)
+            return
+
+        self._apply_operations_parallel()
+
+    def _apply_operations_sequential(self, interactive: bool = False) -> None:
         operations = reversed(self.operations) if self.rollback else self.operations
 
-        # Apply each operation directly (no dependencies needed)
         for operation in operations:
             if operation in self._executed_operations:
                 continue
@@ -67,6 +73,48 @@ class AbstractResult(PrintableMixin, BaseClass):
                         f"    → {operation.description}\n"
                         f"    ⋮ Operation aborted"
                     )
+
+    def _apply_operations_parallel(self) -> None:
+        """Run independent operations in a thread pool; emit logs in input order
+        after completion to avoid interleaved output.
+        """
+        from wexample_helpers.helpers.parallel import parallel_map
+
+        # Dedupe by identity (Operation instances are not hashable) while
+        # preserving order — parity with the sequential `if op in
+        # _executed_operations: continue` guard.
+        seen_ids: set[int] = set()
+        unique_ops: list[AbstractOperation] = []
+        for op in self.operations:
+            if id(op) not in seen_ids:
+                seen_ids.add(id(op))
+                unique_ops.append(op)
+
+        def _do(operation: AbstractOperation) -> tuple[AbstractOperation, bool]:
+            applied = self._apply_single_operation(
+                operation=operation, interactive=False
+            )
+            return (operation, applied)
+
+        results = parallel_map(unique_ops, _do)
+
+        for operation, applied in results:
+            self.state_manager.subtitle(
+                f"OPERATION: {operation.get_snake_short_class_name().upper()}"
+            )
+            if applied:
+                operation.applied = True
+                self._executed_operations.append(operation)
+                self.state_manager.task(
+                    message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                    f"    → {operation.description}\n"
+                )
+            else:
+                self.state_manager.log(
+                    message=f"{operation.target.get_item_title()}: {operation.target.render_display_path()}\n"
+                    f"    → {operation.description}\n"
+                    f"    ⋮ Operation aborted"
+                )
 
     @abstract_method
     def _apply_single_operation(
