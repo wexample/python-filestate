@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
+from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
@@ -22,6 +23,13 @@ if TYPE_CHECKING:
 
 @base_class
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
+    _tree_built: bool = private_field(
+        default=False,
+        description="True once build_item_tree has materialized direct children. "
+        "Used to make tree construction idempotent and to trigger lazy build "
+        "on first get_children_list() call.",
+    )
+
     @classmethod
     def create_from_path(cls, path: PathOrString, **kwargs) -> ItemTargetDirectory:
         from pathlib import Path
@@ -37,6 +45,10 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         from wexample_filestate.config_option.mixin.item_config_option_mixin import (
             ItemTreeConfigOptionMixin,
         )
+
+        if self._tree_built:
+            return
+        self._tree_built = True
 
         super().build_item_tree()
 
@@ -89,23 +101,44 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             self.set_value(raw_value=yaml_read(str(path)))
 
     def find_all_by_type(
-        self, class_type: type[AbstractItemTarget], recursive: bool = False
+        self,
+        class_type: type[AbstractItemTarget],
+        recursive: bool = False,
+        stop_at_match: bool = True,
     ) -> list[AbstractItemTarget]:
-        results = []
+        """Collect descendants matching ``class_type``.
+
+        With ``stop_at_match=True`` (default), a matched node is added to the
+        result but its subtree is not walked. This avoids materializing inner
+        trees of "boundary" entities (e.g., packages within a suite), which is
+        what callers want 99% of the time. Pass ``stop_at_match=False`` to
+        also enumerate nested matches.
+        """
+        results: list[AbstractItemTarget] = []
 
         if recursive:
-
-            def collector(item: AbstractItemTarget) -> None:
-                if isinstance(item, class_type):
-                    results.append(item)
-
-            self.for_each_child_recursive(collector)
+            self._find_all_by_type_recursive(class_type, stop_at_match, results)
         else:
             for child in self.get_children_list():
                 if isinstance(child, class_type):
                     results.append(child)
 
         return results
+
+    def _find_all_by_type_recursive(
+        self,
+        class_type: type[AbstractItemTarget],
+        stop_at_match: bool,
+        results: list[AbstractItemTarget],
+    ) -> None:
+        for child in self.get_children_list():
+            is_match = isinstance(child, class_type)
+            if is_match:
+                results.append(child)
+                if stop_at_match:
+                    continue
+            if isinstance(child, ItemTargetDirectory):
+                child._find_all_by_type_recursive(class_type, stop_at_match, results)
 
     def find_by_name(
         self, item_name: PathOrString, recursive: bool = False
@@ -240,6 +273,9 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         from wexample_filestate.option.children_option import (
             ChildrenOption,
         )
+
+        if not self._tree_built:
+            self.build_item_tree()
 
         option = cast(ChildrenOption, self.get_option(ChildrenOption))
         if option is not None:

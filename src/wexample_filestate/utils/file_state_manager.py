@@ -14,6 +14,6 @@ if TYPE_CHECKING:
 class FileStateManager(ItemTargetDirectory):
     def configure(self, config: DictConfig) -> None:
         super().configure(config=config)
-
-        # As root
-        self.build_item_tree()
+        # Tree is built lazily: get_children_list() triggers build_item_tree()
+        # on the root, which materializes direct children only. Recursion happens
+        # lazily as each child's get_children_list() is accessed.
