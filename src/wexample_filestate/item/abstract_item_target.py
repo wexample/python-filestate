@@ -78,6 +78,7 @@ class AbstractItemTarget(
         path: PathOrString,
         config: DictConfig | None = None,
         configure: bool = True,
+        eager: bool = False,
         **kwargs,
     ) -> AbstractItemTarget:
         from pathlib import Path
@@ -90,7 +91,7 @@ class AbstractItemTarget(
         )
 
         if configure:
-            item_target.configure(config=config)
+            item_target.configure(config=config, eager=eager)
 
         return item_target
 
@@ -182,7 +183,15 @@ class AbstractItemTarget(
         self.io.indentation_down()
         return has_any_task
 
-    def configure(self, config: DictConfig) -> None:
+    def configure(self, config: DictConfig, eager: bool = False) -> None:
+        """Configure this item from a raw config dict.
+
+        With ``eager=False`` (default), the item tree is built lazily on access.
+        With ``eager=True``, force a recursive materialization of the full tree
+        right after configuration — same behavior as before the lazy refactor.
+        Useful when you want fail-fast validation, or when downstream code
+        cannot tolerate lazy walks.
+        """
         self.set_value(raw_value=config)
 
         # Name is allways here, as an option and as an argument.
@@ -221,6 +230,10 @@ class AbstractItemTarget(
         return result
 
     def dump(self) -> Any:
+        # Tree is built lazily; force materialization here so the dump reflects
+        # the configured structure (otherwise children list would be empty).
+        if hasattr(self, "_tree_built") and not self._tree_built:
+            self.build_item_tree()
         output = super().dump()
         output["name"] = self.get_item_name()
 

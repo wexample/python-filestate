@@ -56,6 +56,17 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             if isinstance(option, ItemTreeConfigOptionMixin):
                 option.build_item_tree()
 
+    def build_item_tree_recursive(self) -> None:
+        """Force full recursive materialization of the item tree.
+
+        By default, build_item_tree() only materializes direct children — deeper
+        levels are built lazily on access. Call this method when you need the
+        complete tree right now (e.g., for eager validation or bulk operations).
+        """
+        for child in self.get_children_list():
+            if isinstance(child, ItemTargetDirectory):
+                child.build_item_tree_recursive()
+
     def build_operations(
         self,
         result: AbstractResult,
