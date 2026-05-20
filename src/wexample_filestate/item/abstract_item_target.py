@@ -314,16 +314,6 @@ class AbstractItemTarget(
         self._cached_path_key = key
         return path
 
-    def _invalidate_path_cache(self) -> None:
-        """Drop the memoized path so the next :meth:`get_path` recomputes.
-
-        :class:`ItemTargetDirectory` overrides this to also invalidate any
-        already-materialized descendants whose cached paths were built using
-        this item's path as a prefix.
-        """
-        self._cached_path = None
-        self._cached_path_key = None
-
     def get_relative_path(self) -> Path | None:
         root = self.get_root()
         if root:
@@ -461,6 +451,16 @@ class AbstractItemTarget(
 
     def _init_listeners(self) -> None:
         """Add event listeners"""
+
+    def _invalidate_path_cache(self) -> None:
+        """Drop the memoized path so the next :meth:`get_path` recomputes.
+
+        :class:`ItemTargetDirectory` overrides this to also invalidate any
+        already-materialized descendants whose cached paths were built using
+        this item's path as a prefix.
+        """
+        self._cached_path = None
+        self._cached_path_key = None
 
     def _operation_passes_filters(
         self,

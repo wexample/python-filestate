@@ -42,19 +42,6 @@ class DiskPersistedRegistry(Registry[T]):
         except FileNotFoundError:
             return False
 
-    def save(self) -> None:
-        """Serialize current items to the backing file.
-
-        Items implementing serialize() are converted; others are kept raw.
-        """
-        if self._file is None:
-            raise RuntimeError("No StructuredContentFile configured for persistence")
-        payload = {
-            key: (item.serialize() if hasattr(item, "serialize") else item)
-            for key, item in self._items.items()
-        }
-        self._file.write_parsed(payload)
-
     def load(self, item_class: type[T] | None = None) -> None:
         """Hydrate the registry from the backing file.
 
@@ -72,3 +59,16 @@ class DiskPersistedRegistry(Registry[T]):
                 self._items[key] = item_class.hydrate(entry)
             else:
                 self._items[key] = entry
+
+    def save(self) -> None:
+        """Serialize current items to the backing file.
+
+        Items implementing serialize() are converted; others are kept raw.
+        """
+        if self._file is None:
+            raise RuntimeError("No StructuredContentFile configured for persistence")
+        payload = {
+            key: (item.serialize() if hasattr(item, "serialize") else item)
+            for key, item in self._items.items()
+        }
+        self._file.write_parsed(payload)

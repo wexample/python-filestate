@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.enum.scopes import Scope
-    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.abstract_result import AbstractResult
 
 
@@ -41,14 +40,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             path = path.parent
 
         return super().create_from_path(path=path, **kwargs)
-
-    def _invalidate_path_cache(self) -> None:
-        super()._invalidate_path_cache()
-        # Only descend into already-materialized children — unbuilt sub-trees
-        # have no cached path yet, so there's nothing to invalidate there.
-        if self._tree_built:
-            for child in self.get_children_list():
-                child._invalidate_path_cache()
 
     def build_item_tree(self) -> None:
         from wexample_filestate.config_option.mixin.item_config_option_mixin import (
@@ -144,21 +135,6 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                     results.append(child)
 
         return results
-
-    def _find_all_by_type_recursive(
-        self,
-        class_type: type[AbstractItemTarget],
-        stop_at_match: bool,
-        results: list[AbstractItemTarget],
-    ) -> None:
-        for child in self.get_children_list():
-            is_match = isinstance(child, class_type)
-            if is_match:
-                results.append(child)
-                if stop_at_match:
-                    continue
-            if isinstance(child, ItemTargetDirectory):
-                child._find_all_by_type_recursive(class_type, stop_at_match, results)
 
     def find_by_name(
         self, item_name: PathOrString, recursive: bool = False
@@ -313,3 +289,26 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             raw_value[key] = []
 
         return raw_value
+
+    def _find_all_by_type_recursive(
+        self,
+        class_type: type[AbstractItemTarget],
+        stop_at_match: bool,
+        results: list[AbstractItemTarget],
+    ) -> None:
+        for child in self.get_children_list():
+            is_match = isinstance(child, class_type)
+            if is_match:
+                results.append(child)
+                if stop_at_match:
+                    continue
+            if isinstance(child, ItemTargetDirectory):
+                child._find_all_by_type_recursive(class_type, stop_at_match, results)
+
+    def _invalidate_path_cache(self) -> None:
+        super()._invalidate_path_cache()
+        # Only descend into already-materialized children — unbuilt sub-trees
+        # have no cached path yet, so there's nothing to invalidate there.
+        if self._tree_built:
+            for child in self.get_children_list():
+                child._invalidate_path_cache()
