@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.field import public_field
@@ -29,16 +28,19 @@ class FileRenameOperation(AbstractFileManipulationOperation):
 
     def apply_operation(self) -> None:
         self._backup_target_file()
-
-        old_path = self._original_path
-        new_path = old_path.parent / self.new_name
-
-        os.rename(old_path, new_path)
+        self._rename_target(new_name=self.new_name)
 
     def undo(self) -> None:
-        # Rename back from new name to original name
-        old_path = self._original_path
-        new_path = old_path.parent / self.new_name
+        # Rename back from the new name to the original name.
+        self._rename_target(new_name=self._original_path.name)
 
-        # Rename back to original name
-        os.rename(new_path, old_path)
+    def _rename_target(self, new_name: str) -> None:
+        if self.target.is_file():
+            self.target.get_local_file().rename(new_name)
+        else:
+            self.target.get_local_directory().rename(new_name)
+
+        # Sync the in-memory item: update base_name and drop memoized paths
+        # on this item plus any already-materialized descendants.
+        self.target.base_name = new_name
+        self.target._invalidate_path_cache()

@@ -42,6 +42,14 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return super().create_from_path(path=path, **kwargs)
 
+    def _invalidate_path_cache(self) -> None:
+        super()._invalidate_path_cache()
+        # Only descend into already-materialized children — unbuilt sub-trees
+        # have no cached path yet, so there's nothing to invalidate there.
+        if self._tree_built:
+            for child in self.get_children_list():
+                child._invalidate_path_cache()
+
     def build_item_tree(self) -> None:
         from wexample_filestate.config_option.mixin.item_config_option_mixin import (
             ItemTreeConfigOptionMixin,

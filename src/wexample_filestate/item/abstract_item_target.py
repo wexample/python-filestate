@@ -8,6 +8,7 @@ from wexample_config.config_option.abstract_nested_config_option import (
 )
 from wexample_event.common.dispatcher import EventDispatcherMixin
 from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
@@ -56,6 +57,15 @@ class AbstractItemTarget(
     )
     source: SourceFileOrDirectory | None = public_field(
         default=None, description="The original existing file or directory"
+    )
+    _cached_path: Path | None = private_field(
+        default=None,
+        description="Memoized result of get_path(); invariant for stable config.",
+    )
+    _cached_path_key: tuple | None = private_field(
+        default=None,
+        description="Inputs (base_path, base_name) used to compute _cached_path; "
+        "drives auto-invalidation if either changes.",
     )
     _enable_bubbling = True
 
@@ -183,20 +193,6 @@ class AbstractItemTarget(
         self.io.indentation_down()
         return has_any_task
 
-    def inspect_for_operation(
-        self,
-        scopes: set[Scope],
-        filter_operation: str | None = None,
-    ) -> AbstractOperation | None:
-        """Pure per-item inspection — no UI side effects, safe for parallel use.
-
-        Returns the first matching operation or None. Caller is responsible for
-        respecting filter_paths and is_active() upstream.
-        """
-        if not self.is_active():
-            return None
-        return self._find_first_operation(scopes, filter_operation)
-
     def configure(self, config: DictConfig, eager: bool = False) -> None:
         """Configure this item from a raw config dict.
 
@@ -303,13 +299,30 @@ class AbstractItemTarget(
     def get_path(self) -> Path:
         from pathlib import Path
 
+        key = (self.base_path, self.base_name)
+        if self._cached_path is not None and self._cached_path_key == key:
+            return self._cached_path
+
         # Base path is specified, for instance for the tree root.
         if self.base_path is not None:
             base_path = Path(self.base_path)
         else:
             base_path = self.get_parent_item().get_path()
 
-        return base_path / Path(self.get_item_name())
+        path = base_path / Path(self.get_item_name())
+        self._cached_path = path
+        self._cached_path_key = key
+        return path
+
+    def _invalidate_path_cache(self) -> None:
+        """Drop the memoized path so the next :meth:`get_path` recomputes.
+
+        :class:`ItemTargetDirectory` overrides this to also invalidate any
+        already-materialized descendants whose cached paths were built using
+        this item's path as a prefix.
+        """
+        self._cached_path = None
+        self._cached_path_key = None
 
     def get_relative_path(self) -> Path | None:
         root = self.get_root()
