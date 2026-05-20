@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import shutil
 from typing import TYPE_CHECKING
 
@@ -26,7 +25,7 @@ class FileRemoveOperation(AbstractFileManipulationOperation):
         self._backup_target_file()
 
         if self.target.is_file():
-            os.remove(self._original_path)
+            self.target.get_local_file().remove()
         elif self.target.is_directory():
             shutil.rmtree(self._original_path)
 

@@ -230,12 +230,6 @@ class AbstractItemTarget(
         result = FileStateDryRunResult(state_manager=self)
         try:
             self.last_result = result
-            # Eagerly run batch tools (Black, isort, ...) once and cache results
-            # before the per-item inspection. Without this, parallel inspection
-            # has N workers all triggering N independent tool runs because each
-            # one races on the cache miss.
-            self._prepare_options(scopes=scopes, filter_paths=filter_paths)
-
             self.build_operations(
                 result=result,
                 scopes=scopes,

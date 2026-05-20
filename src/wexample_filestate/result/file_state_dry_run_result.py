@@ -13,9 +13,3 @@ class FileStateDryRunResult(AbstractResult):
         self, operation: AbstractOperation, interactive: bool = False
     ) -> bool:
         return True
-
-    def apply_operations(self, interactive: bool = False) -> None:
-        # Dry-run does no I/O — parallelization adds thread-pool overhead with
-        # zero benefit. Force the sequential path.
-        self._executed_operations = []
-        self._apply_operations_sequential(interactive=interactive)
