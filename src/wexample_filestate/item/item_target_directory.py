@@ -149,10 +149,13 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         - ``max`` parameter is not supported here — caller falls back to the
           sequential path when max is set.
         """
-        import itertools
+        import threading
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         from wexample_helpers.helpers.parallel import PARALLEL_DEFAULT_MAX_WORKERS
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         self.log(message="Scanning workdir...")
         items = self._collect_inspectable_items(filter_paths=filter_paths)
@@ -160,38 +163,87 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             return False
 
         total = len(items)
-        self.log(message=f"Inspecting {total} items...")
 
-        # Per-worker "now checking" log: lets the user see which file each
-        # thread is on. We accept that lines from concurrent workers interleave
-        # — single-line writes to stdout are atomic on Linux up to PIPE_BUF,
-        # which our path strings easily fit into. The counter is the start
-        # ordinal (itertools.count is thread-safe in CPython), so numbers may
-        # appear out of order on screen — that's expected with parallel execution.
-        start_counter = itertools.count(1)
+        # ---- shared state (touched by pool dispatcher + workers + screen) ----
+        state_lock = threading.Lock()
+        workers_current: dict[int, str] = {}  # tid -> path being inspected
+        done_count = {"n": 0}
+        pool_done = threading.Event()
+        pool_exception: list[BaseException | None] = [None]
+        pairs: list[tuple[AbstractItemTarget, AbstractOperation | None]] = []
 
+        # ---- screen (push-refreshed by workers and pool dispatcher) ----
+        # Use the longest path as a hint for how wide each line will be when
+        # building the height, but cap by max_workers (one line per worker).
+        screen_height = min(PARALLEL_DEFAULT_MAX_WORKERS, total) + 2
+
+        def _screen_callback(response: ScreenPromptResponse) -> None:
+            with state_lock:
+                done = done_count["n"]
+                current_paths = list(workers_current.values())
+            response.clear()
+            response.print(f"Inspecting {done}/{total} items")
+            for path in current_paths:
+                response.print(f"  ⏳ {path}")
+            if pool_done.is_set() and done >= total:
+                response.close()
+
+        screen = ScreenPromptResponse.create_screen(
+            callback=_screen_callback,
+            height=screen_height,
+            reset_on_finish=True,
+        )
+
+        # ---- worker function ----
         def _do(
             item: AbstractItemTarget,
         ) -> tuple[AbstractItemTarget, AbstractOperation | None]:
-            idx = next(start_counter)
-            self.log(message=f"  [{idx}/{total}] {item.get_path()}")
-            return (item, item.inspect_for_operation(scopes, filter_operation))
+            tid = threading.get_ident()
+            with state_lock:
+                workers_current[tid] = str(item.get_path())
+            screen.request_refresh()
+            try:
+                result = (item, item.inspect_for_operation(scopes, filter_operation))
+            finally:
+                with state_lock:
+                    workers_current.pop(tid, None)
+                    done_count["n"] += 1
+                screen.request_refresh()
+            return result
 
-        pairs: list[tuple[AbstractItemTarget, AbstractOperation | None]] = []
+        # ---- pool dispatcher (background thread so main can drive the screen) ----
+        def _run_pool() -> None:
+            try:
+                # Not using `with ThreadPoolExecutor`: its __exit__ does
+                # shutdown(wait=True), which blocks Ctrl+C until in-flight
+                # workers finish. cancel_futures=True at least cancels queued
+                # tasks immediately on early exit.
+                executor = ThreadPoolExecutor(
+                    max_workers=PARALLEL_DEFAULT_MAX_WORKERS
+                )
+                try:
+                    futures = [executor.submit(_do, it) for it in items]
+                    for future in as_completed(futures):
+                        pairs.append(future.result())
+                finally:
+                    executor.shutdown(wait=False, cancel_futures=True)
+            except BaseException as exc:  # noqa: BLE001
+                pool_exception[0] = exc
+            finally:
+                pool_done.set()
+                screen.request_refresh()  # wake screen so it observes pool_done
 
-        # NOTE: not using `with ThreadPoolExecutor(...) as executor` because
-        # its __exit__ does shutdown(wait=True), which blocks Ctrl+C until all
-        # in-flight workers finish (some may run external tools like black for
-        # 15+ seconds each). With cancel_futures=True, Ctrl+C at least cancels
-        # the queued tasks immediately — already-running tasks still finish
-        # (Python has no way to abort a running thread).
-        executor = ThreadPoolExecutor(max_workers=PARALLEL_DEFAULT_MAX_WORKERS)
-        try:
-            futures = [executor.submit(_do, item) for item in items]
-            for future in as_completed(futures):
-                pairs.append(future.result())
-        finally:
-            executor.shutdown(wait=False, cancel_futures=True)
+        pool_thread = threading.Thread(target=_run_pool, daemon=True)
+        pool_thread.start()
+
+        # Main thread now drives the screen (blocks until _screen_callback
+        # calls response.close() when pool_done is set and all items finished).
+        self.io.print_response(response=screen)
+
+        # Ensure pool thread is joined and surface any error.
+        pool_thread.join()
+        if pool_exception[0] is not None:
+            raise pool_exception[0]
 
         # Deterministic order: sort by absolute path string.
         pairs_sorted = sorted(pairs, key=lambda pair: str(pair[0].get_path()))
