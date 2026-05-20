@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
-from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.item.abstract_item_target import AbstractItemTarget
@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from wexample_helpers.const.types import (
         FileStringOrPath,
         PathOrString,
-        StringKeysDict,
     )
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
@@ -24,9 +23,11 @@ if TYPE_CHECKING:
 
 @base_class
 class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
-    shortcuts: StringKeysDict = public_field(
-        factory=dict,
-        description="The list of referenced shortcuts pointing to items anywhere in the tree",
+    _tree_built: bool = private_field(
+        default=False,
+        description="True once build_item_tree has materialized direct children. "
+        "Used to make tree construction idempotent and to trigger lazy build "
+        "on first get_children_list() call.",
     )
 
     @classmethod
@@ -45,11 +46,26 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             ItemTreeConfigOptionMixin,
         )
 
+        if self._tree_built:
+            return
+        self._tree_built = True
+
         super().build_item_tree()
 
         for option in self.options.values():
             if isinstance(option, ItemTreeConfigOptionMixin):
                 option.build_item_tree()
+
+    def build_item_tree_recursive(self) -> None:
+        """Force full recursive materialization of the item tree.
+
+        By default, build_item_tree() only materializes direct children — deeper
+        levels are built lazily on access. Call this method when you need the
+        complete tree right now (e.g., for eager validation or bulk operations).
+        """
+        for child in self.get_children_list():
+            if isinstance(child, ItemTargetDirectory):
+                child.build_item_tree_recursive()
 
     def build_operations(
         self,
@@ -96,17 +112,23 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             self.set_value(raw_value=yaml_read(str(path)))
 
     def find_all_by_type(
-        self, class_type: type[AbstractItemTarget], recursive: bool = False
+        self,
+        class_type: type[AbstractItemTarget],
+        recursive: bool = False,
+        stop_at_match: bool = True,
     ) -> list[AbstractItemTarget]:
-        results = []
+        """Collect descendants matching ``class_type``.
+
+        With ``stop_at_match=True`` (default), a matched node is added to the
+        result but its subtree is not walked. This avoids materializing inner
+        trees of "boundary" entities (e.g., packages within a suite), which is
+        what callers want 99% of the time. Pass ``stop_at_match=False`` to
+        also enumerate nested matches.
+        """
+        results: list[AbstractItemTarget] = []
 
         if recursive:
-
-            def collector(item: AbstractItemTarget) -> None:
-                if isinstance(item, class_type):
-                    results.append(item)
-
-            self.for_each_child_recursive(collector)
+            self._find_all_by_type_recursive(class_type, stop_at_match, results)
         else:
             for child in self.get_children_list():
                 if isinstance(child, class_type):
@@ -248,24 +270,14 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             ChildrenOption,
         )
 
+        if not self._tree_built:
+            self.build_item_tree()
+
         option = cast(ChildrenOption, self.get_option(ChildrenOption))
         if option is not None:
             return option.get_children()
 
         return []
-
-    def get_shortcut(self, name: str) -> AbstractItemTarget | None:
-        return self.shortcuts[name] if name in self.shortcuts else None
-
-    def get_shortcut_or_fail(self, name: str) -> AbstractItemTarget | None:
-        from wexample_filestate.exception.undefined_shortcut_exception import (
-            UndefinedShortcutException,
-        )
-
-        shortcut = self.get_shortcut(name=name)
-
-        if shortcut is None:
-            raise UndefinedShortcutException(shortcut=name, root_item=self)
 
     def prepare_value(self, raw_value: Any) -> Any:
         from wexample_filestate.option.children_option import (
@@ -278,17 +290,25 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
 
         return raw_value
 
-    def set_shortcut(self, name: str, children: AbstractItemTarget) -> None:
-        from wexample_filestate.exception.existing_shortcut_exception import (
-            ExistingShortcutException,
-        )
+    def _find_all_by_type_recursive(
+        self,
+        class_type: type[AbstractItemTarget],
+        stop_at_match: bool,
+        results: list[AbstractItemTarget],
+    ) -> None:
+        for child in self.get_children_list():
+            is_match = isinstance(child, class_type)
+            if is_match:
+                results.append(child)
+                if stop_at_match:
+                    continue
+            if isinstance(child, ItemTargetDirectory):
+                child._find_all_by_type_recursive(class_type, stop_at_match, results)
 
-        if name in self.shortcuts:
-            raise ExistingShortcutException(
-                shortcut=name,
-                new_item=children,
-                existing_item=self.shortcuts[name],
-                root_item=self,
-            )
-
-        self.shortcuts[name] = children
+    def _invalidate_path_cache(self) -> None:
+        super()._invalidate_path_cache()
+        # Only descend into already-materialized children — unbuilt sub-trees
+        # have no cached path yet, so there's nothing to invalidate there.
+        if self._tree_built:
+            for child in self.get_children_list():
+                child._invalidate_path_cache()

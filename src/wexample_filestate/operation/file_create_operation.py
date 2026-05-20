@@ -44,7 +44,7 @@ class FileCreateOperation(AbstractFileManipulationOperation):
 
     def undo(self) -> None:
         if self.target.is_file():
-            os.remove(self._original_path)
+            self.target.get_local_file().remove()
         elif self.target.is_directory():
             # Do not remove recursively, as for now it only can be created empty with mkdir.
             os.rmdir(self._original_path)

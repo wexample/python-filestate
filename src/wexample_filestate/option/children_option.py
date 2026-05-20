@@ -31,11 +31,9 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
 
     def build_item_tree(self) -> None:
         super().build_item_tree()
-        children = self.create_children_items()
-
-        # Continue item tree.
-        for child in children:
-            child.build_item_tree()
+        # Materialize direct children only. Each child triggers its own
+        # build_item_tree() lazily on first get_children_list() call.
+        self.create_children_items()
 
     def create_child_item(
         self, child_config: DictConfig, item_name: str | None = None

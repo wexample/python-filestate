@@ -25,8 +25,12 @@ class TestFileStateManager(AbstractStateManagerTest):
         class BadClass:
             pass
 
+        # eager=True forces immediate materialization, so the bad class is
+        # detected at configure time (fail-fast semantics).
         with pytest.raises(BadConfigurationClassTypeException):
-            self.state_manager.configure(config={"children": [{"class": BadClass}]})
+            self.state_manager.configure(
+                config={"children": [{"class": BadClass}]}, eager=True
+            )
 
     def test_configure_from_callback(self, tmp_path) -> None:
         self._setup_with_tmp_path(tmp_path)

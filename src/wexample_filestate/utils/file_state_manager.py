@@ -12,8 +12,11 @@ if TYPE_CHECKING:
 
 @base_class
 class FileStateManager(ItemTargetDirectory):
-    def configure(self, config: DictConfig) -> None:
-        super().configure(config=config)
-
-        # As root
-        self.build_item_tree()
+    def configure(self, config: DictConfig, eager: bool = False) -> None:
+        super().configure(config=config, eager=eager)
+        # Tree is built lazily: get_children_list() triggers build_item_tree()
+        # on the root, which materializes direct children only. Recursion happens
+        # lazily as each child's get_children_list() is accessed.
+        # With eager=True, force full recursive materialization right away.
+        if eager:
+            self.build_item_tree_recursive()

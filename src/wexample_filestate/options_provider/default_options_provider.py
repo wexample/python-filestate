@@ -43,9 +43,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
         from wexample_filestate.option.remove_backup_max_file_size_option import (
             RemoveBackupMaxFileSizeOption,
         )
-        from wexample_filestate.option.shortcut_option import (
-            ShortcutOption,
-        )
         from wexample_filestate.option.should_contain_lines_option import (
             ShouldContainLinesOption,
         )
@@ -81,7 +78,6 @@ class DefaultOptionsProvider(AbstractOptionsProvider):
             NameOption,
             OnBadFormatOption,
             RemoveBackupMaxFileSizeOption,
-            ShortcutOption,
             ShouldContainLinesOption,
             ShouldExistOption,
             ShouldHaveExtensionOption,

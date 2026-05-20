@@ -31,12 +31,15 @@ class FileChangeModeOperation(AbstractOperation):
         default=None,
     )
     _original_gid: int | None = private_field(
+        default=None,
         description="Cached gid to provide undo",
     )
     _original_octal_mode: str | None = private_field(
-        description="Cached mode to provide undo"
+        default=None,
+        description="Cached mode to provide undo",
     )
     _original_uid: int | None = private_field(
+        default=None,
         description="Cached uid to provide undo",
     )
 

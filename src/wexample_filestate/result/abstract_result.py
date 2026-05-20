@@ -33,10 +33,8 @@ class AbstractResult(PrintableMixin, BaseClass):
     def apply_operations(self, interactive: bool = False) -> None:
         self._executed_operations = []
 
-        # Define order of operations based on rollback mode
         operations = reversed(self.operations) if self.rollback else self.operations
 
-        # Apply each operation directly (no dependencies needed)
         for operation in operations:
             if operation in self._executed_operations:
                 continue
