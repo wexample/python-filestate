@@ -102,38 +102,6 @@ class StructuredContentFile(ItemTargetFile):
             # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
             self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))
 
-        try:
-            p = str(self.get_path())
-        except Exception:
-            p = "?"
-        if (
-            p.endswith("/.wex/config.yml")
-            and "/packages/" in p
-            and "/PYTHON/.wex/" not in p
-        ):
-            import sys
-
-            text_snippet = (self._text_cache or "")[:300].replace("\n", "\\n")
-            try:
-                pv = self._content_cache_config.search(
-                    "global.version"
-                ).get_str_or_none()
-            except Exception as e:
-                pv = f"ERR:{e}"
-            try:
-                parsed_v = (
-                    self._parsed_cache["global"]["version"]
-                    if self._parsed_cache
-                    else None
-                )
-            except Exception as e:
-                parsed_v = f"ERR:{e}"
-            print(
-                f"[READ-CONFIG] path={p} cfg.global.version={pv} parsed.global.version={parsed_v} "
-                f"text_cache_snippet={text_snippet!r}",
-                file=sys.stderr,
-                flush=True,
-            )
         return self._content_cache_config
 
     def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
