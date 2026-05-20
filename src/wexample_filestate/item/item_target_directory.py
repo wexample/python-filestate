@@ -149,6 +149,7 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         - ``max`` parameter is not supported here — caller falls back to the
           sequential path when max is set.
         """
+        import itertools
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         from wexample_helpers.helpers.parallel import PARALLEL_DEFAULT_MAX_WORKERS
@@ -158,11 +159,22 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         if not items:
             return False
 
-        self.log(message=f"Inspecting {len(items)} items...")
+        total = len(items)
+        self.log(message=f"Inspecting {total} items...")
+
+        # Per-worker "now checking" log: lets the user see which file each
+        # thread is on. We accept that lines from concurrent workers interleave
+        # — single-line writes to stdout are atomic on Linux up to PIPE_BUF,
+        # which our path strings easily fit into. The counter is the start
+        # ordinal (itertools.count is thread-safe in CPython), so numbers may
+        # appear out of order on screen — that's expected with parallel execution.
+        start_counter = itertools.count(1)
 
         def _do(
             item: AbstractItemTarget,
         ) -> tuple[AbstractItemTarget, AbstractOperation | None]:
+            idx = next(start_counter)
+            self.log(message=f"  [{idx}/{total}] {item.get_path()}")
             return (item, item.inspect_for_operation(scopes, filter_operation))
 
         pairs: list[tuple[AbstractItemTarget, AbstractOperation | None]] = []
