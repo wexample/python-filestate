@@ -137,24 +137,6 @@ class ItemFileMixin(WithLocalFileMixin, ItemMixin):
             return None
 
     def _is_cache_stale(self) -> bool:
-        result = self.__is_cache_stale_inner()
-        try:
-            p = str(self.get_path())
-        except Exception:
-            p = "?"
-        if "config.yml" in p or "version.txt" in p or "pyproject.toml" in p:
-            import sys
-
-            print(
-                f"[STALE-CHECK] path={p} cache_mtime_ns={self._cache_mtime_ns} "
-                f"disk_mtime_ns={self._get_disk_mtime_ns()} stale={result} "
-                f"text_cached={self._text_cache is not None}",
-                file=sys.stderr,
-                flush=True,
-            )
-        return result
-
-    def __is_cache_stale_inner(self) -> bool:
         if self._cache_mtime_ns is None:
             return False
         disk_mtime = self._get_disk_mtime_ns()
