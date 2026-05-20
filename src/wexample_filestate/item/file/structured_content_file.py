@@ -30,6 +30,14 @@ class StructuredContentFile(ItemTargetFile):
         self._parsed_cache = None
         self._content_cache_config = None
 
+    def clear_caches(self) -> None:
+        super().clear_caches()
+        # Derived caches must be reset alongside bytes/text caches to avoid a
+        # "zombie" state where the parsed/config cache survives a lower-level
+        # invalidation and is returned stale on the next read_config call.
+        self._parsed_cache = None
+        self._content_cache_config = None
+
     def dumps(self, content: Any) -> str:
         # Default fallback: stringify. Subclasses should override for structured formats.
         return str(content)
@@ -87,17 +95,49 @@ class StructuredContentFile(ItemTargetFile):
 
         from wexample_config.config_value.nested_config_value import NestedConfigValue
 
-        if reload:
+        if reload or self._is_cache_stale():
             self._content_cache_config = None
         if self._content_cache_config is None:
-            parsed = self.read_parsed()
+            parsed = self.read_parsed(reload=reload)
             # Pass a deep copy to avoid any in-place mutation of the shared parsed cache
             self._content_cache_config = NestedConfigValue(raw=deepcopy(parsed))
 
+        try:
+            p = str(self.get_path())
+        except Exception:
+            p = "?"
+        if (
+            p.endswith("/.wex/config.yml")
+            and "/packages/" in p
+            and "/PYTHON/.wex/" not in p
+        ):
+            import sys
+
+            text_snippet = (self._text_cache or "")[:300].replace("\n", "\\n")
+            try:
+                pv = self._content_cache_config.search(
+                    "global.version"
+                ).get_str_or_none()
+            except Exception as e:
+                pv = f"ERR:{e}"
+            try:
+                parsed_v = (
+                    self._parsed_cache["global"]["version"]
+                    if self._parsed_cache
+                    else None
+                )
+            except Exception as e:
+                parsed_v = f"ERR:{e}"
+            print(
+                f"[READ-CONFIG] path={p} cfg.global.version={pv} parsed.global.version={parsed_v} "
+                f"text_cache_snippet={text_snippet!r}",
+                file=sys.stderr,
+                flush=True,
+            )
         return self._content_cache_config
 
     def read_parsed(self, reload: bool = False, strict: bool = False) -> Any:
-        if reload or self._parsed_cache is None:
+        if reload or self._parsed_cache is None or self._is_cache_stale():
             text = super().read_text(reload=reload)
             self._parsed_cache = self.loads(text, strict=strict)
             # Invalidate config cache when parsed is reloaded
@@ -141,3 +181,8 @@ class StructuredContentFile(ItemTargetFile):
 
     def _expected_file_name_extension(self) -> str | None:
         return None
+
+    def _on_disk_reload(self) -> None:
+        super()._on_disk_reload()
+        self._parsed_cache = None
+        self._content_cache_config = None

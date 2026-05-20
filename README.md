@@ -1,6 +1,6 @@
 # filestate
 
-Version: 10.0.0
+Version: 11.0.0
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
@@ -86,12 +86,12 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - python-dotenv: 
 - ruamel-yaml: 
 - tomlkit: 
-- wexample-config: >=6.2.0
+- wexample-config: >=6.4.0
 - wexample-event: >=0.0.80
-- wexample-file: >=6.1.0
+- wexample-file: >=6.5.0
 - wexample-helpers-yaml: >=0.1.0
-- wexample-prompt: >=7.0.0
-- wexample-runner: >=7.0.0
+- wexample-prompt: >=9.0.0
+- wexample-runner: >=9.0.0
 - xmltodict:
 
 ## Versioning & Compatibility Policy
