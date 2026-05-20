@@ -183,6 +183,20 @@ class AbstractItemTarget(
         self.io.indentation_down()
         return has_any_task
 
+    def inspect_for_operation(
+        self,
+        scopes: set[Scope],
+        filter_operation: str | None = None,
+    ) -> AbstractOperation | None:
+        """Pure per-item inspection — no UI side effects, safe for parallel use.
+
+        Returns the first matching operation or None. Caller is responsible for
+        respecting filter_paths and is_active() upstream.
+        """
+        if not self.is_active():
+            return None
+        return self._find_first_operation(scopes, filter_operation)
+
     def configure(self, config: DictConfig, eager: bool = False) -> None:
         """Configure this item from a raw config dict.
 
@@ -216,6 +230,12 @@ class AbstractItemTarget(
         result = FileStateDryRunResult(state_manager=self)
         try:
             self.last_result = result
+            # Eagerly run batch tools (Black, isort, ...) once and cache results
+            # before the per-item inspection. Without this, parallel inspection
+            # has N workers all triggering N independent tool runs because each
+            # one races on the cache miss.
+            self._prepare_options(scopes=scopes, filter_paths=filter_paths)
+
             self.build_operations(
                 result=result,
                 scopes=scopes,

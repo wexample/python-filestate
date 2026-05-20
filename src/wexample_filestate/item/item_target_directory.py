@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
     from wexample_filestate.const.types_state_items import TargetFileOrDirectoryType
     from wexample_filestate.enum.scopes import Scope
+    from wexample_filestate.operation.abstract_operation import AbstractOperation
     from wexample_filestate.result.abstract_result import AbstractResult
 
 
@@ -75,6 +76,31 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         filter_operation: str | None = None,
         max: int = None,
     ) -> bool:
+        # max= requires accurate per-step counting to stop early → keep the
+        # sequential path (preserves the legacy UI feedback too).
+        if max is not None:
+            return self._build_operations_sequential(
+                result=result,
+                scopes=scopes,
+                filter_paths=filter_paths,
+                filter_operation=filter_operation,
+                max=max,
+            )
+        return self._build_operations_parallel(
+            result=result,
+            scopes=scopes,
+            filter_paths=filter_paths,
+            filter_operation=filter_operation,
+        )
+
+    def _build_operations_sequential(
+        self,
+        result: AbstractResult,
+        scopes: set[Scope],
+        filter_paths: list[str] | None = None,
+        filter_operation: str | None = None,
+        max: int = None,
+    ) -> bool:
         from wexample_filestate.const.state_items import TargetFileOrDirectory
 
         has_task = super().build_operations(
@@ -104,6 +130,98 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
                     return has_task
 
         return has_task
+
+    def _build_operations_parallel(
+        self,
+        result: AbstractResult,
+        scopes: set[Scope],
+        filter_paths: list[str] | None = None,
+        filter_operation: str | None = None,
+    ) -> bool:
+        """Flatten the tree once (sequential walk that triggers lazy build),
+        then inspect every item via a single shared thread pool, then assemble
+        the result in deterministic path order.
+
+        Trade-offs vs the sequential path:
+        - No per-item spinner during inspection (multiple items run concurrently;
+          a single linear progress display would be misleading). Logs are emitted
+          after sort, in path order.
+        - ``max`` parameter is not supported here — caller falls back to the
+          sequential path when max is set.
+        """
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        from wexample_helpers.helpers.parallel import PARALLEL_DEFAULT_MAX_WORKERS
+
+        self.log(message="Scanning workdir...")
+        items = self._collect_inspectable_items(filter_paths=filter_paths)
+        if not items:
+            return False
+
+        self.log(message=f"Inspecting {len(items)} items...")
+
+        def _do(
+            item: AbstractItemTarget,
+        ) -> tuple[AbstractItemTarget, AbstractOperation | None]:
+            return (item, item.inspect_for_operation(scopes, filter_operation))
+
+        pairs: list[tuple[AbstractItemTarget, AbstractOperation | None]] = []
+
+        # NOTE: not using `with ThreadPoolExecutor(...) as executor` because
+        # its __exit__ does shutdown(wait=True), which blocks Ctrl+C until all
+        # in-flight workers finish (some may run external tools like black for
+        # 15+ seconds each). With cancel_futures=True, Ctrl+C at least cancels
+        # the queued tasks immediately — already-running tasks still finish
+        # (Python has no way to abort a running thread).
+        executor = ThreadPoolExecutor(max_workers=PARALLEL_DEFAULT_MAX_WORKERS)
+        try:
+            futures = [executor.submit(_do, item) for item in items]
+            for future in as_completed(futures):
+                pairs.append(future.result())
+        finally:
+            executor.shutdown(wait=False, cancel_futures=True)
+
+        # Deterministic order: sort by absolute path string.
+        pairs_sorted = sorted(pairs, key=lambda pair: str(pair[0].get_path()))
+
+        has_any = False
+        for item, operation in pairs_sorted:
+            if operation is None:
+                continue
+            has_any = True
+            item.task(f"[{operation.get_name()}] {operation.description}")
+            result.operations.append(operation)
+
+        return has_any
+
+    def _collect_inspectable_items(
+        self,
+        filter_paths: list[str] | None = None,
+    ) -> list[AbstractItemTarget]:
+        """Walk the tree depth-first, returning a flat list of items to inspect.
+
+        Respects ``filter_paths`` with the same early-skip semantics as the
+        legacy sequential path: a node whose path does not match any filter
+        contributes neither itself nor its descendants.
+        """
+        if filter_paths is not None and self.get_path().exists():
+            if not any(self._path_matches(p) for p in filter_paths):
+                return []
+
+        collected: list[AbstractItemTarget] = [self]
+
+        for child in self.get_children_list():
+            if isinstance(child, ItemTargetDirectory):
+                collected.extend(
+                    child._collect_inspectable_items(filter_paths=filter_paths)
+                )
+            else:
+                if filter_paths is not None and child.get_path().exists():
+                    if not any(child._path_matches(p) for p in filter_paths):
+                        continue
+                collected.append(child)
+
+        return collected
 
     def configure_from_file(self, path: FileStringOrPath) -> None:
         from wexample_helpers_yaml.helpers.yaml_helpers import yaml_read
