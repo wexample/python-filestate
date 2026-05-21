@@ -4,6 +4,7 @@ domains: []
 global:
   name: filestate
   type: app
-  version: 11.1.1
+  version: 11.1.2
 wex:
-  version: 6.0.28
+  migration: 1
+  version: 6.0.90

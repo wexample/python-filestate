@@ -1,6 +1,6 @@
 # filestate
 
-Version: 11.1.1
+Version: 11.1.2
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
