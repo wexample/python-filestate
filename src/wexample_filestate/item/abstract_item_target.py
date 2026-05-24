@@ -514,8 +514,13 @@ class AbstractItemTarget(
                 if cls in prepared:
                     continue
                 prepared.add(cls)
-                if hasattr(option, "prepare"):
-                    option.prepare(self, scopes, filter_paths)
+                # Skip options whose declared scopes don't intersect with the
+                # requested scopes — otherwise a MODE-only rectify would still
+                # trigger CONTENT prepare()s (e.g. php-cs-fixer, Black) for
+                # nothing, since their operations will be filtered out later.
+                if not set(cls.get_scopes()) & scopes:
+                    continue
+                option.prepare(self, scopes, filter_paths)
 
         visit(self)
         if isinstance(self, ItemTargetDirectory):
