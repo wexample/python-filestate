@@ -3,8 +3,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.abstract_method import abstract_method
-
 if TYPE_CHECKING:
     from wexample_filestate.enum.scopes import Scope
 
@@ -13,9 +11,13 @@ _DECLARED_SCOPE_SETS: dict[type, frozenset] = {}
 
 class WithScopeMixin:
     @classmethod
-    @abstract_method
     def get_scopes(cls) -> list[Scope]:
-        pass
+        # Default: no declared scopes — the class opts out of scope-based filtering.
+        # Concrete options/operations should override to declare the scope(s) they
+        # participate in (e.g. [Scope.CONTENT], [Scope.MODE]). Returning [] means
+        # `matches_scope_filter()` always returns False, so this class is skipped
+        # whenever a scope filter is active.
+        return []
 
     @classmethod
     def matches_scope_filter(cls, scopes: Iterable[Scope]) -> bool:
