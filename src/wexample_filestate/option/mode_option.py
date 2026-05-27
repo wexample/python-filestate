@@ -86,6 +86,25 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
                 target_gid is not None and stat.st_gid != target_gid
             )
 
+            # When recursive, also detect drift in any descendant — otherwise a
+            # file created by another step (e.g. a service/setup hook running
+            # under sudo) inside an already-correctly-owned directory would
+            # never be chown'd. Early-exit on first mismatch to keep checks
+            # cheap on large trees.
+            if not needs_chown and recursive and source_path.is_dir():
+                for root, dirs, files in os.walk(source_path):
+                    for name in dirs + files:
+                        child_stat = os.lstat(os.path.join(root, name))
+                        if (
+                            target_uid is not None and child_stat.st_uid != target_uid
+                        ) or (
+                            target_gid is not None and child_stat.st_gid != target_gid
+                        ):
+                            needs_chown = True
+                            break
+                    if needs_chown:
+                        break
+
         # --- Build operation ---
         if needs_chmod:
             description = f"Update permissions from {file_mode_num_to_octal(current_mode)} to {file_mode_num_to_octal(target_mode)}"
