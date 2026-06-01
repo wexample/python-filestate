@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any, Union
 
 from wexample_config.config_option.abstract_config_option import AbstractConfigOption
+from wexample_config.config_value.config_value import ConfigValue
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.enum.scopes import Scope
@@ -17,6 +19,16 @@ class DefaultContentOption(OptionMixin, AbstractConfigOption):
 
     @staticmethod
     def get_raw_value_allowed_type() -> Any:
-        from wexample_config.config_value.config_value import ConfigValue
+        return Union[str, ConfigValue, Callable]
 
-        return Union[str, ConfigValue]
+    def get_value(self) -> ConfigValue:
+        """Resolve callable values just like ContentOption, so callers can pass
+        either a literal string/ConfigValue or a lambda(target) → str."""
+        value = super().get_value()
+
+        if isinstance(value, str):
+            return ConfigValue(raw=value)
+        if value.is_callable():
+            return ConfigValue(raw=str((value.get_callable())(self)))
+
+        return value

@@ -24,7 +24,7 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
         """Resolve an owner string to a (uid, gid) tuple.
 
         Accepted formats:
-          "~"               -> (current user uid, current user primary gid)
+          "~"               -> (real user uid/gid; falls back to SUDO_UID/SUDO_GID under sudo)
           "999:999"         -> (999, 999)
           "mongodb:mongodb" -> (resolved uid, resolved gid)
           "999"             -> (999, None)  -- gid unchanged
@@ -32,12 +32,16 @@ class OwnerOption(OptionMixin, AbstractConfigOption):
           ":999"            -> (None, 999)  -- uid unchanged
         """
         import grp
-        import os
         import pwd
 
+        from wexample_helpers.helpers.user import (
+            user_get_real_gid,
+            user_get_real_uid,
+        )
+
         if raw.strip() == "~":
-            uid = os.getuid()
-            gid = pwd.getpwuid(uid).pw_gid
+            uid = user_get_real_uid()
+            gid = user_get_real_gid()
             return uid, gid
 
         parts = raw.split(":", 1)
