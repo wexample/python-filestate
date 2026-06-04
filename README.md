@@ -1,6 +1,6 @@
 # filestate
 
-Version: 11.4.1
+Version: 11.4.2
 
 Package that allows you to manage the state of files and directories using YAML configuration files.
 
@@ -90,7 +90,7 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - wexample-event: >=6.1.0
 - wexample-file: >=6.6.0
 - wexample-helpers-yaml: >=6.1.0
-- wexample-prompt: >=10.0.0
+- wexample-prompt: >=10.2.0
 - wexample-runner: >=9.0.0
 - xmltodict:
 
