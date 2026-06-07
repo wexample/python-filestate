@@ -43,7 +43,11 @@ class MarkdownFile(StructuredContentFile):
             content = {"front": {}, "body": ""}
         if isinstance(content, ConfigValue):
             content = content._get_nested_raw()
-        if not isinstance(content, dict) or "front" not in content or "body" not in content:
+        if (
+            not isinstance(content, dict)
+            or "front" not in content
+            or "body" not in content
+        ):
             raise ValueError(
                 "MarkdownFile.dumps expects a dict with keys 'front' and 'body'."
             )
@@ -117,9 +121,11 @@ class MarkdownFile(StructuredContentFile):
         front: dict[str, Any] | None = None,
         body: str | None = None,
     ) -> None:
-        current = self._parsed_cache if self._parsed_cache is not None else {
-            "front": {}, "body": ""
-        }
+        current = (
+            self._parsed_cache
+            if self._parsed_cache is not None
+            else {"front": {}, "body": ""}
+        )
         new_front = front if front is not None else current.get("front", {})
         new_body = body if body is not None else current.get("body", "")
         self.write_parsed({"front": new_front, "body": new_body})
