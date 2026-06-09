@@ -106,6 +106,8 @@ class WithBatchOptionMixin:
                 return
             if item.get_option_recursive(option_cls) is None:
                 return
+            if self._is_excluded_from_batch(item):
+                return
             if self._is_already_rectified(item):
                 return
             items.append(item)
@@ -113,6 +115,19 @@ class WithBatchOptionMixin:
         if isinstance(root, ItemTargetDirectory):
             root.for_each_child_recursive(collect)
         return items
+
+    def _is_excluded_from_batch(
+        self, item: TargetFileOrDirectoryType
+    ) -> bool:
+        """Hook for subclasses to skip specific files (e.g. generated code).
+
+        Default: nothing excluded. Override to filter out paths that should
+        not go through the batch tool — typically because the upstream tool
+        cannot produce idempotent output on them (TanStack `*.gen.ts`,
+        Prisma schema, codegen, etc.), which would cause infinite rectify
+        loops.
+        """
+        return False
 
     # ------------------------------------------------------------------ #
     # Batch cache
