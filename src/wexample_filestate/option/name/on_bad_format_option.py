@@ -69,7 +69,7 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
             )
 
             raise NameFormatException(
-                f"File name '{current_name}' does not match required format"
+                message=f"File name '{current_name}' does not match required format"
             )
         # "ignore" action returns None (no operation)
 
