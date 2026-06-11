@@ -100,6 +100,17 @@ class TestXmlFile(AbstractStructuredFileTest):
         """Get the sample test file name."""
         return "sample.xml"
 
+    def _get_test_data_for_dumps(self) -> dict[str, Any]:
+        """XML requires a single root element, unlike the generic test data."""
+        return {
+            "root": {
+                "name": "test-app",
+                "version": "2.0.0",
+                "config": {"debug": "true", "port": "3000"},
+                "items": {"item": ["item1", "item2", "item3"]},
+            }
+        }
+
     def _validate_parsed_content(self, parsed: dict) -> None:
         """Validate the structure of parsed XML content."""
         # XML has different structure - no name/version at root

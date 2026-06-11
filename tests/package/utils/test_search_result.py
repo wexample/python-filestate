@@ -132,10 +132,14 @@ class TestSearchResult(AbstractStateManagerTest):
         result = SearchResult.create_one_if_match(r"def \w+", item, regex=True)
 
         assert result is not None, "Should find function definition"
-        assert result.line == 1, "First function should be on line 1"
-        assert (
-            "def hello_function" in item.read_text().split("\n")[0]
-        ), "Should match the function definition line"
+        # Compute the expected line instead of hardcoding it: the fixture file
+        # gets reformatted by linters, which shifts line numbers.
+        lines = item.read_text().split("\n")
+        first_def_line = next(
+            index for index, line in enumerate(lines, start=1) if "def " in line
+        )
+        assert result.line == first_def_line, "Should match the first function"
+        assert "def hello_function" in lines[result.line - 1]
 
     def test_deprecated_create_if_match(self, tmp_path) -> None:
         """Test backward compatibility method."""

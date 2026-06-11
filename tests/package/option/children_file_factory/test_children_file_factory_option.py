@@ -20,8 +20,9 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
         return Path(__file__).parent / "test_data"
 
     def _operation_get_count(self) -> int:
-        """ChildrenFileFactoryOption may not generate direct operations."""
-        return 0
+        # The factory generates 2 children (project_a, project_b), each with
+        # should_exist=True on a missing config.txt: 2 create operations.
+        return 2
 
     def _operation_test_assert_applied(self) -> None:
         """Assert state after applying operations."""
@@ -44,20 +45,17 @@ class TestChildrenFileFactoryOption(AbstractTestOperation):
         # by checking if the state manager has the expected structure
         children_factory_option = None
         for option in self.state_manager.options.values():
-            # print(f"Option: {option}, name: {option.get_name()}")
-            if option.get_name() == "children":
-                # Look inside the children option for ChildrenFileFactoryOption
-                if hasattr(option, "children") and option.children:
-                    for child_option in option.children:
-                        if isinstance(child_option, ChildrenFileFactoryOption):
-                            children_factory_option = child_option
-                            break
-                # Also check if the option itself contains the factory option
-                elif hasattr(option, "value") and isinstance(option.value, list):
-                    for child_item in option.value:
-                        if isinstance(child_item, ChildrenFileFactoryOption):
-                            children_factory_option = child_item
-                            break
+            if option.get_name() != "children":
+                continue
+            # The factory lives in option.value (the raw config list), while
+            # option.children holds the materialized item targets; search both.
+            candidates = list(option.children or [])
+            if isinstance(option.value, list):
+                candidates.extend(option.value)
+            for candidate in candidates:
+                if isinstance(candidate, ChildrenFileFactoryOption):
+                    children_factory_option = candidate
+                    break
             if children_factory_option:
                 break
 

@@ -207,6 +207,18 @@ class AbstractItemTarget(
         # Name is allways here, as an option and as an argument.
         config["name"] = config["name"] if config.get("name") else self.base_name
 
+        from wexample_filestate.option.name_option import NameOption
+
+        # An explicit name in config wins over the path-derived default.
+        # NameOption owns the resolution of every supported form (str, nested
+        # dict, callable); stringifying the raw value here would turn a
+        # callable into its repr.
+        name_option = self.get_option(NameOption)
+        if name_option is not None:
+            resolved = name_option.get_name_value()
+            if resolved is not None:
+                self.base_name = resolved
+
         if not self.base_name:
             self.base_name = str(config.get("name"))
 

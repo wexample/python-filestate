@@ -7,6 +7,7 @@ from wexample_config.config_option.abstract_config_option import AbstractConfigO
 from wexample_config.config_option.abstract_nested_config_option import (
     AbstractNestedConfigOption,
 )
+from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_filestate.enum.scopes import Scope
@@ -19,6 +20,10 @@ if TYPE_CHECKING:
 
 @base_class
 class NameOption(OptionMixin, AbstractNestedConfigOption):
+    _callable_value: Callable | None = private_field(
+        default=None,
+        description="Deferred name resolver, set when config provides a callable name",
+    )
     @classmethod
     def get_scopes(cls) -> list[Scope]:
         return [Scope.NAME]
@@ -71,16 +76,11 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         """Get the name value, supporting both legacy string, nested dict, and callable formats."""
         from wexample_filestate.option.name.value_option import ValueOption
 
-        value = self.get_value()
         # Check if we have a callable value stored
-        if callable(value):
-            try:
-                # Execute the callable with self as parameter
-                result = self._callable_value(self)
-                return str(result) if result is not None else None
-            except Exception:
-                # If callable fails, fall back to None
-                return None
+        if self._callable_value is not None:
+            # Execute the callable with self as parameter
+            result = self._callable_value(self)
+            return str(result) if result is not None else None
 
         value_option = self.get_option_value(ValueOption, default=None)
         if value_option and not value_option.is_none():
@@ -96,10 +96,12 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         if isinstance(raw_value, Path):
             raw_value = str(raw_value)
 
-        # Store callable directly without conversion
+        # Store the callable aside: ValueOption only accepts strings, so the
+        # nested config gets a placeholder while get_name_value() resolves the
+        # callable lazily.
         if callable(raw_value):
-            # Create a placeholder dict to satisfy the nested config structure
-            raw_value = {ValueOption.get_name(): raw_value}
+            self._callable_value = raw_value
+            raw_value = {ValueOption.get_name(): None}
         # Convert string form to dict form for consistency
         elif isinstance(raw_value, str):
             raw_value = {ValueOption.get_name(): raw_value}

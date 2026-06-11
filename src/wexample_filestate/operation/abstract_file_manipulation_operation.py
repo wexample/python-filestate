@@ -68,10 +68,12 @@ class AbstractFileManipulationOperation(AbstractOperation):
     def _restore_target_file(self) -> None:
         import os
 
-        from wexample_helpers.helpers.file import file_write
-
         if self.target.is_file():
-            file_write(self._original_path, self._original_file_content)
+            # Write through LocalFile (like _target_file_write does) so its
+            # content/mtime cache stays in sync: a raw file_write landing in
+            # the same clock tick as the previous write would leave the cache
+            # serving the pre-restore content.
+            self.target.get_local_file().write(content=self._original_file_content)
             os.chmod(self._original_path, self._original_file_mode)
         elif self.target.is_directory():
             os.mkdir(self._original_path)
