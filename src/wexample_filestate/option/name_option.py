@@ -24,6 +24,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         default=None,
         description="Deferred name resolver, set when config provides a callable name",
     )
+
     @classmethod
     def get_scopes(cls) -> list[Scope]:
         return [Scope.NAME]
