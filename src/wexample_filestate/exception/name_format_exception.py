@@ -15,7 +15,6 @@ class NameFormatException(AbstractFileStateException):
     """Exception raised when a file name does not match the required format rules."""
 
     error_code: ClassVar[str] = "FILE_STATE_NAME_FORMAT_ERROR"
-
     file_name: str | None = public_field(
         default=None, description="Offending file name"
     )

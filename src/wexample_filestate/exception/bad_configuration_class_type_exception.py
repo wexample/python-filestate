@@ -9,11 +9,10 @@ from wexample_helpers.exception.undefined_exception import UndefinedException
 
 @base_class
 class BadConfigurationClassTypeException(UndefinedException):
-    error_code: ClassVar[str] = "UNDEFINED_ERROR"
-
     class_definition: Any = public_field(
         default=None, description="Offending value provided for the 'class' option"
     )
+    error_code: ClassVar[str] = "UNDEFINED_ERROR"
 
     def _build_message(self) -> str:
         from wexample_filestate.item.item_target_directory import ItemTargetDirectory

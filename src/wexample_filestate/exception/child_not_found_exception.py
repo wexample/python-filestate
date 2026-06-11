@@ -12,9 +12,10 @@ if TYPE_CHECKING:
 
 @base_class
 class ChildNotFoundException(UndefinedException):
+    child: str | None = public_field(
+        default=None, description="Name of the missing child"
+    )
     error_code: ClassVar[str] = "FILE_STATE_CHILD_NOT_FOUND"
-
-    child: str | None = public_field(default=None, description="Name of the missing child")
     root_item: AbstractItemTarget | None = public_field(
         default=None, description="Parent item the child was looked up in"
     )
