@@ -4,16 +4,7 @@ domains: []
 global:
   name: filestate
   type: app
-  version: 12.1.1
-test:
-  coverage:
-    last_report:
-      commit_hash: 2960481cbb0b2aa5fca70cb6f1e1de07d7286654
-      covered: 2322
-      excluded: 198
-      missing: 862
-      percent: 72.92713567839196
-      total: 3184
+  version: 12.1.2
 wex:
   migration: 1
   version: 6.0.112
