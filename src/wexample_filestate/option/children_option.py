@@ -55,7 +55,7 @@ class ChildrenOption(OptionMixin, ChildrenConfigOption):
             class_definition = child_config.get(option_name)
 
             if not issubclass(class_definition, ItemTargetDirectory) and not issubclass(
-                child_config.get(option_name), ItemTargetFile
+                class_definition, ItemTargetFile
             ):
                 raise BadConfigurationClassTypeException(
                     class_definition=class_definition

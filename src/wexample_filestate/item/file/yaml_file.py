@@ -48,7 +48,7 @@ class YamlFile(StructuredContentFile):
             if isinstance(v, ConfigValue):
                 return _normalize(v._get_nested_raw())
             if isinstance(v, CommentedMap):
-                for k in list(v.keys()):
+                for k in v:
                     v[k] = _normalize(v[k])
                 return v
             if isinstance(v, CommentedSeq):

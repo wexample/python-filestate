@@ -157,7 +157,7 @@ class ModeOption(OptionMixin, AbstractNestedConfigOption):
         from wexample_filestate.option.mode.permissions_option import PermissionsOption
 
         # Always work with a dict.
-        if isinstance(raw_value, str) or isinstance(raw_value, int):
+        if isinstance(raw_value, (str, int)):
             raw_value = {PermissionsOption.get_name(): str(raw_value)}
 
         return super().prepare_value(raw_value=raw_value)

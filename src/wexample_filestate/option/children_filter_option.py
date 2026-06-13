@@ -39,9 +39,7 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
         children = []
 
         parent_item = self.get_parent_item()
-        has_callable_filter = (
-            callable(self.filter) if self.filter is not None else False
-        )
+        has_callable_filter = callable(self.filter)
         has_name_pattern = self.name_pattern is not None
 
         # Trigger generation if either a name_pattern is present or a callable filter is provided
@@ -164,7 +162,7 @@ class ChildrenFilterOption(AbstractChildrenManipulationOption):
         include = False
         if entry_filter is not None:
             try:
-                include = bool(entry_filter(entry_path))
+                include = entry_filter(entry_path)
             except Exception:
                 include = False
         else:

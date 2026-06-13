@@ -97,7 +97,7 @@ class AbstractChildrenManipulationOption(
             if self._path_match_patterns(directory):
                 output.append(directory)
 
-                if recursive is True:
+                if recursive:
                     output.extend(
                         self._get_directories_filtered(
                             base_path=directory, recursive=recursive
@@ -118,9 +118,10 @@ class AbstractChildrenManipulationOption(
         if isinstance(patterns, str):
             patterns = [patterns]
 
+        path_name = Path(path).name
         for pattern_str in patterns:
             pattern = re.compile(pattern_str)
-            if not pattern.match(Path(path).name):
+            if not pattern.match(path_name):
                 return False
 
         return True

@@ -16,7 +16,7 @@ def comment_indicates_protected(comment: str | None) -> bool:
 
     if not comment:
         return False
-    c = str(comment).strip().lower()
+    c = comment.strip().lower()
     if FILESTATE_TAG not in c:
         return False
     return any(action in c for action in FILESTATE_ACTIONS)

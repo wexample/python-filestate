@@ -25,7 +25,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
 
     @staticmethod
     def _format_dependencies_list(dependencies: list[str]) -> str:
-        return "\n".join([f"- {dep}" for dep in dependencies])
+        return "\n".join(f"- {dep}" for dep in dependencies)
 
     def get_templates(self) -> list[str] | None:
         """Render each section independently and join with double newlines."""
@@ -78,7 +78,8 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
         """Render a single section. Tries .md.j2 then .md across all search paths."""
         from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
-        for search_path in self._get_readme_search_paths():
+        search_paths = self._get_readme_search_paths()
+        for search_path in search_paths:
             if not search_path.exists():
                 continue
             env = Environment(loader=FileSystemLoader(str(search_path)))
@@ -88,7 +89,7 @@ class ReadmeContentConfigValue(AggregatedTemplatesConfigValue):
             except TemplateNotFound:
                 pass
 
-        for search_path in self._get_readme_search_paths():
+        for search_path in search_paths:
             md_path = search_path / f"{section_name}.md"
             if md_path.exists():
                 env = Environment(loader=FileSystemLoader(str(search_path)))

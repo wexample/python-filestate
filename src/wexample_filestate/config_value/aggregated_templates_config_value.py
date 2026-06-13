@@ -31,17 +31,15 @@ class AggregatedTemplatesConfigValue(ContentConfigValue):
     def get_str(self, type_check: bool = True) -> str | None:
         from wexample_helpers.helpers.string import string_replace_params
 
-        output = []
         templates = self.get_templates()
 
         if len(templates) == 0:
             return None
-        for template_content in templates:
-            output.append(string_replace_params(template_content, self.parameters))
 
-        output_str = os.linesep.join(output)
-
-        return output_str
+        return os.linesep.join(
+            string_replace_params(template_content, self.parameters)
+            for template_content in templates
+        )
 
     def get_templates(self) -> list[str] | None:
         return self.templates

@@ -67,12 +67,13 @@ class TextOption(OptionMixin, AbstractNestedConfigOption):
                 UniqueLinesOption,
             )
 
+            raw_set = set(raw_value)
             raw_value = {
-                TrimOption.get_name(): "trim" in raw_value,
-                EndNewLineOption.get_name(): "ensure_newline" in raw_value
-                or "end_new_line" in raw_value,
-                SortLinesOption.get_name(): "sort_lines" in raw_value,
-                UniqueLinesOption.get_name(): "unique_lines" in raw_value,
+                TrimOption.get_name(): "trim" in raw_set,
+                EndNewLineOption.get_name(): "ensure_newline" in raw_set
+                or "end_new_line" in raw_set,
+                SortLinesOption.get_name(): "sort_lines" in raw_set,
+                UniqueLinesOption.get_name(): "unique_lines" in raw_set,
             }
 
         super().set_value(raw_value=raw_value)

@@ -75,8 +75,7 @@ class AbstractItemTarget(
 
     @classmethod
     def create_from_config(cls, **kwargs) -> AbstractItemTarget:
-        config = kwargs.get("config")
-        kwargs.pop("config", None)
+        config = kwargs.pop("config", None)
         instance = cls(**kwargs)
         instance.configure(config)
 
@@ -135,7 +134,7 @@ class AbstractItemTarget(
                 max=max,
             )
 
-            if len(result.operations) > 0:
+            if result.operations:
                 result.apply_operations(interactive=interactive)
 
                 # Push applied operations to history stack for sequential rollbacks
@@ -301,7 +300,7 @@ class AbstractItemTarget(
         )
 
         providers = super().get_options_providers()
-        if len(providers) > 0:
+        if providers:
             return providers
 
         return [

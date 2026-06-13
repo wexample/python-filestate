@@ -54,11 +54,9 @@ class DiskPersistedRegistry(Registry[T]):
         if not self.is_persisted():
             return
         data = self._file.read_parsed() or {}
+        _use_hydrate = item_class is not None and hasattr(item_class, "hydrate")
         for key, entry in data.items():
-            if item_class is not None and hasattr(item_class, "hydrate"):
-                self._items[key] = item_class.hydrate(entry)
-            else:
-                self._items[key] = entry
+            self._items[key] = item_class.hydrate(entry) if _use_hydrate else entry
 
     def save(self) -> None:
         """Serialize current items to the backing file.

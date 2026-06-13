@@ -117,7 +117,7 @@ class NameOption(OptionMixin, AbstractNestedConfigOption):
         from wexample_filestate.option.name.suffix_option import SuffixOption
 
         # Check each format rule using child options
-        for option_class in [CaseFormatOption, RegexOption, PrefixOption, SuffixOption]:
+        for option_class in (CaseFormatOption, RegexOption, PrefixOption, SuffixOption):
             option = self.get_option(option_class)
             if option and not option.validate_name(name):
                 return False

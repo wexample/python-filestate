@@ -48,7 +48,7 @@ class AbstractExistingFileOperation(AbstractFileManipulationOperation):
         cls, target: TargetFileOrDirectoryType
     ) -> str | None:
         src = cls._read_current_src(target)
-        return src if src is not None and src.strip() != "" else None
+        return src if src is not None and src.strip() else None
 
     @classmethod
     def _read_current_str_or_fail(cls, target: TargetFileOrDirectoryType) -> str:

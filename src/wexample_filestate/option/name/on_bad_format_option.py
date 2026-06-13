@@ -97,7 +97,7 @@ class OnBadFormatOption(OptionMixin, AbstractConfigOption):
 
         # Apply corrections in order: case format, prefix, suffix
         # Each child option handles its own correction logic
-        for option_class in [CaseFormatOption, PrefixOption, SuffixOption]:
+        for option_class in (CaseFormatOption, PrefixOption, SuffixOption):
             option = parent_option.get_option(option_class)
             if option:
                 corrected_name = option.apply_correction(corrected_name)

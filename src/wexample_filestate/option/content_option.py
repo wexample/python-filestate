@@ -35,9 +35,10 @@ class ContentOption(OptionMixin, WithCurrentContentOptionMixin, AbstractConfigOp
     def create_required_operation(
         self, target: TargetFileOrDirectoryType, scopes: set[Scope]
     ) -> AbstractOperation | None:
-        if not self.get_value().is_none():
+        value = self.get_value()
+        if not value.is_none():
             return self._create_write_operation_if_content_changed(
-                target=target, target_content=self.get_value().get_str()
+                target=target, target_content=value.get_str()
             )
         return None
 

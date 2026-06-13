@@ -74,20 +74,14 @@ class StructuredKeysOption(OptionMixin, AbstractConfigOption):
         if not isinstance(parsed, dict):
             return None
 
-        # Resolve callable expected values
-        resolved: list[tuple[str, Any]] = []
+        mismatches: list[tuple[str, Any]] = []
         for key_path, value in expected.items():
             if callable(value):
                 value = value(target)
             elif hasattr(value, "raw") and callable(value.raw):
                 value = value.raw(target)
-            resolved.append((key_path, value))
-
-        # Find mismatches
-        mismatches: list[tuple[str, Any]] = []
-        for key_path, expected_value in resolved:
-            if _get_by_path(parsed, key_path) != expected_value:
-                mismatches.append((key_path, expected_value))
+            if _get_by_path(parsed, key_path) != value:
+                mismatches.append((key_path, value))
 
         if not mismatches:
             return None

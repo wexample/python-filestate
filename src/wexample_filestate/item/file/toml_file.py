@@ -42,7 +42,7 @@ class TomlFile(StructuredContentFile):
         from tomlkit import document, parse
 
         try:
-            if text is None or text == "":
+            if not text:
                 # Return an empty TOMLDocument to keep types consistent
                 return document()
             return parse(text)

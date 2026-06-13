@@ -63,11 +63,16 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
         from wexample_filestate.option.should_exist_option import ShouldExistOption
         from wexample_filestate.option.type_option import TypeOption
 
+        name_key = NameOption.get_name()
+        type_key = TypeOption.get_name()
+        children_key = ChildrenOption.get_name()
+        should_exist_key = ShouldExistOption.get_name()
+
         dir_config = {
-            NameOption.get_name(): path.name,
-            TypeOption.get_name(): DiskItemType.DIRECTORY,
-            ChildrenOption.get_name(): [],
-            ShouldExistOption.get_name(): True,
+            name_key: path.name,
+            type_key: DiskItemType.DIRECTORY,
+            children_key: [],
+            should_exist_key: True,
         }
 
         wex_config = read_dir_config(path)
@@ -77,11 +82,11 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
             return dir_config
 
         if self._path_match_patterns(path.name):
-            dir_config[ChildrenOption.get_name()].append(
+            dir_config[children_key].append(
                 {
-                    NameOption.get_name(): self.pattern[NameOption.get_name()],
-                    TypeOption.get_name(): self.pattern[TypeOption.get_name()],
-                    ShouldExistOption.get_name(): True,
+                    name_key: self.pattern[name_key],
+                    type_key: self.pattern[type_key],
+                    should_exist_key: True,
                 }
             )
 
@@ -89,7 +94,7 @@ class ChildrenFileFactoryOption(AbstractChildrenManipulationOption):
             # Iterate safely over child entries using Path API
             for entry in path.iterdir():
                 if entry.is_dir() and self._path_match_patterns(entry.name):
-                    dir_config[ChildrenOption.get_name()].append(
+                    dir_config[children_key].append(
                         self._generate_children_recursive(
                             path=entry,
                         )

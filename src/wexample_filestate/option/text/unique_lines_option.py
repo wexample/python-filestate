@@ -46,10 +46,12 @@ class UniqueLinesOption(AbstractTextChildOption):
         lines = content.splitlines()
         seen: set[str] = set()
         unique_lines: list[str] = []
+        _seen_add = seen.add
+        _append = unique_lines.append
         for line in lines:
             if line not in seen:
-                seen.add(line)
-                unique_lines.append(line)
+                _seen_add(line)
+                _append(line)
         out = "\n".join(unique_lines)
         if had_trailing_newline:
             out += "\n"

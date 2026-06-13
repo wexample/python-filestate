@@ -56,7 +56,7 @@ class MarkdownFile(StructuredContentFile):
         body = content["body"] or ""
 
         if not front:
-            return body if body.endswith("\n") or body == "" else f"{body}\n"
+            return body if body.endswith("\n") or not body else f"{body}\n"
 
         from wexample_filestate.item.file.yaml_file import YamlFile
 

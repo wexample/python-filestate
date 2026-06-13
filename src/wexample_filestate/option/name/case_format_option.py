@@ -13,10 +13,11 @@ from wexample_filestate.option.name.abstract_name_child_option import (
 class CaseFormatOption(AbstractNameChildOption):
     def apply_correction(self, name: str) -> str:
         """Apply case format correction to name."""
-        if self.get_value().is_none():
+        value = self.get_value()
+        if value.is_none():
             return name
 
-        case_format = self.get_value().get_str()
+        case_format = value.get_str()
 
         if case_format == "uppercase":
             return name.upper()
@@ -57,10 +58,11 @@ class CaseFormatOption(AbstractNameChildOption):
 
     def validate_name(self, name: str) -> bool:
         """Validate case format of the name."""
-        if self.get_value().is_none():
+        value = self.get_value()
+        if value.is_none():
             return True
 
-        case_format = self.get_value().get_str()
+        case_format = value.get_str()
 
         if case_format == "uppercase":
             return name.isupper()

@@ -22,14 +22,12 @@ class SortRecursiveOption(AbstractYamlChildOption):
         from wexample_filestate.operation.file_write_operation import FileWriteOperation
 
         if self.get_value().is_true():
-            # Check if file needs sorting
-            if self._is_yaml_sorted(target):
-                return None
-
-            # Read and sort the YAML content
             data = self._read_yaml_data(target)
             sorted_data = self._sort_recursive(data)
             sorted_content = self._dump_yaml_content(sorted_data)
+
+            if self._dump_yaml_content(data) == sorted_content:
+                return None
 
             return FileWriteOperation(
                 option=self,

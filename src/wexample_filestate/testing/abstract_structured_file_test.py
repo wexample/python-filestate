@@ -60,7 +60,7 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
             # Preview write config
             preview = file_instance.preview_write_config()
             assert isinstance(preview, str), "Config preview should return string"
-            assert len(preview) > 0, "Config preview should not be empty"
+            assert preview, "Config preview should not be empty"
 
             # Preview with specific config
             preview2 = file_instance.preview_write_config(config)
@@ -88,7 +88,7 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
             # Read back to verify
             updated_config = file_instance.read_config(reload=True)
             # Note: Not all file formats may support arbitrary key setting
-        except (ValueError, KeyError, AttributeError, Exception):
+        except Exception:
             # Some file formats may not support arbitrary key setting or config operations
             pass
 
@@ -133,7 +133,7 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
 
         # Test output format
         assert isinstance(serialized_content, str), "Output should be string"
-        assert len(serialized_content) > 0, "Output should not be empty"
+        assert serialized_content, "Output should not be empty"
 
         # Test round-trip: serialize then parse should give back original data
         parsed_back = file_instance.loads(serialized_content)
@@ -164,7 +164,7 @@ class AbstractStructuredFileTest(AbstractStateManagerTest, ABC):
         # Preview with current content
         preview1 = file_instance.preview_write()
         assert isinstance(preview1, str), "Preview should return string"
-        assert len(preview1) > 0, "Preview should not be empty"
+        assert preview1, "Preview should not be empty"
 
         # Preview with custom content
         test_data = self._get_test_data_for_dumps()

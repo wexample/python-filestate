@@ -42,27 +42,29 @@ class SearchResult(BaseClass):
 
         content = item.read_text()
         results: list[SearchResult] = []
+        _append = results.append
         if regex:
             import re
 
             for m in re.finditer(search, content, flags):
                 idx = m.start()
                 line, column = cls._compute_line_col(content, idx)
-                results.append(
+                _append(
                     cls(item=item, searched=search, line=line, column=column)
                 )
             return results
         else:
+            search_len = len(search)
             start = 0
             while True:
                 idx = content.find(search, start)
                 if idx == -1:
                     break
                 line, column = cls._compute_line_col(content, idx)
-                results.append(
+                _append(
                     cls(item=item, searched=search, line=line, column=column)
                 )
-                start = idx + len(search)
+                start = idx + search_len
             return results
 
     # Backward-compatibility alias (deprecated)

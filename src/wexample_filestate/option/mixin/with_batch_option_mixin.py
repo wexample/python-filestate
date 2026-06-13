@@ -100,6 +100,7 @@ class WithBatchOptionMixin:
 
         items: list[TargetFileOrDirectoryType] = []
         option_cls = type(self)
+        _append = items.append
 
         def collect(item: TargetFileOrDirectoryType) -> None:
             if not item.get_path().is_file():
@@ -110,7 +111,7 @@ class WithBatchOptionMixin:
                 return
             if self._is_already_rectified(item):
                 return
-            items.append(item)
+            _append(item)
 
         if isinstance(root, ItemTargetDirectory):
             root.for_each_child_recursive(collect)

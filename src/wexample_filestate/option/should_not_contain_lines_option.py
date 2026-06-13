@@ -68,6 +68,7 @@ class ShouldNotContainLinesOption(OptionMixin, AbstractConfigOption):
 
     def _remove_forbidden_lines(self, lines: list[str], content: str) -> str:
         """Remove specified lines from content."""
+        lines_set = set(lines)
         current_lines = content.splitlines()
-        filtered_lines = [line for line in current_lines if line not in lines]
+        filtered_lines = [line for line in current_lines if line not in lines_set]
         return "\n".join(filtered_lines)

@@ -140,15 +140,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
         self, item_name: PathOrString, recursive: bool = False
     ) -> TargetFileOrDirectoryType | None:
         item_name = str(item_name)
+        children = self.get_children_list()
 
         # Check direct children first
-        for child in self.get_children_list():
+        for child in children:
             if child.get_item_name() == item_name:
                 return child
 
         # Search in subdirectories if recursive
         if recursive:
-            for child in self.get_children_list():
+            for child in children:
                 if child.is_directory():
                     result = cast(ItemTargetDirectory, child).find_by_name(
                         item_name, recursive=True
@@ -195,14 +196,15 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
             return None
 
         # Simple search in direct children
-        for child in self.get_children_list():
+        children = self.get_children_list()
+        for child in children:
             # Compare by name if target is just a filename, otherwise compare full paths
             if child.get_item_name() == str(target) or child.get_path() == target:
                 return child
 
         # If recursive, search in subdirectories
         if recursive:
-            for child in self.get_children_list():
+            for child in children:
                 if child.is_directory():
                     result = cast(ItemTargetDirectory, child).find_by_path(
                         target, recursive=True
@@ -215,14 +217,16 @@ class ItemTargetDirectory(ItemDirectoryMixin, AbstractItemTarget):
     def find_by_type(
         self, class_type: type[AbstractItemTarget], recursive: bool = False
     ) -> AbstractItemTarget | None:
+        children = self.get_children_list()
+
         # Check direct children first
-        for child in self.get_children_list():
+        for child in children:
             if isinstance(child, class_type):
                 return child
 
         # Search in subdirectories if recursive
         if recursive:
-            for child in self.get_children_list():
+            for child in children:
                 if child.is_directory():
                     result = cast(ItemTargetDirectory, child).find_by_type(
                         class_type, recursive=True
